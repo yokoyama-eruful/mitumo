@@ -1,0 +1,13 @@
+{
+    "editor.formatOnSave": true,
+    "laravel-pint.enable": true,
+    "laravel-pint.enableDebugLogs": true,
+    "laravel-pint.configPath": "pint.json",
+    "[php]": {
+        "editor.defaultFormatter": "open-southeners.laravel-pint"
+    },
+    "cSpell.words": [
+        "fontawesome",
+        "laravel"
+    ]
+}
