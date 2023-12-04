@@ -38,7 +38,7 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'mitumo' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
