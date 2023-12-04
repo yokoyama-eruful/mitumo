@@ -1,0 +1,10 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+    
+parameters:
+	level: 2
+	excludePaths:
+		- app/Http/Kernel.php
+		- app/Http/Middleware/*
+	paths:
+		- app/Http
