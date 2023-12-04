@@ -15,6 +15,8 @@ final class User extends Authenticatable
 
     const UPDATED_AT = null;
 
+    protected $rememberTokenName = false;
+
     /**
      * The attributes that are mass assignable.
      *
