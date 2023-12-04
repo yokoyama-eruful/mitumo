@@ -1,6 +1,6 @@
 // https://aka.ms/devcontainer.json
 {
-	"name": "Existing Docker Compose (Extend)",
+	"name": "mitumo Containers",
 	"dockerComposeFile": [
 		"../docker-compose.yml"
 	],
@@ -27,5 +27,5 @@
 		}
 	},
 	"remoteUser": "sail",
-	"postCreateCommand": "chown -R 1000:1000 /var/www/html 2>/dev/null || true"
+	"postCreateCommand": "echo 'forward_agent=yes' >> /etc/ssh/ssh_config && chown -R 1000:1000 /var/www/html 2>/dev/null || true"
 }
