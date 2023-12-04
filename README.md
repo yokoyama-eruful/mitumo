@@ -12,7 +12,7 @@ composer install --ignore-platform-reqs
 ```
 
 ## 保険の計算式・料率テーブル
-　別途ファイルに記載
+　Documentフォルダ内の別途ファイルに記載
 
 
 ## ツール一覧
