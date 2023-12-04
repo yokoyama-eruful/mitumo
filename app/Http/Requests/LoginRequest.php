@@ -25,7 +25,7 @@ final class LoginRequest extends FormRequest
 
     public function authenticate()
     {
-        if (! Auth::guard('estimate')->attempt($this->only('staff_id', 'password'))) {
+        if (! Auth::guard('web')->attempt($this->only('staff_id', 'password'))) {
             throw ValidationException::withMessages([
                 'error' => 'ID・パスワードが間違っています。',
             ]);
