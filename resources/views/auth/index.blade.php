@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div class="mt-10 p-4 tablet:login-box">
+    <div class="mt-10 p-4">
         <h1 class="text-center text-2xl text-blue-500 font-bold mb-4 tracking-wider">
             <i class="fa-solid fa-file-invoice text-8xl mb-4"></i>
             <div>mitumo</div>

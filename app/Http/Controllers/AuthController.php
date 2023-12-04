@@ -19,7 +19,7 @@ final class AuthController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        return redirect()->route('index');
+        return redirect()->route('top.index');
     }
 
     public function logout()
