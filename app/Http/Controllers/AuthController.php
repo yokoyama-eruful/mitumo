@@ -26,6 +26,6 @@ final class AuthController extends Controller
     {
         Auth::logout();
 
-        return Redirect()->route('auth.login');
+        return Redirect()->route('auth.index');
     }
 }
