@@ -21,7 +21,8 @@
 				"open-southeners.laravel-pint",
 				"bradlc.vscode-tailwindcss",
 				"streetsidesoftware.code-spell-checker",
-				"eamodio.gitlens"
+				"eamodio.gitlens",
+				"davidanson.vscode-markdownlint"
 			],
 			"settings": {}
 		}
