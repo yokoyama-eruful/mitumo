@@ -21,5 +21,6 @@ Route::middleware('auth:web')
             ->name('top.')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
+                Route::get('/edit', 'edit')->name('edit');
             });
     });
