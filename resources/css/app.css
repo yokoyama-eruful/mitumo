@@ -3,3 +3,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .estimate-input-box {
+        @apply flex flex-row font-bold border border-gray-600 w-full
+    }
+
+    .estimate-input-required {
+        @apply text-xs text-red-600
+    }
+
+    .estimate-label {
+        @apply h-14 w-36 flex flex-col flex-none items-center justify-center bg-indigo-300 focus:outline-none focus:border-blue-500 font-bold
+    }
+
+    .estimate-input {
+        @apply outline outline-1 h-14 w-full px-3 focus:bg-blue-100
+    }
+}

@@ -19,7 +19,7 @@
                 </a>
                 <nav
                     class="mr-auto ml-4 py-1 pl-4 border-l border-gray-400	flex flex-wrap items-center text-base justify-center">
-                    <a href="" class="mr-5 hover:text-gray-900 hover:scale-105">新規作成</a>
+                    <a href="{{route('top.edit')}}" class="mr-5 hover:text-gray-900 hover:scale-105">新規作成</a>
                     <a href="" class="mr-5 hover:text-gray-900 hover:scale-105">一覧から探す</a>
                 </nav>
 
@@ -52,7 +52,7 @@
                         </a>
                     </div>
                     <div class="p-4">
-                        <a href="">
+                        <a href="{{route('top.edit')}}">
                             <div
                                 class="flex outline outline-1 outline-slate-300 shadow-md rounded-lg  p-8 flex-row hover:bg-gray-200">
                                 <div
