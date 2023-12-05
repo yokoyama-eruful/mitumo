@@ -379,4 +379,15 @@
     </footer>
 </body>
 
+<script>
+    // 物件のタイプをトリガーとした表示・非表示
+    const propertyTypeSelect = document.getElementById('property_type');
+
+    propertyTypeSelect.addEventListener('change', function() {
+        const selectedValue = propertyTypeSelect.value;
+        console.log(`Selected property type: ${selectedValue}`);
+    });
+</script>
+
+
 </html>
