@@ -19,11 +19,11 @@
                 </a>
                 <nav
                     class="mr-auto ml-4 py-1 pl-4 border-l border-gray-400	flex flex-wrap items-center text-base justify-center">
-                    <a href="{{route('top.edit')}}" class="mr-5 hover:text-gray-900 hover:scale-105">新規作成</a>
+                    <a href="{{ route('estimate.create') }}" class="mr-5 hover:text-gray-900 hover:scale-105">新規作成</a>
                     <a href="" class="mr-5 hover:text-gray-900 hover:scale-105">一覧から探す</a>
                 </nav>
 
-                <form action="{{route('auth.logout')}}" method="POST">
+                <form action="{{ route('auth.logout') }}" method="POST">
                     @csrf
                     <button
                         class="inline-flex items-center bg-red-100 border-0 py-1 px-3 focus:outline-none hover:bg-red-200 rounded text-base mt-4">
@@ -52,7 +52,7 @@
                         </a>
                     </div>
                     <div class="p-4">
-                        <a href="{{route('top.edit')}}">
+                        <a href="{{ route('estimate.create') }}">
                             <div
                                 class="flex outline outline-1 outline-slate-300 shadow-md rounded-lg  p-8 flex-row hover:bg-gray-200">
                                 <div

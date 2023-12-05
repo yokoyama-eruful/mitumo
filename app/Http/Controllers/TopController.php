@@ -10,9 +10,4 @@ final class TopController extends Controller
     {
         return view('top.index');
     }
-
-    public function edit()
-    {
-        return view('top.edit');
-    }
 }

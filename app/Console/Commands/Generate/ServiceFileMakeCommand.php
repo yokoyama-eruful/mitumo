@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands\Generate;
 
 use Illuminate\Console\GeneratorCommand as Command;
 
-class ServiceFileMakeCommand extends Command
+final class ServiceFileMakeCommand extends Command
 {
     /**
      * The console command name.
@@ -40,7 +42,7 @@ class ServiceFileMakeCommand extends Command
     /**
      * Get the default namespace for the class.
      *
-     * @param  string  $root_namespace
+     * @param string $root_namespace
      *
      * @return string
      */
