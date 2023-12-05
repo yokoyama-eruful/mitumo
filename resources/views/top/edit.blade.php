@@ -227,8 +227,8 @@
 
             <!-- 変動のある項目 -->
             <div
-                class="h-14 w-full flex flex-col items-center justify-center bg-indigo-300 border border-gray-600 font-bold">
-                <label class="p-3">期間指定（年数）</label>
+                class="h-14 w-full flex flex-col items-center justify-center bg-indigo-300 border border-gray-600 font-bold mt-5">
+                <label class="p-3">おすすめ契約期間指定（年数）</label>
             </div>
             <div class="estimate-input-box">
                 <input id="recommend1" name="recommend1" class="estimate-input">
@@ -240,7 +240,7 @@
             </div>
 
             <div
-                class="h-14 w-full flex flex-col items-center justify-center bg-indigo-300 border border-gray-600 font-bold">
+                class="h-14 w-full flex flex-col items-center justify-center bg-indigo-300 border border-gray-600 font-bold mt-5">
                 <label class="p-3">地震特約縮小支払割合指定</label>
             </div>
             <div class="estimate-input-box">
@@ -254,7 +254,7 @@
 
 
 
-            <div class="estimate-input-box">
+            <div class="estimate-input-box mt-5">
                 <label class="estimate-label" for="base_rate">基本率</label>
                 <input id="base_rate" name="base_rate" class="estimate-input">
             </div>
@@ -284,7 +284,7 @@
                 <input id="work_surcharge" name="work_surcharge" class="estimate-input">
             </div>
 
-            <div class="estimate-input-box">
+            <div class="estimate-input-box mt-5">
                 <label class="estimate-label bg-indigo-500" for="building_insurance_payout">共済の目的</label>
                 <label class="estimate-label bg-indigo-500" for="building_insurance_payout">共済金額</label>
                 <label class="estimate-label bg-indigo-500" for="building_insurance_payout">共済金額合計</label>
@@ -316,7 +316,7 @@
                 <input id="other_item_insurance_payout" name="other_item_insurance_payout" class="estimate-input">
             </div>
 
-            <div class="estimate-input-box">
+            <div class="estimate-input-box mt-5">
                 <label class="estimate-label" for="assess_item">評価項目</label>
                 <input id="assess_item" name="assess_item" class="estimate-input"><!-- 任意・常時 -->{{--セレクトボックス--}}
             </div>
