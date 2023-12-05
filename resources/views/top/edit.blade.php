@@ -103,7 +103,7 @@
                         <option value="木造">木造</option>
                         <option value="土蔵造">土蔵造</option>
                         <option value="その他">その他</option>
-                    </select>{{--セレクトボックス--}}
+                    </select>{{-- セレクトボックス --}}
                 </div>
                 <div class="estimate-input-box">
                     <label class="estimate-label" for="other_structure">その他構造</label>
@@ -115,7 +115,7 @@
                 <div class="estimate-input-box">
                     <label class="estimate-label" for="pillar">柱無時</label>
                     <input id="pillar" name="pillar" class="estimate-input">
-                </div><!-- 任意・常時 -->{{--セレクトボックス--}}
+                </div><!-- 任意・常時 -->{{-- セレクトボックス --}}
                 <div class="estimate-input-box">
                     <label class="estimate-label" for="other_pillar">その他柱無時</label>
                     <input id="other_pillar" name="other_pillar" class="estimate-input"><!-- 任意・常時 -->
@@ -127,7 +127,7 @@
                     <label class="estimate-label" for="fire_resistance">耐火基準</label>
                     <input id="fire_resistance" name="fire_resistance" class="estimate-input">
                 </div>
-                <!-- 任意・常時 -->{{--セレクトボックス--}}
+                <!-- 任意・常時 -->{{-- セレクトボックス --}}
                 <div class="estimate-input-box">
                     <label class="estimate-label" for="other_fire_resistance">その他耐火基準</label>
                     <input id="other_fire_resistance" name="other_fire_resistance" class="estimate-input">
@@ -140,7 +140,7 @@
                     <label class="estimate-label" for="usage">用法
                         <div class="estimate-input-required">※必須</div>
                     </label>
-                    <input id="usage" name="usage" class="estimate-input" required>{{--セレクトボックス--}}
+                    <input id="usage" name="usage" class="estimate-input" required>{{-- セレクトボックス --}}
                 </div>
                 <div class="estimate-input-box">
                     <label class="estimate-label" for="other_usage">その他用法</label>
@@ -167,28 +167,30 @@
             </div>
 
             <div class="estimate-input-box mt-5">
-                <label class="estimate-label" for="property_type">物件
-                    <div class="estimate-input-required">※必須</div>
-                </label>
-                <select id="property_type" name="property_type" class="estimate-input" required>
-                    <option value="住宅">住宅</option>
-                    <option value="普通">普通</option>
-                    <option value="工場">工場</option>
-                </select>{{--セレクトボックス--}}
-                <label class="estimate-label" for="rank">級別
-                    <div class="estimate-input-required">※必須</div>
-                </label>
-                <select id="rank" name="rank" class="estimate-input" required>
-                    <option value="1級">1級</option>
-                    <option value="2級">2級</option>
-                    <option value="3級">3級</option>
-                    <option value="M">M</option>
-                    <option value="T">T</option>
-                    <option value="H">H</option>
-                </select>{{--セレクトボックス--}}
+                <div class="flex">
+                    <label class="estimate-label" for="property_type">物件
+                        <div class="estimate-input-required">※必須</div>
+                    </label>
+                    <select id="property_type" name="property_type" class="estimate-input w-44" required>
+                        <option value="住宅">住宅</option>
+                        <option value="普通">普通</option>
+                        <option value="工場">工場</option>
+                    </select>
+                </div>
+                <div class="flex">
+                    <label class="estimate-label" for="rank">級別
+                        <div class="estimate-input-required">※必須</div>
+                    </label>
+                    <select id="rank" name="rank" class="estimate-input w-44" required>
+                        <option value="1級">1級</option>
+                        <option value="2級">2級</option>
+                        <option value="3級">3級</option>
+                        <option value="M">M</option>
+                        <option value="T">T</option>
+                        <option value="H">H</option>
+                    </select>{{-- セレクトボックス --}}
+                </div>
             </div>
-
-
             <div class="estimate-input-box">
                 <label class="estimate-label" for="start_date">始期日
                     <div class="estimate-input-required">※必須</div>
@@ -211,7 +213,7 @@
                 <label class="estimate-label" for="pay_method">払込方法
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="pay_method" name="pay_method" class="estimate-input" required>{{--セレクトボックス--}}
+                <input id="pay_method" name="pay_method" class="estimate-input" required>{{-- セレクトボックス --}}
             </div>
             <div class="estimate-input-box">
                 <label class="estimate-label" for="insurance_year">共済期間</label>
@@ -244,11 +246,11 @@
                 <label class="p-3">地震特約縮小支払割合指定</label>
             </div>
             <div class="estimate-input-box">
-                <input id="earthquake1" name="earthquake1" class="estimate-input">{{--セレクトボックス--}}
+                <input id="earthquake1" name="earthquake1" class="estimate-input">{{-- セレクトボックス --}}
                 <span class="my-auto mx-1">%</span>
-                <input id="earthquake2" name="earthquake2" class="estimate-input">{{--セレクトボックス--}}
+                <input id="earthquake2" name="earthquake2" class="estimate-input">{{-- セレクトボックス --}}
                 <span class="my-auto mx-1">%</span>
-                <input id="earthquake3" name="earthquake3" class="estimate-input">{{--セレクトボックス--}}
+                <input id="earthquake3" name="earthquake3" class="estimate-input">{{-- セレクトボックス --}}
                 <span class="my-auto mx-1">%</span>
             </div>
 
@@ -273,7 +275,7 @@
             <div class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）</label>
                 <input id="chattel_surcharge_category" name="chattel_surcharge_category"
-                    class="estimate-input">{{--セレクトボックス--}}
+                    class="estimate-input">{{-- セレクトボックス --}}
             </div>
             <div class="estimate-input-box">
                 <label class="estimate-label" for="occupational _surcharge">職業割増</label>
@@ -318,15 +320,16 @@
 
             <div class="estimate-input-box mt-5">
                 <label class="estimate-label" for="assess_item">評価項目</label>
-                <input id="assess_item" name="assess_item" class="estimate-input"><!-- 任意・常時 -->{{--セレクトボックス--}}
+                <input id="assess_item" name="assess_item" class="estimate-input">
+                <!-- 任意・常時 -->{{-- セレクトボックス --}}
             </div>
             <div class="estimate-input-box">
                 <label class="estimate-label" for="assess_usage">用途</label>
-                <input id="assess_usage" name="assess_usage" class="estimate-input">{{--セレクトボックス--}}
+                <input id="assess_usage" name="assess_usage" class="estimate-input">{{-- セレクトボックス --}}
             </div>
             <div class="estimate-input-box">
                 <label class="estimate-label" for="assess_structure">構造</label>
-                <input id="assess_structure" name="assess_structure" class="estimate-input">{{--セレクトボックス--}}
+                <input id="assess_structure" name="assess_structure" class="estimate-input">{{-- セレクトボックス --}}
             </div>
 
             <div class="estimate-input-box">
