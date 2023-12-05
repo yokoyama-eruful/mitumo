@@ -97,6 +97,7 @@
                         <div class="estimate-input-required">※必須</div>
                     </label>
                     <select id="structure" name="structure" class="estimate-input" required>
+                        <option value="" hidden>選択してください</option>
                         <option value="コンクリート造等">コンクリート造等</option>
                         <option value="耐火被覆鉄骨造">耐火被覆鉄骨造</option>
                         <option value="鉄骨造">鉄骨造</option>
@@ -114,7 +115,13 @@
             <div class="flex flex-row">
                 <div class="estimate-input-box">
                     <label class="estimate-label" for="pillar">柱無時</label>
-                    <input id="pillar" name="pillar" class="estimate-input">
+                    <select id="pillar" name="pillar" class="estimate-input">
+                        <option value="" hidden>選択してください</option>
+                        <option value="木造枠組壁（２×４）">木造枠組壁（２×４）</option>
+                        <option value="コンクリート系プレハブ">コンクリート系プレハブ</option>
+                        <option value="鉄骨系プレハブ">鉄骨系プレハブ</option>
+                        <option value="木質系プレハブ">木質系プレハブ</option>
+                    </select>
                 </div><!-- 任意・常時 -->{{-- セレクトボックス --}}
                 <div class="estimate-input-box">
                     <label class="estimate-label" for="other_pillar">その他柱無時</label>
@@ -125,7 +132,13 @@
             <div class="flex flex-row">
                 <div class="estimate-input-box">
                     <label class="estimate-label" for="fire_resistance">耐火基準</label>
-                    <input id="fire_resistance" name="fire_resistance" class="estimate-input">
+                    <select id="fire_resistance" name="fire_resistance" class="estimate-input">
+                        <option value="" hidden>選択してください</option>
+                        <option value="耐火建築物">耐火建築物</option>
+                        <option value="準耐火建築物">準耐火建築物</option>
+                        <option value="省令準耐火建物">省令準耐火建物</option>
+                        <option value="その他">その他</option>
+                    </select>
                 </div>
                 <!-- 任意・常時 -->{{-- セレクトボックス --}}
                 <div class="estimate-input-box">
@@ -140,7 +153,18 @@
                     <label class="estimate-label" for="usage">用法
                         <div class="estimate-input-required">※必須</div>
                     </label>
-                    <input id="usage" name="usage" class="estimate-input" required>{{-- セレクトボックス --}}
+                    <select id="usage" name="usage" class="estimate-input" required>
+                        <option value="" hidden>選択してください</option>
+                        <option value="専用住宅（1戸建）">専用住宅（1戸建）</option>
+                        <option value="専用住宅（共同住宅）">専用住宅（共同住宅）</option>
+                        <option value="併用住宅">併用住宅</option>
+                        <option value="店舗">店舗</option>
+                        <option value="事務所">事務所</option>
+                        <option value="工場">工場</option>
+                        <option value="作業場">作業場</option>
+                        <option value="倉庫">倉庫</option>
+                        <option value="その他">その他</option>
+                    </select>{{-- セレクトボックス --}}
                 </div>
                 <div class="estimate-input-box">
                     <label class="estimate-label" for="other_usage">その他用法</label>
@@ -172,6 +196,7 @@
                         <div class="estimate-input-required">※必須</div>
                     </label>
                     <select id="property_type" name="property_type" class="estimate-input w-44" required>
+                        <option value="" hidden>選択してください</option>
                         <option value="住宅">住宅</option>
                         <option value="普通">普通</option>
                         <option value="工場">工場</option>
@@ -182,13 +207,14 @@
                         <div class="estimate-input-required">※必須</div>
                     </label>
                     <select id="rank" name="rank" class="estimate-input w-44" required>
+                        <option value="" hidden>選択してください</option>
                         <option value="1級">1級</option>
                         <option value="2級">2級</option>
                         <option value="3級">3級</option>
                         <option value="M">M</option>
                         <option value="T">T</option>
                         <option value="H">H</option>
-                    </select>{{-- セレクトボックス --}}
+                    </select>
                 </div>
             </div>
             <div class="estimate-input-box">
@@ -213,9 +239,14 @@
                 <label class="estimate-label" for="pay_method">払込方法
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="pay_method" name="pay_method" class="estimate-input" required>{{-- セレクトボックス --}}
+                <select id="pay_method" name="pay_method" class="estimate-input" required>
+                    <option value="" hidden>選択してください</option>
+                    <option value="一時払">一時払</option>
+                    <option value="長期年払">長期年払</option>
+                    <option value="分割払">分割払</option>
+                </select>{{-- セレクトボックス --}}
             </div>
-            <div class="estimate-input-box">
+            <div class="estimate-input-box mb-5">
                 <label class="estimate-label" for="insurance_year">共済期間</label>
                 <input id="insurance_year" name="insurance_year" class="estimate-input">
                 <span class="my-auto mx-1">年</span>
@@ -228,143 +259,182 @@
 
 
             <!-- 変動のある項目 -->
-            <div
-                class="h-14 w-full flex flex-col items-center justify-center bg-indigo-300 border border-gray-600 font-bold mt-5">
-                <label class="p-3">おすすめ契約期間指定（年数）</label>
-            </div>
-            <div class="estimate-input-box">
-                <input id="recommend1" name="recommend1" class="estimate-input">
-                <span class="my-auto mx-1">年</span>
-                <input id="recommend2" name="recommend2" class="estimate-input">
-                <span class="my-auto mx-1">年</span>
-                <input id="recommend3" name="recommend3" class="estimate-input">
-                <span class="my-auto mx-1">年</span>
-            </div>
-
-            <div
-                class="h-14 w-full flex flex-col items-center justify-center bg-indigo-300 border border-gray-600 font-bold mt-5">
-                <label class="p-3">地震特約縮小支払割合指定</label>
-            </div>
-            <div class="estimate-input-box">
-                <input id="earthquake1" name="earthquake1" class="estimate-input">{{-- セレクトボックス --}}
-                <span class="my-auto mx-1">%</span>
-                <input id="earthquake2" name="earthquake2" class="estimate-input">{{-- セレクトボックス --}}
-                <span class="my-auto mx-1">%</span>
-                <input id="earthquake3" name="earthquake3" class="estimate-input">{{-- セレクトボックス --}}
-                <span class="my-auto mx-1">%</span>
+            <div id="recommend-view-container" class="my-5">
+                <div
+                    class="h-14 w-full flex flex-col items-center justify-center bg-indigo-300 border border-gray-600 font-bold">
+                    <label class="p-3">おすすめ契約期間指定（年数）</label>
+                </div>
+                <div class="estimate-input-box">
+                    <input id="recommend1" name="recommend1" class="estimate-input">
+                    <span class="my-auto mx-1">年</span>
+                    <input id="recommend2" name="recommend2" class="estimate-input">
+                    <span class="my-auto mx-1">年</span>
+                    <input id="recommend3" name="recommend3" class="estimate-input">
+                    <span class="my-auto mx-1">年</span>
+                </div>
             </div>
 
+            <div id="earthquake-view-container" class="my-5">
+                <div
+                    class="h-14 w-full flex flex-col items-center justify-center bg-indigo-300 border border-gray-600 font-bold">
+                    <label class="p-3">地震特約縮小支払割合指定</label>
+                </div>
+                <div class="estimate-input-box">
+                    <select id="earthquake1" name="earthquake1" class="estimate-input">
+                        <option value="15" selected>15</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                    </select>{{-- セレクトボックス --}}
+                    <span class="my-auto mx-1">%</span>
+                    <select id="earthquake2" name="earthquake2" class="estimate-input">
+                        <option value="15">15</option>
+                        <option value="30" selected>30</option>
+                        <option value="50">50</option>
+                    </select>{{-- セレクトボックス --}}
+                    <span class="my-auto mx-1">%</span>
+                    <select id="earthquake3" name="earthquake3" class="estimate-input">
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                        <option value="50" selected>50</option>
+                    </select>{{-- セレクトボックス --}}
+                    <span class="my-auto mx-1">%</span>
+                </div>
+            </div>
 
 
-            <div class="estimate-input-box mt-5">
+            <div id="base_rate-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="base_rate">基本率</label>
                 <input id="base_rate" name="base_rate" class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="chattel_surcharge-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge">動産割増</label>
                 <input id="chattel_surcharge" name="chattel_surcharge" class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="actual_loss_factor-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="actual_loss_factor">実損払係数</label>
                 <input id="actual_loss_factor" name="actual_loss_factor" class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="other_discount-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="other_discount">その他割引</label>
                 <input id="other_discount" name="other_discount" class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="chattel_surcharge_category-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）</label>
-                <input id="chattel_surcharge_category" name="chattel_surcharge_category"
-                    class="estimate-input">{{-- セレクトボックス --}}
+                <input id="chattel_surcharge_category" name="chattel_surcharge_category" class="estimate-input">{{--
+                セレクトボックス --}}
             </div>
-            <div class="estimate-input-box">
-                <label class="estimate-label" for="occupational _surcharge">職業割増</label>
+            <div id="occupational_surcharge-view-container" class="estimate-input-box">
+                <label class="estimate-label" for="occupational_surcharge">職業割増</label>
                 <input id="occupational_surcharge" name="occupational_surcharge" class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="work_surcharge-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="work_surcharge">作業割増</label>
                 <input id="work_surcharge" name="work_surcharge" class="estimate-input">
             </div>
 
-            <div class="estimate-input-box mt-5">
-                <label class="estimate-label bg-indigo-500" for="building_insurance_payout">共済の目的</label>
-                <label class="estimate-label bg-indigo-500" for="building_insurance_payout">共済金額</label>
-                <label class="estimate-label bg-indigo-500" for="building_insurance_payout">共済金額合計</label>
+            <div id="insurance_purpose-view-container" class="estimate-input-box mt-5">
+                <label class="estimate-label bg-indigo-500 outline outline-1">共済の目的</label>
+                <label class="estimate-label bg-indigo-500 outline outline-1">共済金額</label>
+                <label class="estimate-label bg-indigo-500 outline outline-1">共済金額合計</label>
             </div>
 
-            <div class="estimate-input-box">
+            <div id="building_insurance_payout-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="building_insurance_payout">建物共済金額</label>
                 <input id="building_insurance_payout" name="building_insurance_payout" class="estimate-input">
+                <input class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="household_insurance_payout-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="household_insurance_payout">家財共済金額</label>
                 <input id="household_insurance_payout" name="household_insurance_payout" class="estimate-input">
+                <input class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="facility_insurance_payout-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="facility_insurance_payout">設備共済金額</label>
                 <input id="facility_insurance_payout" name="facility_insurance_payout" class="estimate-input">
+                <input class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="other_facility_insurance_payout-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="other_facility_insurance_payout">その他設備共済金額</label>
                 <input id="other_facility_insurance_payout" name="other_facility_insurance_payout"
                     class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="item_insurance_payout-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="item_insurance_payout">商品共済金額</label>
                 <input id="item_insurance_payout" name="item_insurance_payout" class="estimate-input">
+                <input class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="other_item_insurance_payout-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="other_item_insurance_payout">その他商品共済金額</label>
                 <input id="other_item_insurance_payout" name="other_item_insurance_payout" class="estimate-input">
             </div>
 
             <div class="estimate-input-box mt-5">
                 <label class="estimate-label" for="assess_item">評価項目</label>
-                <input id="assess_item" name="assess_item" class="estimate-input">
-                <!-- 任意・常時 -->{{-- セレクトボックス --}}
+                <select id="assess_item" name="assess_item" class="estimate-input">
+                    <option value="" hidden>選択してください</option>
+                    <option value="通常">通常</option>
+                    <option value="ピロティー付">ピロティー付</option>
+                    <option value="太陽光付">太陽光付</option>
+                    <option value="分譲マンション">分譲マンション</option>
+                    <option value="年次取得">年次取得</option>
+                    <option value="改装物件">改装物件の評価計算式</option>
+                </select>
             </div>
-            <div class="estimate-input-box">
+            <div id="assess_usage-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="assess_usage">用途</label>
-                <input id="assess_usage" name="assess_usage" class="estimate-input">{{-- セレクトボックス --}}
+                <select id="assess_usage" name="assess_usage" class="estimate-input">
+                    <option value="専用住宅">専用住宅</option>
+                    <option value="併用住宅">併用住宅</option>
+                    <option value="専用店舗">専用店舗</option>
+                    <option value="工場・倉庫">工場・倉庫</option>
+                    <option value="プレハブ">プレハブ</option>
+                </select>
             </div>
-            <div class="estimate-input-box">
+            <div id="assess_structure-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="assess_structure">構造</label>
-                <input id="assess_structure" name="assess_structure" class="estimate-input">{{-- セレクトボックス --}}
+                <select id="assess_structure" name="assess_structure" class="estimate-input">
+                    <option value="木造">木造</option>
+                    <option value="鉄骨">鉄骨</option>
+                    <option value="鉄筋（RC）">鉄筋（RC）</option>
+                    <option value="枠組（2×4）">枠組（2×4）</option>
+                    <option value="プレハブ造">プレハブ造</option>
+                    <option value="軽量鉄骨">軽量鉄骨</option>
+                </select>
             </div>
 
-            <div class="estimate-input-box">
+            <div id="piloti_floor_area-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="piloti_floor_area">ピロティーの延床面積</label>
                 <input id="piloti_floor_area" name="piloti_floor_area" class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="replacement_price-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="replacement_price">従来建物の<br>再調達価格</label>
                 <input id="replacement_price" name="replacement_price" class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="renovation_cost-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="renovation_cost">改装費用</label>
                 <input id="renovation_cost" name="renovation_cost" class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="conventional_age-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="conventional_age">従来建物の築年</label>
                 <input id="conventional_age" name="conventional_age" class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="depreciation_rate-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="depreciation_rate">従来建物の償却率</label>
                 <input id="depreciation_rate" name="depreciation_rate" class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="renovation_age-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="renovation_age">改装部分の築年</label>
                 <input id="renovation_age" name="renovation_age" class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="renovation_depreciation_rate-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="renovation_depreciation_rate">改装部分の償却率</label>
                 <input id="renovation_depreciation_rate" name="renovation_depreciation_rate" class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="installation_date-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="installation_date">設置日</label>
                 <input id="installation_date" name="installation_date" class="estimate-input">
             </div>
-            <div class="estimate-input-box">
+            <div id="installation_cost-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="installation_cost">設置金額</label>
                 <input id="installation_cost" name="installation_cost" class="estimate-input">
             </div>
@@ -380,13 +450,117 @@
 </body>
 
 <script>
-    // 物件のタイプをトリガーとした表示・非表示
-    const propertyTypeSelect = document.getElementById('property_type');
+    window.onload = (event) => {
+        resetViewArea();
+    };
 
-    propertyTypeSelect.addEventListener('change', function() {
-        const selectedValue = propertyTypeSelect.value;
-        console.log(`Selected property type: ${selectedValue}`);
+    const resetViewArea = () => {
+        const viewContainerIds = document.querySelectorAll(`[id*='-view-container']`);
+
+        viewContainerIds.forEach(element => {
+            element.style.display = 'none';
+        });
+    }
+
+    const noneViewArea = (tagList) => {
+        tagList.forEach(id => {
+            const element = document.getElementById(id + '-view-container');
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+    }
+
+    const showViewArea = (tagList) => {
+        tagList.forEach(id => {
+            const element = document.getElementById(id + '-view-container');
+            if (element) {
+                element.style.display = 'flex';
+            }
+        });
+    }
+
+    // 物件のタイプをトリガーとした表示・非表示
+    document.getElementById('property_type').addEventListener('change', function() {
+        const selectedValue = document.getElementById('property_type').value;
+        const houseShowTagList = [
+            'actual_loss_factor', 'building_insurance_payout',
+            'household_insurance_payout', 'insurance_purpose'
+        ];
+        const standardShowTagList = [
+            'actual_loss_factor', 'other_discount', 'chattel_surcharge_category',
+            'occupational_surcharge', 'work_surcharge', 'building_insurance_payout',
+            'household_insurance_payout', 'facility_insurance_payout', 'other_facility_insurance_payout',
+            'item_insurance_payout', 'other_item_insurance_payout', 'insurance_purpose'
+        ];
+        const factoryShowTagList = [
+            'base_rate', 'chattel_surcharge', 'actual_loss_factor', 'other_discount',
+            'building_insurance_payout', 'household_insurance_payout', 'facility_insurance_payout',
+            'other_facility_insurance_payout', 'item_insurance_payout', 'other_item_insurance_payout',
+            'insurance_purpose'
+        ];
+
+        resetViewArea()
+        let showAreaList = [];
+        switch (selectedValue) {
+            case '住宅':
+                showAreaList = houseShowTagList;
+                break;
+            case '普通':
+                showAreaList = standardShowTagList;
+                break;
+            case '工場':
+                showAreaList = factoryShowTagList;
+                break;
+        };
+
+        showViewArea(showAreaList);
+        switchDisplayRecommendArea();
+        switchDisplayEarthquakeArea();
     });
+
+
+    const switchDisplayRecommendArea = () => {
+        const payMethod = document.getElementById('pay_method').value;
+        const insuranceYear = document.getElementById('insurance_year').value;
+
+        const element = document.getElementById('recommend-view-container');
+        if (!element) {
+            return;
+        }
+
+        //払込方法が「一時払」かつ共済期間が１年の場合
+        if (payMethod === '一時払' && insuranceYear == 1) {
+            element.style.display = 'block';
+
+        } else {
+            element.style.display = 'none';
+        }
+    }
+
+    document.getElementById('pay_method').addEventListener('change', switchDisplayRecommendArea);
+    document.getElementById('insurance_year').addEventListener('change', switchDisplayRecommendArea);
+
+
+    const switchDisplayEarthquakeArea = () => {
+        const propertyType = document.getElementById('property_type').value;
+        const insuranceYear = document.getElementById('insurance_year').value;
+
+        const element = document.getElementById('earthquake-view-container');
+        if (!element) {
+            return;
+        }
+
+        //物件が「普通」or「工場」かつ共済期間が１年の場合
+        if ((propertyType == '工場' || propertyType == '普通') && insuranceYear == 1) {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+
+    document.getElementById('property_type').addEventListener('change', switchDisplayEarthquakeArea);
+    document.getElementById('insurance_year').addEventListener('change', switchDisplayEarthquakeArea);
 </script>
 
 
