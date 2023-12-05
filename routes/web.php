@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EstimateController;
 use App\Http\Controllers\TopController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,14 @@ Route::middleware('auth:web')
             ->name('top.')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
-                Route::get('/edit', 'edit')->name('edit');
+            });
+
+        Route::controller(EstimateController::class)
+            ->prefix('estimate')
+            ->name('estimate.')
+            ->group(function () {
+                Route::get('create', 'create')->name('create');
+                Route::get('edit/{id}', 'edit')->name('edit');
+                Route::post('save/{id}')->name('save');
             });
     });
