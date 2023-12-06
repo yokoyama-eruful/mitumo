@@ -31,9 +31,9 @@
             </form>
         </div>
     </header>
-
+    <div class="text-center font-bold text-xl mt-10">見積書の作成</div>
     <main class="w-[800px] flex m-auto text-black body-font bg-white">
-        <div class="flex flex-col container p-2 pt-20">
+        <div class="flex flex-col container p-2 mt-5">
             <div class="estimate-input-box">
                 <label class="estimate-label" for="company">
                     取扱代理店名
@@ -320,7 +320,8 @@
             </div>
             <div id="chattel_surcharge_category-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）</label>
-                <input id="chattel_surcharge_category" name="chattel_surcharge_category" class="estimate-input">{{--
+                <input id="chattel_surcharge_category" name="chattel_surcharge_category"
+                    class="estimate-input">{{--
                 セレクトボックス --}}
             </div>
             <div id="occupational_surcharge-view-container" class="estimate-input-box">
@@ -438,7 +439,21 @@
                 <label class="estimate-label" for="installation_cost">設置金額</label>
                 <input id="installation_cost" name="installation_cost" class="estimate-input">
             </div>
+
+            <button id="store" type="submit" formaction=""
+                class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5">
+                <div class="flex items-center mb-3">
+                    <div
+                        class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                    </div>
+                    <h2 class="text-lg title-font font-medium">保存</h2>
+                </div>
+                <p class="text-left pl-5">入力された内容を保存します。<br>保存したのちプレビューが可能になります。</p>
+            </button>
         </div>
+
+
 
     </main>
 
