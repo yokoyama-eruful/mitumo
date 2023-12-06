@@ -33,7 +33,8 @@
     </header>
     <div class="text-center font-bold text-xl mt-10">見積書の作成</div>
     <main class="w-[800px] flex m-auto text-black body-font bg-white">
-        <div class="flex flex-col container p-2 mt-5">
+        <form action="" method="POST" class="flex flex-col container p-2 mt-5">
+            @csrf
             <div class="estimate-input-box">
                 <label class="estimate-label" for="company">
                     取扱代理店名
@@ -104,7 +105,7 @@
                         <option value="木造">木造</option>
                         <option value="土蔵造">土蔵造</option>
                         <option value="その他">その他</option>
-                    </select>{{-- セレクトボックス --}}
+                    </select>
                 </div>
                 <div class="estimate-input-box">
                     <label class="estimate-label" for="other_structure">その他構造</label>
@@ -122,7 +123,8 @@
                         <option value="鉄骨系プレハブ">鉄骨系プレハブ</option>
                         <option value="木質系プレハブ">木質系プレハブ</option>
                     </select>
-                </div><!-- 任意・常時 -->{{-- セレクトボックス --}}
+                    <!-- 任意・常時 -->
+                </div>
                 <div class="estimate-input-box">
                     <label class="estimate-label" for="other_pillar">その他柱無時</label>
                     <input id="other_pillar" name="other_pillar" class="estimate-input"><!-- 任意・常時 -->
@@ -139,8 +141,8 @@
                         <option value="省令準耐火建物">省令準耐火建物</option>
                         <option value="その他">その他</option>
                     </select>
+                    <!-- 任意・常時 -->
                 </div>
-                <!-- 任意・常時 -->{{-- セレクトボックス --}}
                 <div class="estimate-input-box">
                     <label class="estimate-label" for="other_fire_resistance">その他耐火基準</label>
                     <input id="other_fire_resistance" name="other_fire_resistance" class="estimate-input">
@@ -164,7 +166,7 @@
                         <option value="作業場">作業場</option>
                         <option value="倉庫">倉庫</option>
                         <option value="その他">その他</option>
-                    </select>{{-- セレクトボックス --}}
+                    </select>
                 </div>
                 <div class="estimate-input-box">
                     <label class="estimate-label" for="other_usage">その他用法</label>
@@ -244,7 +246,7 @@
                     <option value="一時払">一時払</option>
                     <option value="長期年払">長期年払</option>
                     <option value="分割払">分割払</option>
-                </select>{{-- セレクトボックス --}}
+                </select>
             </div>
             <div class="estimate-input-box mb-5">
                 <label class="estimate-label" for="insurance_year">共済期間</label>
@@ -284,19 +286,19 @@
                         <option value="15" selected>15</option>
                         <option value="30">30</option>
                         <option value="50">50</option>
-                    </select>{{-- セレクトボックス --}}
+                    </select>
                     <span class="my-auto mx-1">%</span>
                     <select id="earthquake2" name="earthquake2" class="estimate-input">
                         <option value="15">15</option>
                         <option value="30" selected>30</option>
                         <option value="50">50</option>
-                    </select>{{-- セレクトボックス --}}
+                    </select>
                     <span class="my-auto mx-1">%</span>
                     <select id="earthquake3" name="earthquake3" class="estimate-input">
                         <option value="15">15</option>
                         <option value="30">30</option>
                         <option value="50" selected>50</option>
-                    </select>{{-- セレクトボックス --}}
+                    </select>
                     <span class="my-auto mx-1">%</span>
                 </div>
             </div>
@@ -320,9 +322,7 @@
             </div>
             <div id="chattel_surcharge_category-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）</label>
-                <input id="chattel_surcharge_category" name="chattel_surcharge_category"
-                    class="estimate-input">{{--
-                セレクトボックス --}}
+                <input id="chattel_surcharge_category" name="chattel_surcharge_category" class="estimate-input">
             </div>
             <div id="occupational_surcharge-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="occupational_surcharge">職業割増</label>
@@ -451,10 +451,7 @@
                 </div>
                 <p class="text-left pl-5">入力された内容を保存します。<br>保存したのちプレビューが可能になります。</p>
             </button>
-        </div>
-
-
-
+        </form>
     </main>
 
     <footer class="bg-gray-200 py-4">
