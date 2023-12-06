@@ -403,7 +403,7 @@
                 <label class="estimate-label" for="assess_usage">用途
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <select id="assess_usage" name="assess_usage" class="estimate-input" required>
+                <select id="assess_usage" name="assess_usage" class="estimate-input">
                     <option value="" hidden>選択してください</option>
                     <option value="専用住宅">専用住宅</option>
                     <option value="併用住宅">併用住宅</option>
@@ -416,7 +416,7 @@
                 <label class="estimate-label" for="assess_structure">構造
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <select id="assess_structure" name="assess_structure" class="estimate-input" required>
+                <select id="assess_structure" name="assess_structure" class="estimate-input">
                     <option value="" hidden>選択してください</option>
                     <option value="木造">木造</option>
                     <option value="鉄骨">鉄骨</option>
@@ -431,37 +431,37 @@
                 <label class="estimate-label" for="piloti_floor_area">ピロティーの延床面積
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="piloti_floor_area" name="piloti_floor_area" class="estimate-input" required>
+                <input id="piloti_floor_area" name="piloti_floor_area" class="estimate-input">
             </div>
             <div id="replacement_price-view-container" class="estimate-input-box">
                 <label class="estimate-label text-sm" for="replacement_price">従来建物の<br>再調達価格
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="replacement_price" name="replacement_price" class="estimate-input" required>
+                <input id="replacement_price" name="replacement_price" class="estimate-input">
             </div>
             <div id="renovation_cost-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="renovation_cost">改装費用
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="renovation_cost" name="renovation_cost" class="estimate-input" required>
+                <input id="renovation_cost" name="renovation_cost" class="estimate-input">
             </div>
             <div id="conventional_age-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="conventional_age">従来建物の築年
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="conventional_age" name="conventional_age" class="estimate-input" required>
+                <input id="conventional_age" name="conventional_age" class="estimate-input">
             </div>
             <div id="depreciation_rate-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="depreciation_rate">従来建物の償却率
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="depreciation_rate" name="depreciation_rate" class="estimate-input" required>
+                <input id="depreciation_rate" name="depreciation_rate" class="estimate-input">
             </div>
             <div id="renovation_age-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="renovation_age">改装部分の築年
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="renovation_age" name="renovation_age" class="estimate-input" required>
+                <input id="renovation_age" name="renovation_age" class="estimate-input">
             </div>
             <div id="renovation_depreciation_rate-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="renovation_depreciation_rate">改装部分の償却率
@@ -474,19 +474,19 @@
                 <label class="estimate-label" for="installation_date">設置日
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="installation_date" name="installation_date" class="estimate-input" required>
+                <input id="installation_date" name="installation_date" class="estimate-input">
             </div>
             <div id="installation_cost-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="installation_cost">設置金額
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="installation_cost" name="installation_cost" class="estimate-input" required>
+                <input id="installation_cost" name="installation_cost" class="estimate-input">
             </div>
             <div id="annual_price-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="annual_price">年次価額
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="annual_price" name="annual_price" class="estimate-input" required>
+                <input id="annual_price" name="annual_price" class="estimate-input">
             </div>
 
             <button type="submit"
