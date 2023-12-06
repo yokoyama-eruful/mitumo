@@ -15,12 +15,12 @@ final class EstimateService
 
     public function create(): Estimate
     {
-        return Estimate::firstOrNew();
+        return Estimate::where('id', 'new')->firstOrNew();
     }
 
-    public function find(int $id): Estimate
+    public function find($id): Estimate
     {
-        return Estimate::first($id);
+        return Estimate::find($id);
     }
 
     public function store(array $params): Estimate

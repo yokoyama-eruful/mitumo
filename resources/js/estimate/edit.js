@@ -141,7 +141,7 @@ document.getElementById('assess_item').addEventListener('change', function () {
             break;
 
         case '改装物件':
-            showAreaList = ['assess_usage', 'assess_structure', 'replacement_price', 'renovation_cost',
+            showAreaList = ['replacement_price', 'renovation_cost',
                 'conventional_age', 'depreciation_rate', 'renovation_age',
                 'renovation_depreciation_rate'
             ];

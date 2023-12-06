@@ -47,7 +47,8 @@ return new class extends Migration
 
             $table->string('assess_item')->nullable()->comment('評価項目');
 
-            $table->json('details')->comment('見積もりの詳細情報');
+            $table->json('property_detail')->comment('物件の詳細情報');
+            $table->json('assess_detail')->comment('評価項目の詳細情報');
 
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->useCurrent();

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Estimate\SaveRequest;
 use App\Services\EstimateService;
+use Illuminate\Support\Facades\Auth;
 
 final class EstimateController extends Controller
 {
@@ -31,6 +32,7 @@ final class EstimateController extends Controller
     public function save($id, SaveRequest $request)
     {
         $params = $request->params();
+        $params['user_id'] = Auth::id();
 
         if ($id == 'new') {
             $estimate = $this->estimateService->store($params);
