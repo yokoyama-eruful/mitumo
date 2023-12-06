@@ -324,7 +324,7 @@
                 <label class="estimate-label" for="base_rate">基本率
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="base_rate" name="base_rate" class="estimate-input" required>
+                <input id="base_rate" name="base_rate" class="estimate-input">
             </div>
             <div id="chattel_surcharge-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge">動産割増</label>
@@ -467,8 +467,7 @@
                 <label class="estimate-label" for="renovation_depreciation_rate">改装部分の償却率
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="renovation_depreciation_rate" name="renovation_depreciation_rate" class="estimate-input"
-                    required>
+                <input id="renovation_depreciation_rate" name="renovation_depreciation_rate" class="estimate-input">
             </div>
             <div id="installation_date-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="installation_date">設置日
