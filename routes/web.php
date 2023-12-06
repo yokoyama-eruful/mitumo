@@ -30,6 +30,6 @@ Route::middleware('auth:web')
             ->group(function () {
                 Route::get('create', 'create')->name('create');
                 Route::get('edit/{id}', 'edit')->name('edit');
-                Route::post('save/{id}')->name('save');
+                Route::post('save/{id}', 'save')->name('save');
             });
     });
