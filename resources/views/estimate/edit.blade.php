@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>mitumo</title>
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.css', 'resources/js/estimate/edit.js'])
 </head>
 
-<body class=" min-h-screen flex flex-col justify-between">
-    <header class="sticky top-0 z-10 bg-white shadow-md">
-        <div class="container mx-auto flex items-center justify-between py-4 px-6">
+<body class="min-h-screen flex flex-col justify-between">
+    <header class="top-0 z-10 bg-white shadow-md">
+        <div class="container mx-auto flex items-center justify-between py-2 px-6">
             <a href="{{ route('top.index') }}" class="flex items-center text-gray-900 hover:text-gray-700">
                 <div class="text-2xl"><i class="fa-solid fa-file-invoice"></i></div>
                 <span class="ml-3 text-xl font-medium">mitumo</span>
@@ -31,10 +31,10 @@
             </form>
         </div>
     </header>
-    <div class="text-center font-bold text-xl mt-10">見積書の作成</div>
+    <div class="text-center font-bold text-lg mt-4">見積書の作成</div>
     <main class="w-[800px] flex m-auto text-black body-font bg-white">
         <form action="{{ route('estimate.save', ['id' => $estimate->id ?? 'new']) }}" method="POST"
-            class="flex flex-col container p-2 mt-5">
+            class="flex flex-col container p-2 mt-2">
             @csrf
             <div class="estimate-input-box">
                 <label class="estimate-label" for="company">
@@ -224,19 +224,27 @@
                 <label class="estimate-label" for="start_date">始期日
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="start_date" name="start_date" class="estimate-input" required>
+                <input id="start_date" name="start_date" type="month" class="estimate-input"
+                    placeholder="西暦を入力してください" required>
             </div>
             <div class="estimate-input-box">
                 <label class="estimate-label" for="building_year">建築年
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="building_year" name="building_year" class="estimate-input" required>
+                <input id="building_year" name="building_year" class="estimate-input" placeholder="西暦を入力してください"
+                    required>
             </div>
             <div class="estimate-input-box">
                 <label class="estimate-label" for="building_age">築年数
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="building_age" name="building_age" class="estimate-input" required>
+                <input id="building_age" name="building_age" class="estimate-input hover:bg-white focus:bg-white"
+                    placeholder="自動で算出されます" required readonly>
+                <span class="my-auto mx-1">年</span>
+                <button id="calcBuildingAgeButton" type="button"
+                    class="ms-2 bg-gray-500 hover:bg-gray-700 text-white rounded w-28">
+                    自動計算
+                </button>
             </div>
             <div class="estimate-input-box">
                 <label class="estimate-label" for="pay_method">払込方法
@@ -249,17 +257,24 @@
                     <option value="分割払">分割払</option>
                 </select>
             </div>
-            <div class="estimate-input-box mb-5">
+            <div class="estimate-input-box mb-5 flex">
                 <label class="estimate-label" for="insurance_year">共済期間</label>
-                <input id="insurance_year" name="insurance_year" class="estimate-input">
-                <span class="my-auto mx-1">年</span>
-                <input id="insurance_month" name="insurance_month" class="estimate-input">
-                <span class="my-auto mx-1">ヶ月</span>
-                <input id="insurance_day" name="insurance_day" class="estimate-input">
-                <span class="my-auto mx-1">日</span>
-                <!-- 任意・常時 -->
+                <div class="flex flex-row" class="estimate-input">
+                    <div class="w-1/3 flex flex-row">
+                        <input id="insurance_year" name="insurance_year">
+                        <span class="my-auto mx-1">年</span>
+                    </div>
+                    <div class="w-1/3 flex flex-row">
+                        <input id="insurance_month" name="insurance_month">
+                        <span class="w-10">ヶ月</span>
+                    </div>
+                    <div class="w-1/3 flex flex-row">
+                        <input id="insurance_day" name="insurance_day">
+                        <span class="my-auto mx-1">日</span>
+                        <!-- 任意・常時 -->
+                    </div>
+                </div>
             </div>
-
 
             <!-- 変動のある項目 -->
             <div id="recommend-view-container" class="my-5">
@@ -306,8 +321,10 @@
 
 
             <div id="base_rate-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="base_rate">基本率</label>
-                <input id="base_rate" name="base_rate" class="estimate-input">
+                <label class="estimate-label" for="base_rate">基本率
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="base_rate" name="base_rate" class="estimate-input" required>
             </div>
             <div id="chattel_surcharge-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge">動産割増</label>
@@ -383,8 +400,11 @@
                 </select>
             </div>
             <div id="assess_usage-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="assess_usage">用途</label>
-                <select id="assess_usage" name="assess_usage" class="estimate-input">
+                <label class="estimate-label" for="assess_usage">用途
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <select id="assess_usage" name="assess_usage" class="estimate-input" required>
+                    <option value="" hidden>選択してください</option>
                     <option value="専用住宅">専用住宅</option>
                     <option value="併用住宅">併用住宅</option>
                     <option value="専用店舗">専用店舗</option>
@@ -393,8 +413,11 @@
                 </select>
             </div>
             <div id="assess_structure-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="assess_structure">構造</label>
-                <select id="assess_structure" name="assess_structure" class="estimate-input">
+                <label class="estimate-label" for="assess_structure">構造
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <select id="assess_structure" name="assess_structure" class="estimate-input" required>
+                    <option value="" hidden>選択してください</option>
                     <option value="木造">木造</option>
                     <option value="鉄骨">鉄骨</option>
                     <option value="鉄筋（RC）">鉄筋（RC）</option>
@@ -405,40 +428,65 @@
             </div>
 
             <div id="piloti_floor_area-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="piloti_floor_area">ピロティーの延床面積</label>
-                <input id="piloti_floor_area" name="piloti_floor_area" class="estimate-input">
+                <label class="estimate-label" for="piloti_floor_area">ピロティーの延床面積
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="piloti_floor_area" name="piloti_floor_area" class="estimate-input" required>
             </div>
             <div id="replacement_price-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="replacement_price">従来建物の<br>再調達価格</label>
-                <input id="replacement_price" name="replacement_price" class="estimate-input">
+                <label class="estimate-label text-sm" for="replacement_price">従来建物の<br>再調達価格
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="replacement_price" name="replacement_price" class="estimate-input" required>
             </div>
             <div id="renovation_cost-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="renovation_cost">改装費用</label>
-                <input id="renovation_cost" name="renovation_cost" class="estimate-input">
+                <label class="estimate-label" for="renovation_cost">改装費用
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="renovation_cost" name="renovation_cost" class="estimate-input" required>
             </div>
             <div id="conventional_age-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="conventional_age">従来建物の築年</label>
-                <input id="conventional_age" name="conventional_age" class="estimate-input">
+                <label class="estimate-label" for="conventional_age">従来建物の築年
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="conventional_age" name="conventional_age" class="estimate-input" required>
             </div>
             <div id="depreciation_rate-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="depreciation_rate">従来建物の償却率</label>
-                <input id="depreciation_rate" name="depreciation_rate" class="estimate-input">
+                <label class="estimate-label" for="depreciation_rate">従来建物の償却率
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="depreciation_rate" name="depreciation_rate" class="estimate-input" required>
             </div>
             <div id="renovation_age-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="renovation_age">改装部分の築年</label>
-                <input id="renovation_age" name="renovation_age" class="estimate-input">
+                <label class="estimate-label" for="renovation_age">改装部分の築年
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="renovation_age" name="renovation_age" class="estimate-input" required>
             </div>
             <div id="renovation_depreciation_rate-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="renovation_depreciation_rate">改装部分の償却率</label>
-                <input id="renovation_depreciation_rate" name="renovation_depreciation_rate" class="estimate-input">
+                <label class="estimate-label" for="renovation_depreciation_rate">改装部分の償却率
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="renovation_depreciation_rate" name="renovation_depreciation_rate" class="estimate-input"
+                    required>
             </div>
             <div id="installation_date-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="installation_date">設置日</label>
-                <input id="installation_date" name="installation_date" class="estimate-input">
+                <label class="estimate-label" for="installation_date">設置日
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="installation_date" name="installation_date" class="estimate-input" required>
             </div>
             <div id="installation_cost-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="installation_cost">設置金額</label>
-                <input id="installation_cost" name="installation_cost" class="estimate-input">
+                <label class="estimate-label" for="installation_cost">設置金額
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="installation_cost" name="installation_cost" class="estimate-input" required>
+            </div>
+            <div id="annual_price-view-container" class="estimate-input-box">
+                <label class="estimate-label" for="annual_price">年次価額
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="annual_price" name="annual_price" class="estimate-input" required>
             </div>
 
             <button type="submit"
@@ -461,120 +509,6 @@
         </div>
     </footer>
 </body>
-
-<script>
-    window.onload = (event) => {
-        resetViewArea();
-    };
-
-    const resetViewArea = () => {
-        const viewContainerIds = document.querySelectorAll(`[id*='-view-container']`);
-
-        viewContainerIds.forEach(element => {
-            element.style.display = 'none';
-        });
-    }
-
-    const noneViewArea = (tagList) => {
-        tagList.forEach(id => {
-            const element = document.getElementById(id + '-view-container');
-            if (element) {
-                element.style.display = 'none';
-            }
-        });
-    }
-
-    const showViewArea = (tagList) => {
-        tagList.forEach(id => {
-            const element = document.getElementById(id + '-view-container');
-            if (element) {
-                element.style.display = 'flex';
-            }
-        });
-    }
-
-    // 物件のタイプをトリガーとした表示・非表示
-    document.getElementById('property_type').addEventListener('change', function() {
-        const selectedValue = document.getElementById('property_type').value;
-        const houseShowTagList = [
-            'actual_loss_factor', 'building_insurance_payout',
-            'household_insurance_payout', 'insurance_purpose'
-        ];
-        const standardShowTagList = [
-            'actual_loss_factor', 'other_discount', 'chattel_surcharge_category',
-            'occupational_surcharge', 'work_surcharge', 'building_insurance_payout',
-            'household_insurance_payout', 'facility_insurance_payout', 'other_facility_insurance_payout',
-            'item_insurance_payout', 'other_item_insurance_payout', 'insurance_purpose'
-        ];
-        const factoryShowTagList = [
-            'base_rate', 'chattel_surcharge', 'actual_loss_factor', 'other_discount',
-            'building_insurance_payout', 'household_insurance_payout', 'facility_insurance_payout',
-            'other_facility_insurance_payout', 'item_insurance_payout', 'other_item_insurance_payout',
-            'insurance_purpose'
-        ];
-
-        resetViewArea()
-        let showAreaList = [];
-        switch (selectedValue) {
-            case '住宅':
-                showAreaList = houseShowTagList;
-                break;
-            case '普通':
-                showAreaList = standardShowTagList;
-                break;
-            case '工場':
-                showAreaList = factoryShowTagList;
-                break;
-        };
-
-        showViewArea(showAreaList);
-        switchDisplayRecommendArea();
-        switchDisplayEarthquakeArea();
-    });
-
-
-    const switchDisplayRecommendArea = () => {
-        const payMethod = document.getElementById('pay_method').value;
-        const insuranceYear = document.getElementById('insurance_year').value;
-
-        const element = document.getElementById('recommend-view-container');
-        if (!element) {
-            return;
-        }
-
-        //払込方法が「一時払」かつ共済期間が１年の場合
-        if (payMethod === '一時払' && insuranceYear == 1) {
-            element.style.display = 'block';
-
-        } else {
-            element.style.display = 'none';
-        }
-    }
-
-    document.getElementById('pay_method').addEventListener('change', switchDisplayRecommendArea);
-    document.getElementById('insurance_year').addEventListener('change', switchDisplayRecommendArea);
-
-
-    const switchDisplayEarthquakeArea = () => {
-        const propertyType = document.getElementById('property_type').value;
-        const insuranceYear = document.getElementById('insurance_year').value;
-
-        const element = document.getElementById('earthquake-view-container');
-        if (!element) {
-            return;
-        }
-
-        //物件が「普通」or「工場」かつ共済期間が１年の場合
-        if ((propertyType == '工場' || propertyType == '普通') && insuranceYear == 1) {
-            element.style.display = 'block';
-        } else {
-            element.style.display = 'none';
-        }
-    }
-
-    document.getElementById('property_type').addEventListener('change', switchDisplayEarthquakeArea);
-    document.getElementById('insurance_year').addEventListener('change', switchDisplayEarthquakeArea);
-</script>
 
 
 </html>

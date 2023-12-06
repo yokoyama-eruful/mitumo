@@ -6,7 +6,7 @@
 
 @layer components {
     .estimate-input-box {
-        @apply flex flex-row font-bold border border-gray-600 w-full
+        @apply flex flex-row border border-black w-full
     }
 
     .estimate-input-required {
@@ -14,10 +14,10 @@
     }
 
     .estimate-label {
-        @apply h-14 w-36 flex flex-col flex-none items-center justify-center bg-indigo-300 focus:outline-none focus:border-blue-500 font-bold
+        @apply h-10 w-36 flex flex-col flex-none items-center justify-center bg-indigo-300 focus:outline-none focus:border-blue-500
     }
 
     .estimate-input {
-        @apply outline outline-1 h-14 w-full px-3 focus:bg-blue-100
+        @apply h-10 w-full outline-none px-3 focus:bg-blue-100
     }
 }
