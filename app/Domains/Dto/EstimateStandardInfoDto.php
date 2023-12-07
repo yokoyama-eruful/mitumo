@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domains\Dto;
+
+final class EstimateStandardInfoDto
+{
+    public array $params;
+
+    public function __construct(array $params)
+    {
+        $tmpParams = array_intersect_key($params, array_flip([
+            'company', 'address', 'phone_number', 'staff_name',
+            'contractee', 'location', 'floor_area', 'exclusive_area',
+            'structure', 'other_structure', 'pillar', 'other_pillar',
+            'fire_resistance', 'other_fire_resistance', 'usage',
+            'other_usage', 'floor', 'building', 'other', 'property_type',
+            'rank', 'start_date', 'building_year', 'building_age',
+            'pay_method', 'insurance_year', 'insurance_month',
+            'insurance_day', 'assess_item',
+        ]));
+        $tmpParams['start_date'] = $params['start_date'].'-01';
+
+        $this->params = $tmpParams;
+    }
+}

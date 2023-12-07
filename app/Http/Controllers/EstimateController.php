@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Estimate\SaveRequest;
 use App\Services\EstimateService;
+use Illuminate\Support\Facades\Auth;
 
 final class EstimateController extends Controller
 {
@@ -14,23 +15,24 @@ final class EstimateController extends Controller
     ) {
     }
 
-    public function create()
+    public function create(): \Illuminate\View\View
     {
         $estimate = $this->estimateService->create();
 
         return view('estimate.edit', ['estimate' => $estimate]);
     }
 
-    public function edit($id)
+    public function edit(int $id): \Illuminate\View\View
     {
         $estimate = $this->estimateService->find($id);
 
         return view('estimate.edit', ['estimate' => $estimate]);
     }
 
-    public function save($id, SaveRequest $request)
+    public function save(int $id, SaveRequest $request): \Illuminate\Http\RedirectResponse
     {
         $params = $request->params();
+        $params['user_id'] = Auth::id();
 
         if ($id == 'new') {
             $estimate = $this->estimateService->store($params);

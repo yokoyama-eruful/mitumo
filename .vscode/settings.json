@@ -11,6 +11,7 @@
         "fontawesome",
         "kenchiku",
         "laravel",
-        "mitumo"
+        "mitumo",
+        "piloti"
     ]
 }
