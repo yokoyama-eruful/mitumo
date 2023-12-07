@@ -24,69 +24,57 @@ final class EstimateAssessDetailDto
 
     private function convertStandardParams(array $params): array
     {
-        $standardParams = array_intersect_key($params, array_flip(
+        return array_intersect_key($params, array_flip(
             [
                 'assess_usage', 'assess_structure',
             ]
         ));
-
-        return $standardParams;
     }
 
     private function convertPilotiParams(array $params): array
     {
-        $standardParams = array_intersect_key($params, array_flip(
+        return array_intersect_key($params, array_flip(
             [
                 'assess_usage', 'assess_structure', 'piloti_floor_area',
             ]
         ));
-
-        return $standardParams;
     }
 
     private function convertSolarPanelParams(array $params): array
     {
-        $standardParams = array_intersect_key($params, array_flip(
+        return array_intersect_key($params, array_flip(
             [
                 'assess_usage', 'assess_structure', 'installation_date', 'installation_cost',
             ]
         ));
-
-        return $standardParams;
     }
 
     private function convertCondominiumParams(array $params): array
     {
-        $standardParams = array_intersect_key($params, array_flip(
+        return array_intersect_key($params, array_flip(
             [
                 'assess_usage', 'assess_structure',
             ]
         ));
-
-        return $standardParams;
     }
 
     private function convertAnnualAcquisitionParams(array $params): array
     {
-        $standardParams = array_intersect_key($params, array_flip(
+        return array_intersect_key($params, array_flip(
             [
                 'assess_usage', 'assess_structure', 'annual_price',
             ]
         ));
-
-        return $standardParams;
     }
 
     private function convertRenovatedParams(array $params): array
     {
-        $standardParams = array_intersect_key($params, array_flip(
+        return array_intersect_key($params, array_flip(
             [
                 'replacement_price', 'renovation_cost',
                 'conventional_age', 'depreciation_rate', 'renovation_age',
                 'renovation_depreciation_rate',
             ]
         ));
-
-        return $standardParams;
     }
 }

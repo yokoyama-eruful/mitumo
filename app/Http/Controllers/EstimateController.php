@@ -29,15 +29,15 @@ final class EstimateController extends Controller
         return view('estimate.edit', ['estimate' => $estimate]);
     }
 
-    public function save(int $id, SaveRequest $request): \Illuminate\Http\RedirectResponse
+    public function save($id, SaveRequest $request): \Illuminate\Http\RedirectResponse
     {
         $params = $request->params();
         $params['user_id'] = Auth::id();
 
-        if ($id == 'new') {
+        if ($id === 'new') {
             $estimate = $this->estimateService->store($params);
         } else {
-            $estimate = $this->estimateService->update($id, $params);
+            $estimate = $this->estimateService->update(intval($id), $params);
         }
 
         return redirect()->route('estimate.edit', ['id' => $estimate->id]);

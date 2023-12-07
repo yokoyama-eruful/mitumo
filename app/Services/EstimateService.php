@@ -10,7 +10,6 @@ final class EstimateService
 {
     public function paginate()
     {
-
     }
 
     public function create(): Estimate
@@ -31,8 +30,6 @@ final class EstimateService
     public function update(int $id, array $params): Estimate
     {
         Estimate::where('id', $id)->update($params);
-        $estimate = Estimate::find($id);
-
-        return $estimate;
+        return Estimate::find($id);
     }
 }

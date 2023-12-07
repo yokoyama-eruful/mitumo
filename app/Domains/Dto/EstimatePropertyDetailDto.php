@@ -20,19 +20,17 @@ final class EstimatePropertyDetailDto
 
     private function convertHouseParams(array $params): array
     {
-        $homeParams = array_intersect_key($params, array_flip([
+        return array_intersect_key($params, array_flip([
             'actual_loss_factor', 'building_insurance_payout',
             'household_insurance_payout', 'insurance_purpose',
             'recommend1', 'recommend2', 'recommend3', //おすすめ
             'earthquake1', 'earthquake2', 'earthquake3', //地震
         ]));
-
-        return $homeParams;
     }
 
     private function convertStandardParams(array $params): array
     {
-        $standardParams = array_intersect_key($params, array_flip([
+        return array_intersect_key($params, array_flip([
             'actual_loss_factor', 'other_discount', 'chattel_surcharge_category',
             'occupational_surcharge', 'work_surcharge', 'building_insurance_payout',
             'household_insurance_payout', 'facility_insurance_payout',
@@ -41,13 +39,11 @@ final class EstimatePropertyDetailDto
             'recommend1', 'recommend2', 'recommend3', //おすすめ
             'earthquake1', 'earthquake2', 'earthquake3', //地震
         ]));
-
-        return $standardParams;
     }
 
     private function convertFactoryParams(array $params): array
     {
-        $factoryParams = array_intersect_key($params, array_flip([
+        return array_intersect_key($params, array_flip([
             'base_rate', 'chattel_surcharge', 'actual_loss_factor', 'other_discount',
             'building_insurance_payout', 'household_insurance_payout', 'facility_insurance_payout',
             'other_facility_insurance_payout', 'item_insurance_payout',
@@ -56,7 +52,5 @@ final class EstimatePropertyDetailDto
             'recommend1', 'recommend2', 'recommend3', //おすすめ
             'earthquake1', 'earthquake2', 'earthquake3', //地震
         ]));
-
-        return $factoryParams;
     }
 }
