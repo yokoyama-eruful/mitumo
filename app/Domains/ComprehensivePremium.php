@@ -66,8 +66,7 @@ final class ComprehensivePremium
         $building_age = $this->buildingAge > 25 ? 25 : $this->buildingAge;
 
         //物件が住宅の場合のみ築年数を考慮する。その他の物件は築年数は空文字
-        return
-            $data[0] === $this->propertyType &&
+        return $data[0] === $this->propertyType &&
            (intval($data[2]) === $building_age || $data[2] === '') &&
             $data[3] === $this->rank;
     }

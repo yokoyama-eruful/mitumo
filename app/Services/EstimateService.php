@@ -30,6 +30,7 @@ final class EstimateService
     public function update(int $id, array $params): Estimate
     {
         Estimate::where('id', $id)->update($params);
+
         return Estimate::find($id);
     }
 }
