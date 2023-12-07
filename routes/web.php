@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EstimateController;
+use App\Http\Controllers\PreviewController;
 use App\Http\Controllers\TopController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,5 +33,19 @@ Route::middleware('auth:web')
                 Route::get('create', 'create')->name('create');
                 Route::get('edit/{id}', 'edit')->name('edit');
                 Route::post('save/{id}', 'save')->name('save');
+            });
+
+        Route::controller(PreviewController::class)
+            ->prefix('preview')
+            ->name('preview.')
+            ->group(function () {
+                Route::get('standard', 'standard')->name('standard');
+                Route::get('comprehensive', 'comprehensive')->name('comprehensive');
+                Route::get('standardAndComprehensive', 'standardAndComprehensive')->name('standardAndComprehensive');
+                Route::get('standardOfRecommend', 'standardOfRecommend')->name('standardOfRecommend');
+                Route::get('comprehensiveOfRecommend', 'comprehensiveOfRecommend')->name('comprehensiveOfRecommend');
+                Route::get('standardOfRecommendAndComprehensiveOfRecommend', 'standardOfRecommendAndComprehensiveOfRecommend')->name('standardOfRecommendAndComprehensiveOfRecommend');
+                Route::get('standardOfEarthquake', 'standardOfEarthquake')->name('standardOfEarthquake');
+                Route::get('comprehensiveOfEarthquake', 'comprehensiveOfEarthquake')->name('comprehensiveOfEarthquake');
             });
     });
