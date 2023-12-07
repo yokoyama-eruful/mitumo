@@ -290,15 +290,18 @@
                 <label class="estimate-label" for="insurance_year">共済期間</label>
                 <div class="flex flex-row" class="estimate-input">
                     <div class="w-1/3 flex flex-row">
-                        <input id="insurance_year" name="insurance_year" value="{{ old('insurance_year') }}">
+                        <input id="insurance_year" name="insurance_year"
+                            value="{{ old('insurance_year', $estimate->insurance_year) }}">
                         <span class="my-auto mx-1">年</span>
                     </div>
                     <div class="w-1/3 flex flex-row">
-                        <input id="insurance_month" name="insurance_month" value="{{ old('insurance_month') }}">
+                        <input id="insurance_month" name="insurance_month"
+                            value="{{ old('insurance_month', $estimate->insurance_month) }}">
                         <span class="w-10">ヶ月</span>
                     </div>
                     <div class="w-1/3 flex flex-row">
-                        <input id="insurance_day" name="insurance_day" value="{{ old('insurance_day') }}">
+                        <input id="insurance_day" name="insurance_day"
+                            value="{{ old('insurance_day', $estimate->insurance_day) }}">
                         <span class="my-auto mx-1">日</span>
                         <!-- 任意・常時 -->
                     </div>
@@ -313,13 +316,13 @@
                 </div>
                 <div class="estimate-input-box">
                     <input id="recommend1" name="recommend1" class="estimate-input"
-                        value="{{ old('recommend1') }}">
+                        value="{{ old('recommend1', $estimate->recommend1) }}">
                     <span class="my-auto mx-1">年</span>
                     <input id="recommend2" name="recommend2" class="estimate-input"
-                        value="{{ old('recommend2') }}">
+                        value="{{ old('recommend2', $estimate->recommend2) }}">
                     <span class="my-auto mx-1">年</span>
                     <input id="recommend3" name="recommend3" class="estimate-input"
-                        value="{{ old('recommend3') }}">
+                        value="{{ old('recommend3', $estimate->recommend3) }}">
                     <span class="my-auto mx-1">年</span>
                 </div>
             </div>
@@ -356,37 +359,38 @@
                 <label class="estimate-label" for="base_rate">基本率
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="base_rate" name="base_rate" class="estimate-input" value="{{ old('base_rate') }}">
+                <input id="base_rate" name="base_rate" class="estimate-input"
+                    value="{{ old('base_rate', $estimate->base_rate) }}">
             </div>
             <div id="chattel_surcharge-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge">動産割増</label>
                 <input id="chattel_surcharge" name="chattel_surcharge" class="estimate-input"
-                    value="{{ old('chattel_surcharge') }}">
+                    value="{{ old('chattel_surcharge', $estimate->chattel_surcharge) }}">
             </div>
             <div id="actual_loss_factor-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="actual_loss_factor">実損払係数</label>
                 <input id="actual_loss_factor" name="actual_loss_factor" class="estimate-input"
-                    value="{{ old('actual_loss_factor') }}">
+                    value="{{ old('actual_loss_factor', $estimate->actual_loss_factor) }}">
             </div>
             <div id="other_discount-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="other_discount">その他割引</label>
                 <input id="other_discount" name="other_discount" class="estimate-input"
-                    value="{{ old('other_discount') }}">
+                    value="{{ old('other_discount', $estimate->other_discount) }}">
             </div>
             <div id="chattel_surcharge_category-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）</label>
                 <input id="chattel_surcharge_category" name="chattel_surcharge_category" class="estimate-input"
-                    value="{{ old('chattel_surcharge_category') }}">
+                    value="{{ old('chattel_surcharge_category', $estimate->chattel_surcharge_category) }}">
             </div>
             <div id="occupational_surcharge-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="occupational_surcharge">職業割増</label>
                 <input id="occupational_surcharge" name="occupational_surcharge" class="estimate-input"
-                    value="{{ old('occupational_surcharge') }}">
+                    value="{{ old('occupational_surcharge', $estimate->occupational_surcharge) }}">
             </div>
             <div id="work_surcharge-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="work_surcharge">作業割増</label>
                 <input id="work_surcharge" name="work_surcharge" class="estimate-input"
-                    value="{{ old('work_surcharge') }}">
+                    value="{{ old('work_surcharge', $estimate->work_surcharge) }}">
             </div>
 
             <div id="insurance_purpose-view-container" class="estimate-input-box mt-5">
@@ -398,49 +402,50 @@
             <div id="building_insurance_payout-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="building_insurance_payout">建物共済金額</label>
                 <input id="building_insurance_payout" name="building_insurance_payout" class="estimate-input"
-                    value="{{ old('building_insurance_payout') }}">
+                    value="{{ old('building_insurance_payout', $estimate->building_insurance_payout) }}">
                 <input class="estimate-input">
             </div>
             <div id="household_insurance_payout-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="household_insurance_payout">家財共済金額</label>
                 <input id="household_insurance_payout" name="household_insurance_payout" class="estimate-input"
-                    value="{{ old('household_insurance_payout') }}">
+                    value="{{ old('household_insurance_payout', $estimate->household_insurance_payout) }}">
                 <input class="estimate-input">
             </div>
             <div id="facility_insurance_payout-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="facility_insurance_payout">設備共済金額</label>
                 <input id="facility_insurance_payout" name="facility_insurance_payout" class="estimate-input"
-                    value="{{ old('facility_insurance_payout') }}">
+                    value="{{ old('facility_insurance_payout', $estimate->facility_insurance_payout) }}">
                 <input class="estimate-input">
             </div>
             <div id="other_facility_insurance_payout-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="other_facility_insurance_payout">その他設備共済金額</label>
                 <input id="other_facility_insurance_payout" name="other_facility_insurance_payout"
-                    class="estimate-input" value="{{ old('other_facility_insurance_payout') }}">
+                    class="estimate-input"
+                    value="{{ old('other_facility_insurance_payout', $estimate->other_facility_insurance_payout) }}">
             </div>
             <div id="item_insurance_payout-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="item_insurance_payout">商品共済金額</label>
                 <input id="item_insurance_payout" name="item_insurance_payout" class="estimate-input"
-                    value="{{ old('item_insurance_payout') }}">
+                    value="{{ old('item_insurance_payout', $estimate->item_insurance_payout) }}">
                 <input class="estimate-input">
             </div>
             <div id="other_item_insurance_payout-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="other_item_insurance_payout">その他商品共済金額</label>
                 <input id="other_item_insurance_payout" name="other_item_insurance_payout" class="estimate-input"
-                    value="{{ old('other_item_insurance_payout') }}">
+                    value="{{ old('other_item_insurance_payout', $estimate->other_item_insurance_payout) }}">
             </div>
 
             <div class="estimate-input-box mt-5">
                 <label class="estimate-label" for="assess_item">評価項目</label>
                 <select id="assess_item" name="assess_item" class="estimate-input">
                     <option value="" hidden>選択してください</option>
-                    <option value=""@if (old('assess_item') === '') selected @endif>選択しない</option>
-                    <option value="通常"@if (old('assess_item') === '通常') selected @endif>通常</option>
-                    <option value="ピロティー付"@if (old('assess_item') === 'ピロティー付') selected @endif>ピロティー付</option>
-                    <option value="太陽光付"@if (old('assess_item') === '太陽光付') selected @endif>太陽光付</option>
-                    <option value="分譲マンション"@if (old('assess_item') === '分譲マンション') selected @endif>分譲マンション</option>
-                    <option value="年次取得"@if (old('assess_item') === '年次取得') selected @endif>年次取得</option>
-                    <option value="改装物件"@if (old('assess_item') === '改装物件') selected @endif>改装物件の評価計算式</option>
+                    <option value=""@if (old('assess_item', $estimate->assess_item) === '') selected @endif>選択しない</option>
+                    <option value="通常"@if (old('assess_item', $estimate->assess_item) === '通常') selected @endif>通常</option>
+                    <option value="ピロティー付"@if (old('assess_item', $estimate->assess_item) === 'ピロティー付') selected @endif>ピロティー付</option>
+                    <option value="太陽光付"@if (old('assess_item', $estimate->assess_item) === '太陽光付') selected @endif>太陽光付</option>
+                    <option value="分譲マンション"@if (old('assess_item', $estimate->assess_item) === '分譲マンション') selected @endif>分譲マンション</option>
+                    <option value="年次取得"@if (old('assess_item', $estimate->assess_item) === '年次取得') selected @endif>年次取得</option>
+                    <option value="改装物件"@if (old('assess_item', $estimate->assess_item) === '改装物件') selected @endif>改装物件の評価計算式</option>
                 </select>
             </div>
             <div id="assess_usage-view-container" class="estimate-input-box">
@@ -449,11 +454,11 @@
                 </label>
                 <select id="assess_usage" name="assess_usage" class="estimate-input">
                     <option value="" hidden>選択してください</option>
-                    <option value="専用住宅"@if (old('assess_usage') === '専用住宅') selected @endif>専用住宅</option>
-                    <option value="併用住宅"@if (old('assess_usage') === '併用住宅') selected @endif>併用住宅</option>
-                    <option value="専用店舗"@if (old('assess_usage') === '専用店舗') selected @endif>専用店舗</option>
-                    <option value="工場・倉庫"@if (old('assess_usage') === '工場・倉庫') selected @endif>工場・倉庫</option>
-                    <option value="プレハブ"@if (old('assess_usage') === 'プレハブ') selected @endif>プレハブ</option>
+                    <option value="専用住宅"@if (old('assess_usage', $estimate->assess_usage) === '専用住宅') selected @endif>専用住宅</option>
+                    <option value="併用住宅"@if (old('assess_usage', $estimate->assess_usage) === '併用住宅') selected @endif>併用住宅</option>
+                    <option value="専用店舗"@if (old('assess_usage', $estimate->assess_usage) === '専用店舗') selected @endif>専用店舗</option>
+                    <option value="工場・倉庫"@if (old('assess_usage', $estimate->assess_usage) === '工場・倉庫') selected @endif>工場・倉庫</option>
+                    <option value="プレハブ"@if (old('assess_usage', $estimate->assess_usage) === 'プレハブ') selected @endif>プレハブ</option>
                 </select>
             </div>
             <div id="assess_structure-view-container" class="estimate-input-box">
@@ -462,12 +467,12 @@
                 </label>
                 <select id="assess_structure" name="assess_structure" class="estimate-input">
                     <option value="" hidden>選択してください</option>
-                    <option value="木造" @if (old('assess_structure') === '木造') selected @endif>木造</option>
-                    <option value="鉄骨"@if (old('assess_structure') === '鉄骨') selected @endif>鉄骨</option>
-                    <option value="鉄筋（RC）"@if (old('assess_structure') === '鉄筋（RC）') selected @endif>鉄筋（RC）</option>
-                    <option value="枠組（2×4）"@if (old('assess_structure') === '枠組（2×4）') selected @endif>枠組（2×4）</option>
-                    <option value="プレハブ造"@if (old('assess_structure') === 'プレハブ造') selected @endif>プレハブ造</option>
-                    <option value="軽量鉄骨"@if (old('assess_structure') === '軽量鉄骨') selected @endif>軽量鉄骨</option>
+                    <option value="木造" @if (old('assess_structure', $estimate->assess_structure) === '木造') selected @endif>木造</option>
+                    <option value="鉄骨"@if (old('assess_structure', $estimate->assess_structure) === '鉄骨') selected @endif>鉄骨</option>
+                    <option value="鉄筋（RC）"@if (old('assess_structure', $estimate->assess_structure) === '鉄筋（RC）') selected @endif>鉄筋（RC）</option>
+                    <option value="枠組（2×4）"@if (old('assess_structure', $estimate->assess_structure) === '枠組（2×4）') selected @endif>枠組（2×4）</option>
+                    <option value="プレハブ造"@if (old('assess_structure', $estimate->assess_structure) === 'プレハブ造') selected @endif>プレハブ造</option>
+                    <option value="軽量鉄骨"@if (old('assess_structure', $estimate->assess_structure) === '軽量鉄骨') selected @endif>軽量鉄骨</option>
                 </select>
             </div>
 
@@ -476,70 +481,70 @@
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="piloti_floor_area" name="piloti_floor_area" class="estimate-input"
-                    value="{{ old('piloti_floor_area') }}">
+                    value="{{ old('piloti_floor_area', $estimate->piloti_floor_area) }}">
             </div>
             <div id="replacement_price-view-container" class="estimate-input-box">
                 <label class="estimate-label text-sm" for="replacement_price">従来建物の<br>再調達価格
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="replacement_price" name="replacement_price" class="estimate-input"
-                    value="{{ old('replacement_price') }}">
+                    value="{{ old('replacement_price', $estimate->replacement_price) }}">
             </div>
             <div id="renovation_cost-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="renovation_cost">改装費用
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="renovation_cost" name="renovation_cost" class="estimate-input"
-                    value="{{ old('renovation_cost') }}">
+                    value="{{ old('renovation_cost', $estimate->renovation_cost) }}">
             </div>
             <div id="conventional_age-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="conventional_age">従来建物の築年
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="conventional_age" name="conventional_age" class="estimate-input"
-                    value="{{ old('conventional_age') }}">
+                    value="{{ old('conventional_age', $estimate->conventional_age) }}">
             </div>
             <div id="depreciation_rate-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="depreciation_rate">従来建物の償却率
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="depreciation_rate" name="depreciation_rate" class="estimate-input"
-                    value="{{ old('depreciation_rate') }}">
+                    value="{{ old('depreciation_rate', $estimate->depreciation_rate) }}">
             </div>
             <div id="renovation_age-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="renovation_age">改装部分の築年
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="renovation_age" name="renovation_age" class="estimate-input"
-                    value="{{ old('renovation_age') }}">
+                    value="{{ old('renovation_age', $estimate->renovation_age) }}">
             </div>
             <div id="renovation_depreciation_rate-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="renovation_depreciation_rate">改装部分の償却率
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="renovation_depreciation_rate" name="renovation_depreciation_rate" class="estimate-input"
-                    value="{{ old('renovation_depreciation_rate') }}">
+                    value="{{ old('renovation_depreciation_rate', $estimate->renovation_depreciation_rate) }}">
             </div>
             <div id="installation_date-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="installation_date">設置日
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="installation_date" name="installation_date" class="estimate-input"
-                    value="{{ old('installation_date') }}">
+                    value="{{ old('installation_date', $estimate->installation_date) }}">
             </div>
             <div id="installation_cost-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="installation_cost">設置金額
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="installation_cost" name="installation_cost" class="estimate-input"
-                    value="{{ old('installation_cost') }}">
+                    value="{{ old('installation_cost', $estimate->installation_cost) }}">
             </div>
             <div id="annual_price-view-container" class="estimate-input-box">
                 <label class="estimate-label" for="annual_price">年次価額
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="annual_price" name="annual_price" class="estimate-input"
-                    value="{{ old('annual_price') }}">
+                    value="{{ old('annual_price', $estimate->annual_price) }}">
             </div>
 
             <button type="submit"
