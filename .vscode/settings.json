@@ -12,6 +12,7 @@
         "kenchiku",
         "laravel",
         "mitumo",
-        "piloti"
+        "piloti",
+        "testsuite"
     ]
 }
