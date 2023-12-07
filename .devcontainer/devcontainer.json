@@ -22,7 +22,8 @@
 				"bradlc.vscode-tailwindcss",
 				"streetsidesoftware.code-spell-checker",
 				"eamodio.gitlens",
-				"davidanson.vscode-markdownlint"
+				"davidanson.vscode-markdownlint",
+				"neilbrayfield.php-docblocker",
 			],
 			"settings": {}
 		}
