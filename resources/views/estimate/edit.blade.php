@@ -561,7 +561,7 @@
         @if ($estimate->id)
             <div class="flex">
                 <div class="p-3 w-1/2">
-                    <a href="{{ route('preview.standard') }}" id="preview"
+                    <a href="{{ route('preview.standard', ['id' => $estimate->id]) }}" id="preview"
                         class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-[395px]">
                         <div class="flex items-center mb-3">
                             <div

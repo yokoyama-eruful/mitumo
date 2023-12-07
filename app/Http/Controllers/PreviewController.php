@@ -4,45 +4,68 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Services\EstimateService;
+
 class PreviewController extends Controller
 {
-    public function standard(): \Illuminate\View\View
-    {
-        return view('preview.standard');
+    public function __construct(
+        private EstimateService $estimateService,
+    ) {
     }
 
-    public function comprehensive()
+    public function standard(int $id): \Illuminate\View\View
     {
-        return view('preview.comprehensive');
+        $estimate = $this->estimateService->find($id);
+
+        return view('preview.standard', compact('estimate'));
     }
 
-    public function standardAndComprehensive()
+    public function comprehensive(int $id)
     {
-        return view('preview.standardAndComprehensive');
+        $estimate = $this->estimateService->find($id);
+
+        return view('preview.comprehensive', compact('estimate'));
     }
 
-    public function standardOfRecommend()
+    public function standardAndComprehensive(int $id)
     {
-        return view('preview.standardOfRecommend');
+        $estimate = $this->estimateService->find($id);
+
+        return view('preview.standardAndComprehensive', compact('estimate'));
     }
 
-    public function comprehensiveOfRecommend()
+    public function standardOfRecommend(int $id)
     {
-        return view('preview.comprehensiveOfRecommend');
+        $estimate = $this->estimateService->find($id);
+
+        return view('preview.standardOfRecommend', compact('estimate'));
     }
 
-    public function standardOfRecommendAndComprehensiveOfRecommend()
+    public function comprehensiveOfRecommend(int $id)
     {
-        return view('preview.standardOfRecommendAndComprehensiveOfRecommend');
+        $estimate = $this->estimateService->find($id);
+
+        return view('preview.comprehensiveOfRecommend', compact('estimate'));
     }
 
-    public function standardOfEarthquake()
+    public function standardOfRecommendAndComprehensiveOfRecommend(int $id)
     {
-        return view('preview.standardOfEarthquake');
+        $estimate = $this->estimateService->find($id);
+
+        return view('preview.standardOfRecommendAndComprehensiveOfRecommend', compact('estimate'));
     }
 
-    public function comprehensiveOfEarthquake()
+    public function standardOfEarthquake(int $id)
     {
-        return view('preview.comprehensiveOfEarthquake');
+        $estimate = $this->estimateService->find($id);
+
+        return view('preview.standardOfEarthquake', compact('estimate'));
+    }
+
+    public function comprehensiveOfEarthquake(int $id)
+    {
+        $estimate = $this->estimateService->find($id);
+
+        return view('preview.comprehensiveOfEarthquake', compact('estimate'));
     }
 }
