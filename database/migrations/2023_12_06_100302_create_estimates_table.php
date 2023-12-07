@@ -38,7 +38,7 @@ return new class extends Migration
             $table->string('property_type')->comment('物件');
             $table->string('rank')->comment('級別');
             $table->date('start_date')->comment('始期日');
-            $table->date('building_year')->comment('建築年');
+            $table->integer('building_year')->comment('建築年');
             $table->integer('building_age')->comment('築年数');
             $table->string('pay_method')->comment('払込方法');
             $table->integer('insurance_year')->nullable()->comment('共済期間_年');
