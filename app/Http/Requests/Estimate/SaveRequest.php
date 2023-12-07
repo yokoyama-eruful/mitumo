@@ -44,9 +44,9 @@ final class SaveRequest extends FormRequest
             'building_year' => ['required', 'digits:4', 'integer', 'min:1900', 'max:'.(date('Y') + 1)],
             'building_age' => ['required', 'integer'],
             'pay_method' => ['required', 'string'],
-            'insurance_year' => ['nullable', 'digits:4', 'integer', 'min:1900', 'max:'.(date('Y') + 1)],
-            'insurance_month' => ['nullable', 'digits:2', 'integer', 'min:1', 'max:12'],
-            'insurance_day' => ['nullable', 'digits:2', 'integer', 'min:1', 'max:100'], //わからん
+            'insurance_year' => ['nullable',  'integer'],
+            'insurance_month' => ['nullable', 'integer', 'min:1', 'max:12'],
+            'insurance_day' => ['nullable', 'integer', 'min:1', 'max:100'], //わからん
 
             //おすすめ契約の項目
             'recommend1' => ['nullable', 'integer', 'min:2', 'max:35'],

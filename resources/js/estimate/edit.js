@@ -1,6 +1,7 @@
 
 window.onload = (event) => {
-    resetViewArea();
+    triggerProperty();
+    triggerAssess();
 };
 
 const resetViewArea = () => {
@@ -29,11 +30,10 @@ const showViewArea = (tagList) => {
     });
 }
 
-// 物件のタイプをトリガーとした表示・非表示
-document.getElementById('property_type').addEventListener('change', function () {
+const triggerProperty = () => {
     const selectedValue = document.getElementById('property_type').value;
 
-    resetViewArea()
+    resetViewArea();
     let showAreaList = [];
     switch (selectedValue) {
         case '住宅':
@@ -67,7 +67,10 @@ document.getElementById('property_type').addEventListener('change', function () 
     showViewArea(showAreaList);
     switchDisplayRecommendArea();
     switchDisplayEarthquakeArea();
-});
+};
+
+// 物件のタイプをトリガーとした表示・非表示
+document.getElementById('property_type').addEventListener('change', triggerProperty);
 
 
 const switchDisplayRecommendArea = () => {
@@ -112,11 +115,9 @@ const switchDisplayEarthquakeArea = () => {
 document.getElementById('property_type').addEventListener('change', switchDisplayEarthquakeArea);
 document.getElementById('insurance_year').addEventListener('change', switchDisplayEarthquakeArea);
 
-
-//評価項目をトリガーとした表示・非表示
-document.getElementById('assess_item').addEventListener('change', function () {
+const triggerAssess = () => {
     const selectedValue = document.getElementById('assess_item').value;
-
+    console.log(selectedValue);
     resetViewArea()
     let showAreaList = [];
     switch (selectedValue) {
@@ -149,7 +150,11 @@ document.getElementById('assess_item').addEventListener('change', function () {
     };
 
     showViewArea(showAreaList);
-});
+}
+
+
+//評価項目をトリガーとした表示・非表示
+document.getElementById('assess_item').addEventListener('change', triggerAssess);
 
 //築年数を始期日と建築年から計算
 document.getElementById('building_year').addEventListener('keypress', (event) => {
@@ -185,15 +190,12 @@ document.getElementById('calcBuildingAgeButton').addEventListener('click', () =>
 
 
     if (kenchiku && start_date) {
-        console.log('計算します');
         const calcYears = (startDate, endDate) => {
             const start = new Date(startDate);
             const end = new Date(endDate);
-
             const years = end.getFullYear() - start.getFullYear();
 
             return years;
-
         }
 
         document.getElementById('building_age').value = calcYears(`${kenchiku}-01-01`, `${start_date}-01`);

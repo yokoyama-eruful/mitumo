@@ -18,10 +18,9 @@ final class EstimateStandardInfoDto
             'other_usage', 'floor', 'building', 'other', 'property_type',
             'rank', 'start_date', 'building_year', 'building_age',
             'pay_method', 'insurance_year', 'insurance_month',
-            'insurance_day',
+            'insurance_day', 'assess_item',
         ]));
         $tmpParams['start_date'] = $params['start_date'].'-01';
-        $tmpParams['building_year'] = $params['building_year'].'-01-01';
 
         $this->params = $tmpParams;
     }

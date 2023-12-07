@@ -50,6 +50,7 @@ final class Estimate extends Model
     ];
 
     protected $casts = [
+        'start_date' => 'date',
         'property_detail' => 'json',
         'assess_detail' => 'json',
     ];
