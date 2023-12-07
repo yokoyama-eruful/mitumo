@@ -6,7 +6,7 @@ namespace App\Domains\Dto;
 
 final class EstimateAssessDetailDto
 {
-    public array $params;
+    public readonly array $params;
 
     public function __construct(?string $assess, array $params)
     {

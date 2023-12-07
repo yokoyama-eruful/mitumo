@@ -6,7 +6,7 @@ namespace App\Domains\Dto;
 
 final class EstimatePropertyDetailDto
 {
-    public array $params;
+    public readonly array $params;
 
     public function __construct(string $property_type, array $params)
     {

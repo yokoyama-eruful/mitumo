@@ -6,7 +6,7 @@ namespace App\Domains\Dto;
 
 final class EstimateStandardInfoDto
 {
-    public array $params;
+    public readonly array $params;
 
     public function __construct(array $params)
     {
