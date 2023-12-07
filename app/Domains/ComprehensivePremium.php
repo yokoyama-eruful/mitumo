@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domains;
 
-use Exception;
 use Illuminate\Support\Facades\Storage;
 
 final class ComprehensivePremium
@@ -27,15 +26,13 @@ final class ComprehensivePremium
     }
 
     //料率を取得する
-    public function getRate(string $purpose): float
+    public function getRate(string $purpose): ?float
     {
-        try {
-            $rate = $this->rateList[$purpose];
-        } catch (Exception $e) {
-            throw new Exception('目的の値が違います');
+        if (! in_array($purpose, array_keys($this->rateList))) {
+            return null;
         }
 
-        return floatval($rate);
+        return floatval($this->rateList[$purpose]);
     }
 
     private function makeRateList()
@@ -66,10 +63,12 @@ final class ComprehensivePremium
             return false;
         }
 
+        $building_age = $this->buildingAge > 25 ? 25 : $this->buildingAge;
+
         //物件が住宅の場合のみ築年数を考慮する。その他の物件は築年数は空文字
         return
             $data[0] === $this->propertyType &&
-           (intval($data[2]) === $this->buildingAge || $data[2] === '') &&
+           (intval($data[2]) === $building_age || $data[2] === '') &&
             $data[3] === $this->rank;
     }
 }
