@@ -47,11 +47,12 @@ class EstimateForm extends Component
         $this->assessItem = old('assess_item') ?? $estimate->assess_item;
 
         $this->payMethod = old('payMethod') ?? $estimate->pay_method;
-        $this->insuranceYear = old('insurance_year') ?? $estimate->insurance_year;
+        $this->insuranceYear = old('insurance_year') ?? $estimate->insurance_year ? (int) $estimate->insurance_year : null;
+
         $this->baseRate = old('base_rate') ?? $estimate->base_rate;
 
         $this->calcBuildingAge();
-        $this->onChangePropertyType();
+        $this->initBaseRateList();
         $this->onChangeAssessItem();
 
     }
@@ -59,6 +60,18 @@ class EstimateForm extends Component
     public function render()
     {
         return view('estimate.livewire.form');
+    }
+
+    public function initBaseRateList()
+    {
+        if (in_array($this->propertyType, ['普通', '工場'], true)) {
+            $this->baseRateList = ['1級', '2級', '3級'];
+        } elseif ($this->propertyType === '住宅') {
+            $this->baseRateList = ['M', 'T', 'H'];
+        } else {
+            $this->baseRateList = [];
+        }
+        $this->onChangeBaseRate();
     }
 
     public function onChangePropertyType()
@@ -70,6 +83,7 @@ class EstimateForm extends Component
         } else {
             $this->baseRateList = [];
         }
+        $this->rank = null;
         $this->onChangeBaseRate();
     }
 
@@ -92,7 +106,8 @@ class EstimateForm extends Component
         }
 
         $baseRateObj = new BaseRate();
-        $this->baseRate = $baseRateObj->findRate($this->propertyType, $this->buildingAge ?? '', $this->rank);
+
+        $this->baseRate = $baseRateObj->findRate($this->propertyType, $buildingAge, $this->rank);
     }
 
     public function onChangeAssessItem()
