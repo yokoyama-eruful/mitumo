@@ -39,7 +39,7 @@
         @include('preview.layouts.tab')
         <div class="text-gray-600 body-font">
             <div class="px-5 py-5 mx-auto">
-                <a href=""
+                <a href="{{ route('estimate.edit', ['id' => $estimate->id]) }}"
                     class="w-full flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col">
                     <div class="flex items-center mb-3">
                         <div
