@@ -25,6 +25,6 @@ final class OtherDiscounts
     public function calcOtherDiscounts()
     {
         //(基本率+職業割増+作業割増)*その他割引　※小数点第三位を四捨五入
-        
+
     }
 }
