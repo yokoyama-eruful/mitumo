@@ -193,14 +193,14 @@
                 <label class="estimate-label" for="rank">級別
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <select id="rank" name="rank" class="estimate-input w-44" required>
+                <select id="rank" name="rank" class="estimate-input w-44" wire:model="rank"
+                    wire:change="onChangeBaseRate" required>
                     <option value="" hidden>選択してください</option>
-                    <option value="1級"@if (old('rank', $estimate->rank) === '1級') selected @endif>1級</option>
-                    <option value="2級"@if (old('rank', $estimate->rank) === '2級') selected @endif>2級</option>
-                    <option value="3級"@if (old('rank', $estimate->rank) === '3級') selected @endif>3級</option>
-                    <option value="M"@if (old('rank', $estimate->rank) === 'M') selected @endif>M</option>
-                    <option value="T"@if (old('rank', $estimate->rank) === 'T') selected @endif>T</option>
-                    <option value="H"@if (old('rank', $estimate->rank) === 'H') selected @endif>H</option>
+                    @foreach ($baseRateList as $rate)
+                        <option value={{ $rate }}@if (old('rank', $estimate->base_rate ?? null) === $rate) selected @endif>
+                            {{ $rate }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -318,13 +318,19 @@
             </div>
         @endif
 
-        @if (in_array($propertyType, ['工場'], true))
+        @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
             <div class="estimate-input-box">
                 <label class="estimate-label" for="base_rate">基本率
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="base_rate" name="base_rate" class="estimate-input"
-                    value="{{ old('base_rate', $estimate->property_detail['base_rate'] ?? null) }}">
+                @if (in_array($propertyType, ['住宅', '普通'], true))
+                    <input id="base_rate" name="base_rate" class="estimate-input"
+                        placeholder="物件が「住宅」か「普通」の時は、自動算出されます" wire:model="baseRate"
+                        value="{{ old('base_rate', $estimate->property_detail['base_rate'] ?? null) }}" readonly>
+                @else
+                    <input id="base_rate" name="base_rate" class="estimate-input" wire:model="baseRate"
+                        value="{{ old('base_rate', $estimate->property_detail['base_rate'] ?? null) }}">
+                @endif
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))

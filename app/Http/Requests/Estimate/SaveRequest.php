@@ -57,8 +57,9 @@ final class SaveRequest extends FormRequest
             'earthquake2' => ['nullable', 'integer'],
             'earthquake3' => ['nullable', 'integer'],
 
+            'base_rate' => ['required', 'numeric', 'min:0'],
+
             // // 動的に変化する項目（物件トリガー
-            'base_rate' => ['nullable', 'required_if:property_type,工場', 'numeric', 'min:0'],
             'chattel_surcharge' => ['nullable', 'required_if:property_type,工場', 'string'],
 
             'actual_loss_factor' => ['nullable', 'string'],

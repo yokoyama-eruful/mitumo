@@ -4,15 +4,22 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Domains\BaseRate;
 use App\Models\Estimate;
 use Carbon\Carbon;
 use Livewire\Component;
+
+use function old;
 
 class EstimateForm extends Component
 {
     public Estimate $estimate;
 
     public ?string $propertyType = null;
+
+    public ?string $rank = null;
+
+    public array $baseRateList = [];
 
     public ?string $startDate = null;
 
@@ -24,6 +31,8 @@ class EstimateForm extends Component
 
     public ?int $insuranceYear = null;
 
+    public ?float $baseRate = null;
+
     public ?string $assessItem = null;
 
     public array $assessUsageList = [];
@@ -31,16 +40,20 @@ class EstimateForm extends Component
     public function mount($estimate)
     {
         $this->estimate = $estimate;
-        $this->startDate = $estimate->start_date?->format('Y-m');
-        $this->buildingYear = (string) $estimate->building_year;
-        $this->propertyType = $estimate->property_type;
-        $this->assessItem = $estimate->assess_item;
+        $this->startDate = old('start_date') ?? $estimate->start_date?->format('Y-m');
+        $this->buildingYear = old('building_year') ?? $estimate->building_year ? (string) $estimate->building_year : null;
+        $this->propertyType = old('property_type') ?? $estimate->property_type;
+        $this->rank = old('rank') ?? $estimate->rank;
+        $this->assessItem = old('assess_item') ?? $estimate->assess_item;
 
-        $this->payMethod = $estimate->pay_method;
-        $this->insuranceYear = $estimate->insurance_year;
+        $this->payMethod = old('payMethod') ?? $estimate->pay_method;
+        $this->insuranceYear = old('insurance_year') ?? $estimate->insurance_year;
+        $this->baseRate = old('base_rate') ?? $estimate->base_rate;
 
         $this->calcBuildingAge();
+        $this->onChangePropertyType();
         $this->onChangeAssessItem();
+
     }
 
     public function render()
@@ -50,7 +63,36 @@ class EstimateForm extends Component
 
     public function onChangePropertyType()
     {
+        if (in_array($this->propertyType, ['普通', '工場'], true)) {
+            $this->baseRateList = ['1級', '2級', '3級'];
+        } elseif ($this->propertyType === '住宅') {
+            $this->baseRateList = ['M', 'T', 'H'];
+        } else {
+            $this->baseRateList = [];
+        }
+        $this->onChangeBaseRate();
+    }
 
+    public function onChangeBaseRate()
+    {
+        if ($this->propertyType === '工場' || is_null($this->propertyType) || is_null($this->rank)) {
+            $this->baseRate = null;
+
+            return;
+        }
+
+        if ($this->propertyType === '住宅') {
+            $buildingAge = $this->buildingAge;
+        } else {
+            $buildingAge = '';
+        }
+
+        if (is_null($buildingAge)) {
+            return;
+        }
+
+        $baseRateObj = new BaseRate();
+        $this->baseRate = $baseRateObj->findRate($this->propertyType, $this->buildingAge ?? '', $this->rank);
     }
 
     public function onChangeAssessItem()
@@ -83,10 +125,15 @@ class EstimateForm extends Component
         $endDate = $this->startDate;
 
         $this->buildingAge = $startDate <= $endDate ? $startDate->diffInYears($endDate) : null;
+
+        $this->onChangeBaseRate();
     }
 
     private function convertToHalfWidthIfNumeric($value)
     {
+        if (is_null($value)) {
+            return;
+        }
         $convertedValue = mb_convert_kana($value, 'n');
 
         return is_numeric($convertedValue) ? $convertedValue : '';

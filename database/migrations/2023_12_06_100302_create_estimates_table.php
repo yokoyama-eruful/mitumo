@@ -44,6 +44,7 @@ return new class extends Migration
             $table->integer('insurance_year')->nullable()->comment('共済期間_年');
             $table->integer('insurance_month')->nullable()->comment('共済期間_月');
             $table->integer('insurance_day')->nullable()->comment('共済期間_日');
+            $table->float('base_rate')->comment('基本率');
 
             $table->string('assess_item')->nullable()->comment('評価項目');
 
