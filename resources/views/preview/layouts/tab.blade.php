@@ -1,49 +1,50 @@
 <div class="flex flex-row">
     <div>
-        <a href="{{ route('preview.standard', ['id' => $estimate->id]) }}"
+        <a href="{{ route('estimate.preview.standard', ['id' => $estimate->id]) }}"
             class="rounded-b-lg outline outline-1 outline-gray-200 w-[100px] hover:bg-gray-300 text-sm">
             <button class="rounded-b-lg outline outline-1 outline-gray-200 w-[100px] hover:bg-gray-300 text-sm"
                 value="normal">普通</button>
         </a>
     </div>
     <div>
-        <a href="{{ route('preview.comprehensive', ['id' => $estimate->id]) }}">
+        <a href="{{ route('estimate.preview.comprehensive', ['id' => $estimate->id]) }}">
             <button class="rounded-b-lg outline outline-1 outline-gray-200 w-[100px] hover:bg-gray-300 text-sm"
                 value="">総合</button>
         </a>
     </div>
     <div>
-        <a href="{{ route('preview.standardAndComprehensive', ['id' => $estimate->id]) }}">
+        <a href="{{ route('estimate.preview.standardAndComprehensive', ['id' => $estimate->id]) }}">
             <button class="rounded-b-lg outline outline-1 outline-gray-200 w-[100px] hover:bg-gray-300 text-sm"
                 value="">普通&総合</button>
         </a>
     </div>
     <div>
-        <a href="{{ route('preview.standardOfRecommend', ['id' => $estimate->id]) }}">
+        <a href="{{ route('estimate.preview.standardOfRecommend', ['id' => $estimate->id]) }}">
             <button class="rounded-b-lg outline outline-1 outline-gray-200 w-[100px] hover:bg-gray-300 text-sm"
                 value="">おすすめ普通</button>
         </a>
     </div>
     <div>
-        <a href="{{ route('preview.comprehensiveOfRecommend', ['id' => $estimate->id]) }}">
+        <a href="{{ route('estimate.preview.comprehensiveOfRecommend', ['id' => $estimate->id]) }}">
             <button class="rounded-b-lg outline outline-1 outline-gray-200 w-[100px] hover:bg-gray-300 text-sm"
                 value="">おすすめ総合</button>
         </a>
     </div>
     <div>
-        <a href="{{ route('preview.standardOfRecommendAndComprehensiveOfRecommend', ['id' => $estimate->id]) }}">
+        <a
+            href="{{ route('estimate.preview.standardOfRecommendAndComprehensiveOfRecommend', ['id' => $estimate->id]) }}">
             <button class="rounded-b-lg outline outline-1 outline-gray-200 w-[100px] hover:bg-gray-300 text-sm"
                 value="">おすすめ普&総</button>
         </a>
     </div>
     <div>
-        <a href="{{ route('preview.standardOfEarthquake', ['id' => $estimate->id]) }}">
+        <a href="{{ route('estimate.preview.standardOfEarthquake', ['id' => $estimate->id]) }}">
             <button class="rounded-b-lg outline outline-1 outline-gray-200 w-[100px] hover:bg-gray-300 text-sm"
                 value="">地震普通</button>
         </a>
     </div>
     <div>
-        <a href="{{ route('preview.comprehensiveOfEarthquake', ['id' => $estimate->id]) }}">
+        <a href="{{ route('estimate.preview.comprehensiveOfEarthquake', ['id' => $estimate->id]) }}">
             <button class="rounded-b-lg outline outline-1 outline-gray-200 w-[100px] hover:bg-gray-300 text-sm"
                 value="">地震総合</button>
         </a>

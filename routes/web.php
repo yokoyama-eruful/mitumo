@@ -36,16 +36,16 @@ Route::middleware('auth:web')
             });
 
         Route::controller(PreviewController::class)
-            ->prefix('preview')
-            ->name('preview.')
+            ->prefix('estimate/preview/{id}')
+            ->name('estimate.preview.')
             ->group(function () {
-                Route::get('standard/{id}', 'standard')->name('standard');
-                Route::get('comprehensive/{id}', 'comprehensive')->name('comprehensive');
-                Route::get('standardAndComprehensive/{id}', 'standardAndComprehensive')->name('standardAndComprehensive');
-                Route::get('standardOfRecommend/{id}', 'standardOfRecommend')->name('standardOfRecommend');
-                Route::get('comprehensiveOfRecommend/{id}', 'comprehensiveOfRecommend')->name('comprehensiveOfRecommend');
-                Route::get('standardOfRecommendAndComprehensiveOfRecommend/{id}', 'standardOfRecommendAndComprehensiveOfRecommend')->name('standardOfRecommendAndComprehensiveOfRecommend');
-                Route::get('standardOfEarthquake/{id}', 'standardOfEarthquake')->name('standardOfEarthquake');
-                Route::get('comprehensiveOfEarthquake/{id}', 'comprehensiveOfEarthquake')->name('comprehensiveOfEarthquake');
+                Route::get('standard', 'standard')->name('standard');
+                Route::get('comprehensive', 'comprehensive')->name('comprehensive');
+                Route::get('standardAndComprehensive', 'standardAndComprehensive')->name('standardAndComprehensive');
+                Route::get('standardOfRecommend', 'standardOfRecommend')->name('standardOfRecommend');
+                Route::get('comprehensiveOfRecommend', 'comprehensiveOfRecommend')->name('comprehensiveOfRecommend');
+                Route::get('standardOfRecommendAndComprehensiveOfRecommend', 'standardOfRecommendAndComprehensiveOfRecommend')->name('standardOfRecommendAndComprehensiveOfRecommend');
+                Route::get('standardOfEarthquake', 'standardOfEarthquake')->name('standardOfEarthquake');
+                Route::get('comprehensiveOfEarthquake', 'comprehensiveOfEarthquake')->name('comprehensiveOfEarthquake');
             });
     });
