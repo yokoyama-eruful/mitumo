@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>mitumo</title>
-    @vite(['resources/css/app.css', 'resources/js/estimate/edit.js'])
+    @vite(['resources/css/app.css'])
 </head>
 
 <body class="min-h-screen flex flex-col justify-between">
