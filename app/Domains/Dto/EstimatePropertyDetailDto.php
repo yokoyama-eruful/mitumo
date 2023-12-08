@@ -44,7 +44,7 @@ final class EstimatePropertyDetailDto
     private function convertFactoryParams(array $params): array
     {
         return array_intersect_key($params, array_flip([
-            'base_rate', 'chattel_surcharge', 'actual_loss_factor', 'other_discount',
+            'chattel_surcharge', 'actual_loss_factor', 'other_discount',
             'building_insurance_payout', 'household_insurance_payout', 'facility_insurance_payout',
             'other_facility_insurance_payout', 'item_insurance_payout',
             'other_item_insurance_payout',
