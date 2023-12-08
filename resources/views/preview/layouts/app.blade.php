@@ -33,10 +33,11 @@
     </header>
 
     <main class="text-gray-600 body-font w-[900px] mx-auto mt-5">
+        @include('preview.layouts.tab')
         <div class="block h-[826px] shadow-md outline outline-1 outline-gray-100 p-5">
             @yield('contents')
         </div>
-        @include('preview.layouts.tab')
+
         <div class="text-gray-600 body-font">
             <div class="px-5 py-5 mx-auto">
                 <a href="{{ route('estimate.edit', ['id' => $estimate->id]) }}"
