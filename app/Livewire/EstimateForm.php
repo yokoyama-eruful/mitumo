@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Domains\BaseRate;
+use App\Domains\OccupationalSurcharge;
+use App\Domains\WorkSurcharge;
 use App\Models\Estimate;
 use Carbon\Carbon;
 use Livewire\Component;
@@ -33,6 +35,17 @@ class EstimateForm extends Component
 
     public ?float $baseRate = null;
 
+    //職業割増
+    public ?string $occupationalSurchargeCode = null;
+
+    public ?float $occupationalSurchargeRate = null;
+
+    //作業割増
+    public ?string $workSurchargeCode = null;
+
+    public ?float $workSurchargeRate = null;
+
+    //評価項目
     public ?string $assessItem = null;
 
     public array $assessUsageList = [];
@@ -49,12 +62,31 @@ class EstimateForm extends Component
         $this->payMethod = old('payMethod') ?? $estimate->pay_method;
         $this->insuranceYear = old('insurance_year') ?? $estimate->insurance_year ? (int) $estimate->insurance_year : null;
 
-        $this->baseRate = old('base_rate') ?? (float) $estimate->property_detail['base_rate'];
+        $this->baseRate = old('base_rate') ?? $estimate->base_rate ? (float) $estimate->base_rate : null;
+
+        //職業割増
+        $this->occupationalSurchargeCode =
+         old('occupational_surcharge_code')
+         ?? array_key_exists('occupational_surcharge_code', $estimate->property_detail ?? [])
+         ? $estimate->property_detail['occupational_surcharge_code'] : null;
+        $this->occupationalSurchargeRate =
+         old('occupational_surcharge_rate')
+         ?? array_key_exists('occupational_surcharge_rate', $estimate->property_detail ?? [])
+         ? (float) $estimate->property_detail['occupational_surcharge_rate'] : null;
+
+        //作業割増
+        $this->workSurchargeCode =
+         old('work_surcharge_code')
+         ?? array_key_exists('work_surcharge_code', $estimate->property_detail ?? [])
+         ? $estimate->property_detail['work_surcharge_code'] : null;
+        $this->workSurchargeRate =
+         old('work_surcharge_rate')
+         ?? array_key_exists('work_surcharge_rate', $estimate->property_detail ?? [])
+         ? (float) $estimate->property_detail['work_surcharge_rate'] : null;
 
         $this->calcBuildingAge();
         $this->initBaseRateList();
         $this->onChangeAssessItem();
-
     }
 
     public function render()
@@ -152,5 +184,25 @@ class EstimateForm extends Component
         $convertedValue = mb_convert_kana($value, 'n');
 
         return is_numeric($convertedValue) ? $convertedValue : '';
+    }
+
+    //職業割増の標準コード
+    public function onChangeOccupationalSurchargeCode()
+    {
+        $this->occupationalSurchargeCode = mb_convert_kana($this->occupationalSurchargeCode, 'n');
+
+        $occupationalSurcharge = new OccupationalSurcharge();
+
+        $this->occupationalSurchargeRate = $occupationalSurcharge->findCode($this->occupationalSurchargeCode);
+    }
+
+    //作業割増の作業工程コード
+    public function onChangeWorkSurchargeCode()
+    {
+        $this->workSurchargeCode = mb_convert_kana($this->workSurchargeCode, 'n');
+
+        $workSurcharge = new WorkSurcharge();
+
+        $this->workSurchargeRate = $workSurcharge->findCode($this->workSurchargeCode);
     }
 }
