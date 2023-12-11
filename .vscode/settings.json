@@ -13,7 +13,10 @@
         "laravel",
         "livewire",
         "mitumo",
+        "officedocument",
+        "openxmlformats",
         "piloti",
+        "spreadsheetml",
         "testsuite"
     ]
 }
