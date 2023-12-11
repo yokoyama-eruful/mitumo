@@ -54,6 +54,6 @@ Route::middleware('auth:web')
             ->prefix('estimate/download/{id}')
             ->name('estimate.download.')
             ->group(function () {
-                Route::get('select', 'index')->name('index');
+                Route::get('index', 'index')->name('index');
             });
     });
