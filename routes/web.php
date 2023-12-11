@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\EstimateController;
 use App\Http\Controllers\PreviewController;
 use App\Http\Controllers\TopController;
@@ -47,5 +48,12 @@ Route::middleware('auth:web')
                 Route::get('standardOfRecommendAndComprehensiveOfRecommend', 'standardOfRecommendAndComprehensiveOfRecommend')->name('standardOfRecommendAndComprehensiveOfRecommend');
                 Route::get('standardOfEarthquake', 'standardOfEarthquake')->name('standardOfEarthquake');
                 Route::get('comprehensiveOfEarthquake', 'comprehensiveOfEarthquake')->name('comprehensiveOfEarthquake');
+            });
+
+        Route::controller(DownloadController::class)
+            ->prefix('estimate/download/{id}')
+            ->name('estimate.download.')
+            ->group(function () {
+                Route::get('index', 'index')->name('index');
             });
     });

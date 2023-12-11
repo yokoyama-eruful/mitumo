@@ -49,7 +49,7 @@ class EstimateForm extends Component
         $this->payMethod = old('payMethod') ?? $estimate->pay_method;
         $this->insuranceYear = old('insurance_year') ?? $estimate->insurance_year ? (int) $estimate->insurance_year : null;
 
-        $this->baseRate = old('base_rate') ?? $estimate->base_rate;
+        $this->baseRate = old('base_rate') ?? (float) $estimate->property_detail['base_rate'];
 
         $this->calcBuildingAge();
         $this->initBaseRateList();
