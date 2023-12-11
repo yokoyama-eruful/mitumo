@@ -27,6 +27,8 @@ class StandardAndComprehensiveDownloader
 
         $this->setCalcInfo($spreadSheet, $calcData);
 
+        $spreadSheet->setActiveSheetIndex(0);
+
         $writer = IOFactory::createWriter($spreadSheet, 'Xlsx');
 
         $writer->save('php://output');
@@ -37,12 +39,12 @@ class StandardAndComprehensiveDownloader
     private function setStandardAndComprehensiveInfo($spreadSheet, $standardAndComprehensiveDate)
     {
         $worksheet = $spreadSheet->getSheetByName('普通&総合');
-        $worksheet->setCellValue('セル番号', $standardAndComprehensiveDate);
+        // $worksheet->setCellValue('セル番号', $standardAndComprehensiveDate);
     }
 
     private function setCalcInfo($spreadSheet, $calcData)
     {
         $worksheet = $spreadSheet->getSheetByName('計算');
-        $worksheet->setCellValue('セル番号', $calcData);
+        // $worksheet->setCellValue('セル番号', $calcData);
     }
 }

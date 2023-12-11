@@ -27,6 +27,8 @@ class ComprehensiveOfRecommendDownloader
 
         $this->setCalcInfo($spreadSheet, $calcData);
 
+        $spreadSheet->setActiveSheetIndex(0);
+
         $writer = IOFactory::createWriter($spreadSheet, 'Xlsx');
 
         $writer->save('php://output');
@@ -37,12 +39,12 @@ class ComprehensiveOfRecommendDownloader
     private function setComprehensiveOfRecommendInfo($spreadSheet, $comprehensiveOfRecommendDate)
     {
         $worksheet = $spreadSheet->getSheetByName('おすすめ(総合)');
-        $worksheet->setCellValue('セル番号', $comprehensiveOfRecommendDate);
+        // $worksheet->setCellValue('セル番号', $comprehensiveOfRecommendDate);
     }
 
     private function setCalcInfo($spreadSheet, $calcData)
     {
         $worksheet = $spreadSheet->getSheetByName('計算');
-        $worksheet->setCellValue('セル番号', $calcData);
+        // $worksheet->setCellValue('セル番号', $calcData);
     }
 }

@@ -27,6 +27,8 @@ class StandardOfEarthquakeDownloader
 
         $this->setCalcInfo($spreadSheet, $calcData);
 
+        $spreadSheet->setActiveSheetIndex(0);
+
         $writer = IOFactory::createWriter($spreadSheet, 'Xlsx');
 
         $writer->save('php://output');
@@ -37,12 +39,12 @@ class StandardOfEarthquakeDownloader
     private function setStandardOfEarthquakeInfo($spreadSheet, $standardOfEarthquakeDate)
     {
         $worksheet = $spreadSheet->getSheetByName('おすすめ地震(普通)');
-        $worksheet->setCellValue('セル番号', $standardOfEarthquakeDate);
+        // $worksheet->setCellValue('セル番号', $standardOfEarthquakeDate);
     }
 
     private function setCalcInfo($spreadSheet, $calcData)
     {
         $worksheet = $spreadSheet->getSheetByName('計算');
-        $worksheet->setCellValue('セル番号', $calcData);
+        // $worksheet->setCellValue('セル番号', $calcData);
     }
 }

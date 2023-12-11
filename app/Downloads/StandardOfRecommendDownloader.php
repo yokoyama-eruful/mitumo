@@ -30,6 +30,8 @@ class StandardOfRecommendDownloader
 
         $this->setCalcInfo($spreadSheet, $calcData);
 
+        $spreadSheet->setActiveSheetIndex(0);
+
         $writer = IOFactory::createWriter($spreadSheet, 'Xlsx');
 
         $writer->save('php://output');
