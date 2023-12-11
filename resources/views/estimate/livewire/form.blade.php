@@ -356,23 +356,56 @@
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
             <div id="chattel_surcharge_category-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）</label>
+                <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）
+                    <div class="estimate-input-required">※必須</div>
+                </label>
                 <input id="chattel_surcharge_category" name="chattel_surcharge_category" class="estimate-input"
                     value="{{ old('chattel_surcharge_category', $estimate->property_detail['chattel_surcharge_category'] ?? null) }}">
             </div>
         @endif
         @if (in_array($propertyType, ['普通'], true))
-            <div id="occupational_surcharge-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="occupational_surcharge">職業割増</label>
-                <input id="occupational_surcharge" name="occupational_surcharge" class="estimate-input"
-                    value="{{ old('occupational_surcharge', $estimate->property_detail['occupational_surcharge'] ?? null) }}">
+            <div class="estimate-input-box mt-5 w-auto">
+                <label class="estimate-label h-auto">職業割増</label>
+                <div class="w-auto">
+                    <div class="flex">
+                        <label class="estimate-label w-32" for="occupational_surcharge_code">標準コード</label>
+                        <button type="button"
+                            class="mx-2 my-1 px-2 h-8 w-64 bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
+                        <input id="occupational_surcharge_code" name="occupational_surcharge_code"
+                            class="estimate-input" wire:model="occupationalSurchargeCode"
+                            wire:change="onChangeOccupationalSurchargeCode"
+                            value="{{ old('occupational_surcharge_code', $estimate->property_detail['occupational_surcharge_code'] ?? null) }}">
+                    </div>
+                    <div class="flex">
+                        <label class="estimate-label w-32" for="occupational_surcharge_rate">職業割増</label>
+                        <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
+                        <input id="occupational_surcharge_rate" name="occupational_surcharge_rate"
+                            class="estimate-input" wire:model="occupationalSurchargeRate"
+                            value="{{ old('occupational_surcharge_rate', $estimate->property_detail['occupational_surcharge_rate'] ?? null) }}">
+                    </div>
+                </div>
             </div>
         @endif
         @if (in_array($propertyType, ['普通'], true))
-            <div id="work_surcharge-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="work_surcharge">作業割増</label>
-                <input id="work_surcharge" name="work_surcharge" class="estimate"
-                    value="{{ old('work_surcharge', $estimate->property_detail['work_surcharge'] ?? null) }}">
+            <div class="estimate-input-box w-auto">
+                <label class="estimate-label h-auto">作業割増</label>
+                <div class="w-auto">
+                    <div class="flex">
+                        <label class="estimate-label w-32" for="work_surcharge_code">作業工程コード</label>
+                        <button type="button"
+                            class="mx-2 my-1 px-2 h-8 w-64 bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
+                        <input id="work_surcharge_code" name="work_surcharge_code" class="estimate-input"
+                            wire:model="workSurchargeCode" wire:change="onChangeWorkSurchargeCode"
+                            value="{{ old('work_surcharge_code', $estimate->property_detail['work_surcharge_code'] ?? null) }}">
+                    </div>
+                    <div class="flex">
+                        <label class="estimate-label w-32" for="work_surcharge_rate">職業割増</label>
+                        <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
+                        <input id="work_surcharge_surcharge_rate" name="work_surcharge_rate" class="estimate-input"
+                            wire:model="workSurchargeRate"
+                            value="{{ old('work_surcharge_rate', $estimate->property_detail['work_surcharge_rate'] ?? null) }}">
+                    </div>
+                </div>
             </div>
         @endif
         @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
@@ -400,7 +433,10 @@
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
             <div id="facility_insurance_payout-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="facility_insurance_payout">設備共済金額</label>
+                <label class="estimate-label" for="facility_insurance_payout">
+                    設備共済金額
+                    <div class="estimate-input-required">※必須</div>
+                </label>
                 <input id="facility_insurance_payout" name="facility_insurance_payout" class="estimate-input"
                     value="{{ old('facility_insurance_payout', $estimate->property_detail['facility_insurance_payout'] ?? null) }}">
                 <input class="estimate-input">
@@ -408,7 +444,9 @@
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
             <div id="other_facility_insurance_payout-view-container" class="estimate-input-box">
-                <label class="estimate-label" for="other_facility_insurance_payout">その他設備共済金額</label>
+                <label class="estimate-label" for="other_facility_insurance_payout">その他設備共済金額
+                    <div class="estimate-input-required">※必須</div>
+                </label>
                 <input id="other_facility_insurance_payout" name="other_facility_insurance_payout"
                     class="estimate-input"
                     value="{{ old('other_facility_insurance_payout', $estimate->property_detail['other_facility_insurance_payout'] ?? null) }}">

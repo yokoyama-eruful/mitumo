@@ -32,8 +32,9 @@ final class EstimatePropertyDetailDto
     {
         return array_intersect_key($params, array_flip([
             'actual_loss_factor', 'other_discount', 'chattel_surcharge_category',
-            'occupational_surcharge', 'work_surcharge', 'building_insurance_payout',
-            'household_insurance_payout', 'facility_insurance_payout',
+            'occupational_surcharge_code', 'occupational_surcharge_rate',
+            'work_surcharge_code', 'work_surcharge_rate',
+            'building_insurance_payout', 'household_insurance_payout', 'facility_insurance_payout',
             'other_facility_insurance_payout',
             'item_insurance_payout', 'other_item_insurance_payout', 'insurance_purpose',
             'recommend1', 'recommend2', 'recommend3', //おすすめ

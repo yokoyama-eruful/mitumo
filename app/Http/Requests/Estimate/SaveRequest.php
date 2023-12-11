@@ -65,9 +65,12 @@ final class SaveRequest extends FormRequest
             'actual_loss_factor' => ['nullable', 'string'],
             'other_discount' => ['nullable', 'numeric', 'min:0'],
 
-            'chattel_surcharge_category' => ['nullable', 'required_if:property_type,普通',  'string'],
-            'occupational_surcharge' => ['nullable', 'required_if:property_type,普通', 'numeric', 'min:0'],
-            'work_surcharge' => ['nullable', 'numeric', 'min:0'],
+            'chattel_surcharge_category' => ['nullable', 'required_if:property_type,普通', 'string'],
+
+            'occupational_surcharge_code' => ['nullable',  'string'], // 'required_if:property_type,普通　は一旦省略
+            'occupational_surcharge_rate' => ['nullable',  'numeric', 'min:0'],  // 'required_if:property_type,普通　は一旦省略
+            'work_surcharge_code' => ['nullable', 'string'], // 'required_if:property_type,普通　は一旦省略
+            'work_surcharge_rate' => ['nullable',  'numeric', 'min:0'], // 'required_if:property_type,普通　は一旦省略
 
             'building_insurance_payout' => ['nullable', 'numeric', 'min:0'],
             'household_insurance_payout' => ['nullable', 'numeric', 'min:0'],
