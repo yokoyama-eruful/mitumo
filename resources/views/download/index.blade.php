@@ -48,7 +48,8 @@
                 <label class="text-sm text-gray-500 ml-3">PDF</label>
             </div>
             <div class="flex flex-row space-x-10 pb-10">
-                <form id="normal_form" method="POST" action="" class="bg-green-50 hover:bg-green-100">
+                <form method="POST" action="{{ route('estimate.download.standard', ['id' => $estimate->id]) }}"
+                    class="bg-green-50 hover:bg-green-100">
                     @csrf
                     <button name="normal"
                         class="h-44 w-44 outline outline-1 outline-slate-300 shadow-md rounded text-center text-xl">
@@ -58,7 +59,9 @@
                     </button>
                 </form>
 
-                <form id="comprehensive_form" method="POST" action="" class="bg-green-50 hover:bg-green-100">
+                <form id="comprehensive_form" method="POST"
+                    action="{{ route('estimate.download.comprehensive', ['id' => $estimate->id]) }}"
+                    class="bg-green-50 hover:bg-green-100">
                     @csrf
                     <button name="comprehensive"
                         class="h-44 w-44 outline outline-1 outline-slate-300 shadow-md rounded text-center text-xl">
@@ -68,7 +71,8 @@
                     </button>
                 </form>
 
-                <form id="normal_comprehensive_form" method="POST" action=""
+                <form id="normal_comprehensive_form" method="POST"
+                    action="{{ route('estimate.download.standardAndComprehensive', ['id' => $estimate->id]) }}"
                     class="bg-green-50 hover:bg-green-100">
                     @csrf
                     <button name="normal_comprehensive"
@@ -81,7 +85,9 @@
             </div>
 
             <div class="flex flex-row space-x-10 pb-10">
-                <form id="recommend_form" method="POST" action="" class="bg-green-50 hover:bg-green-100">
+                <form id="recommend_form" method="POST"
+                    action="{{ route('estimate.download.standardOfRecommend', ['id' => $estimate->id]) }}"
+                    class="bg-green-50 hover:bg-green-100">
                     @csrf
                     <button name="recommend"
                         class="h-44 w-44 outline outline-1 outline-slate-300 shadow-md rounded text-center text-xl">
@@ -93,7 +99,8 @@
                     </button>
                 </form>
 
-                <form id="recommend_comprehensive_form" method="POST" action=""
+                <form id="recommend_comprehensive_form" method="POST"
+                    action="{{ route('estimate.download.comprehensiveOfRecommend', ['id' => $estimate->id]) }}"
                     class="bg-green-50 hover:bg-green-100">
                     @csrf
                     <button name="recommend_comprehensive"
@@ -104,7 +111,8 @@
                     </button>
                 </form>
 
-                <form id="recommend_normal_comprehensive_form" method="POST" action=""
+                <form id="recommend_normal_comprehensive_form" method="POST"
+                    action="{{ route('estimate.download.standardOfRecommendAndComprehensiveOfRecommend', ['id' => $estimate->id]) }}"
                     class="bg-green-50 hover:bg-green-100">
                     @csrf
                     <button name="recommend_normal_comprehensive"
@@ -117,7 +125,9 @@
             </div>
 
             <div class="flex flex-row space-x-10 pb-10">
-                <form id="earthquake_normal_form" method="POST" action="" class="bg-green-50 hover:bg-green-100">
+                <form id="earthquake_normal_form" method="POST"
+                    action="{{ route('estimate.download.standardOfEarthquake', ['id' => $estimate->id]) }}"
+                    class="bg-green-50 hover:bg-green-100">
                     @csrf
                     <button name="earthquake_normal"
                         class="h-44 w-44 outline outline-1 outline-slate-300 shadow-md rounded text-center text-xl">
@@ -127,7 +137,8 @@
                     </button>
                 </form>
 
-                <form id="earthquake_comprehensive_form" method="POST" action=""
+                <form id="earthquake_comprehensive_form" method="POST"
+                    action="{{ route('estimate.download.comprehensiveOfEarthquake', ['id' => $estimate->id]) }}"
                     class="bg-green-50 hover:bg-green-100">
                     @csrf
                     <button name="earthquake_comprehensive"
@@ -138,7 +149,9 @@
                     </button>
                 </form>
 
-                <form id="all_form" method="POST" action="" class="bg-green-50 hover:bg-green-100">
+                <form id="all_form" method="POST"
+                    action="{{ route('estimate.download.all', ['id' => $estimate->id]) }}"
+                    class="bg-green-50 hover:bg-green-100">
                     @csrf
                     <button name="all"
                         class="h-44 w-44 outline outline-1 outline-slate-300 shadow-md rounded text-center text-xl">
