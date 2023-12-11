@@ -40,6 +40,12 @@ final class EstimateController extends Controller
             $estimate = $this->estimateService->update(intval($id), $params);
         }
 
-        return redirect()->route('estimate.edit', ['id' => $estimate->id]);
+        $redirectName = match ($request->submit_type) {
+            'preview' => 'estimate.preview.standard',
+            'download' => 'estimate.download.index',
+            default => 'estimate.edit',
+        };
+
+        return redirect()->route($redirectName, ['id' => $estimate->id]);
     }
 }

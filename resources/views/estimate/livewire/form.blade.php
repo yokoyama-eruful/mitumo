@@ -1,6 +1,6 @@
 <main class="w-[800px]  m-auto text-black bg-white">
-    <form action="{{ route('estimate.save', ['id' => $estimate->id ?? 'new']) }}" method="POST"
-        class="flex flex-col container p-2 mt-2">
+    <form id="estimateFormId" action="{{ route('estimate.save', ['id' => $estimate->id ?? 'new']) }}"
+        onsubmit="return false;" method="POST" class="flex flex-col container p-2 mt-2">
         @csrf
         <div class="estimate-input-box">
             <label class="estimate-label" for="company">
@@ -604,7 +604,8 @@
                     value="{{ old('annual_price', $estimate->assess_detail['annual_price'] ?? null) }}">
             </div>
         @endif
-        <button type="button" onclick="submit();"
+
+        <button type="button" onclick="submitForm(this)" name="save"
             class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5">
             <div class="flex items-center mb-3">
                 <div
@@ -615,39 +616,43 @@
             </div>
             <p class="text-left pl-5">入力された内容を保存します。<br>保存したのちプレビューが可能になります。</p>
         </button>
-    </form>
-    @if ($estimate->id)
-        <div class="flex">
-            <div class="p-3 w-1/2">
-                <a href="{{ route('estimate.preview.standard', ['id' => $estimate->id]) }}" id="preview"
-                    class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-[395px]">
+
+        @if ($estimate->id)
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <button type="button" onclick="submitForm(this)" value="preview"
+                    class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5">
+                    <div class="flex items-center mb-3">
+                        <div
+                            class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                        </div>
+                        <h2 class="text-lg title-font font-medium">プレビュー</h2>
+                    </div>
+                    <p class="text-left pl-5">入力した内容で見積書、評価シートのプレビューを表示します。</p>
+                </button>
+
+                <button type="button" onclick="submitForm(this)" value="download"
+                    class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5">
                     <div class="flex items-center mb-3">
                         <div
                             class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
                             <i class="fa-solid fa-eye"></i>
                         </div>
-                        <h2 class="text-gray-900 text-lg title-font font-medium">プレビュー</h2>
+                        <h2 class="text-lg title-font font-medium">ダウンロードファイル選択</h2>
                     </div>
-                    <div class="flex-grow">
-                        <p class="leading-relaxed text-base">入力した内容で見積書、評価シートのプレビューを表示します。</p>
-                    </div>
-                </a>
+                    <p class="text-left pl-5">ダウンロードする見積書を選択する画面に移行します。</p>
+                </button>
             </div>
-            <div class="p-3 w-1/2">
-                <a href="{{ route('estimate.download.index', ['id' => $estimate->id]) }}" id="download"
-                    class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-[395px]">
-                    <div class="flex items-center mb-3">
-                        <div
-                            class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                            <i class="fa-solid fa-hand-pointer"></i>
-                        </div>
-                        <h2 class="text-gray-900 text-lg title-font font-medium">ダウンロードファイル選択</h2>
-                    </div>
-                    <div class="flex-grow">
-                        <p class="leading-relaxed text-base">ダウンロードする見積書を選択する画面に移行します。</p>
-                    </div>
-                </a>
-            </div>
-        </div>
-    @endif
+        @endif
+    </form>
+    <script>
+        function submitForm(button) {
+            const submitInput = document.createElement("input");
+            submitInput.setAttribute("name", "submit_type");
+            submitInput.setAttribute("value", button.value);
+
+            document.getElementById('estimateFormId').appendChild(submitInput);
+            document.getElementById('estimateFormId').submit();
+        }
+    </script>
 </main>
