@@ -30,6 +30,11 @@ final class RecommendInsurancePremium
         $this->recommendTermList = [$estimate['recommend1'], $estimate['recommend2'], $estimate['recommend3']];
     }
 
+    public function getTotalStandardPremium()
+    {
+        //建物共済掛金+家財共済掛金+設備共済掛金+商品共済掛金
+    }
+
     public function calcStandardBuildingPremium()
     {
         //{ ( その他割引建物 * 実損払係数 ) * 長期率 * 短期率 } * 建物共済掛金　※1.短期率が適用されていない場合1をかける　※2.その他割引建物はcalcBuildingOtherDiscounts()
@@ -45,9 +50,10 @@ final class RecommendInsurancePremium
         //{ ( その他割引動産 + 動産割増 ) * 長期率 * 短期率 } * 商品共済掛金　※1.短期率が適用されていない場合1をかける　※2.その他割引動産はcalcChattelOtherDiscounts()
     }
 
-    public function getTotalStandardPremium()
+    private function calcBuildingOtherDiscounts()
     {
-        //建物共済掛金+家財共済掛金+設備共済掛金+商品共済掛金
+        //(基本率(建物)+職業割増+作業割増)*その他割引　※小数点第三位を四捨五入
+
     }
 
     private function calcChattelOtherDiscounts()
