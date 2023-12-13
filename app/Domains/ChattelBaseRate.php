@@ -6,23 +6,27 @@ namespace App\Domains;
 
 use Illuminate\Support\Facades\Storage;
 
-final class BaseRate
+final class ChattelBaseRate
 {
+    public readonly float $baseRate;
+
     public readonly array $rateList;
 
-    public function __construct()
+    public function __construct($estimate)
     {
+        $this->baseRate = $estimate->property_detail['base_rate'];
         $this->rateList = $this->makeRateList();
     }
 
-    public function findRate($propertyType, $buildingAge, $rank)
+    public function findRate($propertyType, $rank)
     {
-        $buildingAge = $buildingAge > 25 ? 25 : $buildingAge;
+        if ($propertyType == '工場') {
+            return $this->baseRate;
+        }
 
-        $result = array_filter($this->rateList, function ($item) use ($propertyType, $buildingAge, $rank) {
+        $result = array_filter($this->rateList, function ($item) use ($propertyType, $rank) {
             return
              $item['物件'] === $propertyType
-                && $item['築年数'] == $buildingAge
                 && $item['級別'] === $rank;
         });
 
@@ -37,7 +41,7 @@ final class BaseRate
 
     private function makeRateList()
     {
-        $filePath = Storage::path('rateTable/baseRateTable.csv');
+        $filePath = Storage::path('rateTable/chattelBaseTable.csv');
 
         $rateList = [];
 
@@ -56,9 +60,8 @@ final class BaseRate
 
             $rateList[] = [
                 '物件' => $data[0],
-                '築年数' => $data[1],
-                '級別' => $data[2],
-                '基本率' => $data[3],
+                '級別' => $data[1],
+                '基本率' => $data[2],
             ];
         }
 

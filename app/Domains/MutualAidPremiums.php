@@ -16,9 +16,9 @@ final class MutualAidPremiums
 
     private ?int $insuranceDay;
 
-    private float $shortTermRate;
+    public float $shortTermRate;
 
-    private float $longTerRate = 0;
+    public float $longTerRate = 0;
 
     public function __construct($estimate)
     {
