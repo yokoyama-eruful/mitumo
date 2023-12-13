@@ -48,4 +48,11 @@ final class EstimateController extends Controller
 
         return redirect()->route($redirectName, ['id' => $estimate->id]);
     }
+
+    public function destroy(int $id)
+    {
+        $this->estimateService->destroy($id);
+
+        return redirect()->back();
+    }
 }

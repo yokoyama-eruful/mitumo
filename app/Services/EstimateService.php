@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Estimate;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 
 final class EstimateService
 {
-    public function paginate()
+    public function paginate(int $pageCount = 10): LengthAwarePaginator
     {
+        return Estimate::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->paginate($pageCount);
     }
 
     public function create(): Estimate
@@ -32,5 +37,10 @@ final class EstimateService
         Estimate::where('id', $id)->update($params);
 
         return Estimate::find($id);
+    }
+
+    public function destroy(int $id): void
+    {
+        Estimate::destroy($id);
     }
 }

@@ -34,6 +34,7 @@ Route::middleware('auth:web')
                 Route::get('create', 'create')->name('create');
                 Route::get('edit/{id}', 'edit')->name('edit');
                 Route::post('save/{id}', 'save')->name('save');
+                Route::delete('destroy/{id}', 'destroy')->name('destroy');
             });
 
         Route::controller(PreviewController::class)

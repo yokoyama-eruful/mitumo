@@ -333,7 +333,7 @@ class EstimateForm extends Component
     {
         $this->buildingYear = (string) FullWidthDigitConverter::convert($this->buildingYear);
 
-        if ($this->startDate == '' || is_null($this->buildingYear)) {
+        if (! $this->startDate || ! $this->buildingYear) {
             $this->buildingAge = null;
 
             return;

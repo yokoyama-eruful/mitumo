@@ -328,6 +328,15 @@
                     wire:model="chattelSurcharge">
             </div>
         @endif
+        @if (in_array($propertyType, ['普通', '工場'], true))
+        <div class="estimate-input-box">
+            <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）
+                <div class="estimate-input-required">※必須</div>
+            </label>
+            <input id="chattel_surcharge_category" name="chattel_surcharge_category" class="estimate-input"
+                wire:model="chattelSurchargeCategory">
+        </div>
+        @endif
         @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
             <div class="estimate-input-box">
                 <label class="estimate-label" for="actual_loss_factor">実損払係数
@@ -343,15 +352,6 @@
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="other_discount" name="other_discount" class="estimate-input" wire:model="otherDiscount">
-            </div>
-        @endif
-        @if (in_array($propertyType, ['普通', '工場'], true))
-            <div class="estimate-input-box">
-                <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）
-                    <div class="estimate-input-required">※必須</div>
-                </label>
-                <input id="chattel_surcharge_category" name="chattel_surcharge_category" class="estimate-input"
-                    wire:model="chattelSurchargeCategory">
             </div>
         @endif
         @if (in_array($propertyType, ['普通'], true))
