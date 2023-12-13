@@ -10,8 +10,6 @@ final class StandardInsurancePremium
 {
     public readonly Estimate $estimate;
 
-    public readonly string $target;
-
     public readonly string $payMethod;
 
     public readonly array $building;
@@ -22,27 +20,25 @@ final class StandardInsurancePremium
 
     public readonly array $item;
 
-    public readonly int $standard1;
+    public readonly float $standard1;
 
-    public readonly int $standard2;
+    public readonly float $standard2;
 
-    public readonly int $standardDiv;
+    public readonly float $standardDiv;
 
     public readonly bool $payByLongTermFlag;
 
-    public readonly int $standardLongTerm;
+    public readonly float $standardLongTerm;
 
-    public function __construct($estimate, $target)
+    public function __construct($estimate)
     {
-        // $target =  建物　家財　設備　商品
         $this->estimate = $estimate;
-        $this->target = $target;
         $this->payMethod = $estimate->pay_method;
 
-        $building = $this->calcBuilding();
-        $houseHold = $this->calcHouseHold();
-        $facility = $this->calcFacility();
-        $item = $this->calcItem();
+        $this->building = $this->calcBuilding();
+        $this->houseHold = $this->calcHouseHold();
+        $this->facility = $this->calcFacility();
+        $this->item = $this->calcItem();
 
         //普通合計１
         $this->standard1 = $this->calcStandard1();
@@ -146,20 +142,11 @@ final class StandardInsurancePremium
         //その他割引
 
         $calcOtherDiscount = function ($estimate) {
-            $propertyType = $estimate->property_type;
+            $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
+            $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
 
-            if (in_array($propertyType, ['住宅', '普通'], true)) {
-                $baseRate = new BuildingBaseRate($estimate);
-                $buildingBaseRate = $baseRate->baseRate;
-            } else {
-                $buildingBaseRate = $estimate->base_rate;
-            }
-
-            $occupationalSurchargeRate = $estimate->property_detail['occupational_surcharge_rate'];
-            $workSurchargeRate = $estimate->property_detail['work_surcharge_rate'];
-            $otherDiscount = $estimate->property_detail['other_discount'];
-
-            return ($buildingBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount;
+            return ($estimate->base_rate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount / 100;
         };
 
         $otherDiscount = $calcOtherDiscount($estimate);
@@ -169,10 +156,12 @@ final class StandardInsurancePremium
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
         $longTermRate = $mutualAidPremium->longTerRate;
-        $applyRate = ($otherDiscount * $estimate->property_detail['actual_loss_factor']) * $longTermRate * $shortTermRate;
+        $actualLossFactor = $this->getValueByKey('actual_loss_factor', $estimate->property_detail, 1);
+        $applyRate = $otherDiscount * $actualLossFactor * $longTermRate * $shortTermRate;
 
         //掛け金
-        $premium = $estimate->property_detail['building_insurance_payout'] * $applyRate;
+        $buildingInsurancePayout = $this->getValueByKey('building_insurance_payout', $estimate->property_detail);
+        $premium = $buildingInsurancePayout * $applyRate;
 
         return [
             'その他割引' => $otherDiscount,
@@ -191,16 +180,16 @@ final class StandardInsurancePremium
 
             if (in_array($propertyType, ['住宅', '普通'], true)) {
                 $baseRate = new ChattelBaseRate($estimate);
-                $chattelBaseRate = $baseRate->baseRate;
+                $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
                 $chattelBaseRate = $estimate->base_rate;
             }
 
-            $occupationalSurchargeRate = $estimate->property_detail['occupational_surcharge_rate'];
-            $workSurchargeRate = $estimate->property_detail['work_surcharge_rate'];
-            $otherDiscount = $estimate->property_detail['other_discount'];
+            $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
+            $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
 
-            return ($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount;
+            return ($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount / 100;
         };
 
         $otherDiscount = $calcOtherDiscount($estimate);
@@ -213,7 +202,8 @@ final class StandardInsurancePremium
         $applyRate = $otherDiscount * $longTermRate * $shortTermRate;
 
         //掛け金
-        $premium = $estimate->property_detail['household_insurance_payout'] * $applyRate;
+        $householdInsurancePayout = $this->getValueByKey('household_insurance_payout', $estimate->property_detail);
+        $premium = $householdInsurancePayout * $applyRate;
 
         return [
             'その他割引' => $otherDiscount,
@@ -232,16 +222,16 @@ final class StandardInsurancePremium
 
             if (in_array($propertyType, ['住宅', '普通'], true)) {
                 $baseRate = new ChattelBaseRate($estimate);
-                $chattelBaseRate = $baseRate->baseRate;
+                $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
                 $chattelBaseRate = $estimate->base_rate;
             }
 
-            $occupationalSurchargeRate = $estimate->property_detail['occupational_surcharge_rate'];
-            $workSurchargeRate = $estimate->property_detail['work_surcharge_rate'];
-            $otherDiscount = $estimate->property_detail['other_discount'];
+            $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
+            $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
 
-            return ($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount;
+            return ($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount / 100;
         };
 
         $otherDiscount = $calcOtherDiscount($estimate);
@@ -251,10 +241,13 @@ final class StandardInsurancePremium
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
         $longTermRate = $mutualAidPremium->longTerRate;
-        $applyRate = ($otherDiscount * $estimate->property_detail['actual_loss_factor']) * $longTermRate * $shortTermRate;
+        $actualLossFactor = $this->getValueByKey('actual_loss_factor', $estimate->property_detail, 1);
+        $applyRate = $otherDiscount * $actualLossFactor * $longTermRate * $shortTermRate;
 
         //掛け金
-        $premium = ($estimate->property_detail['facility_insurance_payout'] + $estimate->property_detail['other_facility_insurance_payout']) * $applyRate;
+        $facilityInsurancePayout = $this->getValueByKey('facility_insurance_payout', $estimate->property_detail);
+        $otherFacilityInsurancePayout = $this->getValueByKey('other_facility_insurance_payout', $estimate->property_detail);
+        $premium = ($facilityInsurancePayout + $otherFacilityInsurancePayout) * $applyRate;
 
         return [
             'その他割引' => $otherDiscount,
@@ -273,16 +266,16 @@ final class StandardInsurancePremium
 
             if (in_array($propertyType, ['住宅', '普通'], true)) {
                 $baseRate = new ChattelBaseRate($estimate);
-                $chattelBaseRate = $baseRate->baseRate;
+                $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
                 $chattelBaseRate = $estimate->base_rate;
             }
 
-            $occupationalSurchargeRate = $estimate->property_detail['occupational_surcharge_rate'];
-            $workSurchargeRate = $estimate->property_detail['work_surcharge_rate'];
-            $otherDiscount = $estimate->property_detail['other_discount'];
+            $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail, 1);
+            $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
 
-            return ($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount;
+            return ($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount / 100;
         };
 
         $otherDiscount = $calcOtherDiscount($estimate);
@@ -292,10 +285,19 @@ final class StandardInsurancePremium
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
         $longTermRate = $mutualAidPremium->longTerRate;
-        $applyRate = ($otherDiscount + 動産割増) * $longTermRate * $shortTermRate;
+
+        $chattelSurchargeRate = match ($estimate->property_type) {
+            '住宅' => 0,
+            '普通' => 0.2, //動産割増（カテゴリ）が１級でも２級でも料率は0.2
+            '工場' => $estimate->property_detail['chattel_surcharge'],
+        };
+
+        $applyRate = ($otherDiscount + $chattelSurchargeRate) * $longTermRate * $shortTermRate;
 
         //掛け金
-        $premium = ($estimate->property_detail['item_insurance_payout'] + $estimate->property_detail['other_item_insurance_payout']) * $applyRate;
+        $itemInsurancePayout = $this->getValueByKey('item_insurance_payout', $estimate->property_detail);
+        $otherItemInsurancePayout = $this->getValueByKey('other_item_insurance_payout', $estimate->property_detail);
+        $premium = ($itemInsurancePayout + $otherItemInsurancePayout) * $applyRate;
 
         return [
             'その他割引' => $otherDiscount,
@@ -307,12 +309,12 @@ final class StandardInsurancePremium
     /**
      * 配列から安全に中身を取得するUtils関数
      */
-    private function getValueByKey(string $key, array $array): int
+    private function getValueByKey(string $key, array $array, int $defaultValue = 0): int
     {
         if (array_key_exists($key, $array) && $array[$key]) {
             return intval($array[$key]);
         }
 
-        return 0;
+        return $defaultValue;
     }
 }

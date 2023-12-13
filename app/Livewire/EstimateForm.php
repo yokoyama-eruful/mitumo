@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\Domains\BaseRate;
+use App\Domains\BuildingBaseRate;
 use App\Domains\OccupationalSurcharge;
 use App\Domains\WorkSurcharge;
 use App\Models\Estimate;
@@ -17,132 +17,132 @@ class EstimateForm extends Component
     public Estimate $estimate;
 
     //入力項目　プロパティ名：キャメルケース　nameタグ：スネークケース
-    public ?string $company;
+    public ?string $company = null;
 
-    public ?string $address;
+    public ?string $address = null;
 
-    public ?string $phoneNumber;
+    public ?string $phoneNumber = null;
 
-    public ?string $staffName;
+    public ?string $staffName = null;
 
-    public ?string $contractee;
+    public ?string $contractee = null;
 
-    public ?string $location;
+    public ?string $location = null;
 
-    public ?string $floorArea;
+    public ?string $floorArea = null;
 
-    public ?string $exclusiveArea;
+    public ?string $exclusiveArea = null;
 
-    public ?string $structure;
+    public ?string $structure = null;
 
-    public ?string $otherStructure;
+    public ?string $otherStructure = null;
 
-    public ?string $pillar;
+    public ?string $pillar = null;
 
-    public ?string $otherPillar;
+    public ?string $otherPillar = null;
 
-    public ?string $fireResistance;
+    public ?string $fireResistance = null;
 
-    public ?string $otherFireResistance;
+    public ?string $otherFireResistance = null;
 
-    public ?string $usage;
+    public ?string $usage = null;
 
-    public ?string $otherUsage;
+    public ?string $otherUsage = null;
 
-    public ?string $floor;
+    public ?string $floor = null;
 
-    public ?string $building;
+    public ?string $building = null;
 
-    public ?string $other;
+    public ?string $other = null;
 
-    public ?string $propertyType;
+    public ?string $propertyType = null;
 
-    public ?string $rank;
+    public ?string $rank = null;
 
-    public ?string $startDate;
+    public ?string $startDate = null;
 
-    public ?string $buildingYear;
+    public ?string $buildingYear = null;
 
-    public ?string $buildingAge;
+    public ?string $buildingAge = null;
 
-    public ?string $payMethod;
+    public ?string $payMethod = null;
 
-    public ?string $insuranceYear;
+    public ?string $insuranceYear = null;
 
-    public ?string $insuranceMonth;
+    public ?string $insuranceMonth = null;
 
-    public ?string $insuranceDay;
+    public ?string $insuranceDay = null;
 
-    public ?string $recommend1;
+    public ?string $recommend1 = null;
 
-    public ?string $recommend2;
+    public ?string $recommend2 = null;
 
-    public ?string $recommend3;
+    public ?string $recommend3 = null;
 
-    public ?string $earthquake1;
+    public ?string $earthquake1 = null;
 
-    public ?string $earthquake2;
+    public ?string $earthquake2 = null;
 
-    public ?string $earthquake3;
+    public ?string $earthquake3 = null;
 
     /////物件情報/////////////////////////////
 
-    public ?string $baseRate;
+    public ?string $baseRate = null;
 
-    public ?string $chattelSurcharge;
+    public ?string $chattelSurcharge = null;
 
-    public ?string $actualLossFactor;
+    public ?string $actualLossFactor = null;
 
-    public ?string $otherDiscount;
+    public ?string $otherDiscount = null;
 
-    public ?string $chattelSurchargeCategory;
+    public ?string $chattelSurchargeCategory = null;
 
-    public ?string $occupationalSurchargeCode;
+    public ?string $occupationalSurchargeCode = null;
 
-    public ?string $occupationalSurchargeRate;
+    public ?string $occupationalSurchargeRate = null;
 
-    public ?string $workSurchargeCode;
+    public ?string $workSurchargeCode = null;
 
-    public ?string $workSurchargeRate;
+    public ?string $workSurchargeRate = null;
 
-    public ?string $buildingInsurancePayout;
+    public ?string $buildingInsurancePayout = null;
 
-    public ?string $householdInsurancePayout;
+    public ?string $householdInsurancePayout = null;
 
-    public ?string $facilityInsurancePayout;
+    public ?string $facilityInsurancePayout = null;
 
-    public ?string $otherFacilityInsurancePayout;
+    public ?string $otherFacilityInsurancePayout = null;
 
-    public ?string $itemInsurancePayout;
+    public ?string $itemInsurancePayout = null;
 
-    public ?string $otherItemInsurancePayout;
+    public ?string $otherItemInsurancePayout = null;
 
     /////評価項目/////////////////////////////
-    public ?string $assessItem;
+    public ?string $assessItem = null;
 
-    public ?string $assessUsage;
+    public ?string $assessUsage = null;
 
-    public ?string $assessStructure;
+    public ?string $assessStructure = null;
 
-    public ?string $pilotiFloorArea;
+    public ?string $pilotiFloorArea = null;
 
-    public ?string $replacementPrice;
+    public ?string $replacementPrice = null;
 
-    public ?string $renovationCost;
+    public ?string $renovationCost = null;
 
-    public ?string $conventionalAge;
+    public ?string $conventionalAge = null;
 
-    public ?string $depreciationRate;
+    public ?string $depreciationRate = null;
 
-    public ?string $renovationAge;
+    public ?string $renovationAge = null;
 
-    public ?string $renovationDepreciationRate;
+    public ?string $renovationDepreciationRate = null;
 
-    public ?string $installationDate;
+    public ?string $installationDate = null;
 
-    public ?string $installationCost;
+    public ?string $installationCost = null;
 
-    public ?string $annualPrice;
+    public ?string $annualPrice = null;
 
     //セレクトボックス
     public array $structureList;
@@ -302,11 +302,14 @@ class EstimateForm extends Component
     {
         if (
             is_null($this->propertyType) ||
-            is_null($this->rank) ||
-            $this->propertyType === '工場'
+            is_null($this->rank)
         ) {
             $this->baseRate = null;
 
+            return;
+        }
+
+        if ($this->propertyType == '工場') {
             return;
         }
 
@@ -316,7 +319,7 @@ class EstimateForm extends Component
             $buildingAge = '';
         }
 
-        $baseRate = new BaseRate();
+        $baseRate = new BuildingBaseRate();
 
         $this->baseRate = (string) $baseRate->findRate($this->propertyType, $buildingAge, $this->rank);
     }

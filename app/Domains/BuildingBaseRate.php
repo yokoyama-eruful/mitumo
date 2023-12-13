@@ -8,25 +8,19 @@ use Illuminate\Support\Facades\Storage;
 
 final class BuildingBaseRate
 {
-    public readonly float $baseRate;
-
     public readonly array $rateList;
 
-    public function __construct($estimate)
+    public function __construct()
     {
-        $this->baseRate = $estimate->property_detail['base_rate'];
         $this->rateList = $this->makeRateList();
     }
 
     public function findRate($propertyType, $buildingAge, $rank)
     {
-        if ($propertyType == '工場') {
-            return $this->baseRate;
-        }
-
         $buildingAge = $buildingAge > 25 ? 25 : $buildingAge;
 
         $result = array_filter($this->rateList, function ($item) use ($propertyType, $buildingAge, $rank) {
+
             return
              $item['物件'] === $propertyType
                 && $item['築年数'] == $buildingAge
