@@ -102,6 +102,32 @@ class Estimate extends Model
         return implode(' ', $otherItem);
     }
 
+    public function getRecommendListAttribute()
+    {
+        $recommendations = [];
+
+        for ($i = 1; $i <= 3; $i++) {
+            $key = "recommend{$i}";
+            $recommendations[$key]
+                = isset($this->property_detail[$key]) ? $this->property_detail[$key] : '';
+        }
+
+        return $recommendations;
+    }
+
+    public function getEarthquakeListAttribute()
+    {
+        $earthquakeList = [];
+
+        for ($i = 1; $i <= 3; $i++) {
+            $key = "earthquake{$i}";
+            $earthquakeList[$key]
+                = isset($this->property_detail[$key]) ? $this->property_detail[$key] : '';
+        }
+
+        return $earthquakeList;
+    }
+
     //単位をつけるメソッド
     public function getFloorWithFloorAttribute()
     {
