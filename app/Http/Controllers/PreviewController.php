@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Domains\StandardInsurancePremium;
 use App\Services\EstimateService;
 
 class PreviewController extends Controller
@@ -16,8 +17,10 @@ class PreviewController extends Controller
     public function standard(int $id): \Illuminate\View\View
     {
         $estimate = $this->estimateService->find($id);
+        $standardPremium = new StandardInsurancePremium($estimate);
+        $standardPremium->getStandardPremium();
 
-        return view('preview.standard', compact('estimate'));
+        return view('preview.standard', compact('estimate', 'standardPremium'));
     }
 
     public function comprehensive(int $id)

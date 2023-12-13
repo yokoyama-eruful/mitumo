@@ -6,7 +6,7 @@ namespace App\Domains;
 
 use Illuminate\Support\Facades\Storage;
 
-final class BaseRate
+final class BuildingBaseRate
 {
     public readonly array $rateList;
 
@@ -20,6 +20,7 @@ final class BaseRate
         $buildingAge = $buildingAge > 25 ? 25 : $buildingAge;
 
         $result = array_filter($this->rateList, function ($item) use ($propertyType, $buildingAge, $rank) {
+
             return
              $item['物件'] === $propertyType
                 && $item['築年数'] == $buildingAge
@@ -37,7 +38,7 @@ final class BaseRate
 
     private function makeRateList()
     {
-        $filePath = Storage::path('rateTable/baseRateTable.csv');
+        $filePath = Storage::path('rateTable/buildingBaseRateTable.csv');
 
         $rateList = [];
 

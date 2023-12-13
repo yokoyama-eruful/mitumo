@@ -10,19 +10,22 @@ final class MutualAidPremiums
 {
     private string $propertyType;
 
+    private string $payMethod;
+
     private ?int $insuranceYear;
 
     private ?int $insuranceMonth;
 
     private ?int $insuranceDay;
 
-    private float $shortTermRate;
+    public float $shortTermRate;
 
-    private float $longTerRate = 0;
+    public float $longTerRate;
 
     public function __construct($estimate)
     {
         $this->propertyType = $estimate->property_type;
+        $this->payMethod = $estimate->pay_method;
 
         $this->insuranceYear = $estimate->insurance_year;
         $this->insuranceMonth = $estimate->insurance_month;
@@ -59,7 +62,7 @@ final class MutualAidPremiums
 
     private function findShortTermRate($month, $day)
     {
-        $filePath = Storage::path('rateTable/baseRateTable.csv');
+        $filePath = Storage::path('rateTable/shortTermRateTable.csv');
 
         $rateList = [];
 
@@ -86,22 +89,32 @@ final class MutualAidPremiums
         fclose($handle);
 
         $result = array_filter($rateList, function ($item) use ($month, $day) {
-            return $item['共済期間（月）'] === $month && $item['共済期間（日）'] === $day;
+            return $item['共済期間（月）'] == $month && $item['共済期間（日）'] == $day;
         });
 
-        return $result['rate'];
+        $result = ! empty($result) ? reset($result) : null;
+
+        if (is_null($result)) {
+            return;
+        }
+
+        return (float) $result['rate'];
     }
 
     private function getLongTermRate()
     {
         //長期率
         //払込方法が一時払いかつ共済期間_年が入力されていたらCSVから読み取り,そうでなければ1
-        return 0;
+        if ($this->payMethod == '一時払' && $this->insuranceYear) {
+            return $this->findLongTermRate($this->insuranceYear);
+        }
+
+        return 1;
     }
 
-    private function makeLongTermRateList()
+    private function findLongTermRate($insuranceYear)
     {
-        $filePath = Storage::path('rateTable/baseRateTable.csv');
+        $filePath = Storage::path('rateTable/longTermRateTable.csv');
 
         $rateList = [];
 
@@ -119,15 +132,23 @@ final class MutualAidPremiums
             }
 
             $rateList[] = [
-                '物件' => $data[0],
-                '築年数' => $data[1],
-                '級別' => $data[2],
-                '基本率' => $data[3],
+                '共済期間（年）' => $data[0],
+                'rate' => $data[1],
             ];
         }
 
         fclose($handle);
 
-        return $rateList;
+        $result = array_filter($rateList, function ($item) use ($insuranceYear) {
+            return $item['共済期間（年）'] == $insuranceYear;
+        });
+
+        $result = ! empty($result) ? reset($result) : null;
+
+        if (is_null($result)) {
+            return;
+        }
+
+        return (float) $result['rate'];
     }
 }
