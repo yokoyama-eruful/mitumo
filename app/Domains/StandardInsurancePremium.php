@@ -58,7 +58,7 @@ final class StandardInsurancePremium
 
     private function calcStandard1()
     {
-        return $this->building['掛金'] + $this->houseHold['掛金'] + $this->facility['掛金'] + $this->item['掛金'];
+        return round($this->building['掛金'] + $this->houseHold['掛金'] + $this->facility['掛金'] + $this->item['掛金'], -1);
     }
 
     private function calcStandard2()
@@ -144,9 +144,12 @@ final class StandardInsurancePremium
         $calcOtherDiscount = function ($estimate) {
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
             $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 1);
+            if ($otherDiscount != 1) {
+                $otherDiscount = 1 - $otherDiscount / 100;
+            }
 
-            return ($estimate->base_rate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount / 100;
+            return round(($estimate->base_rate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
         };
 
         $otherDiscount = $calcOtherDiscount($estimate);
@@ -188,8 +191,11 @@ final class StandardInsurancePremium
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
             $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
             $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
+            if ($otherDiscount != 1) {
+                $otherDiscount = 1 - $otherDiscount / 100;
+            }
 
-            return ($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount / 100;
+            return round(($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
         };
 
         $otherDiscount = $calcOtherDiscount($estimate);
@@ -230,8 +236,11 @@ final class StandardInsurancePremium
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
             $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
             $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
+            if ($otherDiscount != 1) {
+                $otherDiscount = 1 - $otherDiscount / 100;
+            }
 
-            return ($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount / 100;
+            return round(($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
         };
 
         $otherDiscount = $calcOtherDiscount($estimate);
@@ -274,8 +283,12 @@ final class StandardInsurancePremium
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail, 1);
             $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
             $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
+            if ($otherDiscount != 1) {
+                $otherDiscount = 1 - $otherDiscount / 100;
+            }
 
-            return ($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount / 100;
+            return round(($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
         };
 
         $otherDiscount = $calcOtherDiscount($estimate);
