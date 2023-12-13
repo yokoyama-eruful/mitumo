@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Domains\ComprehensiveInsurancePremium;
 use App\Domains\StandardInsurancePremium;
 use App\Services\EstimateService;
 
@@ -18,7 +19,6 @@ class PreviewController extends Controller
     {
         $estimate = $this->estimateService->find($id);
         $standardPremium = new StandardInsurancePremium($estimate);
-        $standardPremium->getStandardPremium();
 
         return view('preview.standard', compact('estimate', 'standardPremium'));
     }
@@ -26,49 +26,58 @@ class PreviewController extends Controller
     public function comprehensive(int $id)
     {
         $estimate = $this->estimateService->find($id);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
 
-        return view('preview.comprehensive', compact('estimate'));
+        return view('preview.comprehensive', compact('estimate', 'comprehensivePremium'));
     }
 
     public function standardAndComprehensive(int $id)
     {
         $estimate = $this->estimateService->find($id);
+        $standardPremium = new StandardInsurancePremium($estimate);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
 
-        return view('preview.standard-and-comprehensive', compact('estimate'));
+        return view('preview.standard-and-comprehensive', compact('estimate', 'standardPremium', 'comprehensivePremium'));
     }
 
     public function standardOfRecommend(int $id)
     {
         $estimate = $this->estimateService->find($id);
+        $standardPremium = new StandardInsurancePremium($estimate);
 
-        return view('preview.standard-of-recommend', compact('estimate'));
+        return view('preview.standard-of-recommend', compact('estimate', 'standardPremium'));
     }
 
     public function comprehensiveOfRecommend(int $id)
     {
         $estimate = $this->estimateService->find($id);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
 
-        return view('preview.comprehensive-of-recommend', compact('estimate'));
+        return view('preview.comprehensive-of-recommend', compact('estimate', 'comprehensivePremium'));
     }
 
     public function standardOfRecommendAndComprehensiveOfRecommend(int $id)
     {
         $estimate = $this->estimateService->find($id);
+        $standardPremium = new StandardInsurancePremium($estimate);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
 
-        return view('preview.standard-of-recommend-and-comprehensive-or-recommend', compact('estimate'));
+        return view('preview.standard-of-recommend-and-comprehensive-or-recommend', compact('estimate', 'standardPremium', 'comprehensivePremium'));
     }
 
     public function standardOfEarthquake(int $id)
     {
         $estimate = $this->estimateService->find($id);
+        $standardPremium = new StandardInsurancePremium($estimate);
 
-        return view('preview.standard-of-earthquake', compact('estimate'));
+        return view('preview.standard-of-earthquake', compact('estimate', 'standardPremium'));
     }
 
     public function comprehensiveOfEarthquake(int $id)
     {
         $estimate = $this->estimateService->find($id);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
 
-        return view('preview.comprehensive-of-earthquake', compact('estimate'));
+        return view('preview.comprehensive-of-earthquake', compact('estimate', 'comprehensivePremium'));
     }
 }
