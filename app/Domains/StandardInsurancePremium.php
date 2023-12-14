@@ -155,7 +155,7 @@ final class StandardInsurancePremium
         $otherDiscount = $calcOtherDiscount($estimate);
 
         ///適用率
-        $mutualAidPremium = new MutualAidPremiums($estimate);
+        $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
         $longTermRate = $mutualAidPremium->longTerRate;
@@ -201,7 +201,7 @@ final class StandardInsurancePremium
         $otherDiscount = $calcOtherDiscount($estimate);
 
         ///適用率
-        $mutualAidPremium = new MutualAidPremiums($estimate);
+        $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
         $longTermRate = $mutualAidPremium->longTerRate;
@@ -246,7 +246,7 @@ final class StandardInsurancePremium
         $otherDiscount = $calcOtherDiscount($estimate);
 
         ///適用率
-        $mutualAidPremium = new MutualAidPremiums($estimate);
+        $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
         $longTermRate = $mutualAidPremium->longTerRate;
@@ -294,7 +294,7 @@ final class StandardInsurancePremium
         $otherDiscount = $calcOtherDiscount($estimate);
 
         ///適用率
-        $mutualAidPremium = new MutualAidPremiums($estimate);
+        $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
         $longTermRate = $mutualAidPremium->longTerRate;
