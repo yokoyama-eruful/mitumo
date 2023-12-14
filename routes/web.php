@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AssessController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\EstimateController;
@@ -49,6 +50,14 @@ Route::middleware('auth:web')
                 Route::get('standardOfRecommendAndComprehensiveOfRecommend', 'standardOfRecommendAndComprehensiveOfRecommend')->name('standardOfRecommendAndComprehensiveOfRecommend');
                 Route::get('standardOfEarthquake', 'standardOfEarthquake')->name('standardOfEarthquake');
                 Route::get('comprehensiveOfEarthquake', 'comprehensiveOfEarthquake')->name('comprehensiveOfEarthquake');
+            });
+
+        Route::controller(AssessController::class)
+            ->prefix('estimate/assess')
+            ->name('estimate.assess.')
+            ->group(function () {
+                Route::get('{id}', 'show')->name('show');
+                Route::post('{id}/download/{type}')->name('download');
             });
 
         Route::controller(DownloadController::class)

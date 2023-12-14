@@ -1,4 +1,4 @@
-<main class="w-[800px]  m-auto text-black bg-white" style="overflow: hidden;">
+<main class="w-[800px] m-auto text-black bg-white">
     @if (Session::has('message'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
             <span class="block sm:inline">{{ Session::get('message') }}</span>
@@ -597,35 +597,47 @@
                     class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
                     <i class="fa-solid fa-floppy-disk"></i>
                 </div>
-                <h2 class="text-lg title-font font-medium">保存</h2>
+                <h2 class="text-lg font-medium">保存</h2>
             </div>
             <p class="text-left pl-5">入力された内容を保存します。<br>保存したのちプレビューが可能になります。</p>
         </button>
 
         @if ($estimate->id)
-            <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-3 gap-4 mb-6">
                 <button type="button" onclick="submitForm(this)" value="preview"
                     class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5">
-                    <div class="flex items-center mb-3">
+                    <div class="flex items-center mt-2 mb-5">
                         <div
                             class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
                             <i class="fa-solid fa-floppy-disk"></i>
                         </div>
-                        <h2 class="text-lg title-font font-medium">プレビュー</h2>
+                        <div class="text-lg font-medium">プレビュー</div>
                     </div>
-                    <p class="text-left pl-5">入力した内容で見積書、評価シートのプレビューを表示します。</p>
+                    <p class="text-left pl-5">入力した内容で見積書をプレビューする。</p>
+                </button>
+
+                <button type="button" onclick="submitForm(this)" value="assessSheet"
+                    class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5">
+                    <div class="flex items-center mb-2">
+                        <div
+                            class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                            <i class="fa-solid fa-ranking-star"></i>
+                        </div>
+                        <div class="text-lg font-medium">評価シートを<br>ダウンロード</div>
+                    </div>
+                    <p class="text-left pl-5">評価シートをダウンロード方法を選択します。</p>
                 </button>
 
                 <button type="button" onclick="submitForm(this)" value="download"
                     class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5">
-                    <div class="flex items-center mb-3">
+                    <div class="flex items-center mb-2">
                         <div
                             class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
                             <i class="fa-solid fa-eye"></i>
                         </div>
-                        <h2 class="text-lg title-font font-medium">ダウンロードファイル選択</h2>
+                        <div class="text-lg font-medium">ダウンロードファイル選択</div>
                     </div>
-                    <p class="text-left pl-5">ダウンロードする見積書を選択する画面に移行します。</p>
+                    <p class="text-left pl-5">ダウンロードする見積書を選択する画面に移動します。</p>
                 </button>
             </div>
         @endif

@@ -44,6 +44,7 @@ final class EstimateController extends Controller
         $redirectName = match ($request->submit_type) {
             'preview' => 'estimate.preview.standard',
             'download' => 'estimate.download.index',
+            'assessSheet' => 'estimate.assess.show',
             default => 'estimate.edit',
         };
 
