@@ -1,4 +1,10 @@
 <main class="w-[800px]  m-auto text-black bg-white" style="overflow: hidden;">
+    @if (Session::has('message'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ Session::get('message') }}</span>
+        </div>
+    @endif
+
     <form id="estimateFormId" action="{{ route('estimate.save', ['id' => $estimate->id ?? 'new']) }}"
         onsubmit="return false;" method="POST" class="flex flex-col container p-2 mt-2">
         @csrf
@@ -329,13 +335,13 @@
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
-        <div class="estimate-input-box">
-            <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）
-                <div class="estimate-input-required">※必須</div>
-            </label>
-            <input id="chattel_surcharge_category" name="chattel_surcharge_category" class="estimate-input"
-                wire:model="chattelSurchargeCategory">
-        </div>
+            <div class="estimate-input-box">
+                <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="chattel_surcharge_category" name="chattel_surcharge_category" class="estimate-input"
+                    wire:model="chattelSurchargeCategory">
+            </div>
         @endif
         @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
             <div class="estimate-input-box">
@@ -641,6 +647,10 @@
             Livewire.on('enableScroll', function() {
                 document.documentElement.style.overflow = 'auto';
                 document.body.style.overflow = 'auto';
+            });
+
+            Livewire.on('alert', function(message) {
+                alert(message)
             });
         });
     </script>

@@ -173,11 +173,8 @@ class EstimateForm extends Component
     public bool $isViewWorkTable = false;
 
     //標準コード
-    private OccupationalSurcharge $occupationalSurcharge;
 
     public array $occupationalSurchargeCodeList = [];
-
-    private WorkSurcharge $workSurcharge;
 
     public array $workSurchargeCodeList = [];
 
@@ -271,11 +268,6 @@ class EstimateForm extends Component
         $this->assessItemList = $this->getAssessItemList();
         $this->assessUsageList = $this->getAssessUsageList();
         $this->assessStructureList = $this->getAssessStructureList();
-
-        $this->occupationalSurcharge = new OccupationalSurcharge();
-        $this->occupationalSurchargeCodeList = $this->occupationalSurcharge->rateList;
-        $this->workSurcharge = new WorkSurcharge();
-        $this->workSurchargeCodeList = $this->workSurcharge->rateList;
     }
 
     public function render()
@@ -322,6 +314,11 @@ class EstimateForm extends Component
         $baseRate = new BuildingBaseRate();
 
         $this->baseRate = (string) $baseRate->findRate($this->propertyType, $buildingAge, $this->rank);
+
+        $this->occupationalSurchargeCode = null;
+        $this->occupationalSurchargeRate = null;
+        $this->workSurchargeCode = null;
+        $this->workSurchargeRate = null;
     }
 
     /**
@@ -374,6 +371,21 @@ class EstimateForm extends Component
      */
     public function onClickOpenOccupationalSurchargeTable()
     {
+
+        if (is_null($this->rank) || $this->rank == '') {
+            $this->dispatch('alert', '級別を指定してください。');
+
+            return;
+        }
+
+        $occupationalSurcharge = new OccupationalSurcharge();
+        $rateList = $occupationalSurcharge->rateList;
+        $rank = $this->rank;
+
+        $this->occupationalSurchargeCodeList = array_filter($rateList, function ($element) use ($rank) {
+            return is_array($element) && isset($element['級別']) && $element['級別'] === $rank;
+        });
+
         $this->dispatch('disableScroll');
         $this->isViewOccupationalTable = true;
     }
@@ -407,6 +419,20 @@ class EstimateForm extends Component
      */
     public function onClickOpenWorkSurchargeTable()
     {
+        if (is_null($this->rank) || $this->rank == '') {
+            $this->dispatch('alert', '級別を指定してください。');
+
+            return;
+        }
+
+        $workSurcharge = new WorkSurcharge();
+        $rateList = $workSurcharge->rateList;
+        $rank = $this->rank;
+
+        $this->workSurchargeCodeList = array_filter($rateList, function ($element) use ($rank) {
+            return is_array($element) && isset($element['級別']) && $element['級別'] === $rank;
+        });
+
         $this->dispatch('disableScroll');
 
         $this->isViewWorkTable = true;

@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Estimate\SaveRequest;
 use App\Services\EstimateService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 final class EstimateController extends Controller
 {
@@ -45,6 +46,8 @@ final class EstimateController extends Controller
             'download' => 'estimate.download.index',
             default => 'estimate.edit',
         };
+
+        Session::flash('message', '保存しました。_'.now());
 
         return redirect()->route($redirectName, ['id' => $estimate->id]);
     }
