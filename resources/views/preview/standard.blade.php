@@ -39,13 +39,13 @@
                 火災
             </div>
             <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                ○
+                {{ $standardCompensation->coverageOptions['火災'] }}
             </div>
             <div class="flex justify-center items-center h-6 w-[275px] outline outline-1 outline-gray-500">
                 残存物取り片付け費用
             </div>
             <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                ○
+                {{ $standardCompensation->paymentOptions['残存物取り片付け費用'] }}
             </div>
         </div>
 
@@ -54,13 +54,13 @@
                 落雷
             </div>
             <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                ○
+                {{ $standardCompensation->coverageOptions['落雷'] }}
             </div>
             <div class="flex justify-center items-center h-6 w-[275px] outline outline-1 outline-gray-500">
                 失火見舞費用
             </div>
             <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                ○
+                {{ $standardCompensation->paymentOptions['失火見舞費用'] }}
             </div>
         </div>
 
@@ -69,13 +69,13 @@
                 破裂または爆発
             </div>
             <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                ○
+                {{ $standardCompensation->coverageOptions['破裂または爆発'] }}
             </div>
             <div class="flex justify-center items-center h-6 w-[275px] outline outline-1 outline-gray-500">
                 地震火災費用
             </div>
             <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                ○
+                {{ $standardCompensation->paymentOptions['地震火災費用'] }}
             </div>
         </div>
 
@@ -84,40 +84,28 @@
                 風災・雪災
             </div>
             <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                ○
+                {{ $standardCompensation->coverageOptions['風災・雪災'] }}
             </div>
             <div class="flex justify-center items-center h-6 w-[275px] outline outline-1 outline-gray-500">
                 修理付帯費用
             </div>
-            {{-- @if ($information_list['information']['物件'] === '工場' || $information_list['information']['物件'] === '普通') --}}
             <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                ○
+                {{ $standardCompensation->paymentOptions['修理付帯費用'] }}
             </div>
-            {{-- @else
-                    <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                        ×
-                    </div>
-                @endif --}}
         </div>
 
         <div class="flex flex-row">
             <div class="flex justify-center items-center h-6 w-[275px] outline outline-1 outline-gray-500">
                 物体の落下・衝突
             </div>
-            {{-- @if ($information_list['information']['物件'] === '工場') --}}
             <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                ○
+                {{ $standardCompensation->coverageOptions['物体の落下・衝突'] }}
             </div>
-            {{-- @else
-                    <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                        ×
-                    </div>
-                @endif --}}
             <div class="flex justify-center items-center h-6 w-[275px] outline outline-1 outline-gray-500">
                 損害防止費用
             </div>
             <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                ○
+                {{ $standardCompensation->paymentOptions['損害防止費用'] }}
             </div>
         </div>
 
@@ -127,38 +115,24 @@
                     <div class="flex justify-center items-center h-6 w-[275px] outline outline-1 outline-gray-500">
                         騒じょう・労働争議
                     </div>
-                    {{-- @if ($information_list['information']['物件'] === '工場') --}}
                     <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                        ○
+                        {{ $standardCompensation->coverageOptions['騒じょう・労働争議'] }}
                     </div>
-                    {{-- @else
-                            <div
-                                class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                                ×
-                            </div>
-                        @endif --}}
                 </div>
                 <div class="flex flex-row">
                     <div class="flex justify-center items-center h-6 w-[275px] outline outline-1 outline-gray-500">
                         水ぬれ
                     </div>
-                    {{-- @if ($information_list['information']['物件'] === '工場') --}}
                     <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                        ○
+                        {{ $standardCompensation->coverageOptions['水ぬれ'] }}
                     </div>
-                    {{-- @else
-                            <div
-                                class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                                ×
-                            </div>
-                        @endif --}}
                 </div>
                 <div class="flex flex-row">
                     <div class="flex justify-center items-center h-6 w-[275px] outline outline-1 outline-gray-500">
                         盗難
                     </div>
                     <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                        ×
+                        {{ $standardCompensation->coverageOptions['盗難'] }}
                     </div>
                 </div>
                 <div class="flex flex-row">
@@ -166,7 +140,7 @@
                         水害
                     </div>
                     <div class="flex justify-center items-center h-6 w-[100px] outline outline-1 outline-gray-500">
-                        ×
+                        {{ $standardCompensation->coverageOptions['水害'] }}
                     </div>
                 </div>
             </div>
