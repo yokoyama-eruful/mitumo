@@ -155,7 +155,7 @@ final class ComprehensiveInsurancePremium
         $otherDiscount = $calcOtherDiscount($estimate);
 
         ///適用率
-        $mutualAidPremium = new MutualAidPremiums($estimate);
+        $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $comprehensivePremium = new ComprehensivePremium($estimate);
         $comprehensivePremium = $comprehensivePremium->getRate('建物');
 
@@ -202,7 +202,7 @@ final class ComprehensiveInsurancePremium
         $otherDiscount = $calcOtherDiscount($estimate);
 
         ///適用率
-        $mutualAidPremium = new MutualAidPremiums($estimate);
+        $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $comprehensivePremium = new ComprehensivePremium($estimate);
         $comprehensivePremium = $comprehensivePremium->getRate('家財');
 
@@ -248,7 +248,7 @@ final class ComprehensiveInsurancePremium
         $otherDiscount = $calcOtherDiscount($estimate);
 
         ///適用率
-        $mutualAidPremium = new MutualAidPremiums($estimate);
+        $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $comprehensivePremium = new ComprehensivePremium($estimate);
         $comprehensivePremium = $comprehensivePremium->getRate('動産2');
 
@@ -293,7 +293,7 @@ final class ComprehensiveInsurancePremium
         $otherDiscount = $calcOtherDiscount($estimate);
 
         ///適用率
-        $mutualAidPremium = new MutualAidPremiums($estimate);
+        $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $comprehensivePremium = new ComprehensivePremium($estimate);
         $comprehensivePremium = $comprehensivePremium->getRate('動産3');
 

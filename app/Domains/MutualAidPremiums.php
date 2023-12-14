@@ -8,28 +8,28 @@ use Illuminate\Support\Facades\Storage;
 
 final class MutualAidPremiums
 {
-    private string $propertyType;
+    public string $propertyType;
 
-    private string $payMethod;
+    public string $payMethod;
 
-    private ?int $insuranceYear;
+    public int $insuranceYear;
 
-    private ?int $insuranceMonth;
+    public int $insuranceMonth;
 
-    private ?int $insuranceDay;
+    public int $insuranceDay;
 
     public float $shortTermRate;
 
     public float $longTerRate;
 
-    public function __construct($estimate)
+    public function __construct($estimate, $insuranceYear)
     {
         $this->propertyType = $estimate->property_type;
         $this->payMethod = $estimate->pay_method;
 
-        $this->insuranceYear = $estimate->insurance_year;
-        $this->insuranceMonth = $estimate->insurance_month;
-        $this->insuranceDay = $estimate->insurance_day;
+        $this->insuranceYear = $insuranceYear;
+        $this->insuranceMonth = $estimate->insurance_month ?? 0;
+        $this->insuranceDay = $estimate->insurance_day ?? 0;
 
         $this->shortTermRate = $this->getShortTermRate();
         $this->longTerRate = $this->getLongTermRate();
