@@ -50,6 +50,7 @@ Route::middleware('auth:web')
                 Route::get('standardOfRecommendAndComprehensiveOfRecommend', 'standardOfRecommendAndComprehensiveOfRecommend')->name('standardOfRecommendAndComprehensiveOfRecommend');
                 Route::get('standardOfEarthquake', 'standardOfEarthquake')->name('standardOfEarthquake');
                 Route::get('comprehensiveOfEarthquake', 'comprehensiveOfEarthquake')->name('comprehensiveOfEarthquake');
+                Route::get('calculation', 'calculation')->name('calculation');
             });
 
         Route::controller(AssessController::class)

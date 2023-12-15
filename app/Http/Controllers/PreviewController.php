@@ -108,4 +108,11 @@ class PreviewController extends Controller
 
         return view('preview.comprehensive-of-earthquake', compact('estimate', 'comprehensivePremium', 'earthquakePremium'));
     }
+
+    public function calculation(int $id)
+    {
+        $estimate = $this->estimateService->find($id);
+
+        return view('preview.calculation', compact('estimate'));
+    }
 }
