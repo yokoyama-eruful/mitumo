@@ -25,13 +25,13 @@
         <div class="flex justify-center items-center h-16 w-[150px] bg-green-200 outline outline-1 outline-gray-500">
         </div>
         <div class="flex justify-center items-center h-16 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
-
+            {{ '支払縮小割合：' . $estimate->EarthquakeList['earthquake1'] . '%' }}
         </div>
         <div class="flex justify-center items-center h-16 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
-
+            {{ '支払縮小割合：' . $estimate->EarthquakeList['earthquake2'] . '%' }}
         </div>
         <div class="flex justify-center items-center h-16 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
-
+            {{ '支払縮小割合：' . $estimate->EarthquakeList['earthquake3'] . '%' }}
         </div>
     </div>
     <div class="flex flex-row">
@@ -39,13 +39,13 @@
             共済金支払最大額
         </div>
         <div class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-
+            {{ yenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake1'])['共済金支払最大額']) }}
         </div>
         <div class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-
+            {{ yenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake2'])['共済金支払最大額']) }}
         </div>
         <div class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-
+            {{ yenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake3'])['共済金支払最大額']) }}
         </div>
     </div>
     <div class="flex flex-row">
@@ -53,13 +53,13 @@
             地震掛金
         </div>
         <div class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-
+            {{ yenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake1'])['地震掛金']) }}
         </div>
         <div class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-
+            {{ yenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake2'])['地震掛金']) }}
         </div>
         <div class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-
+            {{ yenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake3'])['地震掛金']) }}
         </div>
 
     </div>
@@ -67,15 +67,14 @@
         <div class="flex justify-center items-center h-20 w-[150px] bg-green-200 outline outline-1 outline-gray-500">
             合計掛金
         </div>
-
         <div class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-
+            {{ yenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake1'])['合計掛金']) }}
         </div>
         <div class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-
+            {{ yenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake2'])['合計掛金']) }}
         </div>
         <div class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-
+            {{ yenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake3'])['合計掛金']) }}
         </div>
     </div>
 @endsection
