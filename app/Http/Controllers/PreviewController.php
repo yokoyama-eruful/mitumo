@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 
 use App\Domains\ComprehensiveCompensation;
 use App\Domains\ComprehensiveInsurancePremium;
+use App\Domains\EarthquakeComprehensiveInsurancePremium;
+use App\Domains\EarthquakeStandardInsurancePremium;
 use App\Domains\MutualAidPremiums;
 use App\Domains\RecommendComprehensiveInsurancePremium;
 use App\Domains\RecommendStandardInsurancePremium;
@@ -92,7 +94,9 @@ class PreviewController extends Controller
         $estimate = $this->estimateService->find($id);
         $standardPremium = new StandardInsurancePremium($estimate);
 
-        return view('preview.standard-of-earthquake', compact('estimate', 'standardPremium'));
+        $earthquakePremium = new EarthquakeStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
+
+        return view('preview.standard-of-earthquake', compact('estimate', 'standardPremium', 'earthquakePremium'));
     }
 
     public function comprehensiveOfEarthquake(int $id)
@@ -100,6 +104,8 @@ class PreviewController extends Controller
         $estimate = $this->estimateService->find($id);
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
 
-        return view('preview.comprehensive-of-earthquake', compact('estimate', 'comprehensivePremium'));
+        $earthquakePremium = new EarthquakeComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
+
+        return view('preview.comprehensive-of-earthquake', compact('estimate', 'comprehensivePremium', 'earthquakePremium'));
     }
 }

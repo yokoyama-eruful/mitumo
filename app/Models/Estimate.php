@@ -122,7 +122,7 @@ class Estimate extends Model
         for ($i = 1; $i <= 3; $i++) {
             $key = "earthquake{$i}";
             $earthquakeList[$key]
-                = isset($this->property_detail[$key]) ? $this->property_detail[$key] : '';
+                = isset($this->property_detail[$key]) ? $this->property_detail[$key] : 0;
         }
 
         return $earthquakeList;
