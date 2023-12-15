@@ -4,6 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Domains\ComprehensiveCompensation;
+use App\Domains\ComprehensiveInsurancePremium;
+use App\Domains\EarthquakeComprehensiveInsurancePremium;
+use App\Domains\EarthquakeStandardInsurancePremium;
+use App\Domains\MutualAidPremiums;
+use App\Domains\RecommendComprehensiveInsurancePremium;
+use App\Domains\RecommendStandardInsurancePremium;
+use App\Domains\StandardCompensation;
+use App\Domains\StandardInsurancePremium;
 use App\Services\DownloadService;
 use App\Services\EstimateService;
 
@@ -25,54 +34,102 @@ class DownloadController extends Controller
     //普通火災見積書ダウンロード
     public function standard(int $id): void
     {
-        $this->downloadService->dropStandard($id);
+        $estimate = $this->estimateService->find($id);
+        $standardInsurancePremium = new StandardInsurancePremium($estimate);
+        $standardCompensation = new StandardCompensation($estimate->property_type);
+
+        $this->downloadService->dropStandard($estimate, $standardInsurancePremium, $standardCompensation);
     }
 
     //総合火災見積書ダウンロード
     public function comprehensive(int $id): void
     {
-        $this->downloadService->dropComprehensive($id);
+        $estimate = $this->estimateService->find($id);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
+        $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
+        $comprehensiveCompensation = new ComprehensiveCompensation($estimate->property_type, $shortTerm->shortTermRate);
+
+        $this->downloadService->dropComprehensive($estimate, $comprehensivePremium, $comprehensiveCompensation);
     }
 
     //普通&総合火災見積書ダウンロード
     public function standardAndComprehensive(int $id): void
     {
-        $this->downloadService->dropStandardAndComprehensive($id);
+        $estimate = $this->estimateService->find($id);
+        $standardPremium = new StandardInsurancePremium($estimate);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
+        $standardCompensation = new StandardCompensation($estimate->property_type);
+        $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
+        $comprehensiveCompensation = new ComprehensiveCompensation($estimate->property_type, $shortTerm->shortTermRate);
+
+        $this->downloadService->dropStandardAndComprehensive($estimate, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation);
     }
 
     //普通火災見積書(おすすめ契約あり)ダウンロード
     public function standardOfRecommend(int $id): void
     {
-        $this->downloadService->dropStandardOfRecommend($id);
+        $estimate = $this->estimateService->find($id);
+        $standardPremium = new StandardInsurancePremium($estimate);
+        $recommendStandardPremium = new RecommendStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
+
+        $this->downloadService->dropStandardOfRecommend($estimate, $standardPremium, $recommendStandardPremium);
     }
 
     //総合火災見積書(おすすめ契約あり)ダウンロード
     public function comprehensiveOfRecommend(int $id): void
     {
-        $this->downloadService->dropComprehensiveOfRecommend($id);
+        $estimate = $this->estimateService->find($id);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
+        $recommendComprehensivePremium = new RecommendComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
+
+        $this->downloadService->dropComprehensiveOfRecommend($estimate, $comprehensivePremium, $recommendComprehensivePremium);
     }
 
     //普通&総合火災見積書(おすすめ契約あり)ダウンロード
     public function standardOfRecommendAndComprehensiveOfRecommend(int $id): void
     {
-        $this->downloadService->dropStandardOfRecommendAndComprehensiveOfRecommend($id);
+        $estimate = $this->estimateService->find($id);
+        $standardPremium = new StandardInsurancePremium($estimate);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
+        $recommendStandardPremium = new RecommendStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
+        $recommendComprehensivePremium = new RecommendComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
+
+        $this->downloadService->dropStandardOfRecommendAndComprehensiveOfRecommend($estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium);
     }
 
     //普通火災見積書(地震特約あり)ダウンロード
     public function standardOfEarthquake(int $id): void
     {
-        $this->downloadService->dropStandardOfEarthquake($id);
+        $estimate = $this->estimateService->find($id);
+        $standardPremium = new StandardInsurancePremium($estimate);
+        $earthquakePremium = new EarthquakeStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
+
+        $this->downloadService->dropStandardOfEarthquake($estimate, $standardPremium, $earthquakePremium);
     }
 
     //総合火災見積書(地震特約あり)ダウンロード
     public function comprehensiveOfEarthquake(int $id): void
     {
-        $this->downloadService->dropComprehensiveOfEarthquake($id);
+        $estimate = $this->estimateService->find($id);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
+        $earthquakePremium = new EarthquakeComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
+
+        $this->downloadService->dropComprehensiveOfEarthquake($estimate, $comprehensivePremium, $earthquakePremium);
     }
 
     //すべてダウンロード
     public function all(int $id): void
     {
-        $this->downloadService->dropAll($id);
+        $estimate = $this->estimateService->find($id);
+        $standardPremium = new StandardInsurancePremium($estimate);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
+        $standardCompensation = new StandardCompensation($estimate->property_type);
+        $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
+        $comprehensiveCompensation = new ComprehensiveCompensation($estimate->property_type, $shortTerm->shortTermRate);
+        $recommendStandardPremium = new RecommendStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
+        $recommendComprehensivePremium = new RecommendComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
+        $earthquakePremium = new EarthquakeStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
+        $earthquakePremium = new EarthquakeComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
+        $this->downloadService->dropAll($estimate, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation, $recommendStandardPremium, $recommendComprehensivePremium, $earthquakePremium, $earthquakePremium);
     }
 }

@@ -68,7 +68,7 @@ final class RecommendStandardInsurancePremium
         $otherDiscount = $calcOtherDiscount($estimate);
 
         ///適用率
-        $mutualAidPremium = new MutualAidPremiums($estimate, $recommendYear); //おすすめ契約年数で長期率を取得
+        $mutualAidPremium = new MutualAidPremiums($estimate, (int) $recommendYear); //おすすめ契約年数で長期率を取得
 
         $longTermRate = $mutualAidPremium->longTerRate;
         $actualLossFactor = $this->getValueByKey('actual_loss_factor', $estimate->property_detail, 1);

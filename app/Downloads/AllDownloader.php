@@ -10,15 +10,15 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 class AllDownloader
 {
     public function dropFile(
-        $standardDate,
-        $comprehensiveDate,
-        $comprehensiveOfEarthquakeDate,
-        $comprehensiveOfRecommendDate,
-        $standardAndComprehensiveDate,
-        $standardOfEarthquakeDate,
-        $standardOfRecommendAndComprehensiveOfRecommendDate,
-        $standardOfRecommendDate,
-        $calcData,
+        $estimate,
+        $standardPremium,
+        $comprehensivePremium,
+        $standardCompensation,
+        $comprehensiveCompensation,
+        $recommendStandardPremium,
+        $recommendComprehensivePremium,
+        $standardEarthquakePremium,
+        $comprehensiveEarthquakePremium
     ) {
         $filePath = storage_path('app/estimateTemplate/all.xlsx');
 
@@ -30,23 +30,46 @@ class AllDownloader
         $reader = new Xlsx();
         $spreadSheet = $reader->load($filePath);
 
-        $this->setStandardInfo($spreadSheet, $standardDate);
+        $mutualItem = [
+            'O1' => date('Y年m月d日'),
+            'A3' => $estimate->contractee,
+            'R5' => $estimate->company,
+            'R6' => $estimate->address,
+            'R7' => 'ＴＥＬ ： '.$estimate->phone_number,
+            'R8' => '担当 ： '.$estimate->staff_name,
+            'D20' => $estimate->location,
+            'D23' => $estimate->BuildingStructure,
+            'D27' => $estimate->BuildingStructure,
+            'O22' => $estimate->property_type,
+            'D31' => $estimate->rank,
+            'M31' => $estimate->pay_method,
+            'M33' => $estimate->InsurancePeriod,
+            'D35' => $estimate->OtherItem,
+            'D41' => thousandYenUnit($estimate->property_detail['building_insurance_payout']),
+            'K41' => thousandYenUnit($estimate->property_detail['household_insurance_payout']),
+            'D43' => thousandYenUnit($estimate->property_detail['facility_insurance_payout']),
+            'K43' => thousandYenUnit($estimate->property_detail['item_insurance_payout']),
+            'D45' => thousandYenUnit($estimate->property_detail['other_facility_insurance_payout']),
+            'K45' => thousandYenUnit($estimate->property_detail['other_item_insurance_payout']),
+        ];
 
-        $this->setComprehensiveInfo($spreadSheet, $comprehensiveDate);
+        $this->setStandardInfo($spreadSheet, $standardPremium, $standardCompensation, $mutualItem);
 
-        $this->setStandardAndComprehensiveInfo($spreadSheet, $standardAndComprehensiveDate);
+        $this->setComprehensiveInfo($spreadSheet, $comprehensivePremium, $comprehensiveCompensation, $mutualItem);
 
-        $this->setStandardOfRecommendInfo($spreadSheet, $standardOfRecommendDate);
+        $this->setStandardAndComprehensiveInfo($spreadSheet, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation, $mutualItem);
 
-        $this->setComprehensiveOfRecommendInfo($spreadSheet, $comprehensiveOfRecommendDate);
+        $this->setStandardOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $recommendStandardPremium, $mutualItem);
 
-        $this->setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $standardOfRecommendAndComprehensiveOfRecommendDate);
+        $this->setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium, $mutualItem);
 
-        $this->setStandardOfEarthquakeInfo($spreadSheet, $standardOfEarthquakeDate);
+        $this->setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium, $mutualItem);
 
-        $this->setComprehensiveOfEarthquakeInfo($spreadSheet, $comprehensiveOfEarthquakeDate);
+        $this->setStandardOfEarthquakeInfo($spreadSheet, $estimate, $standardPremium, $standardEarthquakePremium, $mutualItem);
 
-        $this->setCalcInfo($spreadSheet, $calcData);
+        $this->setComprehensiveOfEarthquakeInfo($spreadSheet, $estimate, $comprehensivePremium, $comprehensiveEarthquakePremium, $mutualItem);
+
+        $this->setCalcInfo($spreadSheet, $estimate);
 
         $spreadSheet->setActiveSheetIndex(0);
         $writer = IOFactory::createWriter($spreadSheet, 'Xlsx');
@@ -56,57 +79,243 @@ class AllDownloader
         exit;
     }
 
-    private function setStandardInfo($spreadSheet, $standardOfEarthquakeDate)
+    private function setStandardInfo($spreadSheet, $standardInsurancePremium, $standardCompensation, $mutualItem)
     {
+        $standardCompensation = [
+            'G49' => $standardCompensation->coverageOptions['火災'],
+            'G50' => $standardCompensation->coverageOptions['落雷'],
+            'G51' => $standardCompensation->coverageOptions['破裂または爆発'],
+            'G52' => $standardCompensation->coverageOptions['風災・雪災'],
+            'G53' => $standardCompensation->coverageOptions['物体の落下・衝突'],
+            'G54' => $standardCompensation->coverageOptions['騒じょう・労働争議'],
+            'G55' => $standardCompensation->coverageOptions['水ぬれ'],
+            'G56' => $standardCompensation->coverageOptions['盗難'],
+            'G57' => $standardCompensation->coverageOptions['水害'],
+            'P49' => $standardCompensation->paymentOptions['残存物取り片付け費用'],
+            'P50' => $standardCompensation->paymentOptions['失火見舞費用'],
+            'P51' => $standardCompensation->paymentOptions['地震火災費用'],
+            'P52' => $standardCompensation->paymentOptions['修理付帯費用'],
+            'P53' => $standardCompensation->paymentOptions['損害防止費用'],
+        ];
+
         $worksheet = $spreadSheet->getSheetByName('普通');
-        // $worksheet->setCellValue('セル番号', $standardOfEarthquakeDate);
+        foreach ($mutualItem as $key => $mutualItem) {
+            $worksheet->setCellValue($key, $mutualItem);
+        }
+
+        $worksheet->setCellValue('O41', $standardInsurancePremium->getStandardPremium());
+
+        foreach ($standardCompensation as $key => $standardCompensation) {
+            $worksheet->setCellValue($key, $standardCompensation);
+        }
     }
 
-    private function setComprehensiveInfo($spreadSheet, $comprehensiveDate)
+    private function setComprehensiveInfo($spreadSheet, $comprehensivePremium, $comprehensiveCompensation, $mutualItem)
     {
-        $worksheet = $spreadSheet->getSheetByName('地震おすすめ(総合)');
-        // $worksheet->setCellValue('セル番号', $comprehensiveDate);
+        $comprehensiveCompensation = [
+            'G49' => $comprehensiveCompensation->coverageOptions['火災'],
+            'G50' => $comprehensiveCompensation->coverageOptions['落雷'],
+            'G51' => $comprehensiveCompensation->coverageOptions['破裂または爆発'],
+            'G52' => $comprehensiveCompensation->coverageOptions['風災・雪災'],
+            'G53' => $comprehensiveCompensation->coverageOptions['物体の落下・衝突'],
+            'G54' => $comprehensiveCompensation->coverageOptions['騒じょう・労働争議'],
+            'G55' => $comprehensiveCompensation->coverageOptions['水ぬれ'],
+            'G56' => $comprehensiveCompensation->coverageOptions['盗難'],
+            'G57' => $comprehensiveCompensation->coverageOptions['水害'],
+            'P49' => $comprehensiveCompensation->paymentOptions['残存物取り片付け費用'],
+            'P50' => $comprehensiveCompensation->paymentOptions['失火見舞費用'],
+            'P51' => $comprehensiveCompensation->paymentOptions['地震火災費用'],
+            'P52' => $comprehensiveCompensation->paymentOptions['修理付帯費用'],
+            'P53' => $comprehensiveCompensation->paymentOptions['損害防止費用'],
+        ];
+
+        $worksheet = $spreadSheet->getSheetByName('総合');
+        foreach ($mutualItem as $key => $mutualItem) {
+            $worksheet->setCellValue($key, $mutualItem);
+        }
+
+        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+
+        foreach ($comprehensiveCompensation as $key => $comprehensiveCompensation) {
+            $worksheet->setCellValue($key, $comprehensiveCompensation);
+        }
     }
 
-    private function setStandardAndComprehensiveInfo($spreadSheet, $standardAndComprehensiveDate)
+    private function setStandardAndComprehensiveInfo($spreadSheet, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation, $mutualItem)
     {
+        $standardCompensation = [
+            'F49' => $standardCompensation->coverageOptions['火災'],
+            'F50' => $standardCompensation->coverageOptions['落雷'],
+            'F51' => $standardCompensation->coverageOptions['破裂または爆発'],
+            'F52' => $standardCompensation->coverageOptions['風災・雪災'],
+            'F53' => $standardCompensation->coverageOptions['物体の落下・衝突'],
+            'F54' => $standardCompensation->coverageOptions['騒じょう・労働争議'],
+            'F55' => $standardCompensation->coverageOptions['水ぬれ'],
+            'F56' => $standardCompensation->coverageOptions['盗難'],
+            'F57' => $standardCompensation->coverageOptions['水害'],
+            'O49' => $standardCompensation->paymentOptions['残存物取り片付け費用'],
+            'O50' => $standardCompensation->paymentOptions['失火見舞費用'],
+            'O51' => $standardCompensation->paymentOptions['地震火災費用'],
+            'O52' => $standardCompensation->paymentOptions['修理付帯費用'],
+            'O53' => $standardCompensation->paymentOptions['損害防止費用'],
+        ];
+
+        $comprehensiveCompensation = [
+            'H49' => $comprehensiveCompensation->coverageOptions['火災'],
+            'H50' => $comprehensiveCompensation->coverageOptions['落雷'],
+            'H51' => $comprehensiveCompensation->coverageOptions['破裂または爆発'],
+            'H52' => $comprehensiveCompensation->coverageOptions['風災・雪災'],
+            'H53' => $comprehensiveCompensation->coverageOptions['物体の落下・衝突'],
+            'H54' => $comprehensiveCompensation->coverageOptions['騒じょう・労働争議'],
+            'H55' => $comprehensiveCompensation->coverageOptions['水ぬれ'],
+            'H56' => $comprehensiveCompensation->coverageOptions['盗難'],
+            'H57' => $comprehensiveCompensation->coverageOptions['水害'],
+            'Q49' => $comprehensiveCompensation->paymentOptions['残存物取り片付け費用'],
+            'Q50' => $comprehensiveCompensation->paymentOptions['失火見舞費用'],
+            'Q51' => $comprehensiveCompensation->paymentOptions['地震火災費用'],
+            'Q52' => $comprehensiveCompensation->paymentOptions['修理付帯費用'],
+            'Q53' => $comprehensiveCompensation->paymentOptions['損害防止費用'],
+        ];
+
         $worksheet = $spreadSheet->getSheetByName('普通&総合');
-        // $worksheet->setCellValue('セル番号', $standardAndComprehensiveDate);
+        foreach ($mutualItem as $key => $mutualItem) {
+            $worksheet->setCellValue($key, $mutualItem);
+        }
+
+        $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
+        $worksheet->setCellValue('O44', $comprehensivePremium->getComprehensivePremium());
+
+        foreach ($standardCompensation as $key => $standardCompensation) {
+            $worksheet->setCellValue($key, $standardCompensation);
+        }
+
+        foreach ($comprehensiveCompensation as $key => $comprehensiveCompensation) {
+            $worksheet->setCellValue($key, $comprehensiveCompensation);
+        }
     }
 
-    private function setStandardOfRecommendInfo($spreadSheet, $standardOfRecommendDate)
+    private function setStandardOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $recommendStandardPremium, $mutualItem)
     {
         $worksheet = $spreadSheet->getSheetByName('おすすめ(普通)');
-        // $worksheet->setCellValue('セル番号', $standardOfRecommendDate);
+        foreach ($mutualItem as $key => $mutualItem) {
+            $worksheet->setCellValue($key, $mutualItem);
+        }
+
+        $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
+
+        $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
+        $worksheet->setCellValue('D49', $estimate->property_detail['recommend1']);
+        $worksheet->setCellValue('D51', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend1'])['共済掛金']);
+        $worksheet->setCellValue('D53', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend1'])['１年更新の場合より']);
+        $worksheet->setCellValue('I49', $estimate->property_detail['recommend2']);
+        $worksheet->setCellValue('I51', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend2'])['共済掛金']);
+        $worksheet->setCellValue('I53', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend2'])['１年更新の場合より']);
+        $worksheet->setCellValue('N49', $estimate->property_detail['recommend3']);
+        $worksheet->setCellValue('N51', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend3'])['共済掛金']);
+        $worksheet->setCellValue('N53', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend3'])['１年更新の場合より']);
     }
 
-    private function setComprehensiveOfRecommendInfo($spreadSheet, $comprehensiveOfRecommendDate)
+    private function setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium, $mutualItem)
     {
         $worksheet = $spreadSheet->getSheetByName('おすすめ(総合)');
-        // $worksheet->setCellValue('セル番号', $comprehensiveOfRecommendDate);
+        foreach ($mutualItem as $key => $mutualItem) {
+            $worksheet->setCellValue($key, $mutualItem);
+        }
+
+        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+
+        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('D49', yearUnit($estimate->property_detail['recommend1']));
+        $worksheet->setCellValue('D51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'])['共済掛金']);
+        $worksheet->setCellValue('D53', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'])['１年更新の場合より']);
+        $worksheet->setCellValue('I49', yearUnit($estimate->property_detail['recommend2']));
+        $worksheet->setCellValue('I51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'])['共済掛金']);
+        $worksheet->setCellValue('I53', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'])['１年更新の場合より']);
+        $worksheet->setCellValue('N49', yearUnit($estimate->property_detail['recommend3']));
+        $worksheet->setCellValue('N51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'])['共済掛金']);
+        $worksheet->setCellValue('N53', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'])['１年更新の場合より']);
     }
 
-    private function setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $standardOfRecommendAndComprehensiveOfRecommendDate)
+    private function setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium, $mutualItem)
     {
         $worksheet = $spreadSheet->getSheetByName('おすすめ(普&総)');
-        // $worksheet->setCellValue('セル番号', $standardOfRecommendAndComprehensiveOfRecommendDate);
+        foreach ($mutualItem as $key => $mutualItem) {
+            $worksheet->setCellValue($key, $mutualItem);
+        }
+
+        $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
+        $worksheet->setCellValue('O44', $comprehensivePremium->getComprehensivePremium());
+
+        $worksheet->setCellValue('D49', $estimate->property_detail['recommend1']);
+        $worksheet->setCellValue('D51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'])['共済掛金']);
+        $worksheet->setCellValue('D52', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'])['１年更新の場合より']);
+        $worksheet->setCellValue('I49', $estimate->property_detail['recommend2']);
+        $worksheet->setCellValue('I51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'])['共済掛金']);
+        $worksheet->setCellValue('I52', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'])['１年更新の場合より']);
+        $worksheet->setCellValue('N49', $estimate->property_detail['recommend3']);
+        $worksheet->setCellValue('N51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'])['共済掛金']);
+        $worksheet->setCellValue('N52', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'])['１年更新の場合より']);
+
+        $worksheet->setCellValue('D55', $estimate->property_detail['recommend1']);
+        $worksheet->setCellValue('D57', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend1'])['共済掛金']);
+        $worksheet->setCellValue('D58', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend1'])['１年更新の場合より']);
+        $worksheet->setCellValue('I55', $estimate->property_detail['recommend2']);
+        $worksheet->setCellValue('I57', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend2'])['共済掛金']);
+        $worksheet->setCellValue('I58', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend2'])['１年更新の場合より']);
+        $worksheet->setCellValue('N55', $estimate->property_detail['recommend3']);
+        $worksheet->setCellValue('N57', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend3'])['共済掛金']);
+        $worksheet->setCellValue('N58', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend3'])['１年更新の場合より']);
     }
 
-    private function setStandardOfEarthquakeInfo($spreadSheet, $standardOfEarthquakeDate)
+    private function setStandardOfEarthquakeInfo($spreadSheet, $estimate, $standardPremium, $earthquakePremium, $mutualItem)
     {
-        $worksheet = $spreadSheet->getSheetByName('おすすめ地震(普通)');
-        // $worksheet->setCellValue('セル番号', $standardOfEarthquakeDate);
+        $worksheet = $spreadSheet->getSheetByName('地震おすすめ(普通)');
+        foreach ($mutualItem as $key => $mutualItem) {
+            $worksheet->setCellValue($key, $mutualItem);
+        }
+
+        $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
+
+        $worksheet->setCellValue('D49', $estimate->property_detail['earthquake1']);
+        $worksheet->setCellValue('D51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['共済金支払最大額']);
+        $worksheet->setCellValue('D54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['地震掛金']);
+        $worksheet->setCellValue('D56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['合計掛金']);
+        $worksheet->setCellValue('I49', $estimate->property_detail['earthquake2']);
+        $worksheet->setCellValue('I51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['共済金支払最大額']);
+        $worksheet->setCellValue('I54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['地震掛金']);
+        $worksheet->setCellValue('I56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['合計掛金']);
+        $worksheet->setCellValue('N49', $estimate->property_detail['earthquake3']);
+        $worksheet->setCellValue('N51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['共済金支払最大額']);
+        $worksheet->setCellValue('N54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['地震掛金']);
+        $worksheet->setCellValue('N56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['合計掛金']);
     }
 
-    private function setComprehensiveOfEarthquakeInfo($spreadSheet, $comprehensiveOfEarthquakeDate)
+    private function setComprehensiveOfEarthquakeInfo($spreadSheet, $estimate, $comprehensivePremium, $earthquakePremium, $mutualItem)
     {
         $worksheet = $spreadSheet->getSheetByName('地震おすすめ(総合)');
-        // $worksheet->setCellValue('セル番号', $comprehensiveOfEarthquakeDate);
+        foreach ($mutualItem as $key => $mutualItem) {
+            $worksheet->setCellValue($key, $mutualItem);
+        }
+
+        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+
+        $worksheet->setCellValue('D49', $estimate->property_detail['earthquake1']);
+        $worksheet->setCellValue('D51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['共済金支払最大額']);
+        $worksheet->setCellValue('D54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['地震掛金']);
+        $worksheet->setCellValue('D56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['合計掛金']);
+        $worksheet->setCellValue('I49', $estimate->property_detail['earthquake2']);
+        $worksheet->setCellValue('I51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['共済金支払最大額']);
+        $worksheet->setCellValue('I54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['地震掛金']);
+        $worksheet->setCellValue('I56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['合計掛金']);
+        $worksheet->setCellValue('N49', $estimate->property_detail['earthquake3']);
+        $worksheet->setCellValue('N51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['共済金支払最大額']);
+        $worksheet->setCellValue('N54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['地震掛金']);
+        $worksheet->setCellValue('N56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['合計掛金']);
     }
 
     private function setCalcInfo($spreadSheet, $calcData)
     {
         $worksheet = $spreadSheet->getSheetByName('計算');
-        // $worksheet->setCellValue('セル番号', $calcData);
+        // 'セル番号', $calcData);
     }
 }

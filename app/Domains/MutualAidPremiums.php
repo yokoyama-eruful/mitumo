@@ -27,7 +27,7 @@ final class MutualAidPremiums
         $this->propertyType = $estimate->property_type;
         $this->payMethod = $estimate->pay_method;
 
-        $this->insuranceYear = $insuranceYear;
+        $this->insuranceYear = (int) $insuranceYear;
         $this->insuranceMonth = $estimate->insurance_month ?? 0;
         $this->insuranceDay = $estimate->insurance_day ?? 0;
 

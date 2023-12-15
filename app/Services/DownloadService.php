@@ -13,123 +13,78 @@ use App\Downloads\StandardDownloader;
 use App\Downloads\StandardOfEarthquakeDownloader;
 use App\Downloads\StandardOfRecommendAndComprehensiveOfRecommendDownloader;
 use App\Downloads\StandardOfRecommendDownloader;
-use App\Models\Estimate;
 
 final class DownloadService
 {
     //普通火災見積書ダウンロード
-    public function dropStandard($id)
+    public function dropStandard($estimate, $standardInsurancePremium, $standardCompensation)
     {
-        $estimate = Estimate::find($id);
-        $standardDate = [];
-        $calcData = [];
-
         $standardEstimate = new StandardDownloader();
-        $standardEstimate->dropFile($standardDate, $calcData);
+        $standardEstimate->dropFile($estimate, $standardInsurancePremium, $standardCompensation);
     }
 
     //総合火災見積書ダウンロード
-    public function dropComprehensive($id)
+    public function dropComprehensive($estimate, $comprehensivePremium, $comprehensiveCompensation)
     {
-        //見積もり情報の取得
-        $estimate = Estimate::find($id);
-        $comprehensiveDate = [];
-        $calcData = [];
-
         $comprehensiveEstimate = new ComprehensiveDownloader();
-        $comprehensiveEstimate->dropFile($comprehensiveDate, $calcData);
+        $comprehensiveEstimate->dropFile($estimate, $comprehensivePremium, $comprehensiveCompensation);
     }
 
     //普通&総合火災見積書ダウンロード
-    public function dropStandardAndComprehensive($id)
+    public function dropStandardAndComprehensive($estimate, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation)
     {
-        $estimate = Estimate::find($id);
-        $comprehensiveDate = [];
-        $calcData = [];
-
         $standardAndComprehensiveEstimate = new StandardAndComprehensiveDownloader();
-        $standardAndComprehensiveEstimate->dropFile($comprehensiveDate, $calcData);
+        $standardAndComprehensiveEstimate->dropFile($estimate, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation);
     }
 
     //普通火災見積書(おすすめ契約あり)ダウンロード
-    public function dropStandardOfRecommend($id)
+    public function dropStandardOfRecommend($estimate, $standardPremium, $recommendStandardPremium)
     {
-        $estimate = Estimate::find($id);
-        $standardOfRecommendDate = [];
-        $calcData = [];
-
         $standardOfRecommendEstimate = new StandardOfRecommendDownloader();
-        $standardOfRecommendEstimate->dropFile($standardOfRecommendDate, $calcData);
+        $standardOfRecommendEstimate->dropFile($estimate, $standardPremium, $recommendStandardPremium);
     }
 
     //総合火災見積書(おすすめ契約あり)ダウンロード
-    public function dropComprehensiveOfRecommend($id)
+    public function dropComprehensiveOfRecommend($estimate, $comprehensivePremium, $recommendComprehensivePremium)
     {
-        $estimate = Estimate::find($id);
-        $comprehensiveOfRecommendDate = [];
-        $calcData = [];
-
         $comprehensiveOfRecommendEstimate = new ComprehensiveOfRecommendDownloader();
-        $comprehensiveOfRecommendEstimate->dropFile($comprehensiveOfRecommendDate, $calcData);
+        $comprehensiveOfRecommendEstimate->dropFile($estimate, $comprehensivePremium, $recommendComprehensivePremium);
     }
 
     //普通&総合火災見積書(おすすめ契約あり)ダウンロード
-    public function dropStandardOfRecommendAndComprehensiveOfRecommend($id)
+    public function dropStandardOfRecommendAndComprehensiveOfRecommend($estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium)
     {
-        $estimate = Estimate::find($id);
-        $standardOfRecommendAndComprehensiveOfRecommendDate = [];
-        $calcData = [];
-
         $standardOfRecommendAndComprehensiveOfRecommendEstimate = new StandardOfRecommendAndComprehensiveOfRecommendDownloader();
-        $standardOfRecommendAndComprehensiveOfRecommendEstimate->dropFile($standardOfRecommendAndComprehensiveOfRecommendDate, $calcData);
+        $standardOfRecommendAndComprehensiveOfRecommendEstimate->dropFile($estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium);
     }
 
     //普通火災見積書(地震特約あり)ダウンロード
-    public function dropStandardOfEarthquake($id)
+    public function dropStandardOfEarthquake($estimate, $standardPremium, $earthquakePremium)
     {
-        $estimate = Estimate::find($id);
-        $standardOfEarthquakeDate = [];
-        $calcData = [];
-
         $standardOfEarthquakeEstimate = new StandardOfEarthquakeDownloader();
-        $standardOfEarthquakeEstimate->dropFile($standardOfEarthquakeDate, $calcData);
+        $standardOfEarthquakeEstimate->dropFile($estimate, $standardPremium, $earthquakePremium);
     }
 
     //総合火災見積書(地震特約あり)ダウンロード
-    public function dropComprehensiveOfEarthquake($id)
+    public function dropComprehensiveOfEarthquake($estimate, $comprehensivePremium, $earthquakePremium)
     {
-        $estimate = Estimate::find($id);
-        $comprehensiveOfEarthquakeDate = [];
-        $calcData = [];
-
         $comprehensiveOfEarthquakeEstimate = new ComprehensiveOfEarthquakeDownloader();
-        $comprehensiveOfEarthquakeEstimate->dropFile($comprehensiveOfEarthquakeDate, $calcData);
+        $comprehensiveOfEarthquakeEstimate->dropFile($estimate, $comprehensivePremium, $earthquakePremium);
     }
 
-    public function dropAll($id)
+    public function dropAll($estimate, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation, $recommendStandardPremium, $recommendComprehensivePremium, $standardEarthquakePremium, $comprehensiveEarthquakePremium)
     {
-        $estimate = Estimate::find($id);
-        $standardDate = [];
-        $comprehensiveDate = [];
-        $comprehensiveOfEarthquakeDate = [];
-        $comprehensiveOfRecommendDate = [];
-        $standardAndComprehensiveDate = [];
-        $standardOfEarthquakeDate = [];
-        $standardOfRecommendAndComprehensiveOfRecommendDate = [];
-        $standardOfRecommendDate = [];
-        $calcData = [];
-
         $allEstimate = new AllDownloader();
         $allEstimate->dropFile(
-            $standardDate,
-            $comprehensiveDate,
-            $comprehensiveOfEarthquakeDate,
-            $comprehensiveOfRecommendDate,
-            $standardAndComprehensiveDate,
-            $standardOfEarthquakeDate,
-            $standardOfRecommendAndComprehensiveOfRecommendDate,
-            $standardOfRecommendDate,
-            $calcData
+            $estimate,
+            $standardPremium,
+            $comprehensivePremium,
+            $standardCompensation,
+            $comprehensiveCompensation,
+            $recommendStandardPremium,
+            $recommendComprehensivePremium,
+            $standardEarthquakePremium,
+            $comprehensiveEarthquakePremium
         );
     }
 }
