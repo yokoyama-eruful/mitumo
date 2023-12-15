@@ -26,7 +26,6 @@ class PreviewController extends Controller
     {
         $estimate = $this->estimateService->find($id);
         $standardPremium = new StandardInsurancePremium($estimate);
-
         $standardCompensation = new StandardCompensation($estimate->property_type);
 
         return view('preview.standard', compact('estimate', 'standardPremium', 'standardCompensation'));
@@ -36,7 +35,6 @@ class PreviewController extends Controller
     {
         $estimate = $this->estimateService->find($id);
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
-
         $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $comprehensiveCompensation = new ComprehensiveCompensation($estimate->property_type, $shortTerm->shortTermRate);
 
@@ -48,9 +46,7 @@ class PreviewController extends Controller
         $estimate = $this->estimateService->find($id);
         $standardPremium = new StandardInsurancePremium($estimate);
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
-
         $standardCompensation = new StandardCompensation($estimate->property_type);
-
         $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $comprehensiveCompensation = new ComprehensiveCompensation($estimate->property_type, $shortTerm->shortTermRate);
 
@@ -61,7 +57,6 @@ class PreviewController extends Controller
     {
         $estimate = $this->estimateService->find($id);
         $standardPremium = new StandardInsurancePremium($estimate);
-
         $recommendStandardPremium = new RecommendStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
 
         return view('preview.standard-of-recommend', compact('estimate', 'standardPremium', 'recommendStandardPremium'));
@@ -71,7 +66,6 @@ class PreviewController extends Controller
     {
         $estimate = $this->estimateService->find($id);
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
-
         $recommendComprehensivePremium = new RecommendComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
 
         return view('preview.comprehensive-of-recommend', compact('estimate', 'comprehensivePremium', 'recommendComprehensivePremium'));
@@ -82,7 +76,6 @@ class PreviewController extends Controller
         $estimate = $this->estimateService->find($id);
         $standardPremium = new StandardInsurancePremium($estimate);
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
-
         $recommendStandardPremium = new RecommendStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
         $recommendComprehensivePremium = new RecommendComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
 
@@ -93,7 +86,6 @@ class PreviewController extends Controller
     {
         $estimate = $this->estimateService->find($id);
         $standardPremium = new StandardInsurancePremium($estimate);
-
         $earthquakePremium = new EarthquakeStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
 
         return view('preview.standard-of-earthquake', compact('estimate', 'standardPremium', 'earthquakePremium'));
@@ -103,7 +95,6 @@ class PreviewController extends Controller
     {
         $estimate = $this->estimateService->find($id);
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
-
         $earthquakePremium = new EarthquakeComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
 
         return view('preview.comprehensive-of-earthquake', compact('estimate', 'comprehensivePremium', 'earthquakePremium'));

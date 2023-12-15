@@ -10,8 +10,9 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 class ComprehensiveOfRecommendDownloader
 {
     public function dropFile(
-        $comprehensiveOfRecommendDate,
-        $calcData,
+        $estimate,
+        $comprehensivePremium,
+        $recommendComprehensivePremium
     ) {
         $filePath = storage_path('app/estimateTemplate/comprehensiveOfRecommend.xlsx');
 
@@ -23,9 +24,9 @@ class ComprehensiveOfRecommendDownloader
         $reader = new Xlsx();
         $spreadSheet = $reader->load($filePath);
 
-        $this->setComprehensiveOfRecommendInfo($spreadSheet, $comprehensiveOfRecommendDate);
+        $this->setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium);
 
-        $this->setCalcInfo($spreadSheet, $calcData);
+        $this->setCalcInfo($spreadSheet, $estimate);
 
         $spreadSheet->setActiveSheetIndex(0);
 
@@ -36,13 +37,43 @@ class ComprehensiveOfRecommendDownloader
         exit;
     }
 
-    private function setComprehensiveOfRecommendInfo($spreadSheet, $comprehensiveOfRecommendDate)
+    private function setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium)
     {
         $worksheet = $spreadSheet->getSheetByName('おすすめ(総合)');
-        // $worksheet->setCellValue('セル番号', $comprehensiveOfRecommendDate);
+        $worksheet->setCellValue('O1', date('Y年m月d日'));
+        $worksheet->setCellValue('A3', $estimate->contractee);
+        $worksheet->setCellValue('R5', $estimate->company);
+        $worksheet->setCellValue('R6', $estimate->address);
+        $worksheet->setCellValue('R7', 'ＴＥＬ ： '.$estimate->phone_number);
+        $worksheet->setCellValue('R8', '担当 ： '.$estimate->staff_name);
+        $worksheet->setCellValue('D20', $estimate->location);
+        $worksheet->setCellValue('D23', $estimate->BuildingStructure);
+        $worksheet->setCellValue('D27', $estimate->BuildingStructure);
+        $worksheet->setCellValue('O22', $estimate->property_type);
+        $worksheet->setCellValue('D31', $estimate->rank);
+        $worksheet->setCellValue('M31', $estimate->pay_method);
+        $worksheet->setCellValue('M33', $estimate->InsurancePeriod);
+        $worksheet->setCellValue('D35', $estimate->OtherItem);
+        $worksheet->setCellValue('D41', thousandYenUnit($estimate->property_detail['building_insurance_payout']));
+        $worksheet->setCellValue('K41', thousandYenUnit($estimate->property_detail['household_insurance_payout']));
+        $worksheet->setCellValue('D43', thousandYenUnit($estimate->property_detail['facility_insurance_payout']));
+        $worksheet->setCellValue('K43', thousandYenUnit($estimate->property_detail['item_insurance_payout']));
+        $worksheet->setCellValue('D45', thousandYenUnit($estimate->property_detail['other_facility_insurance_payout']));
+        $worksheet->setCellValue('K45', thousandYenUnit($estimate->property_detail['other_item_insurance_payout']));
+
+        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('D49', yearUnit($estimate->property_detail['recommend1']));
+        $worksheet->setCellValue('D51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'])['共済掛金']);
+        $worksheet->setCellValue('D53', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'])['１年更新の場合より']);
+        $worksheet->setCellValue('I49', yearUnit($estimate->property_detail['recommend2']));
+        $worksheet->setCellValue('I51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'])['共済掛金']);
+        $worksheet->setCellValue('I53', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'])['１年更新の場合より']);
+        $worksheet->setCellValue('N49', yearUnit($estimate->property_detail['recommend3']));
+        $worksheet->setCellValue('N51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'])['共済掛金']);
+        $worksheet->setCellValue('N53', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'])['１年更新の場合より']);
     }
 
-    private function setCalcInfo($spreadSheet, $calcData)
+    private function setCalcInfo($spreadSheet, $estimate)
     {
         $worksheet = $spreadSheet->getSheetByName('計算');
         // $worksheet->setCellValue('セル番号', $calcData);

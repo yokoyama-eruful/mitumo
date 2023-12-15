@@ -66,11 +66,24 @@ class Estimate extends Model
         $buildingStructure = [
             $this->structure, $this->other_structure, $this->pillar,
             $this->other_pillar, $this->fire_resistance, $this->other_fire_resistance,
-            $this->usage, $this->other_usage,
+            $this->usage, $this->other_usage, '築'.$this->building_age.'年',
         ];
         $buildingStructure = array_filter($buildingStructure);
 
         return implode(' ', $buildingStructure);
+    }
+
+    public function getOtherBuildingStructureAttribute()
+    {
+        $otherBuildingStructure = [
+            $this->floor ? $this->floor.'階建' : '',
+            $this->building ? $this->building.'棟' : '',
+            $this->floor_area ? '延床:' . $this->floor_area . 'm²' : '',
+            $this->exclusive_area ? '専有:' . $this->exclusive_area . 'm² ' : '',
+        ];
+        $otherBuildingStructure = array_filter($otherBuildingStructure);
+
+        return implode(' ', $otherBuildingStructure);
     }
 
     public function getInsurancePeriodAttribute()
