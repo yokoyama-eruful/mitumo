@@ -31,26 +31,35 @@
                 <div class="flex justify-center items-center w-16 h-10 outline outline-1 outline-gray-500">総合</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->building['基本率'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->building['基本率'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
                 <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
                     <div class="absolute w-28 h-[2px] transform -skew-y-[18deg] bg-gray-500"></div>
                 </div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->building['総合割増'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->building['長期率'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->building['長期率'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->building['適用率'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->building['適用率'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->building['掛金'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->building['掛金'] }}</div>
             </div>
         </div>
     </div>
@@ -82,26 +91,35 @@
                 <div class="flex justify-center items-center w-16 h-10 outline outline-1 outline-gray-500">総合</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->houseHold['基本率'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->houseHold['基本率'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
                 <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
                     <div class="absolute w-28 h-[2px] transform -skew-y-[18deg] bg-gray-500"></div>
                 </div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->houseHold['総合割増'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->houseHold['長期率'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->houseHold['長期率'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->houseHold['適用率'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->houseHold['適用率'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->houseHold['掛金'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->houseHold['掛金'] }}</div>
             </div>
         </div>
     </div>
@@ -133,26 +151,35 @@
                 <div class="flex justify-center items-center w-16 h-10 outline outline-1 outline-gray-500">総合</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->facility['基本率'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->facility['基本率'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
                 <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
                     <div class="absolute w-28 h-[2px] transform -skew-y-[18deg] bg-gray-500"></div>
                 </div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->facility['総合割増'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->facility['長期率'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->facility['長期率'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->facility['適用率'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->facility['適用率'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->facility['掛金'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->facility['掛金'] }}</div>
             </div>
         </div>
     </div>
@@ -184,26 +211,35 @@
                 <div class="flex justify-center items-center w-16 h-10 outline outline-1 outline-gray-500">総合</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->item['基本率'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->item['基本率'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
                 <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
                     <div class="absolute w-28 h-[2px] transform -skew-y-[18deg] bg-gray-500"></div>
                 </div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->item['総合割増'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->item['長期率'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->item['長期率'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->item['適用率'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->item['適用率'] }}</div>
             </div>
             <div class="flex flex-col justify-center items-center w-28 outline-gray-500">
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
-                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500"></div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $standard->item['掛金'] }}</div>
+                <div class="flex justify-center items-center w-28 h-10 outline outline-1 outline-gray-500">
+                    {{ $comprehensive->item['掛金'] }}</div>
             </div>
         </div>
     </div>
@@ -223,7 +259,7 @@
                     基本率（建物）
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-
+                    {{ $standard->building['基本率'] }}
                 </div>
             </div>
             <div class="flex flex-row">
@@ -231,7 +267,7 @@
                     基本率（動産）
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-
+                    {{ $standard->houseHold['基本率'] }}
                 </div>
             </div>
 
@@ -250,7 +286,7 @@
                     職業割増
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-
+                    {{ $standard->occupationalSurchargeRate }}
                 </div>
             </div>
             <div class="flex flex-row">
@@ -258,7 +294,7 @@
                     作業割増
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-
+                    {{ $standard->workSurchargeRate }}
                 </div>
             </div>
             <div class="flex flex-row">
@@ -266,7 +302,7 @@
                     動産割増
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-
+                    {{ $standard->chattelSurcharge }}
                 </div>
             </div>
 
@@ -286,7 +322,7 @@
                     その他割引
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-
+                    {{ $standard->otherDiscount }}
                 </div>
             </div>
             <div class="flex flex-row">
@@ -294,7 +330,7 @@
                     短期係数
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-
+                    {{ $standard->building['短期率'] }}
                 </div>
             </div>
             <div class="flex flex-row">
@@ -302,7 +338,7 @@
                     長期係数
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-
+                    {{ $standard->building['長期率'] }}
                 </div>
             </div>
             <div class="flex flex-row">
@@ -310,7 +346,7 @@
                     実損払係数
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-
+                    {{ $standard->actualLossFactor }}
                 </div>
             </div>
         </div>

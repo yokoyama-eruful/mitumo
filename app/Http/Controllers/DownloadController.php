@@ -35,21 +35,23 @@ class DownloadController extends Controller
     public function standard(int $id): void
     {
         $estimate = $this->estimateService->find($id);
-        $standardInsurancePremium = new StandardInsurancePremium($estimate);
+        $standardPremium = new StandardInsurancePremium($estimate);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $standardCompensation = new StandardCompensation($estimate->property_type);
 
-        $this->downloadService->dropStandard($estimate, $standardInsurancePremium, $standardCompensation);
+        $this->downloadService->dropStandard($estimate, $standardPremium, $comprehensivePremium, $standardCompensation);
     }
 
     //総合火災見積書ダウンロード
     public function comprehensive(int $id): void
     {
         $estimate = $this->estimateService->find($id);
+        $standardPremium = new StandardInsurancePremium($estimate);
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $comprehensiveCompensation = new ComprehensiveCompensation($estimate->property_type, $shortTerm->shortTermRate);
 
-        $this->downloadService->dropComprehensive($estimate, $comprehensivePremium, $comprehensiveCompensation);
+        $this->downloadService->dropComprehensive($estimate, $standardPremium, $comprehensivePremium, $comprehensiveCompensation);
     }
 
     //普通&総合火災見積書ダウンロード
@@ -70,19 +72,21 @@ class DownloadController extends Controller
     {
         $estimate = $this->estimateService->find($id);
         $standardPremium = new StandardInsurancePremium($estimate);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $recommendStandardPremium = new RecommendStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
 
-        $this->downloadService->dropStandardOfRecommend($estimate, $standardPremium, $recommendStandardPremium);
+        $this->downloadService->dropStandardOfRecommend($estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium);
     }
 
     //総合火災見積書(おすすめ契約あり)ダウンロード
     public function comprehensiveOfRecommend(int $id): void
     {
         $estimate = $this->estimateService->find($id);
+        $standardPremium = new StandardInsurancePremium($estimate);
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $recommendComprehensivePremium = new RecommendComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
 
-        $this->downloadService->dropComprehensiveOfRecommend($estimate, $comprehensivePremium, $recommendComprehensivePremium);
+        $this->downloadService->dropComprehensiveOfRecommend($estimate, $standardPremium, $comprehensivePremium, $recommendComprehensivePremium);
     }
 
     //普通&総合火災見積書(おすすめ契約あり)ダウンロード
@@ -102,19 +106,21 @@ class DownloadController extends Controller
     {
         $estimate = $this->estimateService->find($id);
         $standardPremium = new StandardInsurancePremium($estimate);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $earthquakePremium = new EarthquakeStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
 
-        $this->downloadService->dropStandardOfEarthquake($estimate, $standardPremium, $earthquakePremium);
+        $this->downloadService->dropStandardOfEarthquake($estimate, $standardPremium, $comprehensivePremium, $earthquakePremium);
     }
 
     //総合火災見積書(地震特約あり)ダウンロード
     public function comprehensiveOfEarthquake(int $id): void
     {
         $estimate = $this->estimateService->find($id);
+        $standardPremium = new StandardInsurancePremium($estimate);
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $earthquakePremium = new EarthquakeComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
 
-        $this->downloadService->dropComprehensiveOfEarthquake($estimate, $comprehensivePremium, $earthquakePremium);
+        $this->downloadService->dropComprehensiveOfEarthquake($estimate, $standardPremium, $comprehensivePremium, $earthquakePremium);
     }
 
     //すべてダウンロード

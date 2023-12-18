@@ -17,17 +17,17 @@ use App\Downloads\StandardOfRecommendDownloader;
 final class DownloadService
 {
     //普通火災見積書ダウンロード
-    public function dropStandard($estimate, $standardInsurancePremium, $standardCompensation)
+    public function dropStandard($estimate, $standardPremium, $comprehensivePremium, $standardCompensation)
     {
         $standardEstimate = new StandardDownloader();
-        $standardEstimate->dropFile($estimate, $standardInsurancePremium, $standardCompensation);
+        $standardEstimate->dropFile($estimate, $standardPremium, $comprehensivePremium, $standardCompensation);
     }
 
     //総合火災見積書ダウンロード
-    public function dropComprehensive($estimate, $comprehensivePremium, $comprehensiveCompensation)
+    public function dropComprehensive($estimate, $standardPremium, $comprehensivePremium, $comprehensiveCompensation)
     {
         $comprehensiveEstimate = new ComprehensiveDownloader();
-        $comprehensiveEstimate->dropFile($estimate, $comprehensivePremium, $comprehensiveCompensation);
+        $comprehensiveEstimate->dropFile($estimate, $standardPremium, $comprehensivePremium, $comprehensiveCompensation);
     }
 
     //普通&総合火災見積書ダウンロード
@@ -38,17 +38,17 @@ final class DownloadService
     }
 
     //普通火災見積書(おすすめ契約あり)ダウンロード
-    public function dropStandardOfRecommend($estimate, $standardPremium, $recommendStandardPremium)
+    public function dropStandardOfRecommend($estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium)
     {
         $standardOfRecommendEstimate = new StandardOfRecommendDownloader();
-        $standardOfRecommendEstimate->dropFile($estimate, $standardPremium, $recommendStandardPremium);
+        $standardOfRecommendEstimate->dropFile($estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium);
     }
 
     //総合火災見積書(おすすめ契約あり)ダウンロード
-    public function dropComprehensiveOfRecommend($estimate, $comprehensivePremium, $recommendComprehensivePremium)
+    public function dropComprehensiveOfRecommend($estimate, $standardPremium, $comprehensivePremium, $recommendComprehensivePremium)
     {
         $comprehensiveOfRecommendEstimate = new ComprehensiveOfRecommendDownloader();
-        $comprehensiveOfRecommendEstimate->dropFile($estimate, $comprehensivePremium, $recommendComprehensivePremium);
+        $comprehensiveOfRecommendEstimate->dropFile($estimate, $standardPremium, $comprehensivePremium, $recommendComprehensivePremium);
     }
 
     //普通&総合火災見積書(おすすめ契約あり)ダウンロード
@@ -59,17 +59,17 @@ final class DownloadService
     }
 
     //普通火災見積書(地震特約あり)ダウンロード
-    public function dropStandardOfEarthquake($estimate, $standardPremium, $earthquakePremium)
+    public function dropStandardOfEarthquake($estimate, $standardPremium, $comprehensivePremium, $earthquakePremium)
     {
         $standardOfEarthquakeEstimate = new StandardOfEarthquakeDownloader();
-        $standardOfEarthquakeEstimate->dropFile($estimate, $standardPremium, $earthquakePremium);
+        $standardOfEarthquakeEstimate->dropFile($estimate, $standardPremium, $comprehensivePremium, $earthquakePremium);
     }
 
     //総合火災見積書(地震特約あり)ダウンロード
-    public function dropComprehensiveOfEarthquake($estimate, $comprehensivePremium, $earthquakePremium)
+    public function dropComprehensiveOfEarthquake($estimate, $standardPremium, $comprehensivePremium, $earthquakePremium)
     {
         $comprehensiveOfEarthquakeEstimate = new ComprehensiveOfEarthquakeDownloader();
-        $comprehensiveOfEarthquakeEstimate->dropFile($estimate, $comprehensivePremium, $earthquakePremium);
+        $comprehensiveOfEarthquakeEstimate->dropFile($estimate, $standardPremium, $comprehensivePremium, $earthquakePremium);
     }
 
     public function dropAll($estimate, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation, $recommendStandardPremium, $recommendComprehensivePremium, $standardEarthquakePremium, $comprehensiveEarthquakePremium)

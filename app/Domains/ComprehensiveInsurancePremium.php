@@ -167,8 +167,14 @@ final class ComprehensiveInsurancePremium
         $buildingInsurancePayout = $this->getValueByKey('building_insurance_payout', $estimate->property_detail);
         $premium = $buildingInsurancePayout * $applyRate;
 
+        $baseRate = new BuildingBaseRate($estimate);
+        $baseRate = $baseRate->findRate($estimate->property_type, $estimate->building_age, $estimate->rank);
+
         return [
             'その他割引' => $otherDiscount,
+            '基本率' => $baseRate,
+            '総合割増' => $comprehensivePremium,
+            '長期率' => $longTermRate,
             '適用率' => $applyRate,
             '掛金' => $premium,
         ];
@@ -213,8 +219,14 @@ final class ComprehensiveInsurancePremium
         $householdInsurancePayout = $this->getValueByKey('household_insurance_payout', $estimate->property_detail);
         $premium = $householdInsurancePayout * $applyRate;
 
+        $baseRate = new ChattelBaseRate($estimate);
+        $baseRate = $baseRate->findRate($estimate->property_type, $estimate->rank);
+
         return [
             'その他割引' => $otherDiscount,
+            '基本率' => $baseRate,
+            '総合割増' => $comprehensivePremium,
+            '長期率' => $longTermRate,
             '適用率' => $applyRate,
             '掛金' => $premium,
         ];
@@ -261,8 +273,14 @@ final class ComprehensiveInsurancePremium
         $otherFacilityInsurancePayout = $this->getValueByKey('other_facility_insurance_payout', $estimate->property_detail);
         $premium = ($facilityInsurancePayout + $otherFacilityInsurancePayout) * $applyRate;
 
+        $baseRate = new ChattelBaseRate($estimate);
+        $baseRate = $baseRate->findRate($estimate->property_type, $estimate->rank);
+
         return [
             'その他割引' => $otherDiscount,
+            '基本率' => $baseRate,
+            '総合割増' => $comprehensivePremium,
+            '長期率' => $longTermRate,
             '適用率' => $applyRate,
             '掛金' => $premium,
         ];
@@ -312,8 +330,14 @@ final class ComprehensiveInsurancePremium
         $otherItemInsurancePayout = $this->getValueByKey('other_item_insurance_payout', $estimate->property_detail);
         $premium = ($itemInsurancePayout + $otherItemInsurancePayout) * $applyRate;
 
+        $baseRate = new ChattelBaseRate($estimate);
+        $baseRate = $baseRate->findRate($estimate->property_type, $estimate->rank);
+
         return [
             'その他割引' => $otherDiscount,
+            '基本率' => $baseRate,
+            '総合割増' => $comprehensivePremium,
+            '長期率' => $longTermRate,
             '適用率' => $applyRate,
             '掛金' => $premium,
         ];
