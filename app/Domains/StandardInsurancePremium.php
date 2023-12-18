@@ -10,6 +10,16 @@ final class StandardInsurancePremium
 {
     public readonly Estimate $estimate;
 
+    public readonly float $occupationalSurchargeRate;
+
+    public readonly float $workSurchargeRate;
+
+    public readonly float $chattelSurcharge;
+
+    public readonly float $otherDiscount;
+
+    public readonly float $actualLossFactor;
+
     public readonly string $payMethod;
 
     public readonly array $building;
@@ -33,6 +43,11 @@ final class StandardInsurancePremium
     public function __construct($estimate)
     {
         $this->estimate = $estimate;
+        $this->occupationalSurchargeRate = $this->getFloatValueByKey('occupational_surcharge_rate', $estimate->property_detail);
+        $this->workSurchargeRate = $this->getFloatValueByKey('work_surcharge_rate', $estimate->property_detail);
+        $this->chattelSurcharge = $this->getFloatValueByKey('chattel_surcharge', $estimate->property_detail);
+        $this->otherDiscount = $this->getFloatValueByKey('other_discount', $estimate->property_detail);
+        $this->actualLossFactor = $this->getFloatValueByKey('actual_loss_factor', $estimate->property_detail);
         $this->payMethod = $estimate->pay_method;
 
         $this->building = $this->calcBuilding();
@@ -166,8 +181,14 @@ final class StandardInsurancePremium
         $buildingInsurancePayout = $this->getValueByKey('building_insurance_payout', $estimate->property_detail);
         $premium = $buildingInsurancePayout * $applyRate;
 
+        $baseRate = new BuildingBaseRate($estimate);
+        $baseRate = $baseRate->findRate($estimate->property_type, $estimate->building_age, $estimate->rank);
+
         return [
             'その他割引' => $otherDiscount,
+            '基本率' => $baseRate,
+            '短期率' => $shortTermRate == 1 ? '' : $shortTermRate,
+            '長期率' => $longTermRate,
             '適用率' => $applyRate,
             '掛金' => $premium,
         ];
@@ -211,8 +232,14 @@ final class StandardInsurancePremium
         $householdInsurancePayout = $this->getValueByKey('household_insurance_payout', $estimate->property_detail);
         $premium = $householdInsurancePayout * $applyRate;
 
+        $baseRate = new ChattelBaseRate($estimate);
+        $baseRate = $baseRate->findRate($estimate->property_type, $estimate->rank);
+
         return [
             'その他割引' => $otherDiscount,
+            '基本率' => $baseRate,
+            '短期率' => $shortTermRate == 1 ? '' : $shortTermRate,
+            '長期率' => $longTermRate,
             '適用率' => $applyRate,
             '掛金' => $premium,
         ];
@@ -258,8 +285,14 @@ final class StandardInsurancePremium
         $otherFacilityInsurancePayout = $this->getValueByKey('other_facility_insurance_payout', $estimate->property_detail);
         $premium = ($facilityInsurancePayout + $otherFacilityInsurancePayout) * $applyRate;
 
+        $baseRate = new ChattelBaseRate($estimate);
+        $baseRate = $baseRate->findRate($estimate->property_type, $estimate->rank);
+
         return [
             'その他割引' => $otherDiscount,
+            '基本率' => $baseRate,
+            '短期率' => $shortTermRate == 1 ? '' : $shortTermRate,
+            '長期率' => $longTermRate,
             '適用率' => $applyRate,
             '掛金' => $premium,
         ];
@@ -312,8 +345,14 @@ final class StandardInsurancePremium
         $otherItemInsurancePayout = $this->getValueByKey('other_item_insurance_payout', $estimate->property_detail);
         $premium = ($itemInsurancePayout + $otherItemInsurancePayout) * $applyRate;
 
+        $baseRate = new ChattelBaseRate($estimate);
+        $baseRate = $baseRate->findRate($estimate->property_type, $estimate->rank);
+
         return [
             'その他割引' => $otherDiscount,
+            '基本率' => $baseRate,
+            '短期率' => $shortTermRate == 1 ? '' : $shortTermRate,
+            '長期率' => $longTermRate,
             '適用率' => $applyRate,
             '掛金' => $premium,
         ];
@@ -326,6 +365,15 @@ final class StandardInsurancePremium
     {
         if (array_key_exists($key, $array) && $array[$key]) {
             return intval($array[$key]);
+        }
+
+        return $defaultValue;
+    }
+
+    private function getFloatValueByKey(string $key, array $array, int $defaultValue = 0): float
+    {
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return (float) $array[$key];
         }
 
         return $defaultValue;

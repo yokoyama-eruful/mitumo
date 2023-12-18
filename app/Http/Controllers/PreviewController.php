@@ -103,7 +103,9 @@ class PreviewController extends Controller
     public function calculation(int $id)
     {
         $estimate = $this->estimateService->find($id);
+        $standard = new StandardInsurancePremium($estimate);
+        $comprehensive = new ComprehensiveInsurancePremium($estimate);
 
-        return view('preview.calculation', compact('estimate'));
+        return view('preview.calculation', compact('estimate', 'standard', 'comprehensive'));
     }
 }
