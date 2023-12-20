@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domains;
 
+use Exception;
 use Illuminate\Support\Facades\Storage;
 
 final class MutualAidPremiums
@@ -66,9 +67,10 @@ final class MutualAidPremiums
 
         $rateList = [];
 
-        $handle = fopen($filePath, 'r');
-        if (! $handle) {
-            return [];
+        try {
+            $handle = fopen($filePath, 'r');
+        } catch (Exception) {
+            throw new Exception('csvが見つかりません。');
         }
 
         $isHeaderFlag = true;
@@ -118,9 +120,10 @@ final class MutualAidPremiums
 
         $rateList = [];
 
-        $handle = fopen($filePath, 'r');
-        if (! $handle) {
-            return [];
+        try {
+            $handle = fopen($filePath, 'r');
+        } catch (Exception) {
+            throw new Exception('csvが見つかりません。');
         }
 
         $isHeaderFlag = true;

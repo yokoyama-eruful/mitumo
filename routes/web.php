@@ -58,7 +58,7 @@ Route::middleware('auth:web')
             ->name('estimate.assess.')
             ->group(function () {
                 Route::get('{id}', 'show')->name('show');
-                Route::post('{id}/download/{type}')->name('download');
+                Route::post('{id}/download/{fileType}', 'download')->name('download');
             });
 
         Route::controller(DownloadController::class)
@@ -76,4 +76,5 @@ Route::middleware('auth:web')
                 Route::post('comprehensiveOfEarthquake', 'comprehensiveOfEarthquake')->name('comprehensiveOfEarthquake'); //総合火災見積書(地震特約あり)ダウンロード
                 Route::post('all', 'all')->name('all'); //すべてダウンロード
             });
+
     });

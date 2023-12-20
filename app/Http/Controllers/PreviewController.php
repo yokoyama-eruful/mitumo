@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Domains\Assess\AssessNormal;
 use App\Domains\ComprehensiveCompensation;
 use App\Domains\ComprehensiveInsurancePremium;
 use App\Domains\EarthquakeComprehensiveInsurancePremium;
@@ -25,6 +26,9 @@ class PreviewController extends Controller
     public function standard(int $id): \Illuminate\View\View
     {
         $estimate = $this->estimateService->find($id);
+        $test = new AssessNormal($estimate);
+        dd($test->getReProcure('A'), $test->getResidualValue('A'), $test->getCurrentMarketPrice('A'));
+
         $standardPremium = new StandardInsurancePremium($estimate);
         $standardCompensation = new StandardCompensation($estimate->property_type);
 
