@@ -311,8 +311,7 @@ class EstimateForm extends Component
             $buildingAge = '';
         }
 
-        $baseRate = new BuildingBaseRate();
-
+        $baseRate = new BuildingBaseRate($this->estimate);
         $this->baseRate = (string) $baseRate->findRate($this->propertyType, $buildingAge, $this->rank);
 
         $this->occupationalSurchargeCode = null;
@@ -362,6 +361,7 @@ class EstimateForm extends Component
     public function onChangeAssessItem()
     {
         $this->assessUsageList = $this->getAssessUsageList();
+        $this->assessStructureList = $this->getAssessStructureList();
     }
 
     /**
@@ -486,6 +486,7 @@ class EstimateForm extends Component
             '鉄骨造',
             '木造',
             '土蔵造',
+            '軽量鉄骨',
             'その他',
         ];
     }
@@ -575,9 +576,11 @@ class EstimateForm extends Component
 
     private function getAssessStructureList()
     {
-        return [
-            '木造', '鉄骨', '鉄筋（RC）', '枠組（2×4）', 'プレハブ造', '軽量鉄骨',
-        ];
+        return match ($this->assessItem) {
+            '通常', 'ピロティー付', '太陽光付', '年次取得' => ['木造', '鉄骨', '鉄筋（RC）', '枠組（2×4）', 'プレハブ造', '軽量鉄骨'],
+            '分譲マンション' => ['上塗', '壁真'],
+            default => [],
+        };
     }
 
     /**

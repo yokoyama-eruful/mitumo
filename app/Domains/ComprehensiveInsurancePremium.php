@@ -167,6 +167,12 @@ final class ComprehensiveInsurancePremium
         $buildingInsurancePayout = $this->getValueByKey('building_insurance_payout', $estimate->property_detail);
         $premium = $buildingInsurancePayout * $applyRate;
 
+        if ($estimate->property_type === '住宅') {
+            $buildingAge = $estimate->building_age ?? '';
+        } else {
+            $buildingAge = '';
+        }
+
         $baseRate = new BuildingBaseRate($estimate);
         $baseRate = $baseRate->findRate($estimate->property_type, $estimate->building_age, $estimate->rank);
 

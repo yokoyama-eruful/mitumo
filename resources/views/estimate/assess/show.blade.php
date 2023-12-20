@@ -3,7 +3,8 @@
 @section('main')
     <main class="w-[800px] m-auto text-black">
         <div class="flex flex-wrap space-x-10 py-10 justify-center">
-            <form method="POST" action="{{ route('estimate.assess.download', ['id' => $estimate->id, 'type' => 'excel']) }}"
+            <form method="POST"
+                action="{{ route('estimate.assess.download', ['id' => $estimate->id, 'fileType' => 'excel']) }}"
                 class="bg-green-50 hover:bg-green-100">
                 @csrf
                 <button
@@ -15,7 +16,8 @@
                 </button>
             </form>
 
-            <form method="POST" action="{{ route('estimate.assess.download', ['id' => $estimate->id, 'type' => 'pdf']) }}"
+            <form method="POST"
+                action="{{ route('estimate.assess.download', ['id' => $estimate->id, 'fileType' => 'pdf']) }}"
                 class="bg-red-50 hover:bg-red-100">
                 @csrf
                 <button
