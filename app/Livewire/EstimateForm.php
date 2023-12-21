@@ -170,7 +170,11 @@ class EstimateForm extends Component
     //テーブル情報の表示切り替え
     public bool $isViewOccupationalTable = false;
 
+    public string $occupationalSurchargeLargeCategory = 'すべて';
+
     public bool $isViewWorkTable = false;
+
+    public string $workSurchargeLargeCategory = 'すべて';
 
     //標準コード
 
@@ -268,6 +272,9 @@ class EstimateForm extends Component
         $this->assessItemList = $this->getAssessItemList();
         $this->assessUsageList = $this->getAssessUsageList();
         $this->assessStructureList = $this->getAssessStructureList();
+
+        $this->rank = '1級';
+        $this->onClickOpenWorkSurchargeTable();
     }
 
     public function render()
@@ -376,16 +383,28 @@ class EstimateForm extends Component
             return;
         }
 
+        $this->onClickOccupationalLargeCategory();
+
+        $this->dispatch('disableScroll');
+        $this->isViewOccupationalTable = true;
+    }
+
+    public function onClickOccupationalLargeCategory($category = 'すべて')
+    {
+        $this->occupationalSurchargeLargeCategory = $category;
         $occupationalSurcharge = new OccupationalSurcharge();
         $rateList = $occupationalSurcharge->rateList;
         $rank = $this->rank;
 
-        $this->occupationalSurchargeCodeList = array_filter($rateList, function ($element) use ($rank) {
-            return is_array($element) && isset($element['級別']) && $element['級別'] === $rank;
-        });
-
-        $this->dispatch('disableScroll');
-        $this->isViewOccupationalTable = true;
+        if ($category === 'すべて') {
+            $this->occupationalSurchargeCodeList = array_filter($rateList, function ($element) use ($rank) {
+                return is_array($element) && isset($element['級別']) && $element['級別'] === $rank;
+            });
+        } else {
+            $this->occupationalSurchargeCodeList = array_filter($rateList, function ($element) use ($category, $rank) {
+                return is_array($element) && isset($element['級別']) && $element['大項目'] == $category && $element['級別'] === $rank;
+            });
+        }
     }
 
     public function onSelectedOccupationalCode($code)
@@ -422,18 +441,28 @@ class EstimateForm extends Component
 
             return;
         }
+        $this->onClickWorkLargeCategory();
+        $this->dispatch('disableScroll');
 
+        $this->isViewWorkTable = true;
+    }
+
+    public function onClickWorkLargeCategory($category = 'すべて')
+    {
+        $this->workSurchargeLargeCategory = $category;
         $workSurcharge = new WorkSurcharge();
         $rateList = $workSurcharge->rateList;
         $rank = $this->rank;
 
-        $this->workSurchargeCodeList = array_filter($rateList, function ($element) use ($rank) {
-            return is_array($element) && isset($element['級別']) && $element['級別'] === $rank;
-        });
-
-        $this->dispatch('disableScroll');
-
-        $this->isViewWorkTable = true;
+        if ($category === 'すべて') {
+            $this->workSurchargeCodeList = array_filter($rateList, function ($element) use ($rank) {
+                return is_array($element) && isset($element['級別']) && $element['級別'] === $rank;
+            });
+        } else {
+            $this->workSurchargeCodeList = array_filter($rateList, function ($element) use ($category, $rank) {
+                return is_array($element) && isset($element['級別']) && $element['大項目'] == $category && $element['級別'] === $rank;
+            });
+        }
     }
 
     /**
