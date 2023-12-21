@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Storage;
 
 final class BuildingBaseRate
 {
-    public readonly float $baseRate;
+    public readonly ?float $baseRate;
 
     public readonly array $rateList;
 
     public function __construct($estimate)
     {
-        $this->baseRate = array_key_exists('base_rate', $estimate->property_detail) ? $estimate->property_detail['base_rate'] : 0;
+        $this->baseRate = array_key_exists('base_rate', $estimate?->property_detail ?? []) ? $estimate->property_detail['base_rate'] : null;
         $this->rateList = $this->makeRateList();
     }
 

@@ -282,6 +282,7 @@ class EstimateForm extends Component
      */
     public function onChangePropertyType()
     {
+        $this->baseRate = '';
         $this->rankList = $this->getRankList($this->propertyType);
     }
 
@@ -294,14 +295,11 @@ class EstimateForm extends Component
     {
         if (
             is_null($this->propertyType) ||
-            is_null($this->rank)
+            is_null($this->rank) ||
+            $this->propertyType == '工場'
         ) {
             $this->baseRate = null;
 
-            return;
-        }
-
-        if ($this->propertyType == '工場') {
             return;
         }
 
