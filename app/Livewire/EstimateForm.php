@@ -272,9 +272,6 @@ class EstimateForm extends Component
         $this->assessItemList = $this->getAssessItemList();
         $this->assessUsageList = $this->getAssessUsageList();
         $this->assessStructureList = $this->getAssessStructureList();
-
-        $this->rank = '1級';
-        $this->onClickOpenWorkSurchargeTable();
     }
 
     public function render()
