@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Downloads\Assess;
 
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
@@ -12,15 +13,17 @@ class AssessRenovationDownloader
     public function dropFile(
         $estimate,
         $assessData,
-        $isPdfType
+        $fileType
     ) {
 
         $filePath = storage_path('app/assessTemplate/renovation.xlsx');
 
-        $fileName = '改装物件の評価計算式_' . date('YmdHi') . '.xlsx';
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;');
-        header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName));
-        header('Cache-Control: max-age=0');
+        if ($fileType === 'excel') {
+            $fileName = '改装物件の評価計算式_'  .$estimate->contractee.'_'. date('YmdHi') . '.xlsx';
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;');
+            header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName));
+            header('Cache-Control: max-age=0');
+        }
 
         $reader = new Xlsx();
         $spreadSheet = $reader->load($filePath);
@@ -30,7 +33,33 @@ class AssessRenovationDownloader
         $spreadSheet->setActiveSheetIndex(0);
         $writer = IOFactory::createWriter($spreadSheet, 'Xlsx');
 
-        $writer->save('php://output');
+        if ($fileType === 'pdf') {
+            Storage::makeDirectory('/excel');
+            Storage::makeDirectory('/pdf');
+
+            $export_excel_path = storage_path('app/excel/renovation.xlsx');
+
+            $writer->save($export_excel_path);
+
+            $export_pdf_path = storage_path('app/pdf');
+            if (file_exists($export_excel_path)) {
+                $cmd = 'export HOME=/tmp && /usr/bin/soffice --language=ja --headless --convert-to pdf --outdir ' . $export_pdf_path . ' ' . $export_excel_path;
+                exec($cmd);
+            }
+
+            $pdf = storage_path('app/pdf/renovation.pdf');
+            $fileName = '改装物件の評価計算式_'  .$estimate->contractee.'_'. date('YmdHi') . '.pdf';
+
+            header('Content-Type:' . $pdf);
+            header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName));
+            header('Cache-Control: max-age=0');
+
+            readfile($pdf);
+        }
+
+        if ($fileType === 'excel') {
+            $writer->save('php://output');
+        }
 
         exit;
     }

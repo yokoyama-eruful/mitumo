@@ -27,7 +27,7 @@ class AssessController extends Controller
     {
         $estimate = $this->estimateService->find($id);
 
-        $this->assessDownloadService->download($estimate, $fileType == 'PDF');
+        $this->assessDownloadService->download($estimate, $fileType);
 
     }
 }

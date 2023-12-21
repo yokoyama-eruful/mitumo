@@ -19,76 +19,76 @@ use App\Downloads\Assess\AssessSolarPanelDownloader;
 
 final class AssessDownloadService
 {
-    public function download($estimate, $isPdfType)
+    public function download($estimate, $fileType)
     {
         $assessType = $estimate->assess_item;
 
         switch ($assessType) {
             case '通常' :
-                $this->dropNormal($estimate, $isPdfType);
+                $this->dropNormal($estimate, $fileType);
                 break;
 
             case 'ピロティー付' :
-                $this->dropPiloti($estimate, $isPdfType);
+                $this->dropPiloti($estimate, $fileType);
                 break;
 
             case '太陽光付' :
-                $this->dropSolarPanel($estimate, $isPdfType);
+                $this->dropSolarPanel($estimate, $fileType);
                 break;
 
             case '年次取得' :
-                $this->dropAnnual($estimate, $isPdfType);
+                $this->dropAnnual($estimate, $fileType);
                 break;
 
             case '分譲マンション' :
-                $this->dropCondo($estimate, $isPdfType);
+                $this->dropCondo($estimate, $fileType);
                 break;
 
             default:
-                $this->dropRenovation($estimate, $isPdfType);
+                $this->dropRenovation($estimate, $fileType);
                 break;
         }
     }
 
-    private function dropNormal($estimate, $isPdfType)
+    private function dropNormal($estimate, $fileType)
     {
         $assessData = new AssessNormal($estimate);
         $assessDownloader = new AssessNormalDownloader();
-        $assessDownloader->dropFile($estimate, $assessData, $isPdfType);
+        $assessDownloader->dropFile($estimate, $assessData, $fileType);
     }
 
-    private function dropPiloti($estimate, $isPdfType)
+    private function dropPiloti($estimate, $fileType)
     {
         $assessData = new AssessPiloti($estimate);
         $assessDownloader = new AssessPilotiDownloader();
-        $assessDownloader->dropFile($estimate, $assessData, $isPdfType);
+        $assessDownloader->dropFile($estimate, $assessData, $fileType);
     }
 
-    private function dropSolarPanel($estimate, $isPdfType)
+    private function dropSolarPanel($estimate, $fileType)
     {
         $assessData = new AssessSolarPanel($estimate);
         $assessDownloader = new AssessSolarPanelDownloader();
-        $assessDownloader->dropFile($estimate, $assessData, $isPdfType);
+        $assessDownloader->dropFile($estimate, $assessData, $fileType);
     }
 
-    private function dropAnnual($estimate, $isPdfType)
+    private function dropAnnual($estimate, $fileType)
     {
         $assessData = new AssessAnnual($estimate);
         $assessDownloader = new AssessAnnualDownloader();
-        $assessDownloader->dropFile($estimate, $assessData, $isPdfType);
+        $assessDownloader->dropFile($estimate, $assessData, $fileType);
     }
 
-    private function dropCondo($estimate, $isPdfType)
+    private function dropCondo($estimate, $fileType)
     {
         $assessData = new AssessCondo($estimate);
         $assessDownloader = new AssessCondoDownloader();
-        $assessDownloader->dropFile($estimate, $assessData, $isPdfType);
+        $assessDownloader->dropFile($estimate, $assessData, $fileType);
     }
 
-    private function dropRenovation($estimate, $isPdfType)
+    private function dropRenovation($estimate, $fileType)
     {
         $assessData = new AssessRenovation($estimate);
         $assessDownloader = new AssessRenovationDownloader();
-        $assessDownloader->dropFile($estimate, $assessData, $isPdfType);
+        $assessDownloader->dropFile($estimate, $assessData, $fileType);
     }
 }
