@@ -65,16 +65,8 @@ Route::middleware('auth:web')
             ->prefix('estimate/download/{id}')
             ->name('estimate.download.')
             ->group(function () {
-                Route::get('index', 'index')->name('index');
-                Route::post('standard', 'standard')->name('standard'); //普通火災見積書ダウンロード
-                Route::post('comprehensive', 'comprehensive')->name('comprehensive'); //総合火災見積書ダウンロード
-                Route::post('standardAndComprehensive', 'standardAndComprehensive')->name('standardAndComprehensive'); //普通&総合火災見積書ダウンロード
-                Route::post('standardOfRecommend', 'standardOfRecommend')->name('standardOfRecommend'); //普通火災見積書(おすすめ契約あり)ダウンロード
-                Route::post('comprehensiveOfRecommend', 'comprehensiveOfRecommend')->name('comprehensiveOfRecommend'); //総合火災見積書(おすすめ契約あり)ダウンロード
-                Route::post('standardOfRecommendAndComprehensiveOfRecommend', 'standardOfRecommendAndComprehensiveOfRecommend')->name('standardOfRecommendAndComprehensiveOfRecommend'); //普通&総合火災見積書(おすすめ契約あり)ダウンロード
-                Route::post('standardOfEarthquake', 'standardOfEarthquake')->name('standardOfEarthquake'); //普通火災見積書(地震特約あり)ダウンロード
-                Route::post('comprehensiveOfEarthquake', 'comprehensiveOfEarthquake')->name('comprehensiveOfEarthquake'); //総合火災見積書(地震特約あり)ダウンロード
-                Route::post('all', 'all')->name('all'); //すべてダウンロード
+                Route::get('index/', 'index')->name('index');
+                Route::post('{category}', 'download')->name('type');
             });
 
     });

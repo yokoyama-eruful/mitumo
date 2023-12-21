@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Downloads;
 
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
@@ -14,19 +15,23 @@ class StandardOfRecommendAndComprehensiveOfRecommendDownloader
         $standardPremium,
         $comprehensivePremium,
         $recommendStandardPremium,
-        $recommendComprehensivePremium
+        $recommendComprehensivePremium,
+        $fileType,
+        $keisyo
     ) {
         $filePath = storage_path('app/estimateTemplate/standardOfRecommendAndComprehensiveOfRecommend.xlsx');
 
-        $fileName = 'おすすめ_普通_総合_火災共済見積書_' . date('YmdHi') . '.xlsx';
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;');
-        header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName));
-        header('Cache-Control: max-age=0');
+        if ($fileType === 'excel') {
+            $fileName = 'おすすめ_普通_総合_火災共済見積書_' .$estimate->contractee. date('YmdHi') . '.xlsx';
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;');
+            header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName));
+            header('Cache-Control: max-age=0');
+        }
 
         $reader = new Xlsx();
         $spreadSheet = $reader->load($filePath);
 
-        $this->setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium);
+        $this->setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium, $keisyo);
 
         $this->setCalcInfo($spreadSheet, $standardPremium, $comprehensivePremium);
 
@@ -34,16 +39,42 @@ class StandardOfRecommendAndComprehensiveOfRecommendDownloader
 
         $writer = IOFactory::createWriter($spreadSheet, 'Xlsx');
 
-        $writer->save('php://output');
+        if ($fileType === 'pdf') {
+            Storage::makeDirectory('/excel');
+            Storage::makeDirectory('/pdf');
+
+            $export_excel_path = storage_path('app/excel/standardOfRecommendAndComprehensiveOfRecommend.xlsx');
+
+            $writer->save($export_excel_path);
+
+            $export_pdf_path = storage_path('app/pdf');
+            if (file_exists($export_excel_path)) {
+                $cmd = 'export HOME=/tmp && /usr/bin/soffice --language=ja --headless --convert-to pdf --outdir ' . $export_pdf_path . ' ' . $export_excel_path;
+                exec($cmd);
+            }
+
+            $pdf = storage_path('app/pdf/standardOfRecommendAndComprehensiveOfRecommend.pdf');
+            $fileName = 'おすすめ_普通_総合_火災共済見積書_' .$estimate->contractee. date('YmdHi') . '.pdf';
+
+            header('Content-Type:' . $pdf);
+            header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName));
+            header('Cache-Control: max-age=0');
+
+            readfile($pdf);
+        }
+
+        if ($fileType === 'excel') {
+            $writer->save('php://output');
+        }
 
         exit;
     }
 
-    private function setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium)
+    private function setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium, $keisyo)
     {
         $worksheet = $spreadSheet->getSheetByName('おすすめ(普&総)');
         $worksheet->setCellValue('O1', date('Y年m月d日'));
-        $worksheet->setCellValue('A3', $estimate->contractee);
+        $worksheet->setCellValue('A3', $estimate->contractee.$keisyo);
         $worksheet->setCellValue('R5', $estimate->company);
         $worksheet->setCellValue('R6', $estimate->address);
         $worksheet->setCellValue('R7', 'ＴＥＬ ： '.$estimate->phone_number);

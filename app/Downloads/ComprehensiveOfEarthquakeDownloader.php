@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Downloads;
 
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
@@ -13,19 +14,23 @@ class ComprehensiveOfEarthquakeDownloader
         $estimate,
         $standardPremium,
         $comprehensivePremium,
-        $earthquakePremium
+        $earthquakePremium,
+        $fileType,
+        $keisyo
     ) {
         $filePath = storage_path('app/estimateTemplate/comprehensiveOfEarthquake.xlsx');
 
-        $fileName = '地震おすすめ_総合火災共済見積書_' . date('YmdHi') . '.xlsx';
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;');
-        header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName));
-        header('Cache-Control: max-age=0');
+        if ($fileType === 'excel') {
+            $fileName = '地震おすすめ_総合火災共済見積書_'.$estimate->contractee . date('YmdHi') . '.xlsx';
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;');
+            header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName));
+            header('Cache-Control: max-age=0');
+        }
 
         $reader = new Xlsx();
         $spreadSheet = $reader->load($filePath);
 
-        $this->setComprehensiveOfEarthquakeInfo($spreadSheet, $estimate, $comprehensivePremium, $earthquakePremium);
+        $this->setComprehensiveOfEarthquakeInfo($spreadSheet, $estimate, $comprehensivePremium, $earthquakePremium, $keisyo);
 
         $this->setCalcInfo($spreadSheet, $standardPremium, $comprehensivePremium);
 
@@ -33,16 +38,42 @@ class ComprehensiveOfEarthquakeDownloader
 
         $writer = IOFactory::createWriter($spreadSheet, 'Xlsx');
 
-        $writer->save('php://output');
+        if ($fileType === 'pdf') {
+            Storage::makeDirectory('/excel');
+            Storage::makeDirectory('/pdf');
+
+            $export_excel_path = storage_path('app/excel/comprehensiveOfEarthquake.xlsx');
+
+            $writer->save($export_excel_path);
+
+            $export_pdf_path = storage_path('app/pdf');
+            if (file_exists($export_excel_path)) {
+                $cmd = 'export HOME=/tmp && /usr/bin/soffice --language=ja --headless --convert-to pdf --outdir ' . $export_pdf_path . ' ' . $export_excel_path;
+                exec($cmd);
+            }
+
+            $pdf = storage_path('app/pdf/comprehensiveOfEarthquake.pdf');
+            $fileName = '地震おすすめ_総合火災共済見積書_'.$estimate->contractee . date('YmdHi')  . '.pdf';
+
+            header('Content-Type:' . $pdf);
+            header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName));
+            header('Cache-Control: max-age=0');
+
+            readfile($pdf);
+        }
+
+        if ($fileType === 'excel') {
+            $writer->save('php://output');
+        }
 
         exit;
     }
 
-    private function setComprehensiveOfEarthquakeInfo($spreadSheet, $estimate, $comprehensivePremium, $earthquakePremium)
+    private function setComprehensiveOfEarthquakeInfo($spreadSheet, $estimate, $comprehensivePremium, $earthquakePremium, $keisyo)
     {
         $worksheet = $spreadSheet->getSheetByName('地震おすすめ(総合)');
         $worksheet->setCellValue('O1', date('Y年m月d日'));
-        $worksheet->setCellValue('A3', $estimate->contractee);
+        $worksheet->setCellValue('A3', $estimate->contractee.$keisyo);
         $worksheet->setCellValue('R5', $estimate->company);
         $worksheet->setCellValue('R6', $estimate->address);
         $worksheet->setCellValue('R7', 'ＴＥＬ ： '.$estimate->phone_number);

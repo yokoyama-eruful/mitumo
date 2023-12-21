@@ -9,9 +9,15 @@ ARG POSTGRES_VERSION=15
 WORKDIR /var/www/html
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV TZ=UTC
+ENV TZ=JST
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt-get update && \
+     apt-get install -y locales && \
+     echo "ja_JP UTF-8" > /etc/locale.gen && \
+     locale-gen && \
+     echo "export LANG=ja_JP.UTF-8" >> ~/.bashrc
 
 RUN apt-get update \
     && mkdir -p /etc/apt/keyrings \
