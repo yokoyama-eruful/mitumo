@@ -3,6 +3,8 @@
 !.gitignore
 !rateTable/
 !rateTable/*
+!factoryTable/
+!factoryTable/*
 !estimateTemplate/
 !estimateTemplate/*
 !surchargeTable/
