@@ -562,7 +562,7 @@ class EstimateForm extends Component
 
     private function getAssessItemList()
     {
-        return ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '改装物件'];
+        return ['選択しない', '通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '改装物件'];
     }
 
     private function getAssessUsageList()

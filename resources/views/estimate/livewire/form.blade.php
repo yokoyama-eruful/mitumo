@@ -1,4 +1,5 @@
 <main class="w-[800px] m-auto text-black bg-white">
+
     @if (Session::has('message'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
             <span class="block sm:inline">{{ Session::get('message') }}</span>
@@ -174,7 +175,8 @@
                     <option value="" hidden>選択してください</option>
                     @foreach ($propertyTypeList as $item)
                         <option value={{ $item }} @if ($item === $usage) selected @endif>
-                            {{ $item }}</option>
+                            {{ $item }}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -213,8 +215,8 @@
                 <div class="estimate-input-required">※必須</div>
             </label>
             <input id="building_age" name="building_age"
-                class="estimate-input hover:bg-white focus:bg-white text-right" placeholder="自動で算出されます"
-                wire:model="buildingAge" required readonly>
+                class="estimate-input hover:bg-white focus:bg-white text-right" wire:model="buildingAge" required
+                readonly>
             <span class="my-auto mx-1">年</span>
 
         </div>
@@ -283,44 +285,53 @@
                 </div>
                 <div class="estimate-input-box">
                     <select id="earthquake1" name="earthquake1" wire:model="earthquake1" class="estimate-input">
-                        @foreach ($earthquakeList as $item)
-                            <option value={{ $item }} @if ($item === 15) selected @endif>
-                                {{ $item }}
-                            </option>
-                        @endforeach
+                        <option value="選択しない">
+                            選択しない
+                        </option>
+                        <option value="15">
+                            15
+                        </option>
                     </select>
                     <span class="my-auto mx-1">%</span>
                     <select id="earthquake2" name="earthquake2" wire:model="earthquake2" class="estimate-input">
-                        @foreach ($earthquakeList as $item)
-                            <option value={{ $item }} @if ($item === 30) selected @endif>
-                                {{ $item }}
-                            </option>
-                        @endforeach
+                        <option value="選択しない">
+                            選択しない
+                        </option>
+                        <option value="30">
+                            30
+                        </option>
                     </select>
                     <span class="my-auto mx-1">%</span>
                     <select id="earthquake3" name="earthquake3" wire:model="earthquake3" class="estimate-input">
-                        @foreach ($earthquakeList as $item)
-                            <option value={{ $item }} @if ($item === 50) selected @endif>
-                                {{ $item }}
-                            </option>
-                        @endforeach
+                        <option value="選択しない">
+                            選択しない
+                        </option>
+                        <option value="50">
+                            50
+                        </option>
                     </select>
                     <span class="my-auto mx-1">%</span>
                 </div>
             </div>
         @endif
 
-        @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
+        @if (in_array($propertyType, ['住宅', '普通'], true))
             <div class="estimate-input-box">
                 <label class="estimate-label" for="base_rate">建物基本率
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                @if (in_array($propertyType, ['住宅', '普通'], true))
-                    <input id="base_rate" name="base_rate" class="estimate-input"
-                        placeholder="物件が「住宅」か「普通」の時は、自動算出されます" wire:model="baseRate" readonly>
-                @else
-                    <input id="base_rate" name="base_rate" class="estimate-input" wire:model="baseRate">
-                @endif
+                <input id="base_rate" name="base_rate" class="estimate-input" placeholder="物件が「住宅」か「普通」の時は、自動算出されます"
+                    wire:model="baseRate" readonly>
+            </div>
+        @endif
+        @if (in_array($propertyType, ['工場'], true))
+            <div class="estimate-input-box">
+                <label class="estimate-label" for="base_rate">建物基本率
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <button type="button" wire:click=""
+                    class="mx-2 my-1 px-2 h-8 w-64 bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
+                <input id="base_rate" name="base_rate" class="estimate-input" wire:model="baseRate" wire:change="">
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
@@ -337,7 +348,6 @@
         @if (in_array($propertyType, ['普通', '工場'], true))
             <div class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）
-                    <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="chattel_surcharge_category" name="chattel_surcharge_category" class="estimate-input"
                     wire:model="chattelSurchargeCategory">
@@ -373,7 +383,13 @@
                             wire:change="onChangeOccupationalSurchargeCode">
                     </div>
                     <div class="flex">
-                        <label class="estimate-label w-32" for="occupational_surcharge_rate">職業割増</label>
+                        <label class="estimate-label w-32" for="occupational_surcharge_rate">備考</label>
+                        <div class="mx-2 w-64 text-sm"></div>
+                        <input id="occupational_surcharge_note" name="occupational_surcharge_note"
+                            placeholder="自動で入力されます" class="estimate-input">
+                    </div>
+                    <div class="flex">
+                        <label class="estimate-label w-32" for="occupational_surcharge_rate">率</label>
                         <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
                         <input id="occupational_surcharge_rate" name="occupational_surcharge_rate"
                             class="estimate-input" wire:model="occupationalSurchargeRate">
@@ -393,7 +409,12 @@
                             wire:model="workSurchargeCode" wire:change="onChangeWorkSurchargeCode">
                     </div>
                     <div class=" flex">
-                        <label class="estimate-label w-32" for="work_surcharge_rate">作業割増</label>
+                        <label class="estimate-label w-32" for="work_surcharge_note">備考</label>
+                        <div class="mx-2 w-64 text-sm"></div>
+                        <input id="work_surcharge_note" name="work_surcharge_note" class="estimate-input">
+                    </div>
+                    <div class=" flex">
+                        <label class="estimate-label w-32" for="work_surcharge_rate">率</label>
                         <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
                         <input id="work_surcharge_rate" name="work_surcharge_rate" class="estimate-input"
                             wire:model="workSurchargeRate">
@@ -426,27 +447,27 @@
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
             <div class="estimate-input-box">
-                <label class="estimate-label" for="facility_insurance_payout">
+                <label class="estimate-label w-1/3" for="facility_insurance_payout">
                     設備共済金額
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="facility_insurance_payout" name="facility_insurance_payout" class="estimate-input"
+                <input id="facility_insurance_payout" name="facility_insurance_payout" class="estimate-input w-1/3"
                     wire:model="facilityInsurancePayout">
-                <input class="estimate-input">
+                <input class="estimate-input w-1/3">
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
             <div class="estimate-input-box">
-                <label class="estimate-label" for="other_facility_insurance_payout">その他設備共済金額
+                <label class="estimate-label w-1/3" for="other_facility_insurance_payout">その他設備共済金額
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="other_facility_insurance_payout" name="other_facility_insurance_payout"
+                <input id="other_facility_insurance_payout w-1/3" name="other_facility_insurance_payout"
                     class="estimate-input" wire:model="otherFacilityInsurancePayout">
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
             <div class="estimate-input-box">
-                <label class="estimate-label" for="item_insurance_payout">商品共済金額</label>
+                <label class="estimate-label w-1/3" for="item_insurance_payout">商品共済金額</label>
                 <input id="item_insurance_payout" name="item_insurance_payout" class="estimate-input"
                     wire:model="itemInsurancePayout">
                 <input class="estimate-input">
@@ -454,7 +475,7 @@
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
             <div class="estimate-input-box">
-                <label class="estimate-label" for="other_item_insurance_payout">その他商品共済金額</label>
+                <label class="estimate-label w-1/3" for="other_item_insurance_payout">その他商品共済金額</label>
                 <input id="other_item_insurance_payout" name="other_item_insurance_payout" class="estimate-input"
                     wire:model="otherItemInsurancePayout">
             </div>
