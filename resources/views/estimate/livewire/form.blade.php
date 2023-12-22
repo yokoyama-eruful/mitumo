@@ -498,7 +498,8 @@
                     <div class="estimate-input-required">※必須</div>
                 </label>
 
-                <select id="assess_usage" name="assess_usage" wire:model="assessUsage" class="estimate-input">
+                <select id="assess_usage" name="assess_usage" wire:model="assessUsage"
+                    wire:change="onChangeAssessItem" class="estimate-input">
                     <option value="" hidden>選択してください</option>
                     @foreach ($assessUsageList as $item)
                         <option value="{{ $item }}" @if ($item === $assessUsage) selected @endif>
@@ -513,7 +514,7 @@
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <select id="assess_structure" name="assess_structure" wire:model="assessStructure"
-                    class="estimate-input">
+                    wire:change="onChangeAssessItem" class="estimate-input">
                     <option value="" hidden>選択してください</option>
                     @foreach ($assessStructureList as $item)
                         <option value="{{ $item }}" @if ($item === $assessStructure) selected @endif>
@@ -528,7 +529,7 @@
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="piloti_floor_area" name="piloti_floor_area" class="estimate-input"
-                    wire:model="pilotiFloorArea">
+                    wire:model="pilotiFloorArea" wire:change="onChangeAssessItem">
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -537,7 +538,7 @@
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="replacement_price" name="replacement_price" class="estimate-input"
-                    wire:model="replacementPrice">
+                    wire:model="replacementPrice" wire:change="onChangeAssessItem">
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -546,7 +547,7 @@
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="renovation_cost" name="renovation_cost" class="estimate-input"
-                    wire:model="renovationCost">
+                    wire:model="renovationCost" wire:change="onChangeAssessItem">
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -555,7 +556,7 @@
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="conventional_age" name="conventional_age" class="estimate-input"
-                    wire:model="conventionalAge">
+                    wire:model="conventionalAge" wire:change="onChangeAssessItem">
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -564,7 +565,7 @@
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="depreciation_rate" name="depreciation_rate" class="estimate-input"
-                    wire:model="depreciationRate">
+                    wire:model="depreciationRate" wire:change="onChangeAssessItem">
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -572,7 +573,8 @@
                 <label class="estimate-label" for="renovation_age">改装部分の築年
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="renovation_age" name="renovation_age" class="estimate-input" wire:model="renovationAge">
+                <input id="renovation_age" name="renovation_age" class="estimate-input" wire:model="renovationAge"
+                    wire:change="onChangeAssessItem">
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -581,7 +583,7 @@
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="renovation_depreciation_rate" name="renovation_depreciation_rate" class="estimate-input"
-                    wire:model="renovationDepreciationRate">
+                    wire:model="renovationDepreciationRate" wire:change="onChangeAssessItem">
             </div>
         @endif
         @if (in_array($assessItem, ['太陽光付'], true))
@@ -607,9 +609,90 @@
                 <label class="estimate-label" for="annual_price">年次価額
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="annual_price" name="annual_price" class="estimate-input" wire:model="annualPrice">
+                <input id="annual_price" name="annual_price" class="estimate-input" wire:model="annualPrice"
+                    wire:change="onChangeAssessItem">
             </div>
         @endif
+
+        <br>
+
+        @if (in_array($assessItem, ['年次取得'], true))
+            <div class="flex justify-center">
+                <div class="mt-5">
+                    <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">再調達価額
+                    </label>
+                    <input class="w-56 text-center text-lg outline outline-1" wire:model="reProcure" readonly>
+                </div>
+            </div>
+        @endif
+
+        <div class="flex flex-row justify-center">
+            @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
+                <div class="mt-5">
+                    <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">再調達価額A
+                    </label>
+                    <input class="w-56 text-center text-lg outline outline-1" wire:model="reProcureA" readonly>
+                </div>
+            @endif
+
+            @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
+                <div class="mt-5">
+                    <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">再調達価額B
+                    </label>
+                    <input class="w-56 text-center text-lg outline outline-1" wire:model="reProcureB" readonly>
+                </div>
+            @endif
+
+            @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
+                <div class="mt-5">
+                    <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">再調達価額C
+                    </label>
+                    <input class="w-56 text-center text-lg outline outline-1" wire:model="reProcureC" readonly>
+                </div>
+            @endif
+        </div>
+
+
+        @if (in_array($assessItem, ['改装物件'], true))
+            <div class="flex justify-center">
+                <div class="mt-5">
+                    <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">時価額A
+                    </label>
+                    <input class="w-56 text-center text-lg outline outline-1" wire:model="currentMarketPrice"
+                        readonly>
+                </div>
+            </div>
+        @endif
+
+        <div class="flex flex-row justify-center">
+            @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
+                <div class="mt-5">
+                    <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">時価額A
+                    </label>
+                    <input class="w-56 text-center text-lg outline outline-1" wire:model="currentMarketPriceA"
+                        readonly>
+                </div>
+            @endif
+
+            @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
+                <div class="mt-5">
+                    <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">時価額B
+                    </label>
+                    <input class="w-56 text-center text-lg outline outline-1" wire:model="currentMarketPriceB"
+                        readonly>
+                </div>
+            @endif
+
+            @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
+                <div class="mt-5">
+                    <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">時価額C
+                    </label>
+                    <input class="w-56 text-center text-lg outline outline-1" wire:model="currentMarketPriceC"
+                        readonly>
+                </div>
+            @endif
+        </div>
+
 
         <button type="button" onclick="submitForm(this)" name="save"
             class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5">

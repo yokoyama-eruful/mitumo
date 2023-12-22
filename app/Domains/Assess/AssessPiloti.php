@@ -25,14 +25,58 @@ final class AssessPiloti
     public function __construct($estimate)
     {
         $this->floorArea = $estimate->floor_area ? $estimate->floor_area : 0;
-        $this->pilotiFloorArea = (float) $estimate->assess_detail['piloti_floor_area'];
+        $this->pilotiFloorArea = $this->getFloatValueByKey('piloti_floor_area', $estimate->assess_detail);
         $this->exceptForPilotiFloorArea = $this->floorArea - $this->pilotiFloorArea;
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
-        $this->assessUsage = $estimate->assess_detail['assess_usage'];
-        $this->assessStructure = $estimate->assess_detail['assess_structure'];
+        $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
+        $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
 
         $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure);
         $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
+    }
+
+    /*
+    ** LiveFireで使用する評価額
+    */
+    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $assessRank = ''): string
+    {
+        if ($assessRank == '') {
+            return '';
+        }
+
+        $standardAmount = $this->standardAmount = new StandardAmount($assessUsage, $assessStructure);
+
+        $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
+
+        $reProcure = $standardAmount * ((float) $floorArea - (float) $pilotiFloorArea);
+
+        return number_format($reProcure * 0.8, 2).'~'.number_format($reProcure * 1.2, 2);
+    }
+
+    /*
+    ** LiveFireで使用する評価額
+    */
+    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $buildingAge, $assessRank = ''): string
+    {
+        $standardAmount = $this->standardAmount = new StandardAmount($assessUsage, $assessStructure);
+        $agingDepreciation = $this->agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
+
+        $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
+        $reProcure = $standardAmount * ((float) $floorArea - (float) $pilotiFloorArea);
+
+        $agingDepreciation = $this->agingDepreciation->findAgingDepreciation($assessRank);
+
+        $residualValue = $agingDepreciation * (int) $buildingAge;
+
+        if ($residualValue >= 0.5) {
+            $finalResidualValue = 0.5;
+        } else {
+            $finalResidualValue = 1 - $residualValue;
+        }
+
+        $marketPrice = number_format($reProcure * $finalResidualValue, 2);
+
+        return (string) $marketPrice;
     }
 
     public function getExceptForPiloti($assessRank)
@@ -103,5 +147,23 @@ final class AssessPiloti
             '時価額' => $currentMarketPrice,
             '時価額まるめ' => ceil($currentMarketPrice / 1000) * 1000,
         ];
+    }
+
+    private function getStringValueByKey(string $key, array $array, string $defaultValue = ''): string
+    {
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return (string) $array[$key];
+        }
+
+        return $defaultValue;
+    }
+
+    private function getFloatValueByKey(string $key, array $array, float $defaultValue = 0): float
+    {
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return (float) $array[$key];
+        }
+
+        return $defaultValue;
     }
 }

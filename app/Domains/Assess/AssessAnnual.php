@@ -27,12 +27,53 @@ final class AssessAnnual
         $this->rank = $estimate->rank;
         $this->floorArea = $estimate->floor_area ? $estimate->floor_area : 0;
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
-        $this->assessUsage = $estimate->assess_detail['assess_usage'];
-        $this->assessStructure = $estimate->assess_detail['assess_structure'];
-        $this->annualPrice = (int) $estimate->assess_detail['annual_price'];
+        $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
+        $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
+        $this->annualPrice = $this->getIntValueByKey('annual_price', $estimate->assess_detail);
 
         $this->annualCoefficient = new AnnualCoefficient($this->rank, $estimate->building_year);
         $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
+    }
+
+    /*
+      ** LiveFireで使用する評価額
+      */
+    public function viewReProcure($rank, $annualPrice, $buildingYear): string
+    {
+        $annualCoefficient = new AnnualCoefficient($rank, $buildingYear);
+
+        $annualCoefficient = $annualCoefficient->annualCoefficient;
+        $reProcure = (float) $annualPrice * $annualCoefficient;
+
+        return number_format($reProcure * 0.8, 2).'~'. number_format($reProcure * 1.2, 2);
+    }
+
+    /*
+    ** LiveFireで使用する評価額
+    */
+    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $rank, $annualPrice, $buildingYear, $assessRank = ''): string
+    {
+        $annualCoefficient = new AnnualCoefficient($rank, $buildingYear);
+        $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
+
+        if ($assessRank == '') {
+            return '';
+        }
+        $annualCoefficient = $annualCoefficient->annualCoefficient;
+        $reProcure = (float) $annualPrice * $annualCoefficient;
+
+        $agingDepreciation = $agingDepreciation->findAgingDepreciation($assessRank);
+        $residualValue = $agingDepreciation * $this->buildingAge;
+
+        if ($residualValue >= 0.5) {
+            $finalResidualValue = 0.5;
+        } else {
+            $finalResidualValue = 1 - $residualValue;
+        }
+
+        $marketPrice = number_format($reProcure * $finalResidualValue, 2);
+
+        return (string) $marketPrice;
     }
 
     public function getReProcure()
@@ -76,5 +117,23 @@ final class AssessAnnual
             '時価額' => $currentMarketPrice,
             '時価額まるめ' => ceil($currentMarketPrice / 1000) * 1000,
         ];
+    }
+
+    private function getStringValueByKey(string $key, array $array, string $defaultValue = ''): string
+    {
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return (string) $array[$key];
+        }
+
+        return $defaultValue;
+    }
+
+    private function getIntValueByKey(string $key, array $array, int $defaultValue = 0): int
+    {
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return (int) $array[$key];
+        }
+
+        return $defaultValue;
     }
 }

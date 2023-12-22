@@ -27,7 +27,6 @@ class PreviewController extends Controller
     {
         $estimate = $this->estimateService->find($id);
         $test = new AssessNormal($estimate);
-        dd($test->getReProcure('A'), $test->getResidualValue('A'), $test->getCurrentMarketPrice('A'));
 
         $standardPremium = new StandardInsurancePremium($estimate);
         $standardCompensation = new StandardCompensation($estimate->property_type);

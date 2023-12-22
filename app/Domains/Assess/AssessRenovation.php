@@ -30,12 +30,12 @@ final class AssessRenovation
 
     public function __construct($estimate)
     {
-        $this->replacementPrice = (int) $estimate->assess_detail['replacement_price'];
-        $this->renovationCost = (int) $estimate->assess_detail['renovation_cost'];
-        $this->conventionalAge = (int) $estimate->assess_detail['conventional_age'];
-        $this->depreciationRate = (float) $estimate->assess_detail['depreciation_rate'];
-        $this->renovationAge = (int) $estimate->assess_detail['renovation_age'];
-        $this->renovationDepreciationRate = (float) $estimate->assess_detail['renovation_depreciation_rate'];
+        $this->replacementPrice = $this->getIntValueByKey('replacement_price', $estimate->assess_detail);
+        $this->renovationCost = $this->getIntValueByKey('renovation_cost', $estimate->assess_detail);
+        $this->conventionalAge = $this->getIntValueByKey('conventional_age', $estimate->assess_detail);
+        $this->depreciationRate = $this->getFloatValueByKey('depreciation_rate', $estimate->assess_detail);
+        $this->renovationAge = $this->getIntValueByKey('renovation_age', $estimate->assess_detail);
+        $this->renovationDepreciationRate = $this->getFloatValueByKey('renovation_depreciation_rate', $estimate->assess_detail);
 
         $this->conventionalDepreciationRate = $this->getConventionalDepreciationRate();
         $this->renovationCostRate = $this->getRenovationCostRate();
@@ -44,8 +44,51 @@ final class AssessRenovation
         $this->currentMarketPrice = $this->getCurrentMarketPrice();
     }
 
+    /*
+    ** LiveFireで使用する評価額
+    */
+    public function viewCurrentMarketPrice($replacementPrice, $renovationCost, $conventionalAge, $depreciationRate, $renovationAge, $renovationDepreciationRate): string
+    {
+        if (! $replacementPrice) {
+            return '0';
+        }
+
+        $priceStructureRatio = ((int) $replacementPrice - (int) $renovationCost) / $replacementPrice;
+
+        $depreciationRate = $conventionalAge * $depreciationRate;
+
+        if ($depreciationRate >= 0.5) {
+            $depreciationRate = 0.5;
+        }
+
+        $conventionalDepreciationRate = round(round($priceStructureRatio, 2) * $depreciationRate, 3);
+
+        $priceStructureRatio = $renovationCost / $replacementPrice;
+
+        $depreciationRate = $renovationAge * $renovationDepreciationRate;
+
+        if ($depreciationRate >= 0.5) {
+            $depreciationRate = 0.5;
+        }
+
+        $renovationCostRate = round(round($priceStructureRatio, 2) * $depreciationRate, 3);
+
+        $marketPrice = $replacementPrice * (1 - $conventionalDepreciationRate + $renovationCostRate);
+
+        return (string) $marketPrice;
+    }
+
     private function getConventionalDepreciationRate()
     {
+        if ($this->replacementPrice == 0) {
+            return [
+                '価額構成割合' => 0,
+                '価額構成割合まるめ' => 0,
+                '減価率' => 0,
+                '減価率まるめ' => 0,
+            ];
+        }
+
         $priceStructureRatio = ($this->replacementPrice - $this->renovationCost) / $this->replacementPrice;
 
         $depreciationRate = $this->conventionalAge * $this->depreciationRate;
@@ -64,6 +107,15 @@ final class AssessRenovation
 
     private function getRenovationCostRate()
     {
+        if ($this->replacementPrice == 0) {
+            return [
+                '価額構成割合' => 0,
+                '価額構成割合まるめ' => 0,
+                '減価率' => 0,
+                '減価率まるめ' => 0,
+            ];
+        }
+
         $priceStructureRatio = $this->renovationCost / $this->replacementPrice;
 
         $depreciationRate = $this->renovationAge * $this->renovationDepreciationRate;
@@ -98,5 +150,23 @@ final class AssessRenovation
             '時価額' => $currentMarketPrice,
             '時価額まるめ' => ceil($currentMarketPrice / 100000) * 100000,
         ];
+    }
+
+    private function getIntValueByKey(string $key, array $array, int $defaultValue = 0): int
+    {
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return (int) $array[$key];
+        }
+
+        return $defaultValue;
+    }
+
+    private function getFloatValueByKey(string $key, array $array, float $defaultValue = 0): float
+    {
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return (float) $array[$key];
+        }
+
+        return $defaultValue;
     }
 }
