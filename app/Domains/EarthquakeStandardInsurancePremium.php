@@ -33,6 +33,14 @@ final class EarthquakeStandardInsurancePremium
 
     public function getEarthquakePremium($earthquakeRatio)
     {
+        if ($earthquakeRatio == 0 || $earthquakeRatio == '選択しない') {
+            return [
+                '共済金支払最大額' => '',
+                '地震掛金' => '',
+                '合計掛金' => '',
+            ];
+        }
+
         return [
             '共済金支払最大額' => $this->setMaxInsurancePremium($earthquakeRatio),
             '地震掛金' => $this->setEarthquakePremium($earthquakeRatio),
@@ -42,10 +50,6 @@ final class EarthquakeStandardInsurancePremium
 
     private function setMaxInsurancePremium($earthquakeRatio)
     {
-        if ($earthquakeRatio == 0) {
-            return '';
-        }
-
         return (int) $this->estimate->property_detail['building_insurance_payout'] * $earthquakeRatio / 100;
     }
 
@@ -53,10 +57,6 @@ final class EarthquakeStandardInsurancePremium
     {
         if (! $this->getEarthquakeFlag() || $this->estimate->insurance_year >= 2) {
             return '地震特約加入不可';
-        }
-
-        if ($earthquakeRatio == 0) {
-            return '';
         }
 
         return (int) $this->calcEarthquakeDiv($earthquakeRatio);

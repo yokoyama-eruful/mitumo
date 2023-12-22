@@ -285,29 +285,29 @@
                 </div>
                 <div class="estimate-input-box">
                     <select id="earthquake1" name="earthquake1" wire:model="earthquake1" class="estimate-input">
-                        <option value="選択しない">
-                            選択しない
-                        </option>
                         <option value="15">
                             15
+                        </option>
+                        <option value="選択しない">
+                            選択しない
                         </option>
                     </select>
                     <span class="my-auto mx-1">%</span>
                     <select id="earthquake2" name="earthquake2" wire:model="earthquake2" class="estimate-input">
-                        <option value="選択しない">
-                            選択しない
-                        </option>
                         <option value="30">
                             30
+                        </option>
+                        <option value="選択しない">
+                            選択しない
                         </option>
                     </select>
                     <span class="my-auto mx-1">%</span>
                     <select id="earthquake3" name="earthquake3" wire:model="earthquake3" class="estimate-input">
-                        <option value="選択しない">
-                            選択しない
-                        </option>
                         <option value="50">
                             50
+                        </option>
+                        <option value="選択しない">
+                            選択しない
                         </option>
                     </select>
                     <span class="my-auto mx-1">%</span>

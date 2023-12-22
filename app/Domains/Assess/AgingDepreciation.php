@@ -54,7 +54,7 @@ final class AgingDepreciation
     public function findAgingDepreciation(string $assessRank)
     {
         if (empty($this->agingDepreciationList) || ! in_array($assessRank, ['A', 'B', 'C'])) {
-            return;
+            return 0;
         }
 
         return (float) $this->agingDepreciationList[$assessRank]['経年減価率'];

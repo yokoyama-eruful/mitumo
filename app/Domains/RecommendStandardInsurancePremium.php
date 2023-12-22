@@ -20,6 +20,13 @@ final class RecommendStandardInsurancePremium
 
     public function getRecommendPremium($recommendYear)
     {
+        if ($recommendYear == 0) {
+            return [
+                '共済掛金' => '',
+                '１年更新の場合より' => '',
+            ];
+        }
+
         return [
             '共済掛金' => $this->setPremium($recommendYear).'円',
             '１年更新の場合より' => $this->setDiscountAmount($recommendYear),

@@ -7,6 +7,7 @@ namespace App\Http\Requests\Estimate;
 use App\Domains\Dto\EstimateAssessDetailDto;
 use App\Domains\Dto\EstimatePropertyDetailDto;
 use App\Domains\Dto\EstimateStandardInfoDto;
+use App\Rules\Recommend;
 use Illuminate\Foundation\Http\FormRequest;
 
 final class SaveRequest extends FormRequest
@@ -49,13 +50,13 @@ final class SaveRequest extends FormRequest
             'insurance_day' => ['nullable', 'integer', 'min:1', 'max:100'], //わからん
 
             //おすすめ契約の項目
-            'recommend1' => ['nullable', 'integer', 'min:2', 'max:35'],
-            'recommend2' => ['nullable', 'integer', 'min:2', 'max:35'],
-            'recommend3' => ['nullable', 'integer', 'min:2', 'max:35'],
+            'recommend1' => ['nullable', new Recommend()],
+            'recommend2' => ['nullable', new Recommend()],
+            'recommend3' => ['nullable', new Recommend()],
             //地震特約の項目
-            'earthquake1' => ['nullable', 'integer'],
-            'earthquake2' => ['nullable', 'integer'],
-            'earthquake3' => ['nullable', 'integer'],
+            'earthquake1' => ['nullable'],
+            'earthquake2' => ['nullable'],
+            'earthquake3' => ['nullable'],
 
             'base_rate' => ['required', 'numeric', 'min:0'],
 

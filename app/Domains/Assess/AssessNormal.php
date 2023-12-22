@@ -22,14 +22,57 @@ final class AssessNormal
     {
         $this->floorArea = $estimate->floor_area ? $estimate->floor_area : 0;
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
-        $this->assessUsage = $estimate->assess_detail['assess_usage'];
-        $this->assessStructure = $estimate->assess_detail['assess_structure'];
+        $this->assessUsage = $this->getValueByKey('assess_usage', $estimate->assess_detail);
+        $this->assessStructure = $this->getValueByKey('assess_structure', $estimate->assess_detail);
 
         $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure);
         $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
     }
 
-    public function getReProcure($assessRank)
+    /*
+    ** LiveFireで使用する評価額
+    */
+    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $assessRank = ''): string
+    {
+        if ($assessRank == '') {
+
+            return '';
+        }
+
+        $standardAmount = new StandardAmount($assessUsage, $assessStructure);
+        $amount = $standardAmount->findStandardAmount($assessRank);
+        $reProcure = $amount * $floorArea;
+
+        return number_format($reProcure * 0.8, 2).'~'.number_format($reProcure * 1.2, 2);
+    }
+
+    /*
+    ** Livewireで使用する評価額
+    */
+    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $buildingAge, $assessRank = ''): string
+    {
+        $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
+        $standardAmount = new StandardAmount($assessUsage, $assessStructure);
+
+        $amount = $standardAmount->findStandardAmount($assessRank);
+        $reProcure = $amount * $floorArea;
+
+        $agingDepreciation = $agingDepreciation->findAgingDepreciation($assessRank);
+
+        $residualValue = $agingDepreciation * $buildingAge;
+
+        if ($residualValue >= 0.5) {
+            $finalResidualValue = 0.5;
+        } else {
+            $finalResidualValue = 1 - $residualValue;
+        }
+
+        $marketPrice = number_format($reProcure * $finalResidualValue, 2);
+
+        return (string) $marketPrice;
+    }
+
+    public function getReProcure($assessRank = '')
     {
         $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
         $reProcure = $standardAmount * $this->floorArea;
@@ -62,7 +105,7 @@ final class AssessNormal
         ];
     }
 
-    public function getCurrentMarketPrice($assessRank)
+    public function getCurrentMarketPrice($assessRank = '')
     {
         $currentMarketPrice = $this->getReProcure($assessRank)['100%'] * $this->getResidualValue($assessRank)['残価率最終'];
 
@@ -70,5 +113,14 @@ final class AssessNormal
             '時価額' => $currentMarketPrice,
             '時価額まるめ' => ceil($currentMarketPrice / 1000) * 1000,
         ];
+    }
+
+    private function getValueByKey(string $key, array $array, string $defaultValue = ''): string
+    {
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return (string) $array[$key];
+        }
+
+        return $defaultValue;
     }
 }

@@ -25,15 +25,15 @@
         </div>
         <div name="reco"
             class="flex justify-center items-center h-16 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
-            {{ $estimate->RecommendList['recommend1'] . '年' }}
+            {{ yearUnit($estimate->RecommendList['recommend1']) }}
         </div>
         <div name="reco2"
             class="flex justify-center items-center h-16 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
-            {{ $estimate->RecommendList['recommend2'] . '年' }}
+            {{ yearUnit($estimate->RecommendList['recommend2']) }}
         </div>
         <div name="reco3"
             class="flex justify-center items-center h-16 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
-            {{ $estimate->RecommendList['recommend3'] . '年' }}
+            {{ yearUnit($estimate->RecommendList['recommend3']) }}
         </div>
     </div>
     <div class="flex flex-row">
