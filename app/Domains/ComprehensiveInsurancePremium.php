@@ -174,7 +174,7 @@ final class ComprehensiveInsurancePremium
         }
 
         $baseRate = new BuildingBaseRate($estimate);
-        $baseRate = $baseRate->findRate($estimate->property_type, $estimate->building_age, $estimate->rank);
+        $baseRate = $baseRate->findRate($estimate->property_type, $buildingAge, $estimate->rank);
 
         return [
             'その他割引' => $otherDiscount,

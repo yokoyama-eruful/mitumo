@@ -25,13 +25,13 @@
         <div class="flex justify-center items-center h-16 w-[150px] bg-green-200 outline outline-1 outline-gray-500">
         </div>
         <div class="flex justify-center items-center h-16 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
-            {{ '支払縮小割合：' . $estimate->EarthquakeList['earthquake1'] . '%' }}
+            {{ '支払縮小割合：' . percentUnit($estimate->EarthquakeList['earthquake1']) }}
         </div>
         <div class="flex justify-center items-center h-16 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
-            {{ '支払縮小割合：' . $estimate->EarthquakeList['earthquake2'] . '%' }}
+            {{ '支払縮小割合：' . percentUnit($estimate->EarthquakeList['earthquake2']) }}
         </div>
         <div class="flex justify-center items-center h-16 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
-            {{ '支払縮小割合：' . $estimate->EarthquakeList['earthquake3'] . '%' }}
+            {{ '支払縮小割合：' . percentUnit($estimate->EarthquakeList['earthquake3']) }}
         </div>
     </div>
     <div class="flex flex-row">

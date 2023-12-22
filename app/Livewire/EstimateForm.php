@@ -16,6 +16,7 @@ use App\Domains\WorkSurcharge;
 use App\Models\Estimate;
 use App\Utils\FullWidthDigitConverter;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class EstimateForm extends Component
@@ -207,11 +208,10 @@ class EstimateForm extends Component
     public function mount($estimate)
     {
         $this->estimate = $estimate;
-
-        $this->company = old('company', $estimate->company);
-        $this->address = old('address', $estimate->address);
-        $this->phoneNumber = old('phone_number', $estimate->phone_number);
-        $this->staffName = old('staff_name', $estimate->staff_name);
+        $this->company = old('company', $estimate->company) != null ? old('company', $estimate->company) : '広島県中小企業共済協同組合';
+        $this->address = old('address', $estimate->address) != null ? old('address', $estimate->address) : '広島市中区竹屋町4-17';
+        $this->phoneNumber = old('phone_number', $estimate->phone_number) != null ? old('phone_number', $estimate->phone_number) : '082-243-4411';
+        $this->staffName = old('staff_name', $estimate->staff_name) != null ? old('staff_name', $estimate->staff_name) : Auth::user()->name;
         $this->contractee = old('contractee', $estimate->contractee);
         $this->location = old('location', $estimate->location);
 
@@ -351,13 +351,14 @@ class EstimateForm extends Component
      */
     public function onChangeBuildingAge()
     {
-        $this->buildingYear = (string) FullWidthDigitConverter::convert($this->buildingYear);
 
         if (! $this->startDate || ! $this->buildingYear) {
             $this->buildingAge = null;
 
             return;
         }
+
+        $this->buildingYear = (string) FullWidthDigitConverter::convert($this->buildingYear);
 
         $buildingDate = CarbonImmutable::createFromDate((int) $this->buildingYear, 1, 1);
         $startDate = $this->startDate;

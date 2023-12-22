@@ -50,3 +50,19 @@ if (! function_exists('yearUnit')) {
         return $year.'年';
     }
 }
+
+if (! function_exists('percentUnit')) {
+    function percentUnit($percent)
+    {
+        if (! $percent) {
+            return '';
+        }
+
+        //全角文字・数字が含まれているか判定
+        if (preg_match('/[^\x01-\x7E\xA1-\xDF]/u', (string) $percent) > 0) {
+            return $percent;
+        }
+
+        return $percent.'%';
+    }
+}
