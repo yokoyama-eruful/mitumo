@@ -45,7 +45,7 @@ final class StandardInsurancePremium
         $this->estimate = $estimate;
         $this->occupationalSurchargeRate = $this->getFloatValueByKey('occupational_surcharge_rate', $estimate->property_detail);
         $this->workSurchargeRate = $this->getFloatValueByKey('work_surcharge_rate', $estimate->property_detail);
-        $this->chattelSurcharge = $this->getFloatValueByKey('chattel_surcharge', $estimate->property_detail);
+        $this->chattelSurcharge = $this->getChattelSurcharge($estimate);
         $this->otherDiscount = $this->getFloatValueByKey('other_discount', $estimate->property_detail);
         $this->actualLossFactor = $this->getFloatValueByKey('actual_loss_factor', $estimate->property_detail);
         $this->payMethod = $estimate->pay_method;
@@ -171,18 +171,19 @@ final class StandardInsurancePremium
             $buildingBaseRate = $estimate->building_base_rate;
         }
 
-        $calcOtherDiscount = function () use ($estimate, $buildingBaseRate) {
-            $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
-            $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 1);
-            if ($otherDiscount != 1) {
+        $calcOtherDiscount = function ($estimate, $buildingBaseRate) {
+
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 0);
+            if ($otherDiscount == 0) {
+                $otherDiscount = 1;
+            } else {
                 $otherDiscount = 1 - $otherDiscount / 100;
             }
 
-            return round(($buildingBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
+            return round(($buildingBaseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
         };
 
-        $otherDiscount = $calcOtherDiscount($estimate);
+        $otherDiscount = $calcOtherDiscount($estimate, $buildingBaseRate);
 
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
@@ -190,7 +191,7 @@ final class StandardInsurancePremium
         $shortTermRate = $mutualAidPremium->shortTermRate;
         $longTermRate = $mutualAidPremium->longTerRate;
         $actualLossFactor = $this->getValueByKey('actual_loss_factor', $estimate->property_detail, 1);
-        $applyRate = $otherDiscount * $actualLossFactor * $longTermRate * $shortTermRate;
+        $applyRate = round(round(round($otherDiscount * $actualLossFactor, 2) * $longTermRate, 2) * $shortTermRate, 2);
 
         //掛け金
         $buildingInsurancePayout = $this->getValueByKey('building_insurance_payout', $estimate->property_detail);
@@ -221,26 +222,26 @@ final class StandardInsurancePremium
 
         //その他割引
 
-        $calcOtherDiscount = function () use ($estimate, $chattelBaseRate) {
+        $calcOtherDiscount = function ($estimate, $chattelBaseRate) {
 
-            $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
-            $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
-            if ($otherDiscount != 1) {
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 0);
+            if ($otherDiscount == 0) {
+                $otherDiscount = 1;
+            } else {
                 $otherDiscount = 1 - $otherDiscount / 100;
             }
 
-            return round(($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
+            return round(($chattelBaseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
         };
 
-        $otherDiscount = $calcOtherDiscount($estimate);
+        $otherDiscount = $calcOtherDiscount($estimate, $chattelBaseRate);
 
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
         $longTermRate = $mutualAidPremium->longTerRate;
-        $applyRate = $otherDiscount * $longTermRate * $shortTermRate;
+        $applyRate = round(round($otherDiscount * $longTermRate, 2) * $shortTermRate, 2);
 
         //掛け金
         $householdInsurancePayout = $this->getValueByKey('household_insurance_payout', $estimate->property_detail);
@@ -270,19 +271,19 @@ final class StandardInsurancePremium
         }
         //その他割引
 
-        $calcOtherDiscount = function () use ($estimate, $chattelBaseRate) {
+        $calcOtherDiscount = function ($estimate, $chattelBaseRate) {
 
-            $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
-            $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
-            if ($otherDiscount != 1) {
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 0);
+            if ($otherDiscount == 0) {
+                $otherDiscount = 1;
+            } else {
                 $otherDiscount = 1 - $otherDiscount / 100;
             }
 
-            return round(($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
+            return round(($chattelBaseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
         };
 
-        $otherDiscount = $calcOtherDiscount($estimate);
+        $otherDiscount = $calcOtherDiscount($estimate, $chattelBaseRate);
 
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
@@ -290,7 +291,7 @@ final class StandardInsurancePremium
         $shortTermRate = $mutualAidPremium->shortTermRate;
         $longTermRate = $mutualAidPremium->longTerRate;
         $actualLossFactor = $this->getValueByKey('actual_loss_factor', $estimate->property_detail, 1);
-        $applyRate = $otherDiscount * $actualLossFactor * $longTermRate * $shortTermRate;
+        $applyRate = round(round(round($otherDiscount * $actualLossFactor, 2) * $longTermRate, 2) * $shortTermRate, 2);
 
         //掛け金
         $facilityInsurancePayout = $this->getValueByKey('facility_insurance_payout', $estimate->property_detail);
@@ -321,20 +322,19 @@ final class StandardInsurancePremium
         }
         //その他割引
 
-        $calcOtherDiscount = function () use ($estimate, $chattelBaseRate) {
+        $calcOtherDiscount = function ($estimate, $chattelBaseRate) {
 
-            $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail, 1);
-            $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
-            if ($otherDiscount != 1) {
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 0);
+            if ($otherDiscount == 0) {
+                $otherDiscount = 1;
+            } else {
                 $otherDiscount = 1 - $otherDiscount / 100;
             }
 
-            return round(($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
+            return round(($chattelBaseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
         };
 
-        $otherDiscount = $calcOtherDiscount($estimate);
+        $otherDiscount = $calcOtherDiscount($estimate, $chattelBaseRate);
 
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
@@ -342,13 +342,7 @@ final class StandardInsurancePremium
         $shortTermRate = $mutualAidPremium->shortTermRate;
         $longTermRate = $mutualAidPremium->longTerRate;
 
-        $chattelSurchargeRate = match ($estimate->property_type) {
-            '住宅' => 0,
-            '普通' => 0.2, //動産割増（カテゴリ）が１級でも２級でも料率は0.2
-            '工場' => $estimate->property_detail['chattel_surcharge'],
-        };
-
-        $applyRate = ($otherDiscount + $chattelSurchargeRate) * $longTermRate * $shortTermRate;
+        $applyRate = round(round(($otherDiscount + $this->chattelSurcharge) * $longTermRate, 2) * $shortTermRate, 2);
 
         //掛け金
         $itemInsurancePayout = $this->getValueByKey('item_insurance_payout', $estimate->property_detail);
@@ -363,6 +357,15 @@ final class StandardInsurancePremium
             '適用率' => $applyRate,
             '掛金' => $premium,
         ];
+    }
+
+    private function getChattelSurcharge($estimate)
+    {
+        return match ($estimate->property_type) {
+            '住宅' => 0,
+            '普通' => 0.2, //動産割増（カテゴリ）が１級でも２級でも料率は0.2
+            '工場' => $this->getFloatValueByKey('chattel_surcharge', $estimate->property_detail),
+        };
     }
 
     /**
