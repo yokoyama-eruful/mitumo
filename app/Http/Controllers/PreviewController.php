@@ -10,10 +10,12 @@ use App\Domains\ComprehensiveInsurancePremium;
 use App\Domains\EarthquakeComprehensiveInsurancePremium;
 use App\Domains\EarthquakeStandardInsurancePremium;
 use App\Domains\MutualAidPremiums;
+use App\Domains\OccupationalSurcharge;
 use App\Domains\RecommendComprehensiveInsurancePremium;
 use App\Domains\RecommendStandardInsurancePremium;
 use App\Domains\StandardCompensation;
 use App\Domains\StandardInsurancePremium;
+use App\Domains\WorkSurcharge;
 use App\Services\EstimateService;
 
 class PreviewController extends Controller
@@ -107,8 +109,10 @@ class PreviewController extends Controller
     {
         $estimate = $this->estimateService->find($id);
         $standard = new StandardInsurancePremium($estimate);
+        $occupationalSurchargeItem = new OccupationalSurcharge();
+        $workSurchargeItem = new WorkSurcharge();
         $comprehensive = new ComprehensiveInsurancePremium($estimate);
 
-        return view('preview.calculation', compact('estimate', 'standard', 'comprehensive'));
+        return view('preview.calculation', compact('estimate', 'standard', 'comprehensive', 'occupationalSurchargeItem', 'workSurchargeItem'));
     }
 }
