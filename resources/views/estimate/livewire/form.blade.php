@@ -317,16 +317,16 @@
 
         @if (in_array($propertyType, ['住宅', '普通'], true))
             <div class="estimate-input-box">
-                <label class="estimate-label" for="base_rate">建物基本率
+                <label class="estimate-label" for="building_base_rate">建物基本率
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="base_rate" name="base_rate" class="estimate-input" placeholder="物件が「住宅」か「普通」の時は、自動算出されます"
-                    wire:model="baseRate" readonly>
+                <input id="building_base_rate" name="building_base_rate" class="estimate-input"
+                    placeholder="物件が「住宅」か「普通」の時は、自動算出されます" wire:model="baseRate" readonly>
             </div>
         @endif
         @if (in_array($propertyType, ['工場'], true))
             <div class="estimate-input-box w-auto">
-                <label class="estimate-label h-auto">基本率
+                <label class="estimate-label h-auto">建物基本率
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <div class="w-auto">
@@ -340,12 +340,13 @@
                     <div class=" flex">
                         <label class="estimate-label w-32" for="">備考</label>
                         <div class="mx-2 w-64 text-sm"></div>
-                        <input id="" name="ファクトリー" class="estimate-input">
+                        <input id="factory_building_note" name="factory_building_note" class="estimate-input">
                     </div>
                     <div class=" flex">
-                        <label class="estimate-label w-32" for="base_rate">率</label>
+                        <label class="estimate-label w-32" for="building_base_rate">率</label>
                         <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
-                        <input id="base_rate" name="base_rate" class="estimate-input" wire:model="base_rate">
+                        <input id="building_base_rate" name="building_base_rate" class="estimate-input"
+                            wire:model="baseRate">
                     </div>
                 </div>
             </div>

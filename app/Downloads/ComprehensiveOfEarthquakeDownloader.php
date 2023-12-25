@@ -95,18 +95,18 @@ class ComprehensiveOfEarthquakeDownloader
 
         $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
 
-        $worksheet->setCellValue('D49', $estimate->property_detail['earthquake1']);
-        $worksheet->setCellValue('D51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['共済金支払最大額']);
-        $worksheet->setCellValue('D54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['地震掛金']);
-        $worksheet->setCellValue('D56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['合計掛金']);
-        $worksheet->setCellValue('I49', $estimate->property_detail['earthquake2']);
-        $worksheet->setCellValue('I51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['共済金支払最大額']);
-        $worksheet->setCellValue('I54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['地震掛金']);
-        $worksheet->setCellValue('I56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['合計掛金']);
-        $worksheet->setCellValue('N49', $estimate->property_detail['earthquake3']);
-        $worksheet->setCellValue('N51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['共済金支払最大額']);
-        $worksheet->setCellValue('N54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['地震掛金']);
-        $worksheet->setCellValue('N56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['合計掛金']);
+        $worksheet->setCellValue('D49', $estimate->property_detail['earthquake1'] ?? '');
+        $worksheet->setCellValue('D51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'] ?? '')['共済金支払最大額']);
+        $worksheet->setCellValue('D54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'] ?? '')['地震掛金']);
+        $worksheet->setCellValue('D56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'] ?? '')['合計掛金']);
+        $worksheet->setCellValue('I49', $estimate->property_detail['earthquake2'] ?? '');
+        $worksheet->setCellValue('I51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'] ?? '')['共済金支払最大額']);
+        $worksheet->setCellValue('I54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'] ?? '')['地震掛金']);
+        $worksheet->setCellValue('I56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'] ?? '')['合計掛金']);
+        $worksheet->setCellValue('N49', $estimate->property_detail['earthquake3'] ?? '');
+        $worksheet->setCellValue('N51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'] ?? '')['共済金支払最大額']);
+        $worksheet->setCellValue('N54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'] ?? '')['地震掛金']);
+        $worksheet->setCellValue('N56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'] ?? '')['合計掛金']);
     }
 
     private function setCalcInfo($spreadSheet, $standardPremium, $comprehensivePremium)

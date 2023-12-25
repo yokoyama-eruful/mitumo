@@ -149,7 +149,7 @@ final class ComprehensiveInsurancePremium
                 $otherDiscount = 1 - $otherDiscount / 100;
             }
 
-            return round(($estimate->base_rate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
+            return round(($estimate->building_base_rate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
         };
 
         $otherDiscount = $calcOtherDiscount($estimate);
@@ -198,7 +198,7 @@ final class ComprehensiveInsurancePremium
                 $baseRate = new ChattelBaseRate($estimate);
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
-                $chattelBaseRate = $estimate->base_rate;
+                $chattelBaseRate = $estimate->building_base_rate;
             }
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
@@ -250,7 +250,7 @@ final class ComprehensiveInsurancePremium
                 $baseRate = new ChattelBaseRate($estimate);
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
-                $chattelBaseRate = $estimate->base_rate;
+                $chattelBaseRate = $estimate->building_base_rate;
             }
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
@@ -304,7 +304,7 @@ final class ComprehensiveInsurancePremium
                 $baseRate = new ChattelBaseRate($estimate);
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
-                $chattelBaseRate = $estimate->base_rate;
+                $chattelBaseRate = $estimate->building_base_rate;
             }
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail, 1);

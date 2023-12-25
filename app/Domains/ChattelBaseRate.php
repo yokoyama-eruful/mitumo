@@ -14,7 +14,7 @@ final class ChattelBaseRate
 
     public function __construct($estimate)
     {
-        $this->baseRate = array_key_exists('base_rate', $estimate->property_detail) ? $estimate->property_detail['base_rate'] : 0;
+        $this->baseRate = $estimate->building_base_rate;
         $this->rateList = $this->makeRateList();
     }
 

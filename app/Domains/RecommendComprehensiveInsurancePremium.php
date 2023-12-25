@@ -20,7 +20,7 @@ final class RecommendComprehensiveInsurancePremium
 
     public function getRecommendPremium($recommendYear)
     {
-        if ($recommendYear == 0) {
+        if ($recommendYear == '' || $recommendYear == 0) {
             return [
                 '共済掛金' => '',
                 '１年更新の場合より' => '',
@@ -69,7 +69,7 @@ final class RecommendComprehensiveInsurancePremium
                 $otherDiscount = 1 - $otherDiscount / 100;
             }
 
-            return round(($estimate->base_rate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
+            return round(($estimate->building_base_rate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
         };
 
         $otherDiscount = $calcOtherDiscount($estimate);
@@ -102,7 +102,7 @@ final class RecommendComprehensiveInsurancePremium
                 $baseRate = new ChattelBaseRate($estimate);
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
-                $chattelBaseRate = $estimate->base_rate;
+                $chattelBaseRate = $estimate->building_base_rate;
             }
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
@@ -144,7 +144,7 @@ final class RecommendComprehensiveInsurancePremium
                 $baseRate = new ChattelBaseRate($estimate);
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
-                $chattelBaseRate = $estimate->base_rate;
+                $chattelBaseRate = $estimate->building_base_rate;
             }
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
@@ -188,7 +188,7 @@ final class RecommendComprehensiveInsurancePremium
                 $baseRate = new ChattelBaseRate($estimate);
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
-                $chattelBaseRate = $estimate->base_rate;
+                $chattelBaseRate = $estimate->building_base_rate;
             }
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail, 1);
