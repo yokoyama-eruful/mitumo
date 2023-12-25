@@ -39,6 +39,17 @@ final class EstimateService
         return Estimate::find($id);
     }
 
+    public function duplication($id)
+    {
+        $originalRecord = Estimate::find($id);
+
+        if ($originalRecord) {
+            $newRecord = $originalRecord->replicate();
+
+            $newRecord->save();
+        }
+    }
+
     public function destroy(int $id): void
     {
         Estimate::destroy($id);

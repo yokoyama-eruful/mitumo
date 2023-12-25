@@ -53,6 +53,13 @@ final class EstimateController extends Controller
         return redirect()->route($redirectName, ['id' => $estimate->id]);
     }
 
+    public function duplication(int $id)
+    {
+        $this->estimateService->duplication($id);
+
+        return redirect()->route('top.index');
+    }
+
     public function destroy(int $id)
     {
         $this->estimateService->destroy($id);
