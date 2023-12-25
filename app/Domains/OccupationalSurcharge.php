@@ -30,6 +30,21 @@ final class OccupationalSurcharge
         return floatval($result['割増率']);
     }
 
+    public function getOccupationalSurchargeItem($code, $rank)
+    {
+        $result = array_filter($this->rateList, function ($item) use ($code, $rank) {
+            return $item['標準コード'] === $code && $item['級別'] === $rank;
+        });
+
+        $result = ! empty($result) ? reset($result) : null;
+
+        if (is_null($result)) {
+            return;
+        }
+
+        return $result['中項目'].' '.$result['小項目'];
+    }
+
     private function makeRateList()
     {
         $filePath = Storage::path('surchargeTable/occupationalSurchargeTable.csv');
