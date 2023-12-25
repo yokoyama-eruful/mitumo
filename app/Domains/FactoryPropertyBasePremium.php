@@ -33,6 +33,21 @@ final class FactoryPropertyBasePremium
         ];
     }
 
+    public function getFactoryPropertyBasePremiumItem($code, $rank)
+    {
+        $result = array_filter($this->rateList, function ($item) use ($code, $rank) {
+            return $item['作業工程コード'] === $code && $item['級別'] === $rank;
+        });
+
+        $result = ! empty($result) ? reset($result) : null;
+
+        if (is_null($result)) {
+            return;
+        }
+
+        return $result['中項目'].' '.$result['小項目'];
+    }
+
     private function makeRateList()
     {
         $filePath = Storage::path('factoryTable/FactoryTable.csv');

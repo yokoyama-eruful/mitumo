@@ -9,6 +9,7 @@ use App\Domains\ComprehensiveCompensation;
 use App\Domains\ComprehensiveInsurancePremium;
 use App\Domains\EarthquakeComprehensiveInsurancePremium;
 use App\Domains\EarthquakeStandardInsurancePremium;
+use App\Domains\FactoryPropertyBasePremium;
 use App\Domains\MutualAidPremiums;
 use App\Domains\OccupationalSurcharge;
 use App\Domains\RecommendComprehensiveInsurancePremium;
@@ -111,8 +112,9 @@ class PreviewController extends Controller
         $standard = new StandardInsurancePremium($estimate);
         $occupationalSurchargeItem = new OccupationalSurcharge();
         $workSurchargeItem = new WorkSurcharge();
+        $factoryPropertyBasePremiumItem = new FactoryPropertyBasePremium();
         $comprehensive = new ComprehensiveInsurancePremium($estimate);
 
-        return view('preview.calculation', compact('estimate', 'standard', 'comprehensive', 'occupationalSurchargeItem', 'workSurchargeItem'));
+        return view('preview.calculation', compact('estimate', 'standard', 'comprehensive', 'occupationalSurchargeItem', 'workSurchargeItem', 'factoryPropertyBasePremiumItem'));
     }
 }
