@@ -16,7 +16,11 @@ class Recommend implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if ($value && $value <= 2 || $value && $value >= 35) {
+        if (! $value) {
+            return;
+        }
+
+        if ($value < 2 || $value >= 36) {
             $fail('おすすめ契約は空白か整数値で2~35の間でいけません。');
         }
     }
