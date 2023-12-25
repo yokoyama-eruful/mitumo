@@ -188,6 +188,8 @@ class EstimateForm extends Component
 
     public array $payMethodList;
 
+    public array $chattelSurchargeCategoryList;
+
     public array $earthquakeList;
 
     public array $assessItemList;
@@ -306,6 +308,7 @@ class EstimateForm extends Component
         $this->usageList = $this->getUsageList();
         $this->propertyTypeList = $this->getPropertyTypeList();
         $this->payMethodList = $this->getPayMethodList();
+        $this->chattelSurchargeCategoryList = $this->getChattelSurchargeCategoryList();
         $this->earthquakeList = $this->getEarthquakeList();
         $this->assessItemList = $this->getAssessItemList();
         $this->assessUsageList = $this->getAssessUsageList();
@@ -769,6 +772,14 @@ class EstimateForm extends Component
             '一時払',
             '長期年払',
             '分割払',
+        ];
+    }
+
+    private function getChattelSurchargeCategoryList()
+    {
+        return [
+            '1級品',
+            '2級品',
         ];
     }
 

@@ -379,9 +379,16 @@
         @if ($propertyType == '普通')
             <div class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）
+                    <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="chattel_surcharge_category" name="chattel_surcharge_category" class="estimate-input"
-                    wire:model="chattelSurchargeCategory">
+                <select id="chattel_surcharge_category" name="chattel_surcharge_category"
+                    wire:model="chattelSurchargeCategory" class="estimate-input">
+                    <option value="" hidden>選択してください</option>
+                    @foreach ($chattelSurchargeCategoryList as $item)
+                        <option value="{{ $item }}" @if ($item === $chattelSurchargeCategory) selected @endif>
+                            {{ $item }}</option>
+                    @endforeach
+                </select>
             </div>
         @endif
         @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
