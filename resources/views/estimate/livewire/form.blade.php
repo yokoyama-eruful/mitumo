@@ -321,7 +321,14 @@
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="building_base_rate" name="building_base_rate" class="estimate-input"
-                    placeholder="物件が「住宅」か「普通」の時は、自動算出されます" wire:model="baseRate" readonly>
+                    placeholder="物件が「住宅」か「普通」の時は、自動算出されます" wire:model="buildingBaseRate" readonly>
+            </div>
+            <div class="estimate-input-box">
+                <label class="estimate-label" for="building_base_rate">動産基本率
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="chattel_base_rate" name="chattel_base_rate" class="estimate-input"
+                    placeholder="物件が「住宅」か「普通」の時は、自動算出されます" wire:model="chattelBaseRate" readonly>
             </div>
         @endif
         @if (in_array($propertyType, ['工場'], true))
@@ -346,12 +353,19 @@
                         <label class="estimate-label w-32" for="building_base_rate">率</label>
                         <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
                         <input id="building_base_rate" name="building_base_rate" class="estimate-input"
-                            wire:model="baseRate">
+                            wire:model="buildingBaseRate">
                     </div>
                 </div>
             </div>
         @endif
         @if ($propertyType == '工場')
+            <div class="estimate-input-box">
+                <label class="estimate-label" for="building_base_rate">動産基本率
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="chattel_base_rate" name="chattel_base_rate" class="estimate-input" placeholder="自動算出されます"
+                    wire:model="buildingBaseRate" readonly>
+            </div>
             <div class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge">動産割増
                     @if ($propertyType === '工場')

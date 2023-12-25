@@ -11,6 +11,7 @@ use App\Domains\Assess\AssessPiloti;
 use App\Domains\Assess\AssessRenovation;
 use App\Domains\Assess\AssessSolarPanel;
 use App\Domains\BuildingBaseRate;
+use App\Domains\ChattelBaseRate;
 use App\Domains\FactoryPropertyBasePremium;
 use App\Domains\OccupationalSurcharge;
 use App\Domains\WorkSurcharge;
@@ -95,7 +96,9 @@ class EstimateForm extends Component
 
     /////物件情報/////////////////////////////
 
-    public ?string $baseRate = null;
+    public ?string $buildingBaseRate = null;
+
+    public ?string $chattelBaseRate = null;
 
     public ?string $chattelSurcharge = null;
 
@@ -259,7 +262,8 @@ class EstimateForm extends Component
         $this->earthquake3 = old('earthquake3', (string) $estimate->earthquakeList['earthquake3']);
 
         //物件情報
-        $this->baseRate = old('building_base_rate', (string) $estimate->building_base_rate);
+        $this->buildingBaseRate = old('building_base_rate', (string) $estimate->building_base_rate);
+        $this->chattelBaseRate = old('chattel_base_rate', (string) $estimate->chattel_base_rate);
         $this->factoryBuildingCode = old('factory_building_code', $this->getValueByKey('factory_building_code', $estimate->property_detail));
 
         $this->chattelSurcharge = old('chattel_surcharge', $this->getValueByKey('chattel_surcharge', $estimate->property_detail));
@@ -320,7 +324,7 @@ class EstimateForm extends Component
      */
     public function onChangePropertyType()
     {
-        $this->baseRate = '';
+        $this->buildingBaseRate = '';
         $this->rankList = $this->getRankList($this->propertyType);
     }
 
@@ -336,7 +340,8 @@ class EstimateForm extends Component
             is_null($this->rank) ||
             $this->propertyType == '工場'
         ) {
-            $this->baseRate = null;
+            $this->buildingBaseRate = null;
+            $this->chattelBaseRate = null;
 
             return;
         }
@@ -347,8 +352,10 @@ class EstimateForm extends Component
             $buildingAge = '';
         }
 
-        $baseRate = new BuildingBaseRate($this->estimate);
-        $this->baseRate = (string) $baseRate->findRate($this->propertyType, $buildingAge, $this->rank);
+        $buildingBaseRate = new BuildingBaseRate($this->estimate);
+        $this->buildingBaseRate = (string) $buildingBaseRate->findRate($this->propertyType, $buildingAge, $this->rank);
+        $chattelBaseRate = new ChattelBaseRate($this->estimate);
+        $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank);
 
         $this->occupationalSurchargeCode = null;
         $this->occupationalSurchargeRate = null;
@@ -436,7 +443,7 @@ class EstimateForm extends Component
 
         $factoryInfo = $factoryPropertyBasePremium->findCode($this->factoryBuildingCode, $this->rank);
 
-        $this->baseRate = (string) $factoryInfo['基本率'];
+        $this->buildingBaseRate = (string) $factoryInfo['基本率'];
 
         $this->chattelSurcharge = (string) $factoryInfo['動産割増'];
 

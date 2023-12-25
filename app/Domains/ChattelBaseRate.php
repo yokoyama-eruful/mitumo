@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Storage;
 
 final class ChattelBaseRate
 {
-    public readonly float $baseRate;
+    public readonly ?float $baseRate;
 
     public readonly array $rateList;
 
     public function __construct($estimate)
     {
-        $this->baseRate = $estimate->building_base_rate;
+        $this->baseRate = $estimate->chattel_base_rate;
         $this->rateList = $this->makeRateList();
     }
 

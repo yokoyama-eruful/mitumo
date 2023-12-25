@@ -139,9 +139,24 @@ final class ComprehensiveInsurancePremium
     private function calcBuilding()
     {
         $estimate = $this->estimate;
+
+        $propertyType = $estimate->property_type;
+
+        if ($estimate->property_type === '住宅') {
+            $buildingAge = $estimate->building_age ?? '';
+        } else {
+            $buildingAge = '';
+        }
+
+        if (in_array($propertyType, ['住宅', '総合'], true)) {
+            $baseRate = new BuildingBaseRate($estimate);
+            $buildingBaseRate = $baseRate->findRate($propertyType, $buildingAge, $estimate->rank);
+        } else {
+            $buildingBaseRate = $estimate->building_base_rate;
+        }
         //その他割引
 
-        $calcOtherDiscount = function ($estimate) {
+        $calcOtherDiscount = function () use ($estimate, $buildingBaseRate) {
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
             $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
             $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
@@ -149,7 +164,7 @@ final class ComprehensiveInsurancePremium
                 $otherDiscount = 1 - $otherDiscount / 100;
             }
 
-            return round(($estimate->building_base_rate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
+            return round(($buildingBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
         };
 
         $otherDiscount = $calcOtherDiscount($estimate);
@@ -167,18 +182,9 @@ final class ComprehensiveInsurancePremium
         $buildingInsurancePayout = $this->getValueByKey('building_insurance_payout', $estimate->property_detail);
         $premium = $buildingInsurancePayout * $applyRate;
 
-        if ($estimate->property_type === '住宅') {
-            $buildingAge = $estimate->building_age ?? '';
-        } else {
-            $buildingAge = '';
-        }
-
-        $baseRate = new BuildingBaseRate($estimate);
-        $baseRate = $baseRate->findRate($estimate->property_type, $buildingAge, $estimate->rank);
-
         return [
             'その他割引' => $otherDiscount,
-            '基本率' => $baseRate,
+            '基本率' => $buildingBaseRate,
             '総合割増' => $comprehensivePremium,
             '長期率' => $longTermRate,
             '適用率' => $applyRate,
@@ -189,17 +195,19 @@ final class ComprehensiveInsurancePremium
     private function calcHouseHold()
     {
         $estimate = $this->estimate;
+
+        $propertyType = $estimate->property_type;
+
+        if (in_array($propertyType, ['住宅', '総合'], true)) {
+            $baseRate = new ChattelBaseRate($estimate);
+            $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
+        } else {
+            $chattelBaseRate = $estimate->building_base_rate;
+        }
+
         //その他割引
 
-        $calcOtherDiscount = function ($estimate) {
-            $propertyType = $estimate->property_type;
-
-            if (in_array($propertyType, ['住宅', '総合'], true)) {
-                $baseRate = new ChattelBaseRate($estimate);
-                $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
-            } else {
-                $chattelBaseRate = $estimate->building_base_rate;
-            }
+        $calcOtherDiscount = function () use ($estimate, $chattelBaseRate) {
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
             $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
@@ -225,12 +233,9 @@ final class ComprehensiveInsurancePremium
         $householdInsurancePayout = $this->getValueByKey('household_insurance_payout', $estimate->property_detail);
         $premium = $householdInsurancePayout * $applyRate;
 
-        $baseRate = new ChattelBaseRate($estimate);
-        $baseRate = $baseRate->findRate($estimate->property_type, $estimate->rank);
-
         return [
             'その他割引' => $otherDiscount,
-            '基本率' => $baseRate,
+            '基本率' => $chattelBaseRate,
             '総合割増' => $comprehensivePremium,
             '長期率' => $longTermRate,
             '適用率' => $applyRate,
@@ -241,17 +246,19 @@ final class ComprehensiveInsurancePremium
     private function calcFacility()
     {
         $estimate = $this->estimate;
+
+        $propertyType = $estimate->property_type;
+
+        if (in_array($propertyType, ['住宅', '総合'], true)) {
+            $baseRate = new ChattelBaseRate($estimate);
+            $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
+        } else {
+            $chattelBaseRate = $estimate->building_base_rate;
+        }
+
         //その他割引
 
-        $calcOtherDiscount = function ($estimate) {
-            $propertyType = $estimate->property_type;
-
-            if (in_array($propertyType, ['住宅', '総合'], true)) {
-                $baseRate = new ChattelBaseRate($estimate);
-                $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
-            } else {
-                $chattelBaseRate = $estimate->building_base_rate;
-            }
+        $calcOtherDiscount = function () use ($estimate, $chattelBaseRate) {
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
             $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
@@ -279,12 +286,9 @@ final class ComprehensiveInsurancePremium
         $otherFacilityInsurancePayout = $this->getValueByKey('other_facility_insurance_payout', $estimate->property_detail);
         $premium = ($facilityInsurancePayout + $otherFacilityInsurancePayout) * $applyRate;
 
-        $baseRate = new ChattelBaseRate($estimate);
-        $baseRate = $baseRate->findRate($estimate->property_type, $estimate->rank);
-
         return [
             'その他割引' => $otherDiscount,
-            '基本率' => $baseRate,
+            '基本率' => $chattelBaseRate,
             '総合割増' => $comprehensivePremium,
             '長期率' => $longTermRate,
             '適用率' => $applyRate,
@@ -295,17 +299,18 @@ final class ComprehensiveInsurancePremium
     private function calcItem()
     {
         $estimate = $this->estimate;
+
+        $propertyType = $estimate->property_type;
+
+        if (in_array($propertyType, ['住宅', '総合'], true)) {
+            $baseRate = new ChattelBaseRate($estimate);
+            $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
+        } else {
+            $chattelBaseRate = $estimate->building_base_rate;
+        }
         //その他割引
 
-        $calcOtherDiscount = function ($estimate) {
-            $propertyType = $estimate->property_type;
-
-            if (in_array($propertyType, ['住宅', '総合'], true)) {
-                $baseRate = new ChattelBaseRate($estimate);
-                $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
-            } else {
-                $chattelBaseRate = $estimate->building_base_rate;
-            }
+        $calcOtherDiscount = function () use ($estimate, $chattelBaseRate) {
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail, 1);
             $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
@@ -336,12 +341,9 @@ final class ComprehensiveInsurancePremium
         $otherItemInsurancePayout = $this->getValueByKey('other_item_insurance_payout', $estimate->property_detail);
         $premium = ($itemInsurancePayout + $otherItemInsurancePayout) * $applyRate;
 
-        $baseRate = new ChattelBaseRate($estimate);
-        $baseRate = $baseRate->findRate($estimate->property_type, $estimate->rank);
-
         return [
             'その他割引' => $otherDiscount,
-            '基本率' => $baseRate,
+            '基本率' => $chattelBaseRate,
             '総合割増' => $comprehensivePremium,
             '長期率' => $longTermRate,
             '適用率' => $applyRate,
