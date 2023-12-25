@@ -33,7 +33,7 @@ final class EarthquakeStandardInsurancePremium
 
     public function getEarthquakePremium($earthquakeRatio)
     {
-        if ($earthquakeRatio == 0 || $earthquakeRatio == '選択しない') {
+        if (! $earthquakeRatio || $earthquakeRatio == 0 || $earthquakeRatio == '選択しない') {
             return [
                 '共済金支払最大額' => '',
                 '地震掛金' => '',
@@ -133,7 +133,7 @@ final class EarthquakeStandardInsurancePremium
                 $otherDiscount = 1 - $otherDiscount / 100;
             }
 
-            return round(($estimate->base_rate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
+            return round(($estimate->building_base_rate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
         };
 
         $otherDiscount = $calcOtherDiscount($estimate);
@@ -165,7 +165,7 @@ final class EarthquakeStandardInsurancePremium
                 $baseRate = new ChattelBaseRate($estimate);
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
-                $chattelBaseRate = $estimate->base_rate;
+                $chattelBaseRate = $estimate->building_base_rate;
             }
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
@@ -206,7 +206,7 @@ final class EarthquakeStandardInsurancePremium
                 $baseRate = new ChattelBaseRate($estimate);
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
-                $chattelBaseRate = $estimate->base_rate;
+                $chattelBaseRate = $estimate->building_base_rate;
             }
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
@@ -249,7 +249,7 @@ final class EarthquakeStandardInsurancePremium
                 $baseRate = new ChattelBaseRate($estimate);
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
-                $chattelBaseRate = $estimate->base_rate;
+                $chattelBaseRate = $estimate->building_base_rate;
             }
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail, 1);

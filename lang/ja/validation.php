@@ -202,7 +202,7 @@ return [
         'installation_date' => '設置日',
         'installation_cost' => '設置金額',
         'annual_price' => '年次価額',
-        'base_rate' => '基本率',
+        'building_base_rate' => '基本率',
         'chattel_surcharge' => '動産割増',
         'actual_loss_factor' => '実損払係数',
         'other_discount' => 'その他割引',

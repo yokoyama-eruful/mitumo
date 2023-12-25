@@ -15,10 +15,10 @@ final class OccupationalSurcharge
         $this->rateList = $this->makeRateList();
     }
 
-    public function findCode($code)
+    public function findCode($code, $rank)
     {
-        $result = array_filter($this->rateList, function ($item) use ($code) {
-            return $item['標準コード'] === $code;
+        $result = array_filter($this->rateList, function ($item) use ($code, $rank) {
+            return $item['標準コード'] === $code && $item['級別'] === $rank;
         });
 
         $result = ! empty($result) ? reset($result) : null;

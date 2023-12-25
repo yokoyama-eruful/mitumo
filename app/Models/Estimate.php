@@ -44,7 +44,8 @@ class Estimate extends Model
         'insurance_month',
         'insurance_day',
         'assess_item',
-        'base_rate',
+        'building_base_rate',
+        'chattel_base_rate',
 
         'property_detail',
         'assess_detail',

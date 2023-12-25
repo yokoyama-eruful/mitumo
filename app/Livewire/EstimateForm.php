@@ -11,6 +11,8 @@ use App\Domains\Assess\AssessPiloti;
 use App\Domains\Assess\AssessRenovation;
 use App\Domains\Assess\AssessSolarPanel;
 use App\Domains\BuildingBaseRate;
+use App\Domains\ChattelBaseRate;
+use App\Domains\FactoryPropertyBasePremium;
 use App\Domains\OccupationalSurcharge;
 use App\Domains\WorkSurcharge;
 use App\Models\Estimate;
@@ -94,7 +96,9 @@ class EstimateForm extends Component
 
     /////物件情報/////////////////////////////
 
-    public ?string $baseRate = null;
+    public ?string $buildingBaseRate = null;
+
+    public ?string $chattelBaseRate = null;
 
     public ?string $chattelSurcharge = null;
 
@@ -111,6 +115,8 @@ class EstimateForm extends Component
     public ?string $workSurchargeCode = null;
 
     public ?string $workSurchargeRate = null;
+
+    public ?string $factoryBuildingCode = null;
 
     public ?string $buildingInsurancePayout = null;
 
@@ -182,6 +188,8 @@ class EstimateForm extends Component
 
     public array $payMethodList;
 
+    public array $chattelSurchargeCategoryList;
+
     public array $earthquakeList;
 
     public array $assessItemList;
@@ -191,6 +199,10 @@ class EstimateForm extends Component
     public array $assessStructureList;
 
     //テーブル情報の表示切り替え
+    public bool $isViewFactoryRateTable = false;
+
+    public string $factoryLargeCategory = 'すべて';
+
     public bool $isViewOccupationalTable = false;
 
     public string $occupationalSurchargeLargeCategory = 'すべて';
@@ -200,6 +212,8 @@ class EstimateForm extends Component
     public string $workSurchargeLargeCategory = 'すべて';
 
     //標準コード
+
+    public array $factoryCodeList = [];
 
     public array $occupationalSurchargeCodeList = [];
 
@@ -228,9 +242,10 @@ class EstimateForm extends Component
         $this->floor = old('floor', (string) $estimate->floor);
         $this->building = old('building', (string) $estimate->building);
         $this->other = old('other', (string) $estimate->other);
-
         $this->propertyType = old('property_type', $estimate->property_type);
+
         $this->onChangePropertyType();
+
         $this->rank = old('rank', $estimate->rank);
         $this->startDate = old('start_date', $estimate->start_date?->format('Y-m'));
         $this->buildingYear = old('building_year', (string) $estimate->building_year);
@@ -249,7 +264,10 @@ class EstimateForm extends Component
         $this->earthquake3 = old('earthquake3', (string) $estimate->earthquakeList['earthquake3']);
 
         //物件情報
-        $this->baseRate = old('base_rate', (string) $estimate->base_rate);
+        $this->buildingBaseRate = old('building_base_rate', (string) $estimate->building_base_rate);
+        $this->chattelBaseRate = old('chattel_base_rate', (string) $estimate->chattel_base_rate);
+        $this->factoryBuildingCode = old('factory_building_code', $this->getValueByKey('factory_building_code', $estimate->property_detail));
+
         $this->chattelSurcharge = old('chattel_surcharge', $this->getValueByKey('chattel_surcharge', $estimate->property_detail));
         $this->actualLossFactor = old('actual_loss_factor', $this->getValueByKey('actual_loss_factor', $estimate->property_detail));
         $this->otherDiscount = old('other_discount', $this->getValueByKey('other_discount', $estimate->property_detail));
@@ -290,6 +308,7 @@ class EstimateForm extends Component
         $this->usageList = $this->getUsageList();
         $this->propertyTypeList = $this->getPropertyTypeList();
         $this->payMethodList = $this->getPayMethodList();
+        $this->chattelSurchargeCategoryList = $this->getChattelSurchargeCategoryList();
         $this->earthquakeList = $this->getEarthquakeList();
         $this->assessItemList = $this->getAssessItemList();
         $this->assessUsageList = $this->getAssessUsageList();
@@ -308,7 +327,7 @@ class EstimateForm extends Component
      */
     public function onChangePropertyType()
     {
-        $this->baseRate = '';
+        $this->buildingBaseRate = '';
         $this->rankList = $this->getRankList($this->propertyType);
     }
 
@@ -324,7 +343,8 @@ class EstimateForm extends Component
             is_null($this->rank) ||
             $this->propertyType == '工場'
         ) {
-            $this->baseRate = null;
+            $this->buildingBaseRate = null;
+            $this->chattelBaseRate = null;
 
             return;
         }
@@ -335,8 +355,10 @@ class EstimateForm extends Component
             $buildingAge = '';
         }
 
-        $baseRate = new BuildingBaseRate($this->estimate);
-        $this->baseRate = (string) $baseRate->findRate($this->propertyType, $buildingAge, $this->rank);
+        $buildingBaseRate = new BuildingBaseRate($this->estimate);
+        $this->buildingBaseRate = (string) $buildingBaseRate->findRate($this->propertyType, $buildingAge, $this->rank);
+        $chattelBaseRate = new ChattelBaseRate($this->estimate);
+        $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank);
 
         $this->occupationalSurchargeCode = null;
         $this->occupationalSurchargeRate = null;
@@ -391,13 +413,70 @@ class EstimateForm extends Component
     }
 
     /**
+     * 工場物件の建物基本率テーブルを開く
+     *
+     * @return void
+     */
+    public function onOpenFactoryRateTable()
+    {
+        if (is_null($this->rank) || $this->rank == '') {
+            $this->dispatch('alert', '級別を指定してください。');
+
+            return;
+        }
+
+        $this->onClickFactoryLargeCategory();
+
+        $this->dispatch('disableScroll');
+        $this->isViewFactoryRateTable = true;
+    }
+
+    public function onSelectedFactoryBuildingCode($code)
+    {
+        $this->onChangeFactoryBuildingCode($code);
+
+        $this->onClickCloseTable();
+    }
+
+    public function onChangeFactoryBuildingCode($code)
+    {
+        $this->factoryBuildingCode = mb_convert_kana($code, 'n');
+
+        $factoryPropertyBasePremium = new FactoryPropertyBasePremium();
+
+        $factoryInfo = $factoryPropertyBasePremium->findCode($this->factoryBuildingCode, $this->rank);
+
+        $this->buildingBaseRate = (string) $factoryInfo['基本率'];
+
+        $this->chattelSurcharge = (string) $factoryInfo['動産割増'];
+
+    }
+
+    public function onClickFactoryLargeCategory($category = 'すべて')
+    {
+        $this->factoryLargeCategory = $category;
+        $factoryBase = new FactoryPropertyBasePremium();
+        $rateList = $factoryBase->rateList;
+        $rank = $this->rank;
+
+        if ($category === 'すべて') {
+            $this->factoryCodeList = array_filter($rateList, function ($element) use ($rank) {
+                return is_array($element) && isset($element['級別']) && $element['級別'] === $rank;
+            });
+        } else {
+            $this->factoryCodeList = array_filter($rateList, function ($element) use ($category, $rank) {
+                return is_array($element) && isset($element['級別']) && $element['大項目'] == $category && $element['級別'] === $rank;
+            });
+        }
+    }
+
+    /**
      * 職業 テーブル情報から標準コードを参照する
      *
      * @return void
      */
     public function onClickOpenOccupationalSurchargeTable()
     {
-
         if (is_null($this->rank) || $this->rank == '') {
             $this->dispatch('alert', '級別を指定してください。');
 
@@ -447,7 +526,7 @@ class EstimateForm extends Component
 
         $occupationalSurcharge = new OccupationalSurcharge();
 
-        $this->occupationalSurchargeRate = (string) $occupationalSurcharge->findCode($this->occupationalSurchargeCode);
+        $this->occupationalSurchargeRate = (string) $occupationalSurcharge->findCode($this->occupationalSurchargeCode, $this->rank);
     }
 
     /**
@@ -509,7 +588,7 @@ class EstimateForm extends Component
 
         $workSurcharge = new WorkSurcharge();
 
-        $this->workSurchargeRate = (string) $workSurcharge->findCode($this->workSurchargeCode);
+        $this->workSurchargeRate = (string) $workSurcharge->findCode($this->workSurchargeCode, $this->rank);
     }
 
     /**
@@ -519,6 +598,7 @@ class EstimateForm extends Component
      */
     public function onClickCloseTable()
     {
+        $this->isViewFactoryRateTable = false;
         $this->isViewOccupationalTable = false;
         $this->isViewWorkTable = false;
 
@@ -692,6 +772,14 @@ class EstimateForm extends Component
             '一時払',
             '長期年払',
             '分割払',
+        ];
+    }
+
+    private function getChattelSurchargeCategoryList()
+    {
+        return [
+            '1級品',
+            '2級品',
         ];
     }
 

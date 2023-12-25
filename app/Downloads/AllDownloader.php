@@ -235,15 +235,15 @@ class AllDownloader
         $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
 
         $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
-        $worksheet->setCellValue('D49', $estimate->property_detail['recommend1']);
-        $worksheet->setCellValue('D51', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend1'])['共済掛金']);
-        $worksheet->setCellValue('D53', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend1'])['１年更新の場合より']);
-        $worksheet->setCellValue('I49', $estimate->property_detail['recommend2']);
-        $worksheet->setCellValue('I51', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend2'])['共済掛金']);
-        $worksheet->setCellValue('I53', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend2'])['１年更新の場合より']);
-        $worksheet->setCellValue('N49', $estimate->property_detail['recommend3']);
-        $worksheet->setCellValue('N51', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend3'])['共済掛金']);
-        $worksheet->setCellValue('N53', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend3'])['１年更新の場合より']);
+        $worksheet->setCellValue('D49', $estimate->property_detail['recommend1'] ?? '');
+        $worksheet->setCellValue('D51', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend1'] ?? '')['共済掛金']);
+        $worksheet->setCellValue('D53', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend1'] ?? '')['１年更新の場合より']);
+        $worksheet->setCellValue('I49', $estimate->property_detail['recommend2'] ?? '');
+        $worksheet->setCellValue('I51', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend2'] ?? '')['共済掛金']);
+        $worksheet->setCellValue('I53', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend2'] ?? '')['１年更新の場合より']);
+        $worksheet->setCellValue('N49', $estimate->property_detail['recommend3'] ?? '');
+        $worksheet->setCellValue('N51', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend3'] ?? '')['共済掛金']);
+        $worksheet->setCellValue('N53', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend3'] ?? '')['１年更新の場合より']);
     }
 
     private function setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium, $mutualItem)
@@ -256,15 +256,15 @@ class AllDownloader
         $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
 
         $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
-        $worksheet->setCellValue('D49', yearUnit($estimate->property_detail['recommend1']));
-        $worksheet->setCellValue('D51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'])['共済掛金']);
-        $worksheet->setCellValue('D53', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'])['１年更新の場合より']);
-        $worksheet->setCellValue('I49', yearUnit($estimate->property_detail['recommend2']));
-        $worksheet->setCellValue('I51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'])['共済掛金']);
-        $worksheet->setCellValue('I53', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'])['１年更新の場合より']);
-        $worksheet->setCellValue('N49', yearUnit($estimate->property_detail['recommend3']));
-        $worksheet->setCellValue('N51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'])['共済掛金']);
-        $worksheet->setCellValue('N53', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'])['１年更新の場合より']);
+        $worksheet->setCellValue('D49', yearUnit($estimate->property_detail['recommend1'] ?? ''));
+        $worksheet->setCellValue('D51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'] ?? '')['共済掛金']);
+        $worksheet->setCellValue('D53', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'] ?? '')['１年更新の場合より']);
+        $worksheet->setCellValue('I49', yearUnit($estimate->property_detail['recommend2'] ?? ''));
+        $worksheet->setCellValue('I51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'] ?? '')['共済掛金']);
+        $worksheet->setCellValue('I53', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'] ?? '')['１年更新の場合より']);
+        $worksheet->setCellValue('N49', yearUnit($estimate->property_detail['recommend3'] ?? ''));
+        $worksheet->setCellValue('N51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'] ?? '')['共済掛金']);
+        $worksheet->setCellValue('N53', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'] ?? '')['１年更新の場合より']);
     }
 
     private function setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium, $mutualItem)
@@ -277,25 +277,25 @@ class AllDownloader
         $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
         $worksheet->setCellValue('O44', $comprehensivePremium->getComprehensivePremium());
 
-        $worksheet->setCellValue('D49', $estimate->property_detail['recommend1']);
-        $worksheet->setCellValue('D51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'])['共済掛金']);
-        $worksheet->setCellValue('D52', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'])['１年更新の場合より']);
-        $worksheet->setCellValue('I49', $estimate->property_detail['recommend2']);
-        $worksheet->setCellValue('I51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'])['共済掛金']);
-        $worksheet->setCellValue('I52', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'])['１年更新の場合より']);
-        $worksheet->setCellValue('N49', $estimate->property_detail['recommend3']);
-        $worksheet->setCellValue('N51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'])['共済掛金']);
-        $worksheet->setCellValue('N52', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'])['１年更新の場合より']);
+        $worksheet->setCellValue('D49', $estimate->property_detail['recommend1'] ?? '');
+        $worksheet->setCellValue('D51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'] ?? '')['共済掛金']);
+        $worksheet->setCellValue('D52', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend1'] ?? '')['１年更新の場合より']);
+        $worksheet->setCellValue('I49', $estimate->property_detail['recommend2'] ?? '');
+        $worksheet->setCellValue('I51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'] ?? '')['共済掛金']);
+        $worksheet->setCellValue('I52', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend2'] ?? '')['１年更新の場合より']);
+        $worksheet->setCellValue('N49', $estimate->property_detail['recommend3'] ?? '');
+        $worksheet->setCellValue('N51', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'] ?? '')['共済掛金']);
+        $worksheet->setCellValue('N52', $recommendComprehensivePremium->getRecommendPremium($estimate->property_detail['recommend3'] ?? '')['１年更新の場合より']);
 
-        $worksheet->setCellValue('D55', $estimate->property_detail['recommend1']);
-        $worksheet->setCellValue('D57', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend1'])['共済掛金']);
-        $worksheet->setCellValue('D58', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend1'])['１年更新の場合より']);
-        $worksheet->setCellValue('I55', $estimate->property_detail['recommend2']);
-        $worksheet->setCellValue('I57', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend2'])['共済掛金']);
-        $worksheet->setCellValue('I58', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend2'])['１年更新の場合より']);
-        $worksheet->setCellValue('N55', $estimate->property_detail['recommend3']);
-        $worksheet->setCellValue('N57', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend3'])['共済掛金']);
-        $worksheet->setCellValue('N58', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend3'])['１年更新の場合より']);
+        $worksheet->setCellValue('D55', $estimate->property_detail['recommend1'] ?? '');
+        $worksheet->setCellValue('D57', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend1'] ?? '')['共済掛金']);
+        $worksheet->setCellValue('D58', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend1'] ?? '')['１年更新の場合より']);
+        $worksheet->setCellValue('I55', $estimate->property_detail['recommend2'] ?? '');
+        $worksheet->setCellValue('I57', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend2'] ?? '')['共済掛金']);
+        $worksheet->setCellValue('I58', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend2'] ?? '')['１年更新の場合より']);
+        $worksheet->setCellValue('N55', $estimate->property_detail['recommend3'] ?? '');
+        $worksheet->setCellValue('N57', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend3'] ?? '')['共済掛金']);
+        $worksheet->setCellValue('N58', $recommendStandardPremium->getRecommendPremium($estimate->property_detail['recommend3'] ?? '')['１年更新の場合より']);
     }
 
     private function setStandardOfEarthquakeInfo($spreadSheet, $estimate, $standardPremium, $earthquakePremium, $mutualItem)
@@ -307,18 +307,18 @@ class AllDownloader
 
         $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
 
-        $worksheet->setCellValue('D49', $estimate->property_detail['earthquake1']);
-        $worksheet->setCellValue('D51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['共済金支払最大額']);
-        $worksheet->setCellValue('D54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['地震掛金']);
-        $worksheet->setCellValue('D56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['合計掛金']);
-        $worksheet->setCellValue('I49', $estimate->property_detail['earthquake2']);
-        $worksheet->setCellValue('I51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['共済金支払最大額']);
-        $worksheet->setCellValue('I54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['地震掛金']);
-        $worksheet->setCellValue('I56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['合計掛金']);
-        $worksheet->setCellValue('N49', $estimate->property_detail['earthquake3']);
-        $worksheet->setCellValue('N51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['共済金支払最大額']);
-        $worksheet->setCellValue('N54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['地震掛金']);
-        $worksheet->setCellValue('N56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['合計掛金']);
+        $worksheet->setCellValue('D49', $estimate->property_detail['earthquake1'] ?? '');
+        $worksheet->setCellValue('D51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'] ?? '')['共済金支払最大額']);
+        $worksheet->setCellValue('D54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'] ?? '')['地震掛金']);
+        $worksheet->setCellValue('D56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'] ?? '')['合計掛金']);
+        $worksheet->setCellValue('I49', $estimate->property_detail['earthquake2'] ?? '');
+        $worksheet->setCellValue('I51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'] ?? '')['共済金支払最大額']);
+        $worksheet->setCellValue('I54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'] ?? '')['地震掛金']);
+        $worksheet->setCellValue('I56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'] ?? '')['合計掛金']);
+        $worksheet->setCellValue('N49', $estimate->property_detail['earthquake3'] ?? '');
+        $worksheet->setCellValue('N51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'] ?? '')['共済金支払最大額']);
+        $worksheet->setCellValue('N54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'] ?? '')['地震掛金']);
+        $worksheet->setCellValue('N56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'] ?? '')['合計掛金']);
     }
 
     private function setComprehensiveOfEarthquakeInfo($spreadSheet, $estimate, $comprehensivePremium, $earthquakePremium, $mutualItem)
@@ -330,18 +330,18 @@ class AllDownloader
 
         $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
 
-        $worksheet->setCellValue('D49', $estimate->property_detail['earthquake1']);
-        $worksheet->setCellValue('D51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['共済金支払最大額']);
-        $worksheet->setCellValue('D54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['地震掛金']);
-        $worksheet->setCellValue('D56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['合計掛金']);
-        $worksheet->setCellValue('I49', $estimate->property_detail['earthquake2']);
-        $worksheet->setCellValue('I51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['共済金支払最大額']);
-        $worksheet->setCellValue('I54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['地震掛金']);
-        $worksheet->setCellValue('I56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['合計掛金']);
-        $worksheet->setCellValue('N49', $estimate->property_detail['earthquake3']);
-        $worksheet->setCellValue('N51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'])['共済金支払最大額']);
-        $worksheet->setCellValue('N54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'])['地震掛金']);
-        $worksheet->setCellValue('N56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'])['合計掛金']);
+        $worksheet->setCellValue('D49', $estimate->property_detail['earthquake1'] ?? '');
+        $worksheet->setCellValue('D51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'] ?? '')['共済金支払最大額']);
+        $worksheet->setCellValue('D54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'] ?? '')['地震掛金']);
+        $worksheet->setCellValue('D56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'] ?? '')['合計掛金']);
+        $worksheet->setCellValue('I49', $estimate->property_detail['earthquake2'] ?? '');
+        $worksheet->setCellValue('I51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'] ?? '')['共済金支払最大額']);
+        $worksheet->setCellValue('I54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'] ?? '')['地震掛金']);
+        $worksheet->setCellValue('I56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'] ?? '')['合計掛金']);
+        $worksheet->setCellValue('N49', $estimate->property_detail['earthquake3'] ?? '');
+        $worksheet->setCellValue('N51', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake1'] ?? '')['共済金支払最大額']);
+        $worksheet->setCellValue('N54', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake2'] ?? '')['地震掛金']);
+        $worksheet->setCellValue('N56', $earthquakePremium->getEarthquakePremium($estimate->property_detail['earthquake3'] ?? '')['合計掛金']);
     }
 
     private function setCalcInfo($spreadSheet, $standardPremium, $comprehensivePremium)

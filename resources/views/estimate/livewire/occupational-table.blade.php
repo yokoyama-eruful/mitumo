@@ -48,7 +48,7 @@
                         <tr class="transition-colors hover:bg-gray-100 cursor-pointer"
                             wire:click="onSelectedOccupationalCode('{{ $item['標準コード'] }}')">
                             <td class="border-y px-6 py-4">
-                                <div class="text-lg font-semibold">{{ $item['小項目'] }}</div>
+                                <div class="text-lg font-semibold">{{ $item['中項目'] . $item['小項目'] }}</div>
                                 <div class="text-base ms-5"> {{ $item['備考'] }}</div>
                             </td>
                             <td class="border-y px-6 py-4">

@@ -317,24 +317,55 @@
 
         @if (in_array($propertyType, ['住宅', '普通'], true))
             <div class="estimate-input-box">
-                <label class="estimate-label" for="base_rate">建物基本率
+                <label class="estimate-label" for="building_base_rate">建物基本率
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="base_rate" name="base_rate" class="estimate-input" placeholder="物件が「住宅」か「普通」の時は、自動算出されます"
-                    wire:model="baseRate" readonly>
+                <input id="building_base_rate" name="building_base_rate" class="estimate-input"
+                    placeholder="物件が「住宅」か「普通」の時は、自動算出されます" wire:model="buildingBaseRate" readonly>
+            </div>
+            <div class="estimate-input-box">
+                <label class="estimate-label" for="building_base_rate">動産基本率
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="chattel_base_rate" name="chattel_base_rate" class="estimate-input"
+                    placeholder="物件が「住宅」か「普通」の時は、自動算出されます" wire:model="chattelBaseRate" readonly>
             </div>
         @endif
         @if (in_array($propertyType, ['工場'], true))
-            <div class="estimate-input-box">
-                <label class="estimate-label" for="base_rate">建物基本率
+            <div class="estimate-input-box w-auto">
+                <label class="estimate-label h-auto">建物基本率
                     <div class="estimate-input-required">※必須</div>
                 </label>
-                <button type="button" wire:click=""
-                    class="mx-2 my-1 px-2 h-8 w-64 bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
-                <input id="base_rate" name="base_rate" class="estimate-input" wire:model="baseRate" wire:change="">
+                <div class="w-auto">
+                    <div class="flex">
+                        <label class="estimate-label w-32" for="work_surcharge_code">作業工程コード</label>
+                        <button type="button" wire:click="onOpenFactoryRateTable"
+                            class="mx-2 my-1 px-2 h-8 w-64 bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
+                        <input id="factory_building_code" name="factory_building_code" class="estimate-input"
+                            wire:model="factoryBuildingCode">
+                    </div>
+                    <div class=" flex">
+                        <label class="estimate-label w-32" for="">備考</label>
+                        <div class="mx-2 w-64 text-sm"></div>
+                        <input id="factory_building_note" name="factory_building_note" class="estimate-input">
+                    </div>
+                    <div class=" flex">
+                        <label class="estimate-label w-32" for="building_base_rate">率</label>
+                        <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
+                        <input id="building_base_rate" name="building_base_rate" class="estimate-input"
+                            wire:model="buildingBaseRate">
+                    </div>
+                </div>
             </div>
         @endif
-        @if (in_array($propertyType, ['普通', '工場'], true))
+        @if ($propertyType == '工場')
+            <div class="estimate-input-box">
+                <label class="estimate-label" for="building_base_rate">動産基本率
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="chattel_base_rate" name="chattel_base_rate" class="estimate-input" placeholder="自動算出されます"
+                    wire:model="buildingBaseRate" readonly>
+            </div>
             <div class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge">動産割増
                     @if ($propertyType === '工場')
@@ -345,12 +376,19 @@
                     wire:model="chattelSurcharge">
             </div>
         @endif
-        @if (in_array($propertyType, ['普通', '工場'], true))
+        @if ($propertyType == '普通')
             <div class="estimate-input-box">
                 <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）
+                    <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="chattel_surcharge_category" name="chattel_surcharge_category" class="estimate-input"
-                    wire:model="chattelSurchargeCategory">
+                <select id="chattel_surcharge_category" name="chattel_surcharge_category"
+                    wire:model="chattelSurchargeCategory" class="estimate-input">
+                    <option value="" hidden>選択してください</option>
+                    @foreach ($chattelSurchargeCategoryList as $item)
+                        <option value="{{ $item }}" @if ($item === $chattelSurchargeCategory) selected @endif>
+                            {{ $item }}</option>
+                    @endforeach
+                </select>
             </div>
         @endif
         @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
@@ -663,6 +701,9 @@
             </div>
         @endif
     </form>
+    @if ($isViewFactoryRateTable)
+        @include('estimate.livewire.factory-rate-table')
+    @endif
     @if ($isViewOccupationalTable)
         @include('estimate.livewire.occupational-table')
     @endif
