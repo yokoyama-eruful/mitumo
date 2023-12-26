@@ -44,7 +44,7 @@ class AllDownloader
             'R8' => '担当 ： '.$estimate->staff_name,
             'D20' => $estimate->location,
             'D23' => $estimate->BuildingStructure,
-            'D27' => $estimate->BuildingStructure,
+            'D27' => $estimate->OtherBuildingStructure,
             'O22' => $estimate->property_type,
             'D31' => $estimate->rank,
             'M31' => $estimate->pay_method,

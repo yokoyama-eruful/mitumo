@@ -78,8 +78,8 @@ final class SaveRequest extends FormRequest
             'household_insurance_payout' => ['nullable', 'numeric', 'min:0'],
             'facility_insurance_payout' => ['nullable', 'required_if:property_type,普通,工場', 'numeric', 'min:0'],
             'other_facility_insurance_payout' => ['nullable', 'required_if:property_type,普通,工場', 'numeric', 'min:0'],
-            'item_insurance_payout' => ['nullable', 'required_if:property_type,普通,工場', 'numeric', 'min:0'],
-            'other_item_insurance_payout' => ['nullable', 'required_if:property_type,普通,工場', 'numeric', 'min:0'],
+            'item_insurance_payout' => ['nullable', 'numeric', 'min:0'],
+            'other_item_insurance_payout' => ['nullable', 'numeric', 'min:0'],
 
             //動的に変化する項目（評価トリガー）
             'assess_item' => ['nullable', 'in:通常,ピロティー付,太陽光付,分譲マンション,年次取得,改装物件'],

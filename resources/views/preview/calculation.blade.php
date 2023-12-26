@@ -351,31 +351,31 @@
             </div>
         </div>
     </div>
-    @if (in_array($estimate->property_type, ['住宅', '普通'], true))
+    @if (in_array($estimate->property_type, ['普通'], true))
         <div class="flex flex-row mt-5">
             <div class="flex justify-center items-center h-10 w-48 bg-green-200 outline outline-1 outline-gray-500">
-                標準コード:{{ $estimate->property_detail['occupational_surcharge_code'] }}
+                標準コード:{{ array_key_exists('occupational_surcharge_code', $estimate->property_detail) ? $estimate->property_detail['occupational_surcharge_code'] : '' }}
             </div>
             <div class="flex items-center h-10 w-full outline outline-1 outline-gray-500 pl-5">
-                {{ $occupationalSurchargeItem->getOccupationalSurchargeItem($estimate->property_detail['occupational_surcharge_code'], $estimate->rank) }}
+                {{ $occupationalSurchargeItem->getOccupationalSurchargeItem(array_key_exists('occupational_surcharge_code', $estimate->property_detail) ? $estimate->property_detail['occupational_surcharge_code'] : '', $estimate->rank) }}
             </div>
         </div>
         <div class="flex flex-row">
             <div class="flex justify-center items-center h-10 w-48 bg-green-200 outline outline-1 outline-gray-500">
-                作業工程コード:{{ $estimate->property_detail['work_surcharge_code'] }}
+                作業工程コード:{{ array_key_exists('work_surcharge_code', $estimate->property_detail) ? $estimate->property_detail['work_surcharge_code'] : '' }}
             </div>
             <div class="flex items-center h-10 w-full outline outline-1 outline-gray-500 pl-5">
-                {{ $workSurchargeItem->getWorkSurchargeItem($estimate->property_detail['work_surcharge_code'], $estimate->rank) }}
+                {{ $workSurchargeItem->getWorkSurchargeItem(array_key_exists('work_surcharge_code', $estimate->property_detail) ? $estimate->property_detail['work_surcharge_code'] : '', $estimate->rank) }}
             </div>
         </div>
     @endif
     @if (in_array($estimate->property_type, ['工場'], true))
         <div class="flex flex-row">
             <div class="flex justify-center items-center h-10 w-48 bg-green-200 outline outline-1 outline-gray-500">
-                作業工程コード:{{ $estimate->property_detail['factory_building_code'] }}
+                作業工程コード:{{ array_key_exists('factory_building_code', $estimate->property_detail) ? $estimate->property_detail['factory_building_code'] : '' }}
             </div>
             <div class="flex items-center h-10 w-full outline outline-1 outline-gray-500 pl-5">
-                {{ $factoryPropertyBasePremiumItem->getFactoryPropertyBasePremiumItem($estimate->property_detail['factory_building_code'], $estimate->rank) }}
+                {{ $factoryPropertyBasePremiumItem->getFactoryPropertyBasePremiumItem(array_key_exists('factory_building_code', $estimate->property_detail) ? $estimate->property_detail['factory_building_code'] : '', $estimate->rank) }}
             </div>
         </div>
     @endif

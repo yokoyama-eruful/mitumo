@@ -96,7 +96,7 @@ class StandardDownloader
         $worksheet->setCellValue('R8', '担当 ： '.$estimate->staff_name);
         $worksheet->setCellValue('D20', $estimate->location);
         $worksheet->setCellValue('D23', $estimate->BuildingStructure);
-        $worksheet->setCellValue('D27', $estimate->BuildingStructure);
+        $worksheet->setCellValue('D27', $estimate->OtherBuildingStructure);
         $worksheet->setCellValue('O22', $estimate->property_type);
         $worksheet->setCellValue('D31', $estimate->rank);
         $worksheet->setCellValue('M31', $estimate->pay_method);
