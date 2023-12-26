@@ -14,9 +14,9 @@
         <h1 class="text-center text-2xl text-blue-500 font-bold mb-4 tracking-wider">
             <i class="fa-solid fa-file-invoice text-8xl mb-4"></i>
             <div>mitumo</div>
-            <div class="text-xs text-black">β:v1.1</div>
+            <div class="text-xs text-black">β:v2.2</div>
         </h1>
-        <form action="{{route('auth.login')}}" method="POST">
+        <form action="{{ route('auth.login') }}" method="POST">
             @csrf
             <div class="flex flex-col justify-center items-center">
                 <div class="mb-2 w-96">
@@ -32,9 +32,9 @@
                         required>
                 </div>
                 @error('error')
-                <p class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-2" role="alert">
-                    {{$message}}
-                </p>
+                    <p class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-2" role="alert">
+                        {{ $message }}
+                    </p>
                 @enderror
                 <div>
                     <button type="submit" class="bg-blue-500 rounded h-10 w-20 mt-5 text-white font-semibold">

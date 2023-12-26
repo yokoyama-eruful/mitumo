@@ -102,12 +102,12 @@ class StandardDownloader
         $worksheet->setCellValue('M31', $estimate->pay_method);
         $worksheet->setCellValue('M33', $estimate->InsurancePeriod);
         $worksheet->setCellValue('D35', $estimate->OtherItem);
-        $worksheet->setCellValue('D41', thousandYenUnit(array_key_exists('building_insurance_payout', $estimate->property_detail)));
-        $worksheet->setCellValue('K41', thousandYenUnit((array_key_exists('household_insurance_payout', $estimate->property_detail))));
-        $worksheet->setCellValue('D43', thousandYenUnit((array_key_exists('facility_insurance_payout', $estimate->property_detail))));
-        $worksheet->setCellValue('K43', thousandYenUnit((array_key_exists('item_insurance_payout', $estimate->property_detail))));
-        $worksheet->setCellValue('D45', thousandYenUnit((array_key_exists('other_facility_insurance_payout', $estimate->property_detail))));
-        $worksheet->setCellValue('K45', thousandYenUnit((array_key_exists('other_item_insurance_payout', $estimate->property_detail))));
+        $worksheet->setCellValue('D41', thousandYenUnit(array_key_exists('building_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['building_insurance_payout'] : ''));
+        $worksheet->setCellValue('K41', thousandYenUnit(array_key_exists('household_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['household_insurance_payout'] : ''));
+        $worksheet->setCellValue('D43', thousandYenUnit(array_key_exists('facility_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['facility_insurance_payout'] : ''));
+        $worksheet->setCellValue('K43', thousandYenUnit(array_key_exists('item_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['item_insurance_payout'] : ''));
+        $worksheet->setCellValue('D45', thousandYenUnit(array_key_exists('other_facility_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_facility_insurance_payout'] : ''));
+        $worksheet->setCellValue('K45', thousandYenUnit(array_key_exists('other_item_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_item_insurance_payout'] : ''));
 
         $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
         foreach ($standardCompensation as $key => $standardCompensation) {
