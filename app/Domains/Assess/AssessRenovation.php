@@ -49,7 +49,7 @@ final class AssessRenovation
     */
     public function viewCurrentMarketPrice($replacementPrice, $renovationCost, $conventionalAge, $depreciationRate, $renovationAge, $renovationDepreciationRate): string
     {
-        if (! $replacementPrice) {
+        if (! $replacementPrice || ! $renovationCost || ! $conventionalAge || ! $depreciationRate || ! $renovationAge || ! $renovationDepreciationRate) {
             return '0';
         }
 
