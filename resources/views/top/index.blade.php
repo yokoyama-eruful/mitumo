@@ -33,7 +33,7 @@
         </div> --}}
 
             <div
-                class="min-w-full overflow-hidden rounded-lg shadow outline outline-1 outline-gray-100 bg-gray-100 h-[610px]">
+                class="min-w-full min-h-[694px] overflow-hidden rounded-lg shadow outline outline-1 outline-gray-100 bg-gray-100">
                 <table class="min-w-full leading-normal">
                     <thead>
                         <tr class="bg-gray-600 text-white text-sm font-bold text-left">
