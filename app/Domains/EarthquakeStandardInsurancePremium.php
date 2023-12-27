@@ -20,6 +20,8 @@ final class EarthquakeStandardInsurancePremium
 
     public readonly float $totalStandard;
 
+    public readonly float $totalEarthquakeStandard;
+
     public function __construct($estimate, $standardPremium)
     {
         $this->estimate = $estimate;
@@ -29,6 +31,7 @@ final class EarthquakeStandardInsurancePremium
         $this->standardPremium = $standardPremium;
 
         $this->totalStandard = $this->calcTotalStandard();
+        $this->totalEarthquakeStandard = $this->calcTotalEarthquakeStandard();
     }
 
     public function getEarthquakePremium($earthquakeRatio)
@@ -92,13 +95,7 @@ final class EarthquakeStandardInsurancePremium
             return $earthquakePremium;
         }
 
-        if ($earthquakePremium + $this->totalStandard >= 100000) {
-            $coefficient = 1.0;
-        } else {
-            $coefficient = 1.1;
-        }
-
-        $earthquakeMonth = $earthquakePremium * $coefficient / 12;
+        $earthquakeMonth = $earthquakePremium / 12;
 
         return round(ceil($earthquakeMonth), -1);
     }
@@ -117,6 +114,23 @@ final class EarthquakeStandardInsurancePremium
         $itemPremium = $this->calcItem();
 
         return round($buildingPremium + $houseHoldPremium + $facilityPremium + $itemPremium, -1);
+    }
+
+    private function calcTotalEarthquakeStandard()
+    {
+        if (in_array($this->payMethod, ['一時払', '長期年払'], true)) {
+            return $this->totalStandard;
+        }
+
+        if ($this->totalStandard >= 100000) {
+            $coefficient = 1.0;
+        } else {
+            $coefficient = 1.1;
+        }
+
+        $totalEarthquakeStandard = $this->totalStandard * $coefficient / 12;
+
+        return round(ceil($totalEarthquakeStandard), -1);
     }
 
     private function calcBuilding()
