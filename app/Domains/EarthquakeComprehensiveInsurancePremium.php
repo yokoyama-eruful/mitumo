@@ -20,6 +20,8 @@ final class EarthquakeComprehensiveInsurancePremium
 
     public readonly float $totalComprehensive;
 
+    public readonly float $totalEarthquakeComprehensive;
+
     public function __construct($estimate, $comprehensivePremium)
     {
         $this->estimate = $estimate;
@@ -29,6 +31,7 @@ final class EarthquakeComprehensiveInsurancePremium
         $this->comprehensivePremium = $comprehensivePremium;
 
         $this->totalComprehensive = $this->calcTotalComprehensive();
+        $this->totalEarthquakeComprehensive = $this->calcTotalEarthquakeComprehensive();
     }
 
     public function getEarthquakePremium($earthquakeRatio)
@@ -92,13 +95,7 @@ final class EarthquakeComprehensiveInsurancePremium
             return $earthquakePremium;
         }
 
-        if ($earthquakePremium + $this->totalComprehensive >= 100000) {
-            $coefficient = 1.0;
-        } else {
-            $coefficient = 1.1;
-        }
-
-        $earthquakeMonth = $earthquakePremium * $coefficient / 12;
+        $earthquakeMonth = $earthquakePremium / 12;
 
         return round(ceil($earthquakeMonth), -1);
     }
@@ -117,6 +114,23 @@ final class EarthquakeComprehensiveInsurancePremium
         $itemPremium = $this->calcItem();
 
         return round($buildingPremium + $houseHoldPremium + $facilityPremium + $itemPremium, -1);
+    }
+
+    private function calcTotalEarthquakeComprehensive()
+    {
+        if (in_array($this->payMethod, ['一時払', '長期年払'], true)) {
+            return $this->totalComprehensive;
+        }
+
+        if ($this->totalComprehensive >= 100000) {
+            $coefficient = 1.0;
+        } else {
+            $coefficient = 1.1;
+        }
+
+        $totalEarthquakeComprehensive = $this->totalComprehensive * $coefficient / 12;
+
+        return round(ceil($totalEarthquakeComprehensive), -1);
     }
 
     private function calcBuilding()
