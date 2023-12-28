@@ -152,8 +152,12 @@ final class AssessRenovation
         ];
     }
 
-    private function getIntValueByKey(string $key, array $array, int $defaultValue = 0): int
+    private function getIntValueByKey(string $key, ?array $array, int $defaultValue = 0): int
     {
+        if (is_null($array)) {
+            return $defaultValue;
+        }
+
         if (array_key_exists($key, $array) && $array[$key]) {
             return (int) $array[$key];
         }
@@ -161,8 +165,12 @@ final class AssessRenovation
         return $defaultValue;
     }
 
-    private function getFloatValueByKey(string $key, array $array, float $defaultValue = 0): float
+    private function getFloatValueByKey(string $key, ?array $array, float $defaultValue = 0): float
     {
+        if (is_null($array)) {
+            return $defaultValue;
+        }
+
         if (array_key_exists($key, $array) && $array[$key]) {
             return (float) $array[$key];
         }

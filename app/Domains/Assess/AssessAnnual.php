@@ -24,7 +24,7 @@ final class AssessAnnual
 
     public function __construct($estimate)
     {
-        $this->rank = $estimate->rank;
+        $this->rank = $estimate->rank ?? '';
         $this->floorArea = $estimate->floor_area ? $estimate->floor_area : 0;
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
         $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
@@ -40,6 +40,10 @@ final class AssessAnnual
       */
     public function viewReProcure($rank, $annualPrice, $buildingYear): string
     {
+        if ($rank == '' || $annualPrice == '' || $buildingYear == '') {
+            return '';
+        }
+
         $annualCoefficient = new AnnualCoefficient($rank, $buildingYear);
 
         $annualCoefficient = $annualCoefficient->annualCoefficient;
@@ -119,8 +123,12 @@ final class AssessAnnual
         ];
     }
 
-    private function getStringValueByKey(string $key, array $array, string $defaultValue = ''): string
+    private function getStringValueByKey(string $key, ?array $array, string $defaultValue = ''): string
     {
+        if (is_null($array)) {
+            return $defaultValue;
+        }
+
         if (array_key_exists($key, $array) && $array[$key]) {
             return (string) $array[$key];
         }
@@ -128,8 +136,12 @@ final class AssessAnnual
         return $defaultValue;
     }
 
-    private function getIntValueByKey(string $key, array $array, int $defaultValue = 0): int
+    private function getIntValueByKey(string $key, ?array $array, int $defaultValue = 0): int
     {
+        if (is_null($array)) {
+            return $defaultValue;
+        }
+
         if (array_key_exists($key, $array) && $array[$key]) {
             return (int) $array[$key];
         }

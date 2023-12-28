@@ -189,9 +189,15 @@ final class StandardInsurancePremium
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
+        $calcShortTermRate = $mutualAidPremium->shortTermRate;
+
+        if ($calcShortTermRate == 0) {
+            $calcShortTermRate = 1;
+        }
+
         $longTermRate = $mutualAidPremium->longTerRate;
         $actualLossFactor = $this->getValueByKey('actual_loss_factor', $estimate->property_detail, 1);
-        $applyRate = round(round(round($otherDiscount * $actualLossFactor, 2) * $longTermRate, 2) * $shortTermRate, 2);
+        $applyRate = round(round(round($otherDiscount * $actualLossFactor, 2) * $longTermRate, 2) * $calcShortTermRate, 2);
 
         //掛け金
         $buildingInsurancePayout = $this->getValueByKey('building_insurance_payout', $estimate->property_detail);
@@ -200,7 +206,7 @@ final class StandardInsurancePremium
         return [
             'その他割引' => $otherDiscount,
             '基本率' => $buildingBaseRate,
-            '短期率' => $shortTermRate == 1 ? '' : $shortTermRate,
+            '短期率' => $shortTermRate == 0 ? '' : $shortTermRate * 100,
             '長期率' => $longTermRate,
             '適用率' => $applyRate,
             '掛金' => $premium,
@@ -240,8 +246,14 @@ final class StandardInsurancePremium
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
+        $calcShortTermRate = $mutualAidPremium->shortTermRate;
+
+        if ($calcShortTermRate == 0) {
+            $calcShortTermRate = 1;
+        }
+
         $longTermRate = $mutualAidPremium->longTerRate;
-        $applyRate = round(round($otherDiscount * $longTermRate, 2) * $shortTermRate, 2);
+        $applyRate = round(round($otherDiscount * $longTermRate, 2) * $calcShortTermRate, 2);
 
         //掛け金
         $householdInsurancePayout = $this->getValueByKey('household_insurance_payout', $estimate->property_detail);
@@ -250,7 +262,7 @@ final class StandardInsurancePremium
         return [
             'その他割引' => $otherDiscount,
             '基本率' => $chattelBaseRate,
-            '短期率' => $shortTermRate == 1 ? '' : $shortTermRate,
+            '短期率' => $shortTermRate == 0 ? '' : $shortTermRate * 100,
             '長期率' => $longTermRate,
             '適用率' => $applyRate,
             '掛金' => $premium,
@@ -289,9 +301,14 @@ final class StandardInsurancePremium
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
+        $calcShortTermRate = $mutualAidPremium->shortTermRate;
+
+        if ($calcShortTermRate == 0) {
+            $calcShortTermRate = 1;
+        }
         $longTermRate = $mutualAidPremium->longTerRate;
         $actualLossFactor = $this->getValueByKey('actual_loss_factor', $estimate->property_detail, 1);
-        $applyRate = round(round(round($otherDiscount * $actualLossFactor, 2) * $longTermRate, 2) * $shortTermRate, 2);
+        $applyRate = round(round(round($otherDiscount * $actualLossFactor, 2) * $longTermRate, 2) * $calcShortTermRate, 2);
 
         //掛け金
         $facilityInsurancePayout = $this->getValueByKey('facility_insurance_payout', $estimate->property_detail);
@@ -301,7 +318,7 @@ final class StandardInsurancePremium
         return [
             'その他割引' => $otherDiscount,
             '基本率' => $chattelBaseRate,
-            '短期率' => $shortTermRate == 1 ? '' : $shortTermRate,
+            '短期率' => $shortTermRate == 0 ? '' : $shortTermRate * 100,
             '長期率' => $longTermRate,
             '適用率' => $applyRate,
             '掛金' => $premium,
@@ -340,9 +357,15 @@ final class StandardInsurancePremium
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
+        $calcShortTermRate = $mutualAidPremium->shortTermRate;
+
+        if ($calcShortTermRate == 0) {
+            $calcShortTermRate = 1;
+        }
+
         $longTermRate = $mutualAidPremium->longTerRate;
 
-        $applyRate = round(round(($otherDiscount + $this->chattelSurcharge) * $longTermRate, 2) * $shortTermRate, 2);
+        $applyRate = round(round(($otherDiscount + $this->chattelSurcharge) * $longTermRate, 2) * $calcShortTermRate, 2);
 
         //掛け金
         $itemInsurancePayout = $this->getValueByKey('item_insurance_payout', $estimate->property_detail);
@@ -352,7 +375,7 @@ final class StandardInsurancePremium
         return [
             'その他割引' => $otherDiscount,
             '基本率' => $chattelBaseRate,
-            '短期率' => $shortTermRate == 1 ? '' : $shortTermRate,
+            '短期率' => $shortTermRate == 0 ? '' : $shortTermRate * 100,
             '長期率' => $longTermRate,
             '適用率' => $applyRate,
             '掛金' => $premium,

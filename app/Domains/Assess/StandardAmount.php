@@ -18,6 +18,10 @@ final class StandardAmount
 
     private function setStandardAmountList($assessUsage, $assessStructure)
     {
+        if (is_null($assessUsage) || is_null($assessStructure)) {
+            return [];
+        }
+
         $filePath = Storage::path('rateTable/standardAmountList.csv');
 
         $standardAmountList = [];

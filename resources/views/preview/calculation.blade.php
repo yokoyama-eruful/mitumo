@@ -322,7 +322,7 @@
                     その他割引
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-                    {{ $standard->otherDiscount }}
+                    {{ percentUnit($standard->otherDiscount) }}
                 </div>
             </div>
             <div class="flex flex-row">
@@ -330,7 +330,7 @@
                     短期係数
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-                    {{ $standard->building['短期率'] }}
+                    {{ percentUnit($standard->building['短期率']) }}
                 </div>
             </div>
             <div class="flex flex-row">

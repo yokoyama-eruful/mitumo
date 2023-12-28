@@ -18,6 +18,10 @@ final class AgingDepreciation
 
     private function setAgingDepreciation($assessUsage, $assessStructure)
     {
+        if (is_null($assessUsage) || is_null($assessStructure)) {
+            return [];
+        }
+
         $filePath = Storage::path('rateTable/AgingDepreciationList.csv');
 
         $agingDepreciationList = [];

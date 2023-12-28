@@ -32,10 +32,10 @@ final class AssessNormal
     /*
     ** LiveFireで使用する評価額
     */
-    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $assessRank = ''): string
+    public function viewReProcure(string $assessUsage, string $assessStructure, string $floorArea, string $assessRank = ''): string
     {
-        if ($assessRank == '') {
-
+        if ($assessRank == '' || $assessUsage == '' ||
+        $assessStructure == '' || $floorArea == '') {
             return '';
         }
 
@@ -51,6 +51,12 @@ final class AssessNormal
     */
     public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $buildingAge, $assessRank = ''): string
     {
+        if ($assessRank == '' || $assessUsage == '' ||
+        $assessStructure == '' || $floorArea == '' ||
+        $buildingAge == '') {
+            return '';
+        }
+
         $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
         $standardAmount = new StandardAmount($assessUsage, $assessStructure);
 
@@ -87,7 +93,7 @@ final class AssessNormal
         ];
     }
 
-    public function getResidualValue($assessRank)
+    public function getResidualValue($assessRank = '')
     {
         $agingDepreciation = $this->agingDepreciation->findAgingDepreciation($assessRank);
         $residualValue = $agingDepreciation * $this->buildingAge;
@@ -115,8 +121,12 @@ final class AssessNormal
         ];
     }
 
-    private function getValueByKey(string $key, array $array, string $defaultValue = ''): string
+    private function getValueByKey(string $key, ?array $array, string $defaultValue = ''): string
     {
+        if (is_null($array)) {
+            return $defaultValue;
+        }
+
         if (array_key_exists($key, $array) && $array[$key]) {
             return (string) $array[$key];
         }

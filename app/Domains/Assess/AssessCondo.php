@@ -34,8 +34,8 @@ final class AssessCondo
        */
     public function viewReProcure($assessUsage, $assessStructure, $floorArea, $assessRank = ''): string
     {
-        if ($assessRank == '') {
-
+        if ($assessRank == '' || $assessUsage == '' ||
+        $assessStructure == '' || $floorArea == '') {
             return '';
         }
 
@@ -51,6 +51,12 @@ final class AssessCondo
     */
     public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $buildingAge, $assessRank = ''): string
     {
+        if ($assessRank == '' || $assessUsage == '' ||
+        $assessStructure == '' || $floorArea == '' ||
+        $buildingAge == '') {
+            return '';
+        }
+
         $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
         $standardAmount = new StandardAmount($assessUsage, $assessStructure);
 
@@ -72,7 +78,7 @@ final class AssessCondo
         return (string) $marketPrice;
     }
 
-    public function getReProcure($assessRank)
+    public function getReProcure($assessRank = '')
     {
         $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
         $reProcure = $standardAmount * $this->floorArea;
@@ -116,10 +122,10 @@ final class AssessCondo
         ];
     }
 
-    private function getValueByKey(string $key, array $array, string $defaultValue = ''): string
+    private function getValueByKey(string $key, ?array $array, string $defaultValue = ''): string
     {
-        if (array_key_exists($key, $array) && $array[$key]) {
-            return (string) $array[$key];
+        if (is_null($array)) {
+            return $defaultValue;
         }
 
         return $defaultValue;
