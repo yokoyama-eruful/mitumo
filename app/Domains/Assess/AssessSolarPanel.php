@@ -40,8 +40,8 @@ final class AssessSolarPanel
         */
     public function viewReProcure($assessUsage, $assessStructure, $floorArea, $assessRank = ''): string
     {
-        if ($assessRank == '') {
-
+        if ($assessRank == '' || $assessUsage == '' ||
+        $assessStructure == '' || $floorArea == '') {
             return '';
         }
 
@@ -57,6 +57,12 @@ final class AssessSolarPanel
     */
     public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $buildingAge, $assessRank = ''): string
     {
+        if ($assessRank == '' || $assessUsage == '' ||
+        $assessStructure == '' || $floorArea == '' ||
+        $buildingAge == '') {
+            return '';
+        }
+
         $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
         $standardAmount = new StandardAmount($assessUsage, $assessStructure);
 
@@ -99,7 +105,7 @@ final class AssessSolarPanel
         ];
     }
 
-    public function getReProcure($assessRank)
+    public function getReProcure($assessRank = '')
     {
         $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
         $reProcure = $standardAmount * $this->floorArea;
@@ -117,7 +123,7 @@ final class AssessSolarPanel
         ];
     }
 
-    public function getResidualValue($assessRank)
+    public function getResidualValue($assessRank = '')
     {
         $agingDepreciation = $this->agingDepreciation->findAgingDepreciation($assessRank);
         $residualValue = $agingDepreciation * $this->buildingAge;
@@ -135,7 +141,7 @@ final class AssessSolarPanel
         ];
     }
 
-    public function getCurrentMarketPrice($assessRank)
+    public function getCurrentMarketPrice($assessRank = '')
     {
         $currentMarketPrice = $this->getReProcure($assessRank)['100%'] * $this->getResidualValue($assessRank)['残価率最終'];
 
@@ -146,8 +152,12 @@ final class AssessSolarPanel
         ];
     }
 
-    private function getStringValueByKey(string $key, array $array, string $defaultValue = ''): string
+    private function getStringValueByKey(string $key, ?array $array, string $defaultValue = ''): string
     {
+        if (is_null($array)) {
+            return $defaultValue;
+        }
+
         if (array_key_exists($key, $array) && $array[$key]) {
             return (string) $array[$key];
         }
@@ -155,8 +165,12 @@ final class AssessSolarPanel
         return $defaultValue;
     }
 
-    private function getIntValueByKey(string $key, array $array, int $defaultValue = 0): int
+    private function getIntValueByKey(string $key, ?array $array, int $defaultValue = 0): int
     {
+        if (is_null($array)) {
+            return $defaultValue;
+        }
+
         if (array_key_exists($key, $array) && $array[$key]) {
             return (int) $array[$key];
         }

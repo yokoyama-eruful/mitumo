@@ -27,7 +27,7 @@ final class EarthquakeComprehensiveInsurancePremium
         $this->estimate = $estimate;
         $this->propertyType = $estimate->property_type;
         $this->payMethod = $estimate->pay_method;
-        $this->insuranceYear = $estimate->insurance_year;
+        $this->insuranceYear = $estimate->insurance_year ?? 0;
         $this->comprehensivePremium = $comprehensivePremium;
 
         $this->totalComprehensive = $this->calcTotalComprehensive();
@@ -83,7 +83,7 @@ final class EarthquakeComprehensiveInsurancePremium
         $shortTermRate = new MutualAidPremiums($this->estimate, $this->insuranceYear);
         $shortTermRate = $shortTermRate->shortTermRate;
 
-        return $shortTermRate == 1 &&
+        return $shortTermRate == 0 &&
         in_array($this->propertyType, ['普通', '工場'], true);
     }
 
@@ -156,6 +156,10 @@ final class EarthquakeComprehensiveInsurancePremium
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
+        if ($shortTermRate == 0) {
+            $shortTermRate = 1;
+        }
+
         $longTermRate = $mutualAidPremium->longTerRate;
         $actualLossFactor = $this->getValueByKey('actual_loss_factor', $estimate->property_detail, 1);
         $applyRate = $otherDiscount * $actualLossFactor * $longTermRate * $shortTermRate;
@@ -198,6 +202,12 @@ final class EarthquakeComprehensiveInsurancePremium
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
+
+        $shortTermRate = $mutualAidPremium->shortTermRate;
+        if ($shortTermRate == 0) {
+            $shortTermRate = 1;
+        }
+
         $longTermRate = $mutualAidPremium->longTerRate;
         $applyRate = $otherDiscount * $longTermRate * $shortTermRate;
 
@@ -239,6 +249,12 @@ final class EarthquakeComprehensiveInsurancePremium
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
+
+        $shortTermRate = $mutualAidPremium->shortTermRate;
+        if ($shortTermRate == 0) {
+            $shortTermRate = 1;
+        }
+
         $longTermRate = $mutualAidPremium->longTerRate;
         $actualLossFactor = $this->getValueByKey('actual_loss_factor', $estimate->property_detail, 1);
         $applyRate = $otherDiscount * $actualLossFactor * $longTermRate * $shortTermRate;
@@ -283,6 +299,12 @@ final class EarthquakeComprehensiveInsurancePremium
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
+
+        $shortTermRate = $mutualAidPremium->shortTermRate;
+        if ($shortTermRate == 0) {
+            $shortTermRate = 1;
+        }
+
         $longTermRate = $mutualAidPremium->longTerRate;
 
         $chattelSurchargeRate = match ($estimate->property_type) {

@@ -18,6 +18,10 @@ final class AnnualCoefficient
 
     public function findAnnualCoefficientList($rank, $startYear)
     {
+        if (! $rank || ! $startYear) {
+            return 0;
+        }
+
         $filePath = Storage::path('rateTable/AnnualCoefficient.csv');
 
         $annualCoefficientList = [];

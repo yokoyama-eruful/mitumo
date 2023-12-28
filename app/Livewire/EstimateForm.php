@@ -328,6 +328,7 @@ class EstimateForm extends Component
     public function onChangePropertyType()
     {
         $this->buildingBaseRate = '';
+        $this->chattelBaseRate = '';
         $this->rankList = $this->getRankList($this->propertyType);
     }
 
@@ -447,6 +448,8 @@ class EstimateForm extends Component
         $factoryInfo = $factoryPropertyBasePremium->findCode($this->factoryBuildingCode, $this->rank);
 
         $this->buildingBaseRate = (string) $factoryInfo['基本率'];
+
+        $this->chattelBaseRate = (string) $factoryInfo['基本率'];
 
         $this->chattelSurcharge = (string) $factoryInfo['動産割増'];
 

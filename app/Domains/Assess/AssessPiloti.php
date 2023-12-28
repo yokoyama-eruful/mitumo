@@ -40,7 +40,8 @@ final class AssessPiloti
     */
     public function viewReProcure($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $assessRank = ''): string
     {
-        if ($assessRank == '') {
+        if ($assessRank == '' || $assessUsage == '' ||
+        $assessStructure == '' || $floorArea == '') {
             return '';
         }
 
@@ -58,6 +59,12 @@ final class AssessPiloti
     */
     public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $buildingAge, $assessRank = ''): string
     {
+        if ($assessRank == '' || $assessUsage == '' ||
+        $assessStructure == '' || $floorArea == '' ||
+        $pilotiFloorArea == '' || $buildingAge == '') {
+            return '';
+        }
+
         $standardAmount = $this->standardAmount = new StandardAmount($assessUsage, $assessStructure);
         $agingDepreciation = $this->agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
 
@@ -149,8 +156,12 @@ final class AssessPiloti
         ];
     }
 
-    private function getStringValueByKey(string $key, array $array, string $defaultValue = ''): string
+    private function getStringValueByKey(string $key, ?array $array, string $defaultValue = ''): string
     {
+        if (is_null($array)) {
+            return $defaultValue;
+        }
+
         if (array_key_exists($key, $array) && $array[$key]) {
             return (string) $array[$key];
         }
@@ -158,8 +169,12 @@ final class AssessPiloti
         return $defaultValue;
     }
 
-    private function getFloatValueByKey(string $key, array $array, float $defaultValue = 0): float
+    private function getFloatValueByKey(string $key, ?array $array, float $defaultValue = 0): float
     {
+        if (is_null($array)) {
+            return $defaultValue;
+        }
+
         if (array_key_exists($key, $array) && $array[$key]) {
             return (float) $array[$key];
         }
