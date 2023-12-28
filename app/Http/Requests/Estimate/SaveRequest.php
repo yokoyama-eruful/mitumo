@@ -83,7 +83,7 @@ final class SaveRequest extends FormRequest
             'other_item_insurance_payout' => ['nullable', 'numeric', 'min:0'],
 
             //動的に変化する項目（評価トリガー）
-            'assess_item' => ['nullable', 'in:通常,ピロティー付,太陽光付,分譲マンション,年次取得,改装物件'],
+            'assess_item' => ['nullable', 'in:通常,ピロティー付,太陽光付,分譲マンション,年次取得,改装物件,選択しない'],
 
             'assess_usage' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得', 'string'],
             'assess_structure' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得', 'string'],
