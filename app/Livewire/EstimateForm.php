@@ -130,6 +130,14 @@ class EstimateForm extends Component
 
     public ?string $otherItemInsurancePayout = null;
 
+    public ?string $totalBuildingInsurancePayout = null;
+
+    public ?string $totalHouseholdInsurancePayout = null;
+
+    public ?string $totalFacilityInsurancePayout = null;
+
+    public ?string $totalItemInsurancePayout = null;
+
     /////評価項目/////////////////////////////
     public ?string $assessItem = null;
 
@@ -286,6 +294,11 @@ class EstimateForm extends Component
         $this->itemInsurancePayout = old('item_insurance_payout', $this->getValueByKey('item_insurance_payout', $estimate->property_detail));
         $this->otherItemInsurancePayout = old('other_item_insurance_payout', $this->getValueByKey('other_item_insurance_payout', $estimate->property_detail));
 
+        $this->totalBuildingInsurancePayout;
+        $this->totalHouseholdInsurancePayout;
+        $this->totalFacilityInsurancePayout;
+        $this->totalItemInsurancePayout;
+
         //評価項目
         $this->assessItem = old('assess_item', $estimate->assess_item);
         $this->assessUsage = old('assess_usage', $this->getValueByKey('assess_usage', $estimate->assess_detail));
@@ -328,7 +341,6 @@ class EstimateForm extends Component
     public function onChangePropertyType()
     {
         $this->buildingBaseRate = '';
-        $this->chattelBaseRate = '';
         $this->rankList = $this->getRankList($this->propertyType);
     }
 
@@ -609,6 +621,46 @@ class EstimateForm extends Component
     }
 
     /**
+     * 建物共済掛金合計
+     */
+    public function onChangeBuildingInsurancePayout()
+    {
+        return $this->totalBuildingInsurancePayout = $this->buildingInsurancePayout;
+    }
+
+    /**
+     * 家財共済掛金合計
+     */
+    public function onChangeHouseholdInsurancePayout()
+    {
+        return $this->totalHouseholdInsurancePayout = $this->householdInsurancePayout;
+    }
+
+    /**
+     * 設備共済掛金合計
+     */
+    public function onChangeFacilityInsurancePayout()
+    {
+        $facilityInsurancePayout = $this->facilityInsurancePayout ? (int) $this->facilityInsurancePayout : 0;
+
+        $otherFacilityInsurancePayout = $this->otherFacilityInsurancePayout ? (int) $this->otherFacilityInsurancePayout : 0;
+
+        return $this->totalFacilityInsurancePayout = strval($facilityInsurancePayout + $otherFacilityInsurancePayout);
+    }
+
+    /**
+     * 商品共済掛金合計
+     */
+    public function onChangeItemInsurancePayout()
+    {
+        $itemInsurancePayout = $this->itemInsurancePayout ? (int) $this->itemInsurancePayout : 0;
+
+        $otherItemInsurancePayout = $this->otherItemInsurancePayout ? (int) $this->otherItemInsurancePayout : 0;
+
+        return $this->totalItemInsurancePayout = strval($itemInsurancePayout + $otherItemInsurancePayout);
+    }
+
+    /**
      * 再調達価額、時価額を参照
      *
      * @return void
@@ -691,6 +743,16 @@ class EstimateForm extends Component
                 $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingYear, 'C');
                 break;
             case '改装物件':
+
+                if (! is_numeric($this->replacementPrice) ||
+                ! is_numeric($this->renovationCost) ||
+                ! is_numeric($this->conventionalAge) ||
+                ! is_numeric($this->depreciationRate) ||
+                ! is_numeric($this->renovationAge) ||
+                ! is_numeric($this->renovationDepreciationRate)) {
+                    break;
+                }
+
                 $assessDomain = new AssessRenovation($this->estimate);
 
                 $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->replacementPrice, $this->renovationCost, $this->conventionalAge, $this->depreciationRate, $this->renovationAge, $this->renovationDepreciationRate);
