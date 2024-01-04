@@ -128,6 +128,10 @@ final class AssessCondo
             return $defaultValue;
         }
 
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return (string) $array[$key];
+        }
+
         return $defaultValue;
     }
 }
