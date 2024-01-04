@@ -390,7 +390,6 @@
         @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
             <div class="estimate-input-box">
                 <label class="estimate-label" for="actual_loss_factor">実損払係数
-                    <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="actual_loss_factor" name="actual_loss_factor" class="estimate-input"
                     wire:model="actualLossFactor">
@@ -399,9 +398,10 @@
         @if (in_array($propertyType, ['普通', '工場'], true))
             <div class="estimate-input-box">
                 <label class="estimate-label" for="other_discount">その他割引
-                    <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="other_discount" name="other_discount" class="estimate-input" wire:model="otherDiscount">
+                <input id="other_discount" name="other_discount" class="estimate-input" wire:model="otherDiscount"
+                    type="number" min="0" max="50">
+                <span class="my-auto mx-1">%</span>
             </div>
         @endif
         @if (in_array($propertyType, ['普通'], true))

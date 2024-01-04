@@ -65,8 +65,8 @@ final class SaveRequest extends FormRequest
             // // 動的に変化する項目（物件トリガー
             'chattel_surcharge' => ['nullable', 'required_if:property_type,工場', 'string'],
 
-            'actual_loss_factor' => ['nullable', 'string'],
-            'other_discount' => ['nullable', 'numeric', 'min:0'],
+            'actual_loss_factor' => ['nullable', 'numeric', 'min:0'],
+            'other_discount' => ['nullable', 'numeric', 'min:0', 'max:50'],
 
             'chattel_surcharge_category' => ['nullable', 'required_if:property_type,普通', 'string'],
 
@@ -92,9 +92,9 @@ final class SaveRequest extends FormRequest
 
             'replacement_price' => ['nullable', 'required_if:assess_item,改装物件', 'numeric', 'min:0'],
             'renovation_cost' => ['nullable', 'required_if:assess_item,改装物件', 'numeric', 'min:0'],
-            'conventional_age' => ['nullable', 'required_if:assess_item,改装物件', 'integer'],
+            'conventional_age' => ['nullable', 'required_if:assess_item,改装物件', 'numeric', 'min:0'],
             'depreciation_rate' => ['nullable', 'required_if:assess_item,改装物件', 'numeric', 'min:0'],
-            'renovation_age' => ['nullable', 'required_if:assess_item,改装物件', 'integer'],
+            'renovation_age' => ['nullable', 'required_if:assess_item,改装物件', 'numeric', 'min:0'],
             'renovation_depreciation_rate' => ['nullable', 'required_if:assess_item,改装物件', 'numeric', 'min:0'],
 
             'installation_date' => ['nullable', 'required_if:assess_item,太陽光付', 'date'],

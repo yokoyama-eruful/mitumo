@@ -743,6 +743,16 @@ class EstimateForm extends Component
                 $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingYear, 'C');
                 break;
             case '改装物件':
+
+                if (! is_numeric($this->replacementPrice) ||
+                ! is_numeric($this->renovationCost) ||
+                ! is_numeric($this->conventionalAge) ||
+                ! is_numeric($this->depreciationRate) ||
+                ! is_numeric($this->renovationAge) ||
+                ! is_numeric($this->renovationDepreciationRate)) {
+                    break;
+                }
+
                 $assessDomain = new AssessRenovation($this->estimate);
 
                 $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->replacementPrice, $this->renovationCost, $this->conventionalAge, $this->depreciationRate, $this->renovationAge, $this->renovationDepreciationRate);
