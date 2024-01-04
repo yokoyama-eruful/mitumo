@@ -21,7 +21,10 @@ final class EstimateStandardInfoDto
             'insurance_day', 'assess_item', 'building_base_rate',
             'chattel_base_rate',
         ]));
-        $tmpParams['start_date'] = $params['start_date'].'-01';
+
+        if (isset($tmpParams['start_date'])) {
+            $tmpParams['start_date'] = $params['start_date'].'-01';
+        }
 
         $this->params = $tmpParams;
     }

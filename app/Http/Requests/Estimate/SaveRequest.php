@@ -36,18 +36,18 @@ final class SaveRequest extends FormRequest
             'other_fire_resistance' => ['nullable', 'string'],
             'usage' => ['required', 'string'],
             'other_usage' => ['nullable', 'string'],
-            'floor' => ['required', 'integer'],
-            'building' => ['required', 'integer'],
+            'floor' => ['nullable', 'integer'],
+            'building' => ['nullable', 'integer'],
             'other' => ['nullable', 'string'],
             'property_type' => ['required', 'string', 'in:住宅,普通,工場'],
             'rank' => ['required', 'string'],
-            'start_date' => ['required', 'date'],
-            'building_year' => ['required', 'digits:4', 'integer', 'min:1900', 'max:'.(date('Y') + 1)],
-            'building_age' => ['required', 'integer'],
+            'start_date' => ['nullable', 'required_with:building_insurance_payout', 'date'],
+            'building_year' => ['nullable', 'required_with:building_insurance_payout', 'digits:4', 'integer', 'min:1900', 'max:'.(date('Y') + 1)],
+            'building_age' => ['nullable', 'required_with:building_insurance_payout', 'integer'],
             'pay_method' => ['required', 'string'],
-            'insurance_year' => ['nullable',  'integer'],
-            'insurance_month' => ['nullable', 'integer', 'min:1', 'max:12'],
-            'insurance_day' => ['nullable', 'integer', 'min:1', 'max:100'], //わからん
+            'insurance_year' => ['nullable', 'required_without_all:insurance_month,insurance_day',  'integer'],
+            'insurance_month' => ['nullable', 'required_without_all:insurance_year,insurance_day', 'integer', 'min:1', 'max:12'],
+            'insurance_day' => ['nullable', 'required_without_all:insurance_year,insurance_month,', 'integer', 'min:1', 'max:100'], //わからん
 
             //おすすめ契約の項目
             'recommend1' => ['nullable', new Recommend()],
@@ -63,12 +63,12 @@ final class SaveRequest extends FormRequest
             'factory_building_code' => ['nullable',  'string'],
 
             // // 動的に変化する項目（物件トリガー
-            'chattel_surcharge' => ['nullable', 'required_if:property_type,工場', 'string'],
+            'chattel_surcharge' => ['nullable', 'string'],
 
             'actual_loss_factor' => ['nullable', 'numeric', 'min:0'],
             'other_discount' => ['nullable', 'numeric', 'min:0', 'max:50'],
 
-            'chattel_surcharge_category' => ['nullable', 'required_if:property_type,普通', 'string'],
+            'chattel_surcharge_category' => ['nullable', 'string'],
 
             'occupational_surcharge_code' => ['nullable',  'string'], // 'required_if:property_type,普通　は一旦省略
             'occupational_surcharge_rate' => ['nullable',  'numeric', 'min:0'],  // 'required_if:property_type,普通　は一旦省略
@@ -77,8 +77,8 @@ final class SaveRequest extends FormRequest
 
             'building_insurance_payout' => ['nullable', 'numeric', 'min:0'],
             'household_insurance_payout' => ['nullable', 'numeric', 'min:0'],
-            'facility_insurance_payout' => ['nullable', 'required_if:property_type,普通,工場', 'numeric', 'min:0'],
-            'other_facility_insurance_payout' => ['nullable', 'required_if:property_type,普通,工場', 'numeric', 'min:0'],
+            'facility_insurance_payout' => ['nullable', 'numeric', 'min:0'],
+            'other_facility_insurance_payout' => ['nullable', 'numeric', 'min:0'],
             'item_insurance_payout' => ['nullable', 'numeric', 'min:0'],
             'other_item_insurance_payout' => ['nullable', 'numeric', 'min:0'],
 
@@ -102,6 +102,25 @@ final class SaveRequest extends FormRequest
 
             'annual_price' => ['nullable', 'required_if:assess_item,年次取得', 'numeric', 'min:0'],
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if (($this->input('household_insurance_payout') || $this->input('facility_insurance_payout') ||
+            $this->input('other_facility_insurance_payout') || $this->input('item_insurance_payout') ||
+            $this->input('other_item_insurance_payout')) && $this->input('property_type') == '工場' && ! $this->input('chattel_surcharge')) {
+                $validator->errors()->add('エラー', '動産を指定する場合は、動産割増を指定してください');
+            }
+        });
+
+        $validator->after(function ($validator) {
+            if (($this->input('household_insurance_payout') || $this->input('facility_insurance_payout') ||
+                  $this->input('other_facility_insurance_payout') || $this->input('item_insurance_payout') ||
+                  $this->input('other_item_insurance_payout')) && $this->input('property_type') == '普通' && ! $this->input('chattel_surcharge_category')) {
+                $validator->errors()->add('エラー', '動産を指定する場合は、動産割増を指定してください');
+            }
+        });
     }
 
     public function params(): array

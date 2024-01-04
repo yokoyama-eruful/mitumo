@@ -386,7 +386,6 @@ class EstimateForm extends Component
      */
     public function onChangeBuildingAge()
     {
-
         if (! $this->startDate || ! $this->buildingYear) {
             $this->buildingAge = null;
 
@@ -681,6 +680,12 @@ class EstimateForm extends Component
             return;
         }
 
+        if (is_null($this->buildingAge) || $this->buildingAge == '') {
+            $this->dispatch('alert', '評価する場合は、築年数を入力してください。');
+
+            return;
+        }
+
         switch ($this->assessItem) {
             case '通常':
                 $assessDomain = new AssessNormal($this->estimate);
@@ -843,6 +848,7 @@ class EstimateForm extends Component
     private function getChattelSurchargeCategoryList()
     {
         return [
+            '-',
             '1級品',
             '2級品',
         ];
