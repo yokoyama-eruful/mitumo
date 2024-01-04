@@ -14,10 +14,7 @@
         <div class=" h-20 w-[325px] outline outline-1 outline-gray-500 pl-5 pt-2 overflow-x-auto">
             {{ $estimate->buildingStructure }}
             <div>
-                {{ $estimate->floorWithFloor }}
-                {{ $estimate->BuildingWithFloor }}
-                {{ $estimate->FloorAreaWithFloor }}
-                {{ $estimate->ExclusiveAreaWithFloor }}
+                {{ $estimate->OtherBuildingStructure }}
             </div>
         </div>
         <div class="flex justify-center items-center h-20 w-[100px] bg-green-200 outline outline-1 outline-gray-500">
