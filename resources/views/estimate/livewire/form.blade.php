@@ -585,6 +585,7 @@
                 </label>
                 <input id="piloti_floor_area" name="piloti_floor_area" class="estimate-input"
                     wire:model="pilotiFloorArea" wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">m²</span>
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -594,6 +595,7 @@
                 </label>
                 <input id="replacement_price" name="replacement_price" class="estimate-input"
                     wire:model="replacementPrice" wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">円</span>
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -603,6 +605,7 @@
                 </label>
                 <input id="renovation_cost" name="renovation_cost" class="estimate-input"
                     wire:model="renovationCost" wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">円</span>
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -612,6 +615,7 @@
                 </label>
                 <input id="conventional_age" name="conventional_age" class="estimate-input"
                     wire:model="conventionalAge" wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">年</span>
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -621,6 +625,7 @@
                 </label>
                 <input id="depreciation_rate" name="depreciation_rate" class="estimate-input"
                     wire:model="depreciationRate" wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">%</span>
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -630,6 +635,7 @@
                 </label>
                 <input id="renovation_age" name="renovation_age" class="estimate-input" wire:model="renovationAge"
                     wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">年</span>
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -639,6 +645,7 @@
                 </label>
                 <input id="renovation_depreciation_rate" name="renovation_depreciation_rate" class="estimate-input"
                     wire:model="renovationDepreciationRate" wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">%</span>
             </div>
         @endif
         @if (in_array($assessItem, ['太陽光付'], true))
@@ -657,6 +664,7 @@
                 </label>
                 <input id="installation_cost" name="installation_cost" class="estimate-input"
                     wire:model="installationCost" wire:change="onChangeAssessItem">
+                <span class="w-16 p-1 flex items-center">千円</span>
             </div>
         @endif
         @if (in_array($assessItem, ['年次取得'], true))
@@ -666,6 +674,7 @@
                 </label>
                 <input id="annual_price" name="annual_price" class="estimate-input" wire:model="annualPrice"
                     wire:change="onChangeAssessItem">
+                <span class="w-16 p-1 flex items-center">千円</span>
             </div>
         @endif
 
