@@ -69,7 +69,7 @@ class AssessSolarPanelDownloader
         $worksheet = $spreadSheet->getSheetByName('評価表（太陽光付）');
         $worksheet->setCellValue('L1', date('Y年m月d日'));
         $worksheet->setCellValue('B4', $estimate->contractee);
-        $worksheet->setCellValue('F4', $estimate->address);
+        $worksheet->setCellValue('F4', $estimate->location);
         $worksheet->setCellValue('B7', $assessData->assessUsage);
         $worksheet->setCellValue('E7', $assessData->assessStructure);
         $worksheet->setCellValue('H7', $assessData->floorArea);

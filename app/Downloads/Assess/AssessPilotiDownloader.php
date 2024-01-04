@@ -69,7 +69,7 @@ class AssessPilotiDownloader
         $worksheet = $spreadSheet->getSheetByName('評価表（ピロティー付）');
         $worksheet->setCellValue('L1', date('Y年m月d日'));
         $worksheet->setCellValue('B4', $estimate->contractee);
-        $worksheet->setCellValue('F4', $estimate->address);
+        $worksheet->setCellValue('F4', $estimate->location);
         $worksheet->setCellValue('B7', $assessData->assessUsage);
         $worksheet->setCellValue('E7', $assessData->assessStructure);
         $worksheet->setCellValue('H7', $assessData->exceptForPilotiFloorArea);
@@ -107,7 +107,7 @@ class AssessPilotiDownloader
         $worksheet->setCellValue('J24', $assessData->getPiloti()['ピロティー80%']);
         $worksheet->setCellValue('K24', $assessData->getPiloti()['ピロティー80%まるめ']);
 
-        $worksheet->setCellValue('K24', $assessData->floorArea);
+        $worksheet->setCellValue('E29', $assessData->floorArea);
 
         $worksheet->setCellValue('G29', $assessData->getAllFloorAreaReProcure('A')['100%']);
         $worksheet->setCellValue('G30', $assessData->getAllFloorAreaReProcure('B')['100%']);
