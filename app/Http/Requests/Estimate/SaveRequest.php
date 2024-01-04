@@ -36,8 +36,8 @@ final class SaveRequest extends FormRequest
             'other_fire_resistance' => ['nullable', 'string'],
             'usage' => ['required', 'string'],
             'other_usage' => ['nullable', 'string'],
-            'floor' => ['nullable', 'integer'],
-            'building' => ['nullable', 'integer'],
+            'floor' => ['nullable'],
+            'building' => ['nullable'],
             'other' => ['nullable', 'string'],
             'property_type' => ['required', 'string', 'in:住宅,普通,工場'],
             'rank' => ['required', 'string'],
@@ -119,6 +119,22 @@ final class SaveRequest extends FormRequest
                   $this->input('other_facility_insurance_payout') || $this->input('item_insurance_payout') ||
                   $this->input('other_item_insurance_payout')) && $this->input('property_type') == '普通' && ! $this->input('chattel_surcharge_category')) {
                 $validator->errors()->add('エラー', '動産を指定する場合は、動産割増を指定してください');
+            }
+        });
+
+        $validator->after(function ($validator) {
+            if ($this->input('floor')) {
+                if (preg_match('/^[+]?[0]*[1-9]*[.]?[0-9 ０-９]*$/', $this->input('floor')) == 0) {
+                    $validator->errors()->add('エラー', '階は整数でなくてはいけません。');
+                }
+            }
+        });
+
+        $validator->after(function ($validator) {
+            if ($this->input('building')) {
+                if (preg_match('/^[+]?[0]*[1-9]*[.]?[0-9 ０-９]*$/', $this->input('building')) == 0) {
+                    $validator->errors()->add('エラー', '棟は整数でなくてはいけません。');
+                }
             }
         });
     }

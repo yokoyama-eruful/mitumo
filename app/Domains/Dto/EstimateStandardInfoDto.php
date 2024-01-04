@@ -22,6 +22,14 @@ final class EstimateStandardInfoDto
             'chattel_base_rate',
         ]));
 
+        if (preg_match('/^[０-９]*$/', $tmpParams['floor']) == 1) {
+            $tmpParams['floor'] = mb_convert_kana($tmpParams['floor'], 'n');
+        }
+
+        if (preg_match('/^[０-９]*$/', $tmpParams['building']) == 1) {
+            $tmpParams['building'] = mb_convert_kana($tmpParams['building'], 'n');
+        }
+
         if (isset($tmpParams['start_date'])) {
             $tmpParams['start_date'] = $params['start_date'].'-01';
         }
