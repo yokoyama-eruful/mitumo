@@ -19,7 +19,6 @@
             <nav class="flex space-x-6">
                 <a href="{{ route('top.index') }}"
                     class="text-gray-600 hover:text-gray-900 transition duration-300">トップに戻る</a>
-                <a href="#" class="text-gray-600 hover:text-gray-900 transition duration-300">一覧から探す</a>
             </nav>
             <form action="{{ route('auth.logout') }}" method="POST">
                 @csrf

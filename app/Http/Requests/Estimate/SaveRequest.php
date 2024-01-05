@@ -123,6 +123,12 @@ final class SaveRequest extends FormRequest
         });
 
         $validator->after(function ($validator) {
+            if ($this->input('insurance_year') && ($this->input('insurance_month') || $this->input('insurance_day'))) {
+                $validator->errors()->add('エラー', '共済期間が１年以上の場合は、月・日数は選択できません。');
+            }
+        });
+
+        $validator->after(function ($validator) {
             if ($this->input('floor')) {
                 if (preg_match('/^[+]?[0]*[1-9]*[.]?[0-9 ０-９]*$/', $this->input('floor')) == 0) {
                     $validator->errors()->add('エラー', '階は整数でなくてはいけません。');
