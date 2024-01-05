@@ -130,14 +130,6 @@ class EstimateForm extends Component
 
     public ?string $otherItemInsurancePayout = null;
 
-    public ?string $totalBuildingInsurancePayout = null;
-
-    public ?string $totalHouseholdInsurancePayout = null;
-
-    public ?string $totalFacilityInsurancePayout = null;
-
-    public ?string $totalItemInsurancePayout = null;
-
     /////評価項目/////////////////////////////
     public ?string $assessItem = null;
 
@@ -293,11 +285,6 @@ class EstimateForm extends Component
         $this->otherFacilityInsurancePayout = old('other_facility_insurance_payout', $this->getValueByKey('other_facility_insurance_payout', $estimate->property_detail));
         $this->itemInsurancePayout = old('item_insurance_payout', $this->getValueByKey('item_insurance_payout', $estimate->property_detail));
         $this->otherItemInsurancePayout = old('other_item_insurance_payout', $this->getValueByKey('other_item_insurance_payout', $estimate->property_detail));
-
-        $this->totalBuildingInsurancePayout;
-        $this->totalHouseholdInsurancePayout;
-        $this->totalFacilityInsurancePayout;
-        $this->totalItemInsurancePayout;
 
         //評価項目
         $this->assessItem = old('assess_item', $estimate->assess_item);
@@ -617,46 +604,6 @@ class EstimateForm extends Component
         $this->isViewWorkTable = false;
 
         $this->dispatch('enableScroll');
-    }
-
-    /**
-     * 建物共済掛金合計
-     */
-    public function onChangeBuildingInsurancePayout()
-    {
-        return $this->totalBuildingInsurancePayout = $this->buildingInsurancePayout;
-    }
-
-    /**
-     * 家財共済掛金合計
-     */
-    public function onChangeHouseholdInsurancePayout()
-    {
-        return $this->totalHouseholdInsurancePayout = $this->householdInsurancePayout;
-    }
-
-    /**
-     * 設備共済掛金合計
-     */
-    public function onChangeFacilityInsurancePayout()
-    {
-        $facilityInsurancePayout = $this->facilityInsurancePayout ? (int) $this->facilityInsurancePayout : 0;
-
-        $otherFacilityInsurancePayout = $this->otherFacilityInsurancePayout ? (int) $this->otherFacilityInsurancePayout : 0;
-
-        return $this->totalFacilityInsurancePayout = strval($facilityInsurancePayout + $otherFacilityInsurancePayout);
-    }
-
-    /**
-     * 商品共済掛金合計
-     */
-    public function onChangeItemInsurancePayout()
-    {
-        $itemInsurancePayout = $this->itemInsurancePayout ? (int) $this->itemInsurancePayout : 0;
-
-        $otherItemInsurancePayout = $this->otherItemInsurancePayout ? (int) $this->otherItemInsurancePayout : 0;
-
-        return $this->totalItemInsurancePayout = strval($itemInsurancePayout + $otherItemInsurancePayout);
     }
 
     /**

@@ -496,14 +496,14 @@
             </div>
         @endif
         @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
-            <div class="estimate-input-box mt-3">
+            <div class="estimate-input-box">
                 <label class="estimate-label w-1/2" for="household_insurance_payout">家財共済金額</label>
                 <input id="household_insurance_payout" name="household_insurance_payout" class="estimate-input w-1/2"
                     wire:model="householdInsurancePayout" wire:change="onChangeHouseholdInsurancePayout">
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
-            <div class="estimate-input-box mt-3">
+            <div class="estimate-input-box">
                 <label class="estimate-label w-1/2" for="facility_insurance_payout">
                     設備共済金額
                 </label>
@@ -521,7 +521,7 @@
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
-            <div class="estimate-input-box mt-3">
+            <div class="estimate-input-box">
                 <label class="estimate-label w-1/2" for="item_insurance_payout">商品共済金額</label>
                 <input id="item_insurance_payout" name="item_insurance_payout" class="estimate-input w-1/2"
                     wire:model="itemInsurancePayout" wire:change="onChangeItemInsurancePayout">

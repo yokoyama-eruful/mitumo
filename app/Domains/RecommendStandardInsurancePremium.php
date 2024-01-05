@@ -28,7 +28,7 @@ final class RecommendStandardInsurancePremium
         }
 
         return [
-            '共済掛金' => $this->setPremium($recommendYear).'円',
+            '共済掛金' => $this->setPremium($recommendYear),
             '１年更新の場合より' => $this->setDiscountAmount($recommendYear),
         ];
     }
@@ -53,7 +53,7 @@ final class RecommendStandardInsurancePremium
             return '';
         }
 
-        return $this->standardPremium * $recommendYear - $this->setPremium($recommendYear) .'円お得';
+        return $this->standardPremium * $recommendYear - $this->setPremium($recommendYear);
     }
 
     private function calcBuilding($recommendYear)
