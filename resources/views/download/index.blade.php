@@ -61,28 +61,45 @@
                     @endif
                 </div>
             </div>
+
             <div class="grid grid-cols-3 gap-10 mt-5">
-                @foreach ($estimateType as $estimateType)
+                @foreach ($estimateTypeList as $estimateType => $enableDisable)
                     @if ($fileType == 'pdf')
-                        <form method="POST"
-                            action="{{ route('estimate.download.type', ['id' => $estimate->id, 'category' => $estimateType, 'fileType' => $fileType, 'keisyo' => $keisyo]) }}"
-                            class="bg-red-50 hover:bg-red-100">
-                            @csrf
+                        @if ($enableDisable == 'disable')
                             <button
-                                class="h-44 w-44 outline outline-1 outline-slate-300 shadow-md rounded text-center text-xl">
+                                class="h-44 w-44 outline outline-1 outline-slate-300 shadow-md rounded text-center text-xl bg-slate-100 text-gray-400 cursor-not-allowed">
                                 {{ $estimateType }}
                             </button>
-                        </form>
+                        @else
+                            <form method="POST"
+                                action="{{ route('estimate.download.type', ['id' => $estimate->id, 'category' => $estimateType, 'fileType' => $fileType, 'keisyo' => $keisyo]) }}"
+                                class="bg-red-50 hover:bg-red-100">
+                                @csrf
+                                <button
+                                    class="h-44 w-44 outline outline-1 outline-slate-300 shadow-md rounded text-center text-xl">
+                                    {{ $estimateType }}
+                                </button>
+                            </form>
+                        @endif
                     @else
-                        <form method="POST"
-                            action="{{ route('estimate.download.type', ['id' => $estimate->id, 'category' => $estimateType, 'fileType' => $fileType, 'keisyo' => $keisyo]) }}"
-                            class="bg-green-50 hover:bg-green-100">
-                            @csrf
-                            <button
-                                class="h-44 w-44 outline outline-1 outline-slate-300 shadow-md rounded text-center text-xl">
-                                {{ $estimateType }}
-                            </button>
-                        </form>
+                        @if ($enableDisable == 'disable')
+                            <div>
+                                <button
+                                    class="h-44 w-44 outline outline-1 outline-slate-300 shadow-md rounded text-center text-xl bg-slate-100 text-gray-400 cursor-not-allowed">
+                                    {{ $estimateType }}
+                                </button>
+                            </div>
+                        @else
+                            <form method="POST"
+                                action="{{ route('estimate.download.type', ['id' => $estimate->id, 'category' => $estimateType, 'fileType' => $fileType, 'keisyo' => $keisyo]) }}"
+                                class="bg-green-50 hover:bg-green-100">
+                                @csrf
+                                <button
+                                    class="h-44 w-44 outline outline-1 outline-slate-300 shadow-md rounded text-center text-xl">
+                                    {{ $estimateType }}
+                                </button>
+                            </form>
+                        @endif
                     @endif
                 @endforeach
             </div>
