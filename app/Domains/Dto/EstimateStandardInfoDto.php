@@ -30,7 +30,6 @@ final class EstimateStandardInfoDto
             $tmpParams['building'] = mb_convert_kana($tmpParams['building'], 'n');
         }
 
-        dd($params['start_date'], $params['building_year']);
         if (isset($tmpParams['start_date'])) {
             $tmpParams['start_date'] = $params['start_date'].'-01';
         }
