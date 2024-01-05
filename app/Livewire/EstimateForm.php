@@ -382,9 +382,9 @@ class EstimateForm extends Component
         $this->buildingYear = (string) FullWidthDigitConverter::convert($this->buildingYear);
 
         $buildingDate = CarbonImmutable::createFromDate((int) $this->buildingYear, 1, 1);
-        $startDate = $this->startDate;
+        [$startYear,$startMonth] = explode('-', $this->startDate);
 
-        $this->buildingAge = $buildingDate <= $startDate ? (string) $buildingDate->diffInYears($startDate) : null;
+        $this->buildingAge = $buildingDate <= $startYear ? (string) $buildingDate->diffInYears($startYear) : null;
 
         $this->onChangeBaseRate();
     }

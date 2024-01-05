@@ -10,6 +10,8 @@ final class AssessSolarPanel
 
     public readonly int $buildingAge;
 
+    public readonly int $buildingYear;
+
     public readonly string $assessUsage;
 
     public readonly string $assessStructure;
@@ -26,6 +28,7 @@ final class AssessSolarPanel
     {
         $this->floorArea = $estimate->floor_area ? $estimate->floor_area : 0;
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
+        $this->buildingYear = $estimate->building_year ? $estimate->building_year : 0;
         $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
         $this->installationDate = $this->getStringValueByKey('installation_date', $estimate->assess_detail);

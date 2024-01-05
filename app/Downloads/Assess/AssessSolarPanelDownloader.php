@@ -73,7 +73,7 @@ class AssessSolarPanelDownloader
         $worksheet->setCellValue('B7', $assessData->assessUsage);
         $worksheet->setCellValue('E7', $assessData->assessStructure);
         $worksheet->setCellValue('H7', $assessData->floorArea);
-        $worksheet->setCellValue('K7', $assessData->buildingAge);
+        $worksheet->setCellValue('K7', $this->ConvertYear($assessData->buildingYear).'01月01日');
         $worksheet->setCellValue('B15', $assessData->installationDate);
         $worksheet->setCellValue('E15', $assessData->installationCost);
         $worksheet->setCellValue('H15', $assessData->getSolarPanelInfo()['経過年数']);
@@ -130,5 +130,26 @@ class AssessSolarPanelDownloader
         $worksheet->setCellValue('M25', $assessData->getCurrentMarketPrice('A')['太陽光付まるめ']);
         $worksheet->setCellValue('M26', $assessData->getCurrentMarketPrice('B')['太陽光付まるめ']);
         $worksheet->setCellValue('M27', $assessData->getCurrentMarketPrice('C')['太陽光付まるめ']);
+    }
+
+    public function ConvertYear($fiscal_year)
+    {
+        $eras = [
+            ['year' => 2019, 'name' => '令和', 'new_Japanese_calendar' => '平成31年'],
+            ['year' => 1989, 'name' => '平成', 'new_Japanese_calendar' => '平成元年'],
+            ['year' => 1926, 'name' => '昭和', 'new_Japanese_calendar' => '大正15年'],
+        ];
+
+        foreach ($eras as $era) {
+            if ($fiscal_year === $era['year']) {
+                return $era['new_Japanese_calendar'];
+            }
+
+            if ($fiscal_year >= $era['year']) {
+                $year = $fiscal_year - $era['year'] + 1;
+
+                return $era['name'] . $year . '年';
+            }
+        }
     }
 }

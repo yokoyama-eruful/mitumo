@@ -492,14 +492,14 @@
             <div class="estimate-input-box">
                 <label class="estimate-label w-1/2" for="building_insurance_payout">建物共済金額</label>
                 <input id="building_insurance_payout" name="building_insurance_payout" class="estimate-input  w-1/2"
-                    wire:model="buildingInsurancePayout" wire:change="onChangeBuildingInsurancePayout">
+                    wire:model="buildingInsurancePayout">
             </div>
         @endif
         @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
             <div class="estimate-input-box">
                 <label class="estimate-label w-1/2" for="household_insurance_payout">家財共済金額</label>
                 <input id="household_insurance_payout" name="household_insurance_payout" class="estimate-input w-1/2"
-                    wire:model="householdInsurancePayout" wire:change="onChangeHouseholdInsurancePayout">
+                    wire:model="householdInsurancePayout">
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
@@ -508,7 +508,7 @@
                     設備共済金額
                 </label>
                 <input id="facility_insurance_payout" name="facility_insurance_payout" class="estimate-input w-1/2"
-                    wire:model="facilityInsurancePayout" wire:change="onChangeFacilityInsurancePayout">
+                    wire:model="facilityInsurancePayout">
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
@@ -516,23 +516,21 @@
                 <label class="estimate-label w-1/2" for="other_facility_insurance_payout">その他設備共済金額
                 </label>
                 <input id="other_facility_insurance_payout" name="other_facility_insurance_payout"
-                    class="estimate-input w-1/2" wire:model="otherFacilityInsurancePayout"
-                    wire:change="onChangeFacilityInsurancePayout">
+                    class="estimate-input w-1/2" wire:model="otherFacilityInsurancePayout">
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
             <div class="estimate-input-box">
                 <label class="estimate-label w-1/2" for="item_insurance_payout">商品共済金額</label>
                 <input id="item_insurance_payout" name="item_insurance_payout" class="estimate-input w-1/2"
-                    wire:model="itemInsurancePayout" wire:change="onChangeItemInsurancePayout">
+                    wire:model="itemInsurancePayout">
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
             <div class="estimate-input-box">
                 <label class="estimate-label w-1/2" for="other_item_insurance_payout">その他商品共済金額</label>
                 <input id="other_item_insurance_payout" name="other_item_insurance_payout"
-                    wire:change="onChangeItemInsurancePayout" class="estimate-input w-1/2"
-                    wire:model="otherItemInsurancePayout">
+                    class="estimate-input w-1/2" wire:model="otherItemInsurancePayout">
             </div>
         @endif
 
