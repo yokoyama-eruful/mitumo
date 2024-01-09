@@ -11,11 +11,11 @@
 
         <div>
             <div class="flex justify-center items-center h-10 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
-                普通共済金額
+                普通共済掛金
             </div>
             <div>
                 <div class="flex items-center h-[120px] w-[200px] outline outline-1 outline-gray-500 pl-5">
-                    {{ $standardPremium->getStandardPremium() }}円
+                    {{ yenUnit($standardPremium->getStandardPremium()) }}
                 </div>
             </div>
         </div>

@@ -149,13 +149,11 @@
 
         <div class="estimate-input-box">
             <label class="estimate-label" for="floor">階
-                <div class="estimate-input-required">※必須</div>
             </label>
             <input id="floor" name="floor" class="estimate-input" wire:model="floor" required>
         </div>
         <div class="estimate-input-box">
             <label class="estimate-label" for="building">棟
-                <div class="estimate-input-required">※必須</div>
             </label>
             <input id="building" name="building" class="estimate-input" wire:model="building" required>
         </div>
@@ -195,31 +193,57 @@
                 </select>
             </div>
         </div>
-        <div class="estimate-input-box">
-            <label class="estimate-label" for="start_date">始期日
-                <div class="estimate-input-required">※必須</div>
-            </label>
-            <input id="start_date" name="start_date" type="month" class="estimate-input text-right"
-                placeholder="西暦を入力してください" wire:model="startDate" wire:change="onChangeBuildingAge" required>
-        </div>
-        <div class="estimate-input-box">
-            <label class="estimate-label" for="building_year">建築年
-                <div class="estimate-input-required">※必須</div>
-            </label>
-            <input id="building_year" name="building_year" class="estimate-input text-right"
-                placeholder="西暦を入力してください" wire:model="buildingYear" wire:change="onChangeBuildingAge" required>
-            <span class="my-auto mx-1">年</span>
-        </div>
-        <div class="estimate-input-box">
-            <label class="estimate-label" for="building_age">築年数
-                <div class="estimate-input-required">※必須</div>
-            </label>
-            <input id="building_age" name="building_age"
-                class="estimate-input hover:bg-white focus:bg-white text-right" wire:model="buildingAge" required
-                readonly>
-            <span class="my-auto mx-1">年</span>
 
-        </div>
+        @if (is_null($buildingInsurancePayout) || $buildingInsurancePayout == '')
+            <div class="estimate-input-box">
+                <label class="estimate-label" for="start_date">始期日
+                </label>
+                <input id="start_date" name="start_date" type="date" class="estimate-input text-right"
+                    placeholder="西暦を入力してください" wire:model="startDate" wire:change="onChangeBuildingAge" required>
+            </div>
+            <div class="estimate-input-box">
+                <label class="estimate-label" for="building_year">建築年
+                </label>
+                <input id="building_year" name="building_year" class="estimate-input text-right"
+                    placeholder="西暦を入力してください" wire:model="buildingYear" wire:change="onChangeBuildingAge" required>
+                <span class="my-auto mx-1">年</span>
+            </div>
+            <div class="estimate-input-box">
+                <label class="estimate-label" for="building_age">築年数
+                </label>
+                <input id="building_age" name="building_age"
+                    class="estimate-input hover:bg-white focus:bg-white text-right" wire:model="buildingAge" required
+                    readonly>
+                <span class="my-auto mx-1">年</span>
+            </div>
+        @else
+            <div class="estimate-input-box">
+                <label class="estimate-label" for="start_date">始期日
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="start_date" name="start_date" type="month" class="estimate-input text-right"
+                    placeholder="西暦を入力してください" wire:model="startDate" wire:change="onChangeBuildingAge" required>
+            </div>
+            <div class="estimate-input-box">
+                <label class="estimate-label" for="building_year">建築年
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="building_year" name="building_year" class="estimate-input text-right"
+                    placeholder="西暦を入力してください" wire:model="buildingYear" wire:change="onChangeBuildingAge" required>
+                <span class="my-auto mx-1">年</span>
+            </div>
+            <div class="estimate-input-box">
+                <label class="estimate-label" for="building_age">築年数
+                    <div class="estimate-input-required">※必須</div>
+                </label>
+                <input id="building_age" name="building_age"
+                    class="estimate-input hover:bg-white focus:bg-white text-right" wire:model="buildingAge" required
+                    readonly>
+                <span class="my-auto mx-1">年</span>
+            </div>
+        @endif
+
+
         <div class="estimate-input-box">
             <label class="estimate-label" for="pay_method">払込方法
                 <div class="estimate-input-required">※必須</div>
@@ -235,7 +259,9 @@
             </select>
         </div>
         <div class="estimate-input-box mb-5 flex">
-            <label class="estimate-label" for="insurance_year">共済期間</label>
+            <label class="estimate-label" for="insurance_year">共済期間
+                <div class="estimate-input-required">※必須</div>
+            </label>
             <div class="flex flex-row" class="estimate-input">
                 <div class="w-1/3 flex flex-row">
                     <input id="insurance_year" name="insurance_year" wire:model="insuranceYear"
@@ -344,11 +370,11 @@
                         <input id="factory_building_code" name="factory_building_code" class="estimate-input"
                             wire:model="factoryBuildingCode">
                     </div>
-                    {{-- <div class=" flex">
+                    <div class=" flex">
                         <label class="estimate-label w-32" for="">備考</label>
                         <div class="mx-2 w-64 text-sm"></div>
-                        <input id="factory_building_note" name="factory_building_note" class="estimate-input">
-                    </div> --}}
+                        <input class="estimate-input" wire:model="selectFactory">
+                    </div>
                     <div class=" flex">
                         <label class="estimate-label w-32" for="building_base_rate">率</label>
                         <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
@@ -375,7 +401,7 @@
         @endif
         @if ($propertyType == '普通')
             <div class="estimate-input-box">
-                <label class="estimate-label" for="chattel_surcharge_category">動産割増（カテゴリ）
+                <label class="estimate-label" for="chattel_surcharge_category">動産割増
                 </label>
                 <select id="chattel_surcharge_category" name="chattel_surcharge_category"
                     wire:model="chattelSurchargeCategory" class="estimate-input">
@@ -395,7 +421,7 @@
                     wire:model="actualLossFactor">
             </div>
         @endif
-        @if (in_array($propertyType, ['普通', '工場'], true))
+        @if (in_array($propertyType, ['普通', '工場', '住宅'], true))
             <div class="estimate-input-box">
                 <label class="estimate-label" for="other_discount">その他割引
                 </label>
@@ -458,62 +484,53 @@
         @endif
         @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
             <div class="estimate-input-box mt-5 flex justify-between">
-                <label class="estimate-label w-1/3 bg-indigo-500 outline outline-1">共済の目的</label>
-                <label class="estimate-label w-1/3 bg-indigo-500 outline outline-1">共済金額</label>
-                <label class="estimate-label w-1/3 bg-indigo-500 outline outline-1">共済金額合計</label>
+                <label class="estimate-label w-1/2 bg-indigo-500 outline outline-1">共済の目的</label>
+                <label class="estimate-label w-1/2 bg-indigo-500 outline outline-1">共済金額</label>
             </div>
         @endif
         @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
             <div class="estimate-input-box">
-                <label class="estimate-label w-1/3" for="building_insurance_payout">建物共済金額</label>
-                <input id="building_insurance_payout" name="building_insurance_payout" class="estimate-input  w-1/3"
-                    wire:model="buildingInsurancePayout" wire:change="onChangeBuildingInsurancePayout">
-                <input class="estimate-input  w-1/3" wire:model="totalBuildingInsurancePayout" readonly>
+                <label class="estimate-label w-1/2" for="building_insurance_payout">建物共済金額</label>
+                <input id="building_insurance_payout" name="building_insurance_payout" class="estimate-input  w-1/2"
+                    wire:model="buildingInsurancePayout">
             </div>
         @endif
         @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
-            <div class="estimate-input-box mt-3">
-                <label class="estimate-label w-1/3" for="household_insurance_payout">家財共済金額</label>
-                <input id="household_insurance_payout" name="household_insurance_payout" class="estimate-input w-1/3"
-                    wire:model="householdInsurancePayout" wire:change="onChangeHouseholdInsurancePayout">
-                <input class="estimate-input w-1/3" wire:model="totalHouseholdInsurancePayout" readonly>
+            <div class="estimate-input-box">
+                <label class="estimate-label w-1/2" for="household_insurance_payout">家財共済金額</label>
+                <input id="household_insurance_payout" name="household_insurance_payout" class="estimate-input w-1/2"
+                    wire:model="householdInsurancePayout">
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
-            <div class="estimate-input-box mt-3">
-                <label class="estimate-label w-1/3" for="facility_insurance_payout">
+            <div class="estimate-input-box">
+                <label class="estimate-label w-1/2" for="facility_insurance_payout">
                     設備共済金額
-                    <div class="estimate-input-required">※必須</div>
                 </label>
-                <input id="facility_insurance_payout" name="facility_insurance_payout" class="estimate-input w-1/3"
-                    wire:model="facilityInsurancePayout" wire:change="onChangeFacilityInsurancePayout">
-                <input class="estimate-input w-1/3" wire:model="totalFacilityInsurancePayout" readonly>
+                <input id="facility_insurance_payout" name="facility_insurance_payout" class="estimate-input w-1/2"
+                    wire:model="facilityInsurancePayout">
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
-            <div class="estimate-input-box w-[522px]">
+            <div class="estimate-input-box">
                 <label class="estimate-label w-1/2" for="other_facility_insurance_payout">その他設備共済金額
-                    <div class="estimate-input-required">※必須</div>
                 </label>
                 <input id="other_facility_insurance_payout" name="other_facility_insurance_payout"
-                    class="estimate-input w-1/2" wire:model="otherFacilityInsurancePayout"
-                    wire:change="onChangeFacilityInsurancePayout">
+                    class="estimate-input w-1/2" wire:model="otherFacilityInsurancePayout">
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
-            <div class="estimate-input-box mt-3">
-                <label class="estimate-label w-1/3" for="item_insurance_payout">商品共済金額</label>
-                <input id="item_insurance_payout" name="item_insurance_payout" class="estimate-input w-1/3"
-                    wire:model="itemInsurancePayout" wire:change="onChangeItemInsurancePayout">
-                <input class="estimate-input w-1/3" wire:model="totalItemInsurancePayout" readonly>
+            <div class="estimate-input-box">
+                <label class="estimate-label w-1/2" for="item_insurance_payout">商品共済金額</label>
+                <input id="item_insurance_payout" name="item_insurance_payout" class="estimate-input w-1/2"
+                    wire:model="itemInsurancePayout">
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
-            <div class="estimate-input-box w-[522px]">
+            <div class="estimate-input-box">
                 <label class="estimate-label w-1/2" for="other_item_insurance_payout">その他商品共済金額</label>
                 <input id="other_item_insurance_payout" name="other_item_insurance_payout"
-                    wire:change="onChangeItemInsurancePayout" class="estimate-input w-1/2"
-                    wire:model="otherItemInsurancePayout">
+                    class="estimate-input w-1/2" wire:model="otherItemInsurancePayout">
             </div>
         @endif
 
@@ -566,6 +583,7 @@
                 </label>
                 <input id="piloti_floor_area" name="piloti_floor_area" class="estimate-input"
                     wire:model="pilotiFloorArea" wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">m²</span>
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -575,6 +593,7 @@
                 </label>
                 <input id="replacement_price" name="replacement_price" class="estimate-input"
                     wire:model="replacementPrice" wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">円</span>
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -584,6 +603,7 @@
                 </label>
                 <input id="renovation_cost" name="renovation_cost" class="estimate-input"
                     wire:model="renovationCost" wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">円</span>
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -593,6 +613,7 @@
                 </label>
                 <input id="conventional_age" name="conventional_age" class="estimate-input"
                     wire:model="conventionalAge" wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">年</span>
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -602,6 +623,7 @@
                 </label>
                 <input id="depreciation_rate" name="depreciation_rate" class="estimate-input"
                     wire:model="depreciationRate" wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">%</span>
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -611,6 +633,7 @@
                 </label>
                 <input id="renovation_age" name="renovation_age" class="estimate-input" wire:model="renovationAge"
                     wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">年</span>
             </div>
         @endif
         @if (in_array($assessItem, ['改装物件'], true))
@@ -620,6 +643,7 @@
                 </label>
                 <input id="renovation_depreciation_rate" name="renovation_depreciation_rate" class="estimate-input"
                     wire:model="renovationDepreciationRate" wire:change="onChangeAssessItem">
+                <span class="my-auto mx-1">%</span>
             </div>
         @endif
         @if (in_array($assessItem, ['太陽光付'], true))
@@ -638,6 +662,7 @@
                 </label>
                 <input id="installation_cost" name="installation_cost" class="estimate-input"
                     wire:model="installationCost" wire:change="onChangeAssessItem">
+                <span class="w-16 p-1 flex items-center">千円</span>
             </div>
         @endif
         @if (in_array($assessItem, ['年次取得'], true))
@@ -647,6 +672,7 @@
                 </label>
                 <input id="annual_price" name="annual_price" class="estimate-input" wire:model="annualPrice"
                     wire:change="onChangeAssessItem">
+                <span class="w-16 p-1 flex items-center">千円</span>
             </div>
         @endif
 

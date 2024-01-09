@@ -130,13 +130,7 @@ class EstimateForm extends Component
 
     public ?string $otherItemInsurancePayout = null;
 
-    public ?string $totalBuildingInsurancePayout = null;
-
-    public ?string $totalHouseholdInsurancePayout = null;
-
-    public ?string $totalFacilityInsurancePayout = null;
-
-    public ?string $totalItemInsurancePayout = null;
+    public ?string $selectFactory = null;
 
     /////評価項目/////////////////////////////
     public ?string $assessItem = null;
@@ -294,11 +288,6 @@ class EstimateForm extends Component
         $this->itemInsurancePayout = old('item_insurance_payout', $this->getValueByKey('item_insurance_payout', $estimate->property_detail));
         $this->otherItemInsurancePayout = old('other_item_insurance_payout', $this->getValueByKey('other_item_insurance_payout', $estimate->property_detail));
 
-        $this->totalBuildingInsurancePayout;
-        $this->totalHouseholdInsurancePayout;
-        $this->totalFacilityInsurancePayout;
-        $this->totalItemInsurancePayout;
-
         //評価項目
         $this->assessItem = old('assess_item', $estimate->assess_item);
         $this->assessUsage = old('assess_usage', $this->getValueByKey('assess_usage', $estimate->assess_detail));
@@ -330,6 +319,9 @@ class EstimateForm extends Component
 
     public function render()
     {
+        $this->onChangeAssessItem();
+        $this->findFactoryBuildingItem($this->factoryBuildingCode);
+
         return view('estimate.livewire.form');
     }
 
@@ -386,7 +378,6 @@ class EstimateForm extends Component
      */
     public function onChangeBuildingAge()
     {
-
         if (! $this->startDate || ! $this->buildingYear) {
             $this->buildingAge = null;
 
@@ -396,9 +387,9 @@ class EstimateForm extends Component
         $this->buildingYear = (string) FullWidthDigitConverter::convert($this->buildingYear);
 
         $buildingDate = CarbonImmutable::createFromDate((int) $this->buildingYear, 1, 1);
-        $startDate = $this->startDate;
+        [$startYear,$startMonth] = explode('-', $this->startDate);
 
-        $this->buildingAge = $buildingDate <= $startDate ? (string) $buildingDate->diffInYears($startDate) : null;
+        $this->buildingAge = $buildingDate <= $startYear ? (string) $buildingDate->diffInYears($startYear) : null;
 
         $this->onChangeBaseRate();
     }
@@ -465,6 +456,17 @@ class EstimateForm extends Component
 
         $this->chattelSurcharge = (string) $factoryInfo['動産割増'];
 
+        $this->findFactoryBuildingItem($code);
+
+    }
+
+    public function findFactoryBuildingItem($code)
+    {
+        $this->factoryBuildingCode = mb_convert_kana($code, 'n');
+
+        $factoryPropertyBasePremium = new FactoryPropertyBasePremium();
+
+        $this->selectFactory = (string) $factoryPropertyBasePremium->getFactoryPropertyBasePremiumItem($this->factoryBuildingCode, $this->rank);
     }
 
     public function onClickFactoryLargeCategory($category = 'すべて')
@@ -621,46 +623,6 @@ class EstimateForm extends Component
     }
 
     /**
-     * 建物共済掛金合計
-     */
-    public function onChangeBuildingInsurancePayout()
-    {
-        return $this->totalBuildingInsurancePayout = $this->buildingInsurancePayout;
-    }
-
-    /**
-     * 家財共済掛金合計
-     */
-    public function onChangeHouseholdInsurancePayout()
-    {
-        return $this->totalHouseholdInsurancePayout = $this->householdInsurancePayout;
-    }
-
-    /**
-     * 設備共済掛金合計
-     */
-    public function onChangeFacilityInsurancePayout()
-    {
-        $facilityInsurancePayout = $this->facilityInsurancePayout ? (int) $this->facilityInsurancePayout : 0;
-
-        $otherFacilityInsurancePayout = $this->otherFacilityInsurancePayout ? (int) $this->otherFacilityInsurancePayout : 0;
-
-        return $this->totalFacilityInsurancePayout = strval($facilityInsurancePayout + $otherFacilityInsurancePayout);
-    }
-
-    /**
-     * 商品共済掛金合計
-     */
-    public function onChangeItemInsurancePayout()
-    {
-        $itemInsurancePayout = $this->itemInsurancePayout ? (int) $this->itemInsurancePayout : 0;
-
-        $otherItemInsurancePayout = $this->otherItemInsurancePayout ? (int) $this->otherItemInsurancePayout : 0;
-
-        return $this->totalItemInsurancePayout = strval($itemInsurancePayout + $otherItemInsurancePayout);
-    }
-
-    /**
      * 再調達価額、時価額を参照
      *
      * @return void
@@ -673,11 +635,21 @@ class EstimateForm extends Component
         $this->reProcureC = '';
         $this->currentMarketPrice = '';
 
+        if (is_null($this->estimate->id)) {
+            return;
+        }
+
         if (is_null($this->assessUsage) || is_null($this->assessStructure)) {
             return;
         }
 
         if ($this->assessItem == '選択しない') {
+            return;
+        }
+
+        if (is_null($this->buildingAge) || $this->buildingAge == '') {
+            $this->dispatch('alert', '評価する場合は、築年数を入力してください。');
+
             return;
         }
 
@@ -843,6 +815,7 @@ class EstimateForm extends Component
     private function getChattelSurchargeCategoryList()
     {
         return [
+            '-',
             '1級品',
             '2級品',
         ];

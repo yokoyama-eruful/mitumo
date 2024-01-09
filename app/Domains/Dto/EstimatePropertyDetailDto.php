@@ -21,7 +21,7 @@ final class EstimatePropertyDetailDto
     private function convertHouseParams(array $params): array
     {
         return array_intersect_key($params, array_flip([
-            'actual_loss_factor', 'building_insurance_payout',
+            'actual_loss_factor', 'other_discount', 'building_insurance_payout',
             'household_insurance_payout', 'insurance_purpose',
             'recommend1', 'recommend2', 'recommend3', //おすすめ
             'earthquake1', 'earthquake2', 'earthquake3', //地震
