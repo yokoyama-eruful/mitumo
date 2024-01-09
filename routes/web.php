@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AssessController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DownloadController;
@@ -26,6 +27,13 @@ Route::middleware('auth:web')
             ->name('top.')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
+            });
+
+        Route::controller(AccountController::class)
+            ->prefix('account')
+            ->name('account.')
+            ->group(function () {
+                Route::get('index/', 'index')->name('index');
             });
 
         Route::controller(EstimateController::class)

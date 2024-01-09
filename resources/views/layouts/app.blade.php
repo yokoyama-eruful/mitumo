@@ -20,6 +20,9 @@
                 <a href="{{ route('top.index') }}"
                     class="text-gray-600 hover:text-gray-900 transition duration-300">トップに戻る</a>
             </nav>
+            <nav>
+                <a href="{{ route('account.index') }}">アカウント作成</a>
+            </nav>
             <form action="{{ route('auth.logout') }}" method="POST">
                 @csrf
                 <button type="submit"
