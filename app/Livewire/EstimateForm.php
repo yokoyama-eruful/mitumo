@@ -317,6 +317,8 @@ class EstimateForm extends Component
 
     public function render()
     {
+        $this->onChangeAssessItem();
+
         return view('estimate.livewire.form');
     }
 
