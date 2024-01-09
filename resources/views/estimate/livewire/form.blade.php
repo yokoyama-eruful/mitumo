@@ -370,11 +370,11 @@
                         <input id="factory_building_code" name="factory_building_code" class="estimate-input"
                             wire:model="factoryBuildingCode">
                     </div>
-                    {{-- <div class=" flex">
+                    <div class=" flex">
                         <label class="estimate-label w-32" for="">備考</label>
                         <div class="mx-2 w-64 text-sm"></div>
-                        <input id="factory_building_note" name="factory_building_note" class="estimate-input">
-                    </div> --}}
+                        <input class="estimate-input" wire:model="selectFactory">
+                    </div>
                     <div class=" flex">
                         <label class="estimate-label w-32" for="building_base_rate">率</label>
                         <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
@@ -421,7 +421,7 @@
                     wire:model="actualLossFactor">
             </div>
         @endif
-        @if (in_array($propertyType, ['普通', '工場'], true))
+        @if (in_array($propertyType, ['普通', '工場', '住宅'], true))
             <div class="estimate-input-box">
                 <label class="estimate-label" for="other_discount">その他割引
                 </label>

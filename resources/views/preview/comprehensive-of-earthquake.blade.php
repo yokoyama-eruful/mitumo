@@ -15,7 +15,7 @@
             </div>
             <div>
                 <div class="flex items-center h-[120px] w-[200px] outline outline-1 outline-gray-500 pl-5">
-                    {{ $comprehensivePremium->getComprehensivePremium() }}円
+                    {{ yenUnit($comprehensivePremium->getComprehensivePremium()) }}
                 </div>
             </div>
         </div>

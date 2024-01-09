@@ -130,6 +130,8 @@ class EstimateForm extends Component
 
     public ?string $otherItemInsurancePayout = null;
 
+    public ?string $selectFactory = null;
+
     /////評価項目/////////////////////////////
     public ?string $assessItem = null;
 
@@ -318,6 +320,7 @@ class EstimateForm extends Component
     public function render()
     {
         $this->onChangeAssessItem();
+        $this->findFactoryBuildingItem($this->factoryBuildingCode);
 
         return view('estimate.livewire.form');
     }
@@ -453,6 +456,17 @@ class EstimateForm extends Component
 
         $this->chattelSurcharge = (string) $factoryInfo['動産割増'];
 
+        $this->findFactoryBuildingItem($code);
+
+    }
+
+    public function findFactoryBuildingItem($code)
+    {
+        $this->factoryBuildingCode = mb_convert_kana($code, 'n');
+
+        $factoryPropertyBasePremium = new FactoryPropertyBasePremium();
+
+        $this->selectFactory = (string) $factoryPropertyBasePremium->getFactoryPropertyBasePremiumItem($this->factoryBuildingCode, $this->rank);
     }
 
     public function onClickFactoryLargeCategory($category = 'すべて')
@@ -620,6 +634,10 @@ class EstimateForm extends Component
         $this->reProcureB = '';
         $this->reProcureC = '';
         $this->currentMarketPrice = '';
+
+        if (is_null($this->estimate->id)) {
+            return;
+        }
 
         if (is_null($this->assessUsage) || is_null($this->assessStructure)) {
             return;

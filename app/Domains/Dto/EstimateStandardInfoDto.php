@@ -22,11 +22,11 @@ final class EstimateStandardInfoDto
             'chattel_base_rate',
         ]));
 
-        if (preg_match('/^[０-９]*$/', $tmpParams['floor']) == 1) {
+        if (isset($tmpParams['floor']) && preg_match('/^[０-９]*$/', $tmpParams['floor']) == 1) {
             $tmpParams['floor'] = mb_convert_kana($tmpParams['floor'], 'n');
         }
 
-        if (preg_match('/^[０-９]*$/', $tmpParams['building']) == 1) {
+        if (isset($tmpParams['building']) && preg_match('/^[０-９]*$/', $tmpParams['building']) == 1) {
             $tmpParams['building'] = mb_convert_kana($tmpParams['building'], 'n');
         }
 
