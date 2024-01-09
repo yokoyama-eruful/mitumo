@@ -10,6 +10,8 @@ final class AssessNormal
 
     public readonly int $buildingAge;
 
+    public readonly int $buildingYear;
+
     public readonly string $assessUsage;
 
     public readonly string $assessStructure;
@@ -22,6 +24,7 @@ final class AssessNormal
     {
         $this->floorArea = $estimate->floor_area ? $estimate->floor_area : 0;
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
+        $this->buildingYear = $estimate->building_year ? $estimate->building_year : 0;
         $this->assessUsage = $this->getValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getValueByKey('assess_structure', $estimate->assess_detail);
 
@@ -32,10 +35,10 @@ final class AssessNormal
     /*
     ** LiveFireで使用する評価額
     */
-    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $assessRank = ''): string
+    public function viewReProcure(string $assessUsage, string $assessStructure, string $floorArea, string $assessRank = ''): string
     {
-        if ($assessRank == '') {
-
+        if ($assessRank == '' || $assessUsage == '' ||
+        $assessStructure == '' || $floorArea == '') {
             return '';
         }
 
@@ -51,6 +54,12 @@ final class AssessNormal
     */
     public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $buildingAge, $assessRank = ''): string
     {
+        if ($assessRank == '' || $assessUsage == '' ||
+        $assessStructure == '' || $floorArea == '' ||
+        $buildingAge == '') {
+            return '';
+        }
+
         $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
         $standardAmount = new StandardAmount($assessUsage, $assessStructure);
 
@@ -87,7 +96,7 @@ final class AssessNormal
         ];
     }
 
-    public function getResidualValue($assessRank)
+    public function getResidualValue($assessRank = '')
     {
         $agingDepreciation = $this->agingDepreciation->findAgingDepreciation($assessRank);
         $residualValue = $agingDepreciation * $this->buildingAge;
@@ -115,8 +124,12 @@ final class AssessNormal
         ];
     }
 
-    private function getValueByKey(string $key, array $array, string $defaultValue = ''): string
+    private function getValueByKey(string $key, ?array $array, string $defaultValue = ''): string
     {
+        if (is_null($array)) {
+            return $defaultValue;
+        }
+
         if (array_key_exists($key, $array) && $array[$key]) {
             return (string) $array[$key];
         }

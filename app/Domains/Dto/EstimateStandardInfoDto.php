@@ -19,8 +19,20 @@ final class EstimateStandardInfoDto
             'rank', 'start_date', 'building_year', 'building_age',
             'pay_method', 'insurance_year', 'insurance_month',
             'insurance_day', 'assess_item', 'building_base_rate',
+            'chattel_base_rate',
         ]));
-        $tmpParams['start_date'] = $params['start_date'].'-01';
+
+        if (isset($tmpParams['floor']) && preg_match('/^[０-９]*$/', $tmpParams['floor']) == 1) {
+            $tmpParams['floor'] = mb_convert_kana($tmpParams['floor'], 'n');
+        }
+
+        if (isset($tmpParams['building']) && preg_match('/^[０-９]*$/', $tmpParams['building']) == 1) {
+            $tmpParams['building'] = mb_convert_kana($tmpParams['building'], 'n');
+        }
+
+        if (isset($tmpParams['start_date'])) {
+            $tmpParams['start_date'] = $params['start_date'].'-01';
+        }
 
         $this->params = $tmpParams;
     }

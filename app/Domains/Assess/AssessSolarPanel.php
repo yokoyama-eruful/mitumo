@@ -10,6 +10,8 @@ final class AssessSolarPanel
 
     public readonly int $buildingAge;
 
+    public readonly int $buildingYear;
+
     public readonly string $assessUsage;
 
     public readonly string $assessStructure;
@@ -26,6 +28,7 @@ final class AssessSolarPanel
     {
         $this->floorArea = $estimate->floor_area ? $estimate->floor_area : 0;
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
+        $this->buildingYear = $estimate->building_year ? $estimate->building_year : 0;
         $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
         $this->installationDate = $this->getStringValueByKey('installation_date', $estimate->assess_detail);
@@ -40,8 +43,8 @@ final class AssessSolarPanel
         */
     public function viewReProcure($assessUsage, $assessStructure, $floorArea, $assessRank = ''): string
     {
-        if ($assessRank == '') {
-
+        if ($assessRank == '' || $assessUsage == '' ||
+        $assessStructure == '' || $floorArea == '') {
             return '';
         }
 
@@ -57,6 +60,12 @@ final class AssessSolarPanel
     */
     public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $buildingAge, $assessRank = ''): string
     {
+        if ($assessRank == '' || $assessUsage == '' ||
+        $assessStructure == '' || $floorArea == '' ||
+        $buildingAge == '') {
+            return '';
+        }
+
         $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
         $standardAmount = new StandardAmount($assessUsage, $assessStructure);
 
@@ -99,7 +108,7 @@ final class AssessSolarPanel
         ];
     }
 
-    public function getReProcure($assessRank)
+    public function getReProcure($assessRank = '')
     {
         $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
         $reProcure = $standardAmount * $this->floorArea;
@@ -117,7 +126,7 @@ final class AssessSolarPanel
         ];
     }
 
-    public function getResidualValue($assessRank)
+    public function getResidualValue($assessRank = '')
     {
         $agingDepreciation = $this->agingDepreciation->findAgingDepreciation($assessRank);
         $residualValue = $agingDepreciation * $this->buildingAge;
@@ -135,7 +144,7 @@ final class AssessSolarPanel
         ];
     }
 
-    public function getCurrentMarketPrice($assessRank)
+    public function getCurrentMarketPrice($assessRank = '')
     {
         $currentMarketPrice = $this->getReProcure($assessRank)['100%'] * $this->getResidualValue($assessRank)['残価率最終'];
 
@@ -146,8 +155,12 @@ final class AssessSolarPanel
         ];
     }
 
-    private function getStringValueByKey(string $key, array $array, string $defaultValue = ''): string
+    private function getStringValueByKey(string $key, ?array $array, string $defaultValue = ''): string
     {
+        if (is_null($array)) {
+            return $defaultValue;
+        }
+
         if (array_key_exists($key, $array) && $array[$key]) {
             return (string) $array[$key];
         }
@@ -155,8 +168,12 @@ final class AssessSolarPanel
         return $defaultValue;
     }
 
-    private function getIntValueByKey(string $key, array $array, int $defaultValue = 0): int
+    private function getIntValueByKey(string $key, ?array $array, int $defaultValue = 0): int
     {
+        if (is_null($array)) {
+            return $defaultValue;
+        }
+
         if (array_key_exists($key, $array) && $array[$key]) {
             return (int) $array[$key];
         }

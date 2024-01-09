@@ -11,11 +11,11 @@
 
         <div>
             <div class="flex justify-center items-center h-10 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
-                総合共済金額
+                総合共済掛金
             </div>
             <div>
                 <div class="flex items-center h-[120px] w-[200px] outline outline-1 outline-gray-500 pl-5">
-                    {{ $comprehensivePremium->getComprehensivePremium() }}円
+                    {{ yenUnit($comprehensivePremium->getComprehensivePremium()) }}
                 </div>
             </div>
         </div>
@@ -42,13 +42,13 @@
             共済掛金
         </div>
         <div name="reco_c" class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-            {{ $recommendComprehensivePremium->getRecommendPremium((int) $estimate->RecommendList['recommend1'])['共済掛金'] }}
+            {{ yenUnit($recommendComprehensivePremium->getRecommendPremium((int) $estimate->RecommendList['recommend1'])['共済掛金']) }}
         </div>
         <div name="reco2_c" class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-            {{ $recommendComprehensivePremium->getRecommendPremium((int) $estimate->RecommendList['recommend2'])['共済掛金'] }}
+            {{ yenUnit($recommendComprehensivePremium->getRecommendPremium((int) $estimate->RecommendList['recommend2'])['共済掛金']) }}
         </div>
         <div name="reco3_c" class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-            {{ $recommendComprehensivePremium->getRecommendPremium((int) $estimate->RecommendList['recommend3'])['共済掛金'] }}
+            {{ yenUnit($recommendComprehensivePremium->getRecommendPremium((int) $estimate->RecommendList['recommend3'])['共済掛金']) }}
         </div>
     </div>
     <div class="flex flex-row">
@@ -56,13 +56,13 @@
             １年更新の場合より
         </div>
         <div name="reco_c" class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-            {{ $recommendComprehensivePremium->getRecommendPremium((int) $estimate->RecommendList['recommend1'])['１年更新の場合より'] }}
+            {{ yenUnit($recommendComprehensivePremium->getRecommendPremium((int) $estimate->RecommendList['recommend1'])['１年更新の場合より']) . 'お得' }}
         </div>
         <div name="reco2_c" class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-            {{ $recommendComprehensivePremium->getRecommendPremium((int) $estimate->RecommendList['recommend2'])['１年更新の場合より'] }}
+            {{ yenUnit($recommendComprehensivePremium->getRecommendPremium((int) $estimate->RecommendList['recommend2'])['１年更新の場合より']) . 'お得' }}
         </div>
         <div name="reco3_c" class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-            {{ $recommendComprehensivePremium->getRecommendPremium((int) $estimate->RecommendList['recommend3'])['１年更新の場合より'] }}
+            {{ yenUnit($recommendComprehensivePremium->getRecommendPremium((int) $estimate->RecommendList['recommend3'])['１年更新の場合より']) . 'お得' }}
         </div>
     </div>
 @endsection

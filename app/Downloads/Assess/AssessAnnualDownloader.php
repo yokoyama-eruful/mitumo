@@ -69,12 +69,12 @@ class AssessAnnualDownloader
         $worksheet = $spreadSheet->getSheetByName('評価表（年次取得）');
         $worksheet->setCellValue('L1', date('Y年m月d日'));
         $worksheet->setCellValue('B4', $estimate->contractee);
-        $worksheet->setCellValue('F4', $estimate->address);
+        $worksheet->setCellValue('F4', $estimate->location);
         $worksheet->setCellValue('B7', $assessData->assessUsage);
         $worksheet->setCellValue('E7', $assessData->assessStructure);
         $worksheet->setCellValue('G7', $assessData->rank);
         $worksheet->setCellValue('H7', $assessData->floorArea);
-        $worksheet->setCellValue('K7', $assessData->buildingAge);
+        $worksheet->setCellValue('K7', $this->ConvertYear($assessData->buildingYear).'01月01日');
 
         $worksheet->setCellValue('B15', $assessData->annualPrice);
 
@@ -107,5 +107,26 @@ class AssessAnnualDownloader
         $worksheet->setCellValue('K20', $assessData->getCurrentMarketPrice('A')['時価額まるめ']);
         $worksheet->setCellValue('K21', $assessData->getCurrentMarketPrice('B')['時価額まるめ']);
         $worksheet->setCellValue('K22', $assessData->getCurrentMarketPrice('C')['時価額まるめ']);
+    }
+
+    public function ConvertYear($fiscal_year)
+    {
+        $eras = [
+            ['year' => 2019, 'name' => '令和', 'new_Japanese_calendar' => '平成31年度'],
+            ['year' => 1989, 'name' => '平成', 'new_Japanese_calendar' => '平成元年度'],
+            ['year' => 1926, 'name' => '昭和', 'new_Japanese_calendar' => '大正15年度'],
+        ];
+
+        foreach ($eras as $era) {
+            if ($fiscal_year === $era['year']) {
+                return $era['new_Japanese_calendar'];
+            }
+
+            if ($fiscal_year >= $era['year']) {
+                $year = $fiscal_year - $era['year'] + 1;
+
+                return $era['name'] . $year . '年度';
+            }
+        }
     }
 }

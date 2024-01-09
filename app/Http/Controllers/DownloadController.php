@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Domains\MutualAidPremiums;
 use App\Http\Requests\Estimate\DownloadRequest;
 use App\Services\DownloadService;
 use App\Services\EstimateService;
@@ -30,7 +31,12 @@ class DownloadController extends Controller
             '総合火災見積地震おすすめ契約', 'すべて',
         ];
 
-        return view('download.index', compact('estimate', 'fileType', 'keisyo', 'estimateType'));
+        $termRate = new MutualAidPremiums($estimate, $estimate->insurance_year);
+        $shortTermRate = $termRate->shortTermRate;
+
+        $estimateTypeList = $this->downloadService->getEnableDisableList($estimate, $shortTermRate, $estimateType);
+
+        return view('download.index', compact('estimate', 'fileType', 'keisyo', 'estimateTypeList', 'shortTermRate'));
     }
 
     public function download(DownloadRequest $request, int $id, $category): void

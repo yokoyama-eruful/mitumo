@@ -130,6 +130,8 @@ class EstimateForm extends Component
 
     public ?string $otherItemInsurancePayout = null;
 
+    public ?string $selectFactory = null;
+
     /////評価項目/////////////////////////////
     public ?string $assessItem = null;
 
@@ -317,6 +319,9 @@ class EstimateForm extends Component
 
     public function render()
     {
+        $this->onChangeAssessItem();
+        $this->findFactoryBuildingItem($this->factoryBuildingCode);
+
         return view('estimate.livewire.form');
     }
 
@@ -373,7 +378,6 @@ class EstimateForm extends Component
      */
     public function onChangeBuildingAge()
     {
-
         if (! $this->startDate || ! $this->buildingYear) {
             $this->buildingAge = null;
 
@@ -383,9 +387,9 @@ class EstimateForm extends Component
         $this->buildingYear = (string) FullWidthDigitConverter::convert($this->buildingYear);
 
         $buildingDate = CarbonImmutable::createFromDate((int) $this->buildingYear, 1, 1);
-        $startDate = $this->startDate;
+        [$startYear,$startMonth] = explode('-', $this->startDate);
 
-        $this->buildingAge = $buildingDate <= $startDate ? (string) $buildingDate->diffInYears($startDate) : null;
+        $this->buildingAge = $buildingDate <= $startYear ? (string) $buildingDate->diffInYears($startYear) : null;
 
         $this->onChangeBaseRate();
     }
@@ -448,8 +452,21 @@ class EstimateForm extends Component
 
         $this->buildingBaseRate = (string) $factoryInfo['基本率'];
 
+        $this->chattelBaseRate = (string) $factoryInfo['基本率'];
+
         $this->chattelSurcharge = (string) $factoryInfo['動産割増'];
 
+        $this->findFactoryBuildingItem($code);
+
+    }
+
+    public function findFactoryBuildingItem($code)
+    {
+        $this->factoryBuildingCode = mb_convert_kana($code, 'n');
+
+        $factoryPropertyBasePremium = new FactoryPropertyBasePremium();
+
+        $this->selectFactory = (string) $factoryPropertyBasePremium->getFactoryPropertyBasePremiumItem($this->factoryBuildingCode, $this->rank);
     }
 
     public function onClickFactoryLargeCategory($category = 'すべて')
@@ -618,11 +635,21 @@ class EstimateForm extends Component
         $this->reProcureC = '';
         $this->currentMarketPrice = '';
 
+        if (is_null($this->estimate->id)) {
+            return;
+        }
+
         if (is_null($this->assessUsage) || is_null($this->assessStructure)) {
             return;
         }
 
         if ($this->assessItem == '選択しない') {
+            return;
+        }
+
+        if (is_null($this->buildingAge) || $this->buildingAge == '') {
+            $this->dispatch('alert', '評価する場合は、築年数を入力してください。');
+
             return;
         }
 
@@ -688,6 +715,16 @@ class EstimateForm extends Component
                 $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingYear, 'C');
                 break;
             case '改装物件':
+
+                if (! is_numeric($this->replacementPrice) ||
+                ! is_numeric($this->renovationCost) ||
+                ! is_numeric($this->conventionalAge) ||
+                ! is_numeric($this->depreciationRate) ||
+                ! is_numeric($this->renovationAge) ||
+                ! is_numeric($this->renovationDepreciationRate)) {
+                    break;
+                }
+
                 $assessDomain = new AssessRenovation($this->estimate);
 
                 $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->replacementPrice, $this->renovationCost, $this->conventionalAge, $this->depreciationRate, $this->renovationAge, $this->renovationDepreciationRate);
@@ -778,6 +815,7 @@ class EstimateForm extends Component
     private function getChattelSurchargeCategoryList()
     {
         return [
+            '-',
             '1級品',
             '2級品',
         ];

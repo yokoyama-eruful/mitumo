@@ -22,7 +22,7 @@
                 </div>
                 <div class="flex items-center h-10 w-[175px] outline outline-1 outline-gray-500 pl-5">
                     @if (isset($estimate['property_detail']['building_insurance_payout']))
-                        {{ $estimate['property_detail']['building_insurance_payout'] . '千円' }}
+                        {{ thousandYenUnit($estimate['property_detail']['building_insurance_payout']) }}
                     @endif
                 </div>
                 <div
@@ -31,7 +31,7 @@
                 </div>
                 <div class="flex items-center h-10 w-[175px] outline outline-1 outline-gray-500 pl-5">
                     @if (isset($estimate['property_detail']['household_insurance_payout']))
-                        {{ $estimate['property_detail']['household_insurance_payout'] . '千円' }}
+                        {{ thousandYenUnit($estimate['property_detail']['household_insurance_payout']) }}
                     @endif
                 </div>
             </div>
@@ -43,7 +43,7 @@
 
                 <div class="flex items-center h-10 w-[175px] outline outline-1 outline-gray-500 pl-5">
                     @if (isset($estimate['property_detail']['facility_insurance_payout']))
-                        {{ $estimate['property_detail']['facility_insurance_payout'] . '千円' }}
+                        {{ thousandYenUnit($estimate['property_detail']['facility_insurance_payout']) }}
                     @endif
                 </div>
 
@@ -54,7 +54,7 @@
 
                 <div class="flex items-center h-10 w-[175px] outline outline-1 outline-gray-500 pl-5">
                     @if (isset($estimate['property_detail']['item_insurance_payout']))
-                        {{ $estimate['property_detail']['item_insurance_payout'] . '千円' }}
+                        {{ thousandYenUnit($estimate['property_detail']['item_insurance_payout']) }}
                     @endif
                 </div>
 
@@ -67,7 +67,7 @@
 
                 <div class="flex items-center h-10 w-[175px] outline outline-1 outline-gray-500 pl-5">
                     @if (isset($estimate['property_detail']['other_facility_insurance_payout']))
-                        {{ $estimate['property_detail']['other_facility_insurance_payout'] . '千円' }}
+                        {{ thousandYenUnit($estimate['property_detail']['other_facility_insurance_payout']) }}
                     @endif
                 </div>
 
@@ -78,7 +78,7 @@
 
                 <div class="flex items-center h-10 w-[175px] outline outline-1 outline-gray-500 pl-5">
                     @if (isset($estimate['property_detail']['other_item_insurance_payout']))
-                        {{ $estimate['property_detail']['other_item_insurance_payout'] . '千円' }}
+                        {{ thousandYenUnit($estimate['property_detail']['other_item_insurance_payout']) }}
                     @endif
                 </div>
             </div>

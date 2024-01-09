@@ -81,6 +81,7 @@ class Estimate extends Model
             $this->building ? $this->building.'棟' : '',
             $this->floor_area ? '延床:' . $this->floor_area . 'm²' : '',
             $this->exclusive_area ? '専有:' . $this->exclusive_area . 'm² ' : '',
+            $this->other ? $this->other : '',
         ];
         $otherBuildingStructure = array_filter($otherBuildingStructure);
 
@@ -104,9 +105,8 @@ class Estimate extends Model
         $otherItem = [
             isset($this->property_detail['chattel_surcharge_category']) ? '動産割増' : '',
             isset($this->property_detail['chattel_surcharge']) ? '動産割増' : '',
-            isset($this->property_detail['chattel_surcharge_category']) ? '動産割増' : '',
-            isset($this->property_detail['occupational_surcharge']) ? '職業割増' : '',
-            isset($this->property_detail['work_surcharge']) ? '作業割増' : '',
+            isset($this->property_detail['occupational_surcharge_rate']) ? '職業割増' : '',
+            isset($this->property_detail['work_surcharge_rate']) ? '作業割増' : '',
             isset($this->property_detail['other_discount']) ? 'その他割引' : '',
             isset($this->property_detail['actual_loss_factor']) ? '実損払係数あり' : '',
         ];

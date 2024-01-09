@@ -17,7 +17,9 @@
         "mitumo",
         "officedocument",
         "openxmlformats",
+        "outdir",
         "piloti",
+        "soffice",
         "spreadsheetml",
         "testsuite"
     ]
