@@ -319,7 +319,10 @@ class EstimateForm extends Component
 
     public function render()
     {
-        $this->onChangeAssessItem();
+        if (isset($this->estimate->id)) {
+            $this->onChangeAssessItem();
+        }
+
         $this->findFactoryBuildingItem($this->factoryBuildingCode);
 
         return view('estimate.livewire.form');
@@ -635,15 +638,11 @@ class EstimateForm extends Component
         $this->reProcureC = '';
         $this->currentMarketPrice = '';
 
-        if (is_null($this->estimate->id)) {
-            return;
-        }
-
         if (is_null($this->assessUsage) || is_null($this->assessStructure)) {
             return;
         }
 
-        if ($this->assessItem == '選択しない') {
+        if ($this->assessItem == '選択しない' || is_null($this->assessItem)) {
             return;
         }
 
