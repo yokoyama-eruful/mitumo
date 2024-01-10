@@ -58,8 +58,8 @@ final class SaveRequest extends FormRequest
             'earthquake2' => ['nullable'],
             'earthquake3' => ['nullable'],
 
-            'building_base_rate' => ['required', 'numeric', 'min:0'],
-            'chattel_base_rate' => ['required', 'numeric', 'min:0'],
+            'building_base_rate' => ['nullable', 'required_with:building_insurance_payout', 'numeric', 'min:0'],
+            'chattel_base_rate' => ['nullable', 'required_with:household_insurance_payout,facility_insurance_payout,other_facility_insurance_payout,other_facility_insurance_payout,item_insurance_payout,other_item_insurance_payout', 'numeric', 'min:0'],
             'factory_building_code' => ['nullable',  'string'],
 
             // // 動的に変化する項目（物件トリガー

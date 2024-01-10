@@ -344,14 +344,23 @@
         @if (in_array($propertyType, ['住宅', '普通'], true))
             <div class="estimate-input-box">
                 <label class="estimate-label" for="building_base_rate">建物基本率
-                    <div class="estimate-input-required">※必須</div>
+                    @if (!empty($buildingInsurancePayout))
+                        <div class="estimate-input-required">※必須</div>
+                    @endif
                 </label>
                 <input id="building_base_rate" name="building_base_rate" class="estimate-input"
                     placeholder="物件が「住宅」か「普通」の時は、自動算出されます" wire:model="buildingBaseRate" readonly>
             </div>
             <div class="estimate-input-box">
                 <label class="estimate-label" for="chattel_base_rate">動産基本率
-                    <div class="estimate-input-required">※必須</div>
+                    @if (
+                        !empty($householdInsurancePayout) ||
+                            !empty($facilityInsurancePayout) ||
+                            !empty($otherFacilityInsurancePayout) ||
+                            !empty($itemInsurancePayout) ||
+                            !empty($otherItemInsurancePayout))
+                        <div class="estimate-input-required">※必須</div>
+                    @endif
                 </label>
                 <input id="chattel_base_rate" name="chattel_base_rate" class="estimate-input"
                     placeholder="物件が「住宅」か「普通」の時は、自動算出されます" wire:model="chattelBaseRate" readonly>
