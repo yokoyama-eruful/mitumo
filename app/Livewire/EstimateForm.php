@@ -440,6 +440,7 @@ class EstimateForm extends Component
 
     public function onSelectedFactoryBuildingCode($code)
     {
+        $this->factoryBuildingCode = $code;
         $this->onChangeFactoryBuildingCode();
 
         $this->onClickCloseTable();
