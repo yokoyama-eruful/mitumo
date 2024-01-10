@@ -440,14 +440,14 @@ class EstimateForm extends Component
 
     public function onSelectedFactoryBuildingCode($code)
     {
-        $this->onChangeFactoryBuildingCode($code);
+        $this->onChangeFactoryBuildingCode();
 
         $this->onClickCloseTable();
     }
 
-    public function onChangeFactoryBuildingCode($code)
+    public function onChangeFactoryBuildingCode()
     {
-        $this->factoryBuildingCode = mb_convert_kana($code, 'n');
+        $this->factoryBuildingCode = mb_convert_kana($this->factoryBuildingCode, 'n');
 
         $factoryPropertyBasePremium = new FactoryPropertyBasePremium();
 
@@ -459,7 +459,7 @@ class EstimateForm extends Component
 
         $this->chattelSurcharge = (string) $factoryInfo['動産割増'];
 
-        $this->findFactoryBuildingItem($code);
+        $this->findFactoryBuildingItem($this->factoryBuildingCode);
 
     }
 
@@ -750,6 +750,7 @@ class EstimateForm extends Component
     private function getPillarList()
     {
         return [
+            '',
             '木造枠組壁（２×４）',
             'コンクリート系プレハブ',
             '鉄骨系プレハブ',
@@ -760,6 +761,7 @@ class EstimateForm extends Component
     private function getFireResistanceList()
     {
         return [
+            '',
             '耐火建築物',
             '準耐火建築物',
             '省令準耐火建物',

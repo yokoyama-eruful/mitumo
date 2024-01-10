@@ -368,7 +368,7 @@
                         <button type="button" wire:click="onOpenFactoryRateTable"
                             class="mx-2 my-1 px-2 h-8 w-64 bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
                         <input id="factory_building_code" name="factory_building_code" class="estimate-input"
-                            wire:model="factoryBuildingCode">
+                            wire:model="factoryBuildingCode" wire:change="onChangeFactoryBuildingCode">
                     </div>
                     <div class=" flex">
                         <label class="estimate-label w-32" for="">備考</label>
