@@ -64,8 +64,10 @@ final class RecommendComprehensiveInsurancePremium
         $calcOtherDiscount = function ($estimate) {
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
             $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
-            if ($otherDiscount != 1) {
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 0);
+            if ($otherDiscount == 0) {
+                $otherDiscount = 1;
+            } else {
                 $otherDiscount = 1 - $otherDiscount / 100;
             }
 
@@ -107,8 +109,10 @@ final class RecommendComprehensiveInsurancePremium
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
             $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
-            if ($otherDiscount != 1) {
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 0);
+            if ($otherDiscount == 0) {
+                $otherDiscount = 1;
+            } else {
                 $otherDiscount = 1 - $otherDiscount / 100;
             }
 
@@ -149,8 +153,10 @@ final class RecommendComprehensiveInsurancePremium
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
             $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
-            if ($otherDiscount != 1) {
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 0);
+            if ($otherDiscount == 0) {
+                $otherDiscount = 1;
+            } else {
                 $otherDiscount = 1 - $otherDiscount / 100;
             }
 
@@ -193,7 +199,12 @@ final class RecommendComprehensiveInsurancePremium
 
             $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail, 1);
             $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
+            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 0);
+            if ($otherDiscount == 0) {
+                $otherDiscount = 1;
+            } else {
+                $otherDiscount = 1 - $otherDiscount / 100;
+            }
 
             return ($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount / 100;
         };

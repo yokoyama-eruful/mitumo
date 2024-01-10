@@ -502,6 +502,8 @@
                 <label class="estimate-label w-1/2" for="building_insurance_payout">建物共済金額</label>
                 <input id="building_insurance_payout" name="building_insurance_payout" class="estimate-input  w-1/2"
                     wire:model="buildingInsurancePayout">
+                <span class="w-16 p-1 flex items-center">千円</span>
+
             </div>
         @endif
         @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
@@ -509,6 +511,7 @@
                 <label class="estimate-label w-1/2" for="household_insurance_payout">家財共済金額</label>
                 <input id="household_insurance_payout" name="household_insurance_payout" class="estimate-input w-1/2"
                     wire:model="householdInsurancePayout">
+                <span class="w-16 p-1 flex items-center">千円</span>
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
@@ -518,6 +521,7 @@
                 </label>
                 <input id="facility_insurance_payout" name="facility_insurance_payout" class="estimate-input w-1/2"
                     wire:model="facilityInsurancePayout">
+                <span class="w-16 p-1 flex items-center">千円</span>
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
@@ -526,6 +530,7 @@
                 </label>
                 <input id="other_facility_insurance_payout" name="other_facility_insurance_payout"
                     class="estimate-input w-1/2" wire:model="otherFacilityInsurancePayout">
+                <span class="w-16 p-1 flex items-center">千円</span>
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
@@ -533,6 +538,7 @@
                 <label class="estimate-label w-1/2" for="item_insurance_payout">商品共済金額</label>
                 <input id="item_insurance_payout" name="item_insurance_payout" class="estimate-input w-1/2"
                     wire:model="itemInsurancePayout">
+                <span class="w-16 p-1 flex items-center">千円</span>
             </div>
         @endif
         @if (in_array($propertyType, ['普通', '工場'], true))
@@ -540,6 +546,7 @@
                 <label class="estimate-label w-1/2" for="other_item_insurance_payout">その他商品共済金額</label>
                 <input id="other_item_insurance_payout" name="other_item_insurance_payout"
                     class="estimate-input w-1/2" wire:model="otherItemInsurancePayout">
+                <span class="w-16 p-1 flex items-center">千円</span>
             </div>
         @endif
 
