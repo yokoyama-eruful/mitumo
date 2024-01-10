@@ -94,8 +94,8 @@ class StandardOfRecommendAndComprehensiveOfRecommendDownloader
         $worksheet->setCellValue('D45', thousandYenUnit(array_key_exists('other_facility_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_facility_insurance_payout'] : ''));
         $worksheet->setCellValue('K45', thousandYenUnit(array_key_exists('other_item_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_item_insurance_payout'] : ''));
 
-        $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
-        $worksheet->setCellValue('O44', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('O44', $standardPremium->getStandardPremium());
 
         $worksheet->setCellValue('D49', yearUnit(array_key_exists('recommend1', $estimate->property_detail) ? $estimate->property_detail['recommend1'] : ''));
         $worksheet->setCellValue('D51', $recommendComprehensivePremium->getRecommendPremium(array_key_exists('recommend1', $estimate->property_detail) ? $estimate->property_detail['recommend1'] : '')['共済掛金']);

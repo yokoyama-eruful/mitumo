@@ -15,7 +15,7 @@
             </div>
             <div>
                 <div class="flex items-center h-10 w-[200px] outline outline-1 outline-gray-500 pl-5">
-                    {{ yenUnit($comprehensivePremium->getComprehensivePremium()) }}
+                    {{ yenUnit($standardPremium->getStandardPremium()) }}
                 </div>
             </div>
             <div class="flex justify-center items-center h-10 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
@@ -23,7 +23,7 @@
             </div>
             <div>
                 <div class="flex items-center h-10 w-[200px] outline outline-1 outline-gray-500 pl-5">
-                    {{ yenUnit($standardPremium->getStandardPremium()) }}
+                    {{ yenUnit($comprehensivePremium->getComprehensivePremium()) }}
                 </div>
             </div>
         </div>

@@ -392,7 +392,7 @@ class EstimateForm extends Component
         $buildingDate = CarbonImmutable::createFromDate((int) $this->buildingYear, 1, 1);
         [$startYear,$startMonth] = explode('-', $this->startDate);
 
-        $this->buildingAge = $buildingDate <= $startYear ? (string) $buildingDate->diffInYears($startYear) : null;
+        $this->buildingAge = $buildingDate->year <= $startYear ? (string) $buildingDate->diffInYears($startYear) : null;
 
         $this->onChangeBaseRate();
     }
@@ -440,6 +440,7 @@ class EstimateForm extends Component
 
     public function onSelectedFactoryBuildingCode($code)
     {
+        $this->factoryBuildingCode = $code;
         $this->onChangeFactoryBuildingCode();
 
         $this->onClickCloseTable();
