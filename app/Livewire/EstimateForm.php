@@ -319,7 +319,10 @@ class EstimateForm extends Component
 
     public function render()
     {
-        $this->onChangeAssessItem();
+        if (isset($this->estimate->id)) {
+            $this->onChangeAssessItem();
+        }
+
         $this->findFactoryBuildingItem($this->factoryBuildingCode);
 
         return view('estimate.livewire.form');
@@ -437,14 +440,14 @@ class EstimateForm extends Component
 
     public function onSelectedFactoryBuildingCode($code)
     {
-        $this->onChangeFactoryBuildingCode($code);
+        $this->onChangeFactoryBuildingCode();
 
         $this->onClickCloseTable();
     }
 
-    public function onChangeFactoryBuildingCode($code)
+    public function onChangeFactoryBuildingCode()
     {
-        $this->factoryBuildingCode = mb_convert_kana($code, 'n');
+        $this->factoryBuildingCode = mb_convert_kana($this->factoryBuildingCode, 'n');
 
         $factoryPropertyBasePremium = new FactoryPropertyBasePremium();
 
@@ -456,7 +459,7 @@ class EstimateForm extends Component
 
         $this->chattelSurcharge = (string) $factoryInfo['動産割増'];
 
-        $this->findFactoryBuildingItem($code);
+        $this->findFactoryBuildingItem($this->factoryBuildingCode);
 
     }
 
@@ -635,15 +638,11 @@ class EstimateForm extends Component
         $this->reProcureC = '';
         $this->currentMarketPrice = '';
 
-        if (is_null($this->estimate->id)) {
-            return;
-        }
-
         if (is_null($this->assessUsage) || is_null($this->assessStructure)) {
             return;
         }
 
-        if ($this->assessItem == '選択しない') {
+        if ($this->assessItem == '選択しない' || is_null($this->assessItem)) {
             return;
         }
 
@@ -751,6 +750,7 @@ class EstimateForm extends Component
     private function getPillarList()
     {
         return [
+            '',
             '木造枠組壁（２×４）',
             'コンクリート系プレハブ',
             '鉄骨系プレハブ',
@@ -761,6 +761,7 @@ class EstimateForm extends Component
     private function getFireResistanceList()
     {
         return [
+            '',
             '耐火建築物',
             '準耐火建築物',
             '省令準耐火建物',

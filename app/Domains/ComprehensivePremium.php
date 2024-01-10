@@ -19,7 +19,7 @@ final class ComprehensivePremium
     public function __construct($estimate)
     {
         $this->propertyType = $estimate['property_type'];
-        $this->buildingAge = $estimate['building_age'];
+        $this->buildingAge = $estimate['building_age'] ? $estimate['building_age'] : 0;
         $this->rank = $estimate['rank'];
 
         $this->rateList = $this->makeRateList();

@@ -24,7 +24,10 @@ final class FactoryPropertyBasePremium
         $result = ! empty($result) ? reset($result) : null;
 
         if (is_null($result)) {
-            return;
+            return [
+                '基本率' => '',
+                '動産割増' => '',
+            ];
         }
 
         return [
