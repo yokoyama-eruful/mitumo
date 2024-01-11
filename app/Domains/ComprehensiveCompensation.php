@@ -53,6 +53,6 @@ final class ComprehensiveCompensation
     //総合火災契約の可不可条件（修理付帯費用以外）
     private function isContractDecision()
     {
-        return ! ($this->propertyType == '工場' || $this->shortTermRate != 0);
+        return $this->propertyType == '工場' || $this->shortTermRate != 0;
     }
 }
