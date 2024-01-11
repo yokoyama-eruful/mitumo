@@ -111,9 +111,11 @@ final class StandardInsurancePremium
         $estimate = $this->estimate;
 
         return
-         $this->payMethod == '長期年払' &&
+        $this->payMethod == '長期年払' &&
         $estimate->insurance_year >= 5 &&
-        $estimate->property_detail['other_discount'];
+        is_null($estimate->property_detail['actual_loss_factor']) &&
+        (is_null($estimate->property_detail['other_discount']) ||
+        $estimate->property_detail['other_discount'] < 10);
 
     }
 
