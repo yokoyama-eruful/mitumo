@@ -1,0 +1,770 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Livewire;
+
+use App\Domains\Assess\AssessAnnual;
+use App\Domains\Assess\AssessCondo;
+use App\Domains\Assess\AssessNormal;
+use App\Domains\Assess\AssessPiloti;
+use App\Domains\Assess\AssessRenovation;
+use App\Domains\Assess\AssessSolarPanel;
+use App\Domains\BuildingBaseRate;
+use App\Domains\ChattelBaseRate;
+use App\Domains\OccupationalSurcharge;
+use App\Domains\WorkSurcharge;
+use App\Models\Futsu2;
+use App\Utils\FullWidthDigitConverter;
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
+
+class Futsu2Form extends Component
+{
+    public Futsu2 $estimate;
+
+    //入力項目　プロパティ名：キャメルケース　nameタグ：スネークケース
+    public ?string $company = null;
+
+    public ?string $address = null;
+
+    public ?string $phoneNumber = null;
+
+    public ?string $staffName = null;
+
+    public ?string $contractee = null;
+
+    public ?string $location = null;
+
+    public ?string $floorArea = null;
+
+    public ?string $exclusiveArea = null;
+
+    public ?string $structure = null;
+
+    public ?string $otherStructure = null;
+
+    public ?string $pillar = null;
+
+    public ?string $otherPillar = null;
+
+    public ?string $fireResistance = null;
+
+    public ?string $otherFireResistance = null;
+
+    public ?string $usage = null;
+
+    public ?string $otherUsage = null;
+
+    public ?string $floor = null;
+
+    public ?string $building = null;
+
+    public ?string $other = null;
+
+    public ?string $propertyType = null;
+
+    public ?string $rank = null;
+
+    public ?string $startDate = null;
+
+    public ?string $buildingYear = null;
+
+    public ?string $buildingAge = null;
+
+    public ?string $payMethod = null;
+
+    public ?string $insuranceYear = null;
+
+    public ?string $insuranceMonth = null;
+
+    public ?string $insuranceDay = null;
+
+    public ?string $recommend1 = null;
+
+    public ?string $recommend2 = null;
+
+    public ?string $recommend3 = null;
+
+    public ?string $earthquake1 = null;
+
+    public ?string $earthquake2 = null;
+
+    public ?string $earthquake3 = null;
+
+    /////物件情報/////////////////////////////
+
+    public ?string $buildingBaseRate = null;
+
+    public ?string $chattelBaseRate = null;
+
+    public ?string $chattelSurcharge = null;
+
+    public ?string $actualLossFactor = null;
+
+    public ?string $otherDiscount = null;
+
+    public ?string $chattelSurchargeCategory = null;
+
+    public ?string $occupationalSurchargeCode = null;
+
+    public ?string $occupationalSurchargeRate = null;
+
+    public ?string $workSurchargeCode = null;
+
+    public ?string $workSurchargeRate = null;
+
+    public ?string $buildingInsurancePayout = null;
+
+    public ?string $householdInsurancePayout = null;
+
+    public ?string $facilityInsurancePayout = null;
+
+    public ?string $otherFacilityInsurancePayout = null;
+
+    public ?string $itemInsurancePayout = null;
+
+    public ?string $otherItemInsurancePayout = null;
+
+    /////評価項目/////////////////////////////
+    public ?string $assessItem = null;
+
+    public ?string $assessUsage = null;
+
+    public ?string $assessStructure = null;
+
+    public ?string $pilotiFloorArea = null;
+
+    public ?string $replacementPrice = null;
+
+    public ?string $renovationCost = null;
+
+    public ?string $conventionalAge = null;
+
+    public ?string $depreciationRate = null;
+
+    public ?string $renovationAge = null;
+
+    public ?string $renovationDepreciationRate = null;
+
+    public ?string $installationDate = null;
+
+    public ?string $installationCost = null;
+
+    public ?string $annualPrice = null;
+
+    public ?string $reProcure = null;
+
+    public ?string $reProcureA = null;
+
+    public ?string $reProcureB = null;
+
+    public ?string $reProcureC = null;
+
+    public ?string $currentMarketPrice = null;
+
+    public ?string $currentMarketPriceA = null;
+
+    public ?string $currentMarketPriceB = null;
+
+    public ?string $currentMarketPriceC = null;
+
+    //セレクトボックス
+    public array $structureList;
+
+    public array $pillarList;
+
+    public array $fireResistanceList;
+
+    public array $usageList;
+
+    public array $propertyTypeList;
+
+    public array $rankList;
+
+    public array $payMethodList;
+
+    public array $chattelSurchargeCategoryList;
+
+    public array $earthquakeList;
+
+    public array $assessItemList;
+
+    public array $assessUsageList;
+
+    public array $assessStructureList;
+
+    //テーブル情報の表示切り替え
+
+    public bool $isViewOccupationalTable = false;
+
+    public string $occupationalSurchargeLargeCategory = 'すべて';
+
+    public bool $isViewWorkTable = false;
+
+    public string $workSurchargeLargeCategory = 'すべて';
+
+    //標準コード
+
+    public array $occupationalSurchargeCodeList = [];
+
+    public array $workSurchargeCodeList = [];
+
+    public function mount($estimate)
+    {
+        $this->estimate = $estimate;
+        $this->company = old('company', $estimate->company) != null ? old('company', $estimate->company) : '広島県中小企業共済協同組合';
+        $this->address = old('address', $estimate->address) != null ? old('address', $estimate->address) : '広島市中区竹屋町4-17';
+        $this->phoneNumber = old('phone_number', $estimate->phone_number) != null ? old('phone_number', $estimate->phone_number) : '082-243-4411';
+        $this->staffName = old('staff_name', $estimate->staff_name) != null ? old('staff_name', $estimate->staff_name) : Auth::user()->name;
+        $this->contractee = old('contractee', $estimate->contractee);
+        $this->location = old('location', $estimate->location);
+
+        $this->floorArea = old('floor_area', (string) $estimate->floor_area);
+        $this->exclusiveArea = old('exclusive_area', (string) $estimate->exclusive_area);
+        $this->structure = old('structure', $estimate->structure);
+        $this->otherStructure = old('otherStructure', $estimate->other_structure);
+        $this->pillar = old('pillar', $estimate->pillar);
+        $this->otherPillar = old('other_pillar', $estimate->other_pillar);
+        $this->fireResistance = old('fire_resistance', $estimate->fire_resistance);
+        $this->otherFireResistance = old('other_fireResistance', $estimate->other_fire_resistance);
+        $this->usage = old('usage', $estimate->usage);
+        $this->otherUsage = old('other_usage', $estimate->other_usage);
+        $this->floor = old('floor', (string) $estimate->floor);
+        $this->building = old('building', (string) $estimate->building);
+        $this->other = old('other', (string) $estimate->other);
+        $this->propertyType = old('property_type', $estimate->property_type);
+
+        $this->onChangePropertyType();
+
+        $this->rank = old('rank', $estimate->rank);
+        $this->startDate = old('start_date', $estimate->start_date?->format('Y-m'));
+        $this->buildingYear = old('building_year', (string) $estimate->building_year);
+        $this->buildingAge = old('building_age', (string) $estimate->building_age);
+        $this->payMethod = old('pay_method', $estimate->pay_method);
+        $this->insuranceYear = old('insurance_year', (string) $estimate->insurance_year);
+        $this->insuranceMonth = old('insurance_month', (string) $estimate->insurance_month);
+        $this->insuranceDay = old('insurance_day', (string) $estimate->insurance_day);
+
+        $this->recommend1 = old('recommend1', (string) $estimate->recommendList['recommend1']);
+        $this->recommend2 = old('recommend2', (string) $estimate->recommendList['recommend2']);
+        $this->recommend3 = old('recommend3', (string) $estimate->recommendList['recommend3']);
+
+        $this->earthquake1 = old('earthquake1', (string) $estimate->earthquakeList['earthquake1']);
+        $this->earthquake2 = old('earthquake2', (string) $estimate->earthquakeList['earthquake2']);
+        $this->earthquake3 = old('earthquake3', (string) $estimate->earthquakeList['earthquake3']);
+
+        //物件情報
+        $this->buildingBaseRate = old('building_base_rate', (string) $estimate->building_base_rate);
+        $this->chattelBaseRate = old('chattel_base_rate', (string) $estimate->chattel_base_rate);
+
+        $this->chattelSurcharge = old('chattel_surcharge', $this->getValueByKey('chattel_surcharge', $estimate->property_detail));
+        $this->actualLossFactor = old('actual_loss_factor', $this->getValueByKey('actual_loss_factor', $estimate->property_detail));
+        $this->otherDiscount = old('other_discount', $this->getValueByKey('other_discount', $estimate->property_detail));
+        $this->chattelSurchargeCategory = old('chattel_surcharge_category', $this->getValueByKey('chattel_surcharge_category', $estimate->property_detail));
+
+        $this->occupationalSurchargeCode = old('occupational_surcharge_code', $this->getValueByKey('occupational_surcharge_code', $estimate->property_detail));
+        $this->occupationalSurchargeRate = old('occupational_surcharge_rate', $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail));
+
+        $this->workSurchargeCode = old('work_surcharge_code', $this->getValueByKey('work_surcharge_code', $estimate->property_detail));
+        $this->workSurchargeRate = old('work_surcharge_rate', $this->getValueByKey('work_surcharge_rate', $estimate->property_detail));
+
+        $this->buildingInsurancePayout = old('building_insurance_payout', $this->getValueByKey('building_insurance_payout', $estimate->property_detail));
+        $this->householdInsurancePayout = old('household_insurance_payout', $this->getValueByKey('household_insurance_payout', $estimate->property_detail));
+        $this->facilityInsurancePayout = old('facility_insurance_payout', $this->getValueByKey('facility_insurance_payout', $estimate->property_detail));
+        $this->otherFacilityInsurancePayout = old('other_facility_insurance_payout', $this->getValueByKey('other_facility_insurance_payout', $estimate->property_detail));
+        $this->itemInsurancePayout = old('item_insurance_payout', $this->getValueByKey('item_insurance_payout', $estimate->property_detail));
+        $this->otherItemInsurancePayout = old('other_item_insurance_payout', $this->getValueByKey('other_item_insurance_payout', $estimate->property_detail));
+
+        //評価項目
+        $this->assessItem = old('assess_item', $estimate->assess_item);
+        $this->assessUsage = old('assess_usage', $this->getValueByKey('assess_usage', $estimate->assess_detail));
+        $this->assessStructure = old('assess_structure', $this->getValueByKey('assess_structure', $estimate->assess_detail));
+        $this->pilotiFloorArea = old('piloti_floor_area', $this->getValueByKey('piloti_floor_area', $estimate->assess_detail));
+        $this->replacementPrice = old('replacement_price', $this->getValueByKey('replacement_price', $estimate->assess_detail));
+        $this->renovationCost = old('renovation_cost', $this->getValueByKey('renovation_cost', $estimate->assess_detail));
+        $this->conventionalAge = old('conventional_age', $this->getValueByKey('conventional_age', $estimate->assess_detail));
+        $this->depreciationRate = old('depreciation_rate', $this->getValueByKey('depreciation_rate', $estimate->assess_detail));
+        $this->renovationAge = old('renovation_age', $this->getValueByKey('renovation_age', $estimate->assess_detail));
+        $this->renovationDepreciationRate = old('renovation_depreciation_rate', $this->getValueByKey('renovation_depreciation_rate', $estimate->assess_detail));
+        $this->installationDate = old('installation_date', $this->getValueByKey('installation_date', $estimate->assess_detail));
+        $this->installationCost = old('installation_cost', $this->getValueByKey('installation_cost', $estimate->assess_detail));
+        $this->annualPrice = old('annual_price', $this->getValueByKey('annual_price', $estimate->assess_detail));
+
+        //セレクトボックスの選択肢
+        $this->structureList = $this->getStructureList();
+        $this->pillarList = $this->getPillarList();
+        $this->fireResistanceList = $this->getFireResistanceList();
+        $this->usageList = $this->getUsageList();
+        $this->propertyTypeList = $this->getPropertyTypeList();
+        $this->payMethodList = $this->getPayMethodList();
+        $this->chattelSurchargeCategoryList = $this->getChattelSurchargeCategoryList();
+        $this->earthquakeList = $this->getEarthquakeList();
+        $this->assessItemList = $this->getAssessItemList();
+        $this->assessUsageList = $this->getAssessUsageList();
+        $this->assessStructureList = $this->getAssessStructureList();
+    }
+
+    public function render()
+    {
+        if (isset($this->estimate->id)) {
+            $this->onChangeAssessItem();
+        }
+
+        return view('futsu2.livewire.form');
+    }
+
+    /**
+     * 物件情報に連動した級別セレクトボックスを設置する
+     *
+     * @return void
+     */
+    public function onChangePropertyType()
+    {
+        $this->buildingBaseRate = '';
+        $this->rankList = $this->getRankList($this->propertyType);
+    }
+
+    /**
+     * 基本率の自動算出
+     *
+     * @return void
+     */
+    public function onChangeBaseRate()
+    {
+        if (
+            is_null($this->propertyType) ||
+            is_null($this->rank)
+        ) {
+            $this->buildingBaseRate = null;
+            $this->chattelBaseRate = null;
+
+            return;
+        }
+
+        $buildingAge = '';
+
+        $buildingBaseRate = new BuildingBaseRate($this->estimate, 'futsu2/rateTable/buildingBaseRateTable.csv');
+        $this->buildingBaseRate = (string) $buildingBaseRate->findRate($this->propertyType, $buildingAge, $this->rank);
+        $chattelBaseRate = new ChattelBaseRate($this->estimate, 'futsu2/rateTable/chattelBaseTable.csv');
+        $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank);
+
+        $this->occupationalSurchargeCode = null;
+        $this->occupationalSurchargeRate = null;
+        $this->workSurchargeCode = null;
+        $this->workSurchargeRate = null;
+    }
+
+    /**
+     * 築年数を算出する
+     *
+     * @return void
+     */
+    public function onChangeBuildingAge()
+    {
+        if (! $this->startDate || ! $this->buildingYear) {
+            $this->buildingAge = null;
+
+            return;
+        }
+
+        $this->buildingYear = (string) FullWidthDigitConverter::convert($this->buildingYear);
+
+        $buildingDate = CarbonImmutable::createFromDate((int) $this->buildingYear, 1, 1);
+        [$startYear,$startMonth] = explode('-', $this->startDate);
+
+        $this->buildingAge = $buildingDate->year <= $startYear ? (string) $buildingDate->diffInYears($startYear) : null;
+
+        $this->onChangeBaseRate();
+    }
+
+    /**
+     * おすすめ契約期間指定の入力項目の表示トリガー
+     *
+     * @return void
+     */
+    public function onChangeRecommend()
+    {
+
+    }
+
+    /**
+     * 評価項目によって評価用途の選択肢を変更するトリガー
+     *
+     * @return void
+     */
+    public function onChangeAssessItem()
+    {
+        $this->assessUsageList = $this->getAssessUsageList();
+        $this->assessStructureList = $this->getAssessStructureList();
+        $this->onChangeAssessAmount();
+    }
+
+    /**
+     * 職業 テーブル情報から標準コードを参照する
+     *
+     * @return void
+     */
+    public function onClickOpenOccupationalSurchargeTable()
+    {
+        if (is_null($this->rank) || $this->rank == '') {
+            $this->dispatch('alert', '級別を指定してください。');
+
+            return;
+        }
+
+        $this->onClickOccupationalLargeCategory();
+
+        $this->dispatch('disableScroll');
+        $this->isViewOccupationalTable = true;
+    }
+
+    public function onClickOccupationalLargeCategory($category = 'すべて')
+    {
+        $this->occupationalSurchargeLargeCategory = $category;
+        $occupationalSurcharge = new OccupationalSurcharge('futsu2/surchargeTable/occupationalSurchargeTable.csv');
+        $rateList = $occupationalSurcharge->rateList;
+        $rank = $this->rank;
+
+        if ($category === 'すべて') {
+            $this->occupationalSurchargeCodeList = array_filter($rateList, function ($element) use ($rank) {
+                return is_array($element) && isset($element['級別']) && $element['級別'] === $rank;
+            });
+        } else {
+            $this->occupationalSurchargeCodeList = array_filter($rateList, function ($element) use ($category, $rank) {
+                return is_array($element) && isset($element['級別']) && $element['大項目'] == $category && $element['級別'] === $rank;
+            });
+        }
+    }
+
+    public function onSelectedOccupationalCode($code)
+    {
+        $this->occupationalSurchargeCode = $code;
+        $this->onChangeOccupationalSurchargeCode();
+
+        $this->onClickCloseTable();
+    }
+
+    /**
+     * 職業 標準コードから職業割増を算出する
+     *
+     * @return void
+     */
+    public function onChangeOccupationalSurchargeCode()
+    {
+        $this->occupationalSurchargeCode = mb_convert_kana($this->occupationalSurchargeCode, 'n');
+
+        $occupationalSurcharge = new OccupationalSurcharge('futsu2/surchargeTable/occupationalSurchargeTable.csv');
+
+        $this->occupationalSurchargeRate = (string) $occupationalSurcharge->findCode($this->occupationalSurchargeCode, $this->rank);
+    }
+
+    /**
+     * 職業 テーブル情報から作業工程コードを参照する
+     *
+     * @return void
+     */
+    public function onClickOpenWorkSurchargeTable()
+    {
+        if (is_null($this->rank) || $this->rank == '') {
+            $this->dispatch('alert', '級別を指定してください。');
+
+            return;
+        }
+        $this->onClickWorkLargeCategory();
+        $this->dispatch('disableScroll');
+
+        $this->isViewWorkTable = true;
+    }
+
+    public function onClickWorkLargeCategory($category = 'すべて')
+    {
+        $this->workSurchargeLargeCategory = $category;
+        $workSurcharge = new WorkSurcharge('futsu2/surchargeTable/workSurchargeTable.csv');
+        $rateList = $workSurcharge->rateList;
+        $rank = $this->rank;
+
+        if ($category === 'すべて') {
+            $this->workSurchargeCodeList = array_filter($rateList, function ($element) use ($rank) {
+                return is_array($element) && isset($element['級別']) && $element['級別'] === $rank;
+            });
+        } else {
+            $this->workSurchargeCodeList = array_filter($rateList, function ($element) use ($category, $rank) {
+                return is_array($element) && isset($element['級別']) && $element['大項目'] == $category && $element['級別'] === $rank;
+            });
+        }
+    }
+
+    /**
+     * 作業 作業工程テーブル情報から作業工程コードを参照する
+     *
+     * @return void
+     */
+    public function onSelectedWorkCode($code)
+    {
+        $this->workSurchargeCode = $code;
+        $this->onChangeWorkSurchargeCode();
+        $this->onClickCloseTable();
+    }
+
+    /**
+     * 作業工程コードから作業割増を算出する
+     *
+     * @return void
+     */
+    public function onChangeWorkSurchargeCode()
+    {
+        $this->workSurchargeCode = mb_convert_kana($this->workSurchargeCode, 'n');
+
+        $workSurcharge = new WorkSurcharge('futsu2/surchargeTable/workSurchargeTable.csv');
+
+        $this->workSurchargeRate = (string) $workSurcharge->findCode($this->workSurchargeCode, $this->rank);
+    }
+
+    /**
+     * 職業 テーブル情報から標準コードを参照する
+     *
+     * @return void
+     */
+    public function onClickCloseTable()
+    {
+        $this->isViewOccupationalTable = false;
+        $this->isViewWorkTable = false;
+
+        $this->dispatch('enableScroll');
+    }
+
+    /**
+     * 再調達価額、時価額を参照
+     *
+     * @return void
+     */
+    public function onChangeAssessAmount()
+    {
+        $this->reProcure = '';
+        $this->reProcureA = '';
+        $this->reProcureB = '';
+        $this->reProcureC = '';
+        $this->currentMarketPrice = '';
+
+        if (is_null($this->assessUsage) || is_null($this->assessStructure)) {
+            return;
+        }
+
+        if ($this->assessItem == '選択しない' || is_null($this->assessItem)) {
+            return;
+        }
+
+        switch ($this->assessItem) {
+            case '通常':
+                $assessDomain = new AssessNormal($this->estimate);
+
+                $this->reProcure = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, '');
+                $this->reProcureA = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A');
+                $this->reProcureB = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B');
+                $this->reProcureC = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C');
+
+                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, '');
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A');
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B');
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C');
+                break;
+            case 'ピロティー付':
+                $assessDomain = new AssessPiloti($this->estimate);
+                $this->reProcure = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, '');
+                $this->reProcureA = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'A');
+                $this->reProcureB = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'B');
+                $this->reProcureC = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'C');
+
+                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, '');
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'A');
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'B');
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'C');
+                break;
+            case '太陽光付':
+                $assessDomain = new AssessSolarPanel($this->estimate);
+
+                $this->reProcure = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, '');
+                $this->reProcureA = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A');
+                $this->reProcureB = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B');
+                $this->reProcureC = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C');
+
+                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, '');
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A');
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B');
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C');
+                break;
+            case '分譲マンション':
+                $assessDomain = new AssessCondo($this->estimate);
+
+                $this->reProcure = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, '');
+                $this->reProcureA = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A');
+                $this->reProcureB = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B');
+                $this->reProcureC = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C');
+
+                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, '');
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A');
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B');
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C');
+                break;
+            case '年次取得':
+                $assessDomain = new AssessAnnual($this->estimate);
+
+                $this->reProcure = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingYear);
+
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingYear, 'A');
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingYear, 'B');
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingYear, 'C');
+                break;
+            case '改装物件':
+
+                if (! is_numeric($this->replacementPrice) ||
+                ! is_numeric($this->renovationCost) ||
+                ! is_numeric($this->conventionalAge) ||
+                ! is_numeric($this->depreciationRate) ||
+                ! is_numeric($this->renovationAge) ||
+                ! is_numeric($this->renovationDepreciationRate)) {
+                    break;
+                }
+
+                $assessDomain = new AssessRenovation($this->estimate);
+
+                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->replacementPrice, $this->renovationCost, $this->conventionalAge, $this->depreciationRate, $this->renovationAge, $this->renovationDepreciationRate);
+                break;
+
+        }
+
+    }
+
+    //選択肢のデータ格納用メソッド
+    private function getStructureList()
+    {
+        return [
+            'コンクリート造等',
+            '耐火被覆鉄骨造',
+            '鉄骨造',
+            '木造',
+            '土蔵造',
+            '軽量鉄骨',
+            'その他',
+        ];
+    }
+
+    private function getPillarList()
+    {
+        return [
+            '',
+            '木造枠組壁（２×４）',
+            'コンクリート系プレハブ',
+            '鉄骨系プレハブ',
+            '木質系プレハブ',
+        ];
+    }
+
+    private function getFireResistanceList()
+    {
+        return [
+            '',
+            '耐火建築物',
+            '準耐火建築物',
+            '省令準耐火建物',
+            'その他',
+        ];
+    }
+
+    private function getUsageList()
+    {
+        return [
+            '専用住宅（1戸建）',
+            '専用住宅（共同住宅）',
+            '併用住宅',
+            '店舗',
+            '事務所',
+            '作業場',
+            '倉庫',
+            'その他',
+        ];
+    }
+
+    private function getPropertyTypeList()
+    {
+        return [
+            '住宅',
+            '普通',
+        ];
+    }
+
+    private function getRankList($propertyType)
+    {
+        $this->rank = null;
+
+        return match ($propertyType) {
+            '普通' => ['1級', '2級', '3級'],
+            '住宅' => ['M', 'T', 'H'],
+            default => [],
+        };
+    }
+
+    private function getPayMethodList()
+    {
+        return [
+            '一時払',
+            '長期年払',
+            '分割払',
+        ];
+    }
+
+    private function getChattelSurchargeCategoryList()
+    {
+        return [
+            '-',
+            '1級品',
+            '2級品',
+        ];
+    }
+
+    private function getEarthquakeList()
+    {
+        return [15, 30, 50];
+    }
+
+    private function getAssessItemList()
+    {
+        return ['選択しない', '通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '改装物件'];
+    }
+
+    private function getAssessUsageList()
+    {
+        return match ($this->assessItem) {
+            '通常', 'ピロティー付', '太陽光付', '年次取得' => ['専用住宅', '併用住宅', '専用店舗', 'プレハブ'],
+            '分譲マンション' => ['分譲マンション'],
+            default => [],
+        };
+    }
+
+    private function getAssessStructureList()
+    {
+        return match ($this->assessItem) {
+            '通常', 'ピロティー付', '太陽光付', '年次取得' => ['木造', '鉄骨', '鉄筋（RC）', '枠組（2×4）', 'プレハブ造', '軽量鉄骨'],
+            '分譲マンション' => ['上塗', '壁真'],
+            default => [],
+        };
+    }
+
+    /**
+     * 配列から安全に中身を取得するUtils関数
+     */
+    private function getValueByKey(string $key, ?array $array): string
+    {
+        if (is_null($array)) {
+            return '';
+        }
+
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return $array[$key];
+        }
+
+        return '';
+    }
+}

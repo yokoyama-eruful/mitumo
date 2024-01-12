@@ -91,7 +91,7 @@ final class AssessRenovation
 
         $priceStructureRatio = ($this->replacementPrice - $this->renovationCost) / $this->replacementPrice;
 
-        $depreciationRate = $this->conventionalAge * $this->depreciationRate;
+        $depreciationRate = $this->conventionalAge * $this->depreciationRate / 100;
 
         if ($depreciationRate >= 0.5) {
             $depreciationRate = 0.5;
@@ -118,7 +118,7 @@ final class AssessRenovation
 
         $priceStructureRatio = $this->renovationCost / $this->replacementPrice;
 
-        $depreciationRate = $this->renovationAge * $this->renovationDepreciationRate;
+        $depreciationRate = $this->renovationAge * $this->renovationDepreciationRate / 100;
 
         if ($depreciationRate >= 0.5) {
             $depreciationRate = 0.5;

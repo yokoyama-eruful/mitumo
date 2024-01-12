@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domains;
 
-use App\Models\Estimate;
+use Illuminate\Database\Eloquent\Model;
 
 final class EarthquakeStandardInsurancePremium
 {
-    public readonly Estimate $estimate;
+    public readonly Model $estimate;
 
     public readonly string $propertyType;
 
@@ -182,7 +182,11 @@ final class EarthquakeStandardInsurancePremium
             $propertyType = $estimate->property_type;
 
             if (in_array($propertyType, ['住宅', '普通'], true)) {
-                $baseRate = new ChattelBaseRate($estimate);
+                if ($estimate->getTable() == 'futsu2') {
+                    $baseRate = new ChattelBaseRate($estimate, 'futsu2/rateTable/chattelBaseTable.csv');
+                } else {
+                    $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
+                }
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
                 $chattelBaseRate = $estimate->building_base_rate;
@@ -229,7 +233,11 @@ final class EarthquakeStandardInsurancePremium
             $propertyType = $estimate->property_type;
 
             if (in_array($propertyType, ['住宅', '普通'], true)) {
-                $baseRate = new ChattelBaseRate($estimate);
+                if ($estimate->getTable() == 'futsu2') {
+                    $baseRate = new ChattelBaseRate($estimate, 'futsu2/rateTable/chattelBaseTable.csv');
+                } else {
+                    $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
+                }
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
                 $chattelBaseRate = $estimate->building_base_rate;
@@ -278,7 +286,11 @@ final class EarthquakeStandardInsurancePremium
             $propertyType = $estimate->property_type;
 
             if (in_array($propertyType, ['住宅', '普通'], true)) {
-                $baseRate = new ChattelBaseRate($estimate);
+                if ($estimate->getTable() == 'futsu2') {
+                    $baseRate = new ChattelBaseRate($estimate, 'futsu2/rateTable/chattelBaseTable.csv');
+                } else {
+                    $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
+                }
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
                 $chattelBaseRate = $estimate->building_base_rate;

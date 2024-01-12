@@ -110,8 +110,8 @@ class PreviewController extends Controller
     {
         $estimate = $this->estimateService->find($id);
         $standard = new StandardInsurancePremium($estimate);
-        $occupationalSurchargeItem = new OccupationalSurcharge();
-        $workSurchargeItem = new WorkSurcharge();
+        $occupationalSurchargeItem = new OccupationalSurcharge('surchargeTable/occupationalSurchargeTable.csv');
+        $workSurchargeItem = new WorkSurcharge('surchargeTable/workSurchargeTable.csv');
         $factoryPropertyBasePremiumItem = new FactoryPropertyBasePremium();
         $comprehensive = new ComprehensiveInsurancePremium($estimate);
 

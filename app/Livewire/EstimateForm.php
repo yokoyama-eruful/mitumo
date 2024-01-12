@@ -363,11 +363,10 @@ class EstimateForm extends Component
             $buildingAge = '';
         }
 
-        $buildingBaseRate = new BuildingBaseRate($this->estimate);
+        $buildingBaseRate = new BuildingBaseRate($this->estimate, 'rateTable/buildingBaseRateTable.csv');
         $this->buildingBaseRate = (string) $buildingBaseRate->findRate($this->propertyType, $buildingAge, $this->rank);
-        $chattelBaseRate = new ChattelBaseRate($this->estimate);
+        $chattelBaseRate = new ChattelBaseRate($this->estimate, 'rateTable/chattelBaseTable.csv');
         $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank);
-
         $this->occupationalSurchargeCode = null;
         $this->occupationalSurchargeRate = null;
         $this->workSurchargeCode = null;
@@ -513,7 +512,7 @@ class EstimateForm extends Component
     public function onClickOccupationalLargeCategory($category = 'すべて')
     {
         $this->occupationalSurchargeLargeCategory = $category;
-        $occupationalSurcharge = new OccupationalSurcharge();
+        $occupationalSurcharge = new OccupationalSurcharge('surchargeTable/occupationalSurchargeTable.csv');
         $rateList = $occupationalSurcharge->rateList;
         $rank = $this->rank;
 
@@ -545,7 +544,7 @@ class EstimateForm extends Component
     {
         $this->occupationalSurchargeCode = mb_convert_kana($this->occupationalSurchargeCode, 'n');
 
-        $occupationalSurcharge = new OccupationalSurcharge();
+        $occupationalSurcharge = new OccupationalSurcharge('surchargeTable/occupationalSurchargeTable.csv');
 
         $this->occupationalSurchargeRate = (string) $occupationalSurcharge->findCode($this->occupationalSurchargeCode, $this->rank);
     }
@@ -571,7 +570,7 @@ class EstimateForm extends Component
     public function onClickWorkLargeCategory($category = 'すべて')
     {
         $this->workSurchargeLargeCategory = $category;
-        $workSurcharge = new WorkSurcharge();
+        $workSurcharge = new WorkSurcharge('surchargeTable/workSurchargeTable.csv');
         $rateList = $workSurcharge->rateList;
         $rank = $this->rank;
 
@@ -607,7 +606,7 @@ class EstimateForm extends Component
     {
         $this->workSurchargeCode = mb_convert_kana($this->workSurchargeCode, 'n');
 
-        $workSurcharge = new WorkSurcharge();
+        $workSurcharge = new WorkSurcharge('surchargeTable/workSurchargeTable.csv');
 
         $this->workSurchargeRate = (string) $workSurcharge->findCode($this->workSurchargeCode, $this->rank);
     }

@@ -100,8 +100,12 @@ final class RecommendComprehensiveInsurancePremium
         $calcOtherDiscount = function ($estimate) {
             $propertyType = $estimate->property_type;
 
-            if (in_array($propertyType, ['住宅', '総合'], true)) {
-                $baseRate = new ChattelBaseRate($estimate);
+            if (in_array($propertyType, ['住宅', '普通'], true)) {
+                if ($estimate->getTable() == 'futsu2') {
+                    $baseRate = new ChattelBaseRate($estimate, 'futsu2/rateTable/chattelBaseTable.csv');
+                } else {
+                    $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
+                }
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
                 $chattelBaseRate = $estimate->building_base_rate;
@@ -144,8 +148,12 @@ final class RecommendComprehensiveInsurancePremium
         $calcOtherDiscount = function ($estimate) {
             $propertyType = $estimate->property_type;
 
-            if (in_array($propertyType, ['住宅', '総合'], true)) {
-                $baseRate = new ChattelBaseRate($estimate);
+            if (in_array($propertyType, ['住宅', '普通'], true)) {
+                if ($estimate->getTable() == 'futsu2') {
+                    $baseRate = new ChattelBaseRate($estimate, 'futsu2/rateTable/chattelBaseTable.csv');
+                } else {
+                    $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
+                }
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
                 $chattelBaseRate = $estimate->building_base_rate;
@@ -190,8 +198,12 @@ final class RecommendComprehensiveInsurancePremium
         $calcOtherDiscount = function ($estimate) {
             $propertyType = $estimate->property_type;
 
-            if (in_array($propertyType, ['住宅', '総合'], true)) {
-                $baseRate = new ChattelBaseRate($estimate);
+            if (in_array($propertyType, ['住宅', '普通'], true)) {
+                if ($estimate->getTable() == 'futsu2') {
+                    $baseRate = new ChattelBaseRate($estimate, 'futsu2/rateTable/chattelBaseTable.csv');
+                } else {
+                    $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
+                }
                 $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             } else {
                 $chattelBaseRate = $estimate->building_base_rate;

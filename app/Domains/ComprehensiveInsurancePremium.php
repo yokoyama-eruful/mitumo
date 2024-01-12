@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domains;
 
-use App\Models\Estimate;
+use Illuminate\Database\Eloquent\Model;
 
 final class ComprehensiveInsurancePremium
 {
-    public readonly Estimate $estimate;
+    public readonly Model $estimate;
 
     public readonly float $chattelSurcharge;
 
@@ -160,7 +160,11 @@ final class ComprehensiveInsurancePremium
         }
 
         if (in_array($propertyType, ['住宅', '普通'], true)) {
-            $baseRate = new BuildingBaseRate($estimate);
+            if ($estimate->getTable() == 'futsu2') {
+                $baseRate = new BuildingBaseRate($estimate, 'futsu2/rateTable/buildingBaseRateTable.csv');
+            } else {
+                $baseRate = new BuildingBaseRate($estimate, 'rateTable/buildingBaseRateTable.csv');
+            }
             $buildingBaseRate = $baseRate->findRate($propertyType, $buildingAge, $estimate->rank);
         } else {
             $buildingBaseRate = $estimate->building_base_rate;
@@ -211,7 +215,11 @@ final class ComprehensiveInsurancePremium
         $propertyType = $estimate->property_type;
 
         if (in_array($propertyType, ['住宅', '普通'], true)) {
-            $baseRate = new ChattelBaseRate($estimate);
+            if ($estimate->getTable() == 'futsu2') {
+                $baseRate = new ChattelBaseRate($estimate, 'futsu2/rateTable/chattelBaseTable.csv');
+            } else {
+                $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
+            }
             $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
         } else {
             $chattelBaseRate = $estimate->building_base_rate;
@@ -262,7 +270,11 @@ final class ComprehensiveInsurancePremium
         $propertyType = $estimate->property_type;
 
         if (in_array($propertyType, ['住宅', '普通'], true)) {
-            $baseRate = new ChattelBaseRate($estimate);
+            if ($estimate->getTable() == 'futsu2') {
+                $baseRate = new ChattelBaseRate($estimate, 'futsu2/rateTable/chattelBaseTable.csv');
+            } else {
+                $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
+            }
             $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
         } else {
             $chattelBaseRate = $estimate->building_base_rate;
@@ -315,7 +327,11 @@ final class ComprehensiveInsurancePremium
         $propertyType = $estimate->property_type;
 
         if (in_array($propertyType, ['住宅', '普通'], true)) {
-            $baseRate = new ChattelBaseRate($estimate);
+            if ($estimate->getTable() == 'futsu2') {
+                $baseRate = new ChattelBaseRate($estimate, 'futsu2/rateTable/chattelBaseTable.csv');
+            } else {
+                $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
+            }
             $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
         } else {
             $chattelBaseRate = $estimate->building_base_rate;
