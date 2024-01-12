@@ -355,9 +355,8 @@
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
                     @if ($standard->getPayByLongTermFlag() == true)
-                        有
+                        3%
                     @else
-                        無
                     @endif
                 </div>
             </div>
