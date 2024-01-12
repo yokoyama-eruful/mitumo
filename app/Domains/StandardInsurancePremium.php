@@ -106,7 +106,7 @@ final class StandardInsurancePremium
         return 180;
     }
 
-    private function getPayByLongTermFlag()
+    public function getPayByLongTermFlag()
     {
         $estimate = $this->estimate;
 

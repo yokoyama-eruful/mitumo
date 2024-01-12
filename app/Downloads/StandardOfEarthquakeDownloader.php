@@ -161,5 +161,6 @@ class StandardOfEarthquakeDownloader
         $worksheet->setCellValue('E27', $standardPremium->building['短期率']);
         $worksheet->setCellValue('E28', $standardPremium->building['長期率']);
         $worksheet->setCellValue('E29', $standardPremium->actualLossFactor);
+        $worksheet->setCellValue('E30', $standardPremium->getPayByLongTermFlag() == true ? '有' : '無');
     }
 }
