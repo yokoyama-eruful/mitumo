@@ -152,7 +152,7 @@ final class StandardInsurancePremium
 
     private function calcStandardLongTerm()
     {
-        if ($this->standard2 > 2050) {
+        if ($this->standard2 > 2050 || $this->discountCategory == '公有物件等割引') {
             return round(ceil($this->standard2 * 0.97), -1);
         }
 

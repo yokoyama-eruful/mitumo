@@ -150,7 +150,7 @@ final class ComprehensiveInsurancePremium
 
     private function calcComprehensiveLongTerm()
     {
-        if ($this->comprehensive2 > 2050) {
+        if ($this->comprehensive2 > 2050 || $this->discountCategory == '公有物件等割引') {
             return round(ceil($this->comprehensive2 * 0.97), -1);
         }
 

@@ -913,7 +913,7 @@ class EstimateForm extends Component
 
     private function getDiscountCategoryList($propertyType, $rank)
     {
-        if ('工場' && $rank == '1級') {
+        if ($propertyType == '工場' && $rank == '1級') {
             return ['', 'リスク評価割引'];
         } elseif ($propertyType == '普通' && $rank == '1級') {
             return ['', 'リスク評価割引', '公有物件等割引'];
