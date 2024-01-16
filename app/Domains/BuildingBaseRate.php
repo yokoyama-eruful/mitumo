@@ -12,10 +12,10 @@ final class BuildingBaseRate
 
     public readonly array $rateList;
 
-    public function __construct($estimate)
+    public function __construct($estimate, $path)
     {
         $this->baseRate = $estimate->building_base_rate;
-        $this->rateList = $this->makeRateList();
+        $this->rateList = $this->makeRateList($path);
     }
 
     public function findRate($propertyType, $buildingAge, $rank)
@@ -43,9 +43,9 @@ final class BuildingBaseRate
         return floatval($result['基本率']);
     }
 
-    private function makeRateList()
+    private function makeRateList($path)
     {
-        $filePath = Storage::path('rateTable/buildingBaseRateTable.csv');
+        $filePath = Storage::path($path);
 
         $rateList = [];
 

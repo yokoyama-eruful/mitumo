@@ -7,25 +7,26 @@
                 <div class="mr-10">
                     敬称選択
                     @if ($keisyo == '様')
-                        <a href="" class=" bg-gray-300 text-white font-bold py-2 px-4 rounded shadow-inner">様</a>
+                        <a class=" bg-gray-300 text-white font-bold py-2 px-4 rounded shadow-inner cursor-not-allowed">様</a>
                         <a href="{{ route('estimate.download.index', ['id' => $estimate->id, 'fileType' => $fileType, 'keisyo' => '御中']) }}"
-                            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow-md">御中</a>
+                            class="outline outline-[1px] outline-gray-500 hover:bg-gray-500 text-gray hover:text-white font-bold py-2 px-4 rounded shadow-lg">御中</a>
                     @else
                         <a href="{{ route('estimate.download.index', ['id' => $estimate->id, 'fileType' => $fileType, 'keisyo' => '様']) }}"
-                            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">様</a>
-                        <a href="" class="bg-gray-300 text-white font-bold py-2 px-4 rounded">御中</a>
+                            class="outline outline-[1px] outline-gray-500 hover:bg-gray-500 text-gray hover:text-white font-bold py-2 px-4 rounded shadow-lg">様</a>
+                        <a class="bg-gray-300 text-white font-bold py-2 px-4 rounded cursor-not-allowed">御中</a>
                     @endif
                 </div>
                 <div class="mr-10">
                     ファイル選択
                     @if ($fileType == 'excel')
-                        <a href="" class="bg-green-300 text-white font-bold py-2 px-4 rounded shadow-inner">excel</a>
+                        <a
+                            class="bg-green-200 text-white font-bold py-2 px-4 rounded shadow-inner cursor-not-allowed">excel</a>
                         <a href="{{ route('estimate.download.index', ['id' => $estimate->id, 'fileType' => 'pdf', 'keisyo' => $keisyo]) }}"
-                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">pdf</a>
+                            class="outline outline-[1px] outline-red-500 hover:bg-red-500 text-red-500 hover:text-white font-bold py-2 px-4 rounded shadow-lg">pdf</a>
                     @else
                         <a href="{{ route('estimate.download.index', ['id' => $estimate->id, 'fileType' => 'excel', 'keisyo' => $keisyo]) }}"
-                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-md">excel</a>
-                        <a href="" class="bg-red-300 text-white font-bold py-2 px-4 rounded">pdf</a>
+                            class="outline outline-[1px] outline-green-500 hover:bg-green-500 text-green-500 hover:text-white font-bold py-2 px-4 rounded shadow-lg">excel</a>
+                        <a class="bg-red-200 text-white font-bold py-2 px-4 rounded cursor-not-allowed">pdf</a>
                     @endif
                 </div>
             </div>

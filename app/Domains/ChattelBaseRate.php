@@ -12,10 +12,10 @@ final class ChattelBaseRate
 
     public readonly array $rateList;
 
-    public function __construct($estimate)
+    public function __construct($estimate, $path)
     {
         $this->baseRate = $estimate->chattel_base_rate;
-        $this->rateList = $this->makeRateList();
+        $this->rateList = $this->makeRateList($path);
     }
 
     public function findRate($propertyType, $rank)
@@ -39,17 +39,16 @@ final class ChattelBaseRate
         return floatval($result['基本率']);
     }
 
-    private function makeRateList()
+    private function makeRateList($path)
     {
-        $filePath = Storage::path('rateTable/chattelBaseTable.csv');
-
-        $rateList = [];
+        $filePath = Storage::path($path);
 
         $handle = fopen($filePath, 'r');
         if (! $handle) {
             return [];
         }
 
+        $rateList = [];
         $isHeaderFlag = true;
         while (($data = fgetcsv($handle, null, ',')) !== false) {
             if ($isHeaderFlag) {

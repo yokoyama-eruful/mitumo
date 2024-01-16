@@ -11,3 +11,11 @@
 !surchargeTable/*
 !assessTemplate/
 !assessTemplate/*
+!estimateFutsu2/
+!estimateFutsu2/*
+!estimateFutsu2/estimateTemplate/
+!estimateFutsu2/estimateTemplate/*
+!estimateFutsu2/rateTable/
+!estimateFutsu2/rateTable/*
+!estimateFutsu2/surchargeTable/
+!estimateFutsu2/surchargeTable/*

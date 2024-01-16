@@ -12,6 +12,7 @@ use App\Domains\Assess\AssessRenovation;
 use App\Domains\Assess\AssessSolarPanel;
 use App\Domains\BuildingBaseRate;
 use App\Domains\ChattelBaseRate;
+use App\Domains\DiscountRisk;
 use App\Domains\FactoryPropertyBasePremium;
 use App\Domains\OccupationalSurcharge;
 use App\Domains\WorkSurcharge;
@@ -104,7 +105,13 @@ class EstimateForm extends Component
 
     public ?string $actualLossFactor = null;
 
+    public ?string $discountCategory = null;
+
     public ?string $otherDiscount = null;
+
+    public ?string $discountFireExtinguisher = null;
+
+    public ?string $discountSecurity = null;
 
     public ?string $chattelSurchargeCategory = null;
 
@@ -115,6 +122,10 @@ class EstimateForm extends Component
     public ?string $workSurchargeCode = null;
 
     public ?string $workSurchargeRate = null;
+
+    public ?string $discountRiskCode = null;
+
+    public ?string $discountRiskRate = null;
 
     public ?string $factoryBuildingCode = null;
 
@@ -194,6 +205,8 @@ class EstimateForm extends Component
 
     public array $earthquakeList;
 
+    public array $discountCategoryList;
+
     public array $assessItemList;
 
     public array $assessUsageList;
@@ -213,6 +226,10 @@ class EstimateForm extends Component
 
     public string $workSurchargeLargeCategory = 'すべて';
 
+    public bool $isViewDiscountRiskTable = false;
+
+    public string $discountRiskCategory = '';
+
     //標準コード
 
     public array $factoryCodeList = [];
@@ -220,6 +237,10 @@ class EstimateForm extends Component
     public array $occupationalSurchargeCodeList = [];
 
     public array $workSurchargeCodeList = [];
+
+    public array $discountRiskCodeList = [];
+
+    public array $discountRiskLargeCodeList = [];
 
     public function mount($estimate)
     {
@@ -272,7 +293,11 @@ class EstimateForm extends Component
 
         $this->chattelSurcharge = old('chattel_surcharge', $this->getValueByKey('chattel_surcharge', $estimate->property_detail));
         $this->actualLossFactor = old('actual_loss_factor', $this->getValueByKey('actual_loss_factor', $estimate->property_detail));
+        $this->discountCategory = old('discount_category', $this->getValueByKey('discount_category', $estimate->property_detail));
+        $this->discountRiskCategory = old('discount_risk_category', $this->getValueByKey('discount_risk_category', $estimate->property_detail));
         $this->otherDiscount = old('other_discount', $this->getValueByKey('other_discount', $estimate->property_detail));
+        $this->discountFireExtinguisher = old('discount_fire_extinguisher', $this->getValueByKey('discount_fire_extinguisher', $estimate->property_detail));
+        $this->discountSecurity = old('discount_security', $this->getValueByKey('discount_security', $estimate->property_detail));
         $this->chattelSurchargeCategory = old('chattel_surcharge_category', $this->getValueByKey('chattel_surcharge_category', $estimate->property_detail));
 
         $this->occupationalSurchargeCode = old('occupational_surcharge_code', $this->getValueByKey('occupational_surcharge_code', $estimate->property_detail));
@@ -280,6 +305,9 @@ class EstimateForm extends Component
 
         $this->workSurchargeCode = old('work_surcharge_code', $this->getValueByKey('work_surcharge_code', $estimate->property_detail));
         $this->workSurchargeRate = old('work_surcharge_rate', $this->getValueByKey('work_surcharge_rate', $estimate->property_detail));
+
+        $this->discountRiskCode = old('discount_risk_code', $this->getValueByKey('discount_risk_code', $estimate->property_detail));
+        $this->discountRiskRate = old('discount_risk_rate', $this->getValueByKey('discount_risk_rate', $estimate->property_detail));
 
         $this->buildingInsurancePayout = old('building_insurance_payout', $this->getValueByKey('building_insurance_payout', $estimate->property_detail));
         $this->householdInsurancePayout = old('household_insurance_payout', $this->getValueByKey('household_insurance_payout', $estimate->property_detail));
@@ -324,6 +352,7 @@ class EstimateForm extends Component
         }
 
         $this->findFactoryBuildingItem($this->factoryBuildingCode);
+        $this->onChangeDiscountRiskCode();
 
         return view('estimate.livewire.form');
     }
@@ -336,7 +365,11 @@ class EstimateForm extends Component
     public function onChangePropertyType()
     {
         $this->buildingBaseRate = '';
+        $this->discountFireExtinguisher = '';
+        $this->discountRiskCategory = '';
+        $this->discountSecurity = '';
         $this->rankList = $this->getRankList($this->propertyType);
+        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
     }
 
     /**
@@ -346,6 +379,8 @@ class EstimateForm extends Component
      */
     public function onChangeBaseRate()
     {
+        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
+
         if (
             is_null($this->propertyType) ||
             is_null($this->rank) ||
@@ -363,11 +398,10 @@ class EstimateForm extends Component
             $buildingAge = '';
         }
 
-        $buildingBaseRate = new BuildingBaseRate($this->estimate);
+        $buildingBaseRate = new BuildingBaseRate($this->estimate, 'rateTable/buildingBaseRateTable.csv');
         $this->buildingBaseRate = (string) $buildingBaseRate->findRate($this->propertyType, $buildingAge, $this->rank);
-        $chattelBaseRate = new ChattelBaseRate($this->estimate);
+        $chattelBaseRate = new ChattelBaseRate($this->estimate, 'rateTable/chattelBaseTable.csv');
         $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank);
-
         $this->occupationalSurchargeCode = null;
         $this->occupationalSurchargeRate = null;
         $this->workSurchargeCode = null;
@@ -405,6 +439,11 @@ class EstimateForm extends Component
     public function onChangeRecommend()
     {
 
+    }
+
+    public function onChangeDiscountCategory()
+    {
+        $this->getDiscountCategoryList($this->propertyType, $this->rank);
     }
 
     /**
@@ -513,7 +552,7 @@ class EstimateForm extends Component
     public function onClickOccupationalLargeCategory($category = 'すべて')
     {
         $this->occupationalSurchargeLargeCategory = $category;
-        $occupationalSurcharge = new OccupationalSurcharge();
+        $occupationalSurcharge = new OccupationalSurcharge('surchargeTable/occupationalSurchargeTable.csv');
         $rateList = $occupationalSurcharge->rateList;
         $rank = $this->rank;
 
@@ -545,7 +584,7 @@ class EstimateForm extends Component
     {
         $this->occupationalSurchargeCode = mb_convert_kana($this->occupationalSurchargeCode, 'n');
 
-        $occupationalSurcharge = new OccupationalSurcharge();
+        $occupationalSurcharge = new OccupationalSurcharge('surchargeTable/occupationalSurchargeTable.csv');
 
         $this->occupationalSurchargeRate = (string) $occupationalSurcharge->findCode($this->occupationalSurchargeCode, $this->rank);
     }
@@ -571,7 +610,7 @@ class EstimateForm extends Component
     public function onClickWorkLargeCategory($category = 'すべて')
     {
         $this->workSurchargeLargeCategory = $category;
-        $workSurcharge = new WorkSurcharge();
+        $workSurcharge = new WorkSurcharge('surchargeTable/workSurchargeTable.csv');
         $rateList = $workSurcharge->rateList;
         $rank = $this->rank;
 
@@ -607,9 +646,52 @@ class EstimateForm extends Component
     {
         $this->workSurchargeCode = mb_convert_kana($this->workSurchargeCode, 'n');
 
-        $workSurcharge = new WorkSurcharge();
+        $workSurcharge = new WorkSurcharge('surchargeTable/workSurchargeTable.csv');
 
         $this->workSurchargeRate = (string) $workSurcharge->findCode($this->workSurchargeCode, $this->rank);
+    }
+
+    /**
+     * リスク評価のための表を参照
+     *
+     * @return void
+     */
+    public function onClickDiscountRiskTable()
+    {
+        $this->onFindDiscountRiskCategory();
+
+        $this->dispatch('disableScroll');
+        $this->isViewDiscountRiskTable = true;
+    }
+
+    public function onFindDiscountRiskCategory()
+    {
+
+        $discountRisk = new DiscountRisk();
+        $rateList = $discountRisk->rateList;
+        $this->discountRiskCodeList = array_filter($rateList, function ($element) {
+            return is_array($element);
+        });
+
+        $this->discountRiskLargeCodeList = ['Ⅰ.危険分散', 'Ⅱ.消火設備', 'Ⅲ.セキュリティ', 'Ⅳ.火気管理', 'Ⅴ.ロス履歴'];
+    }
+
+    public function onSelectDiscountRiskCode($code)
+    {
+        $this->discountRiskCode = $code;
+        $this->onChangeDiscountRiskCode();
+        $this->onClickCloseTable();
+    }
+
+    public function onChangeDiscountRiskCode()
+    {
+        $this->discountRiskCode = mb_convert_kana($this->discountRiskCode, 'n');
+
+        $discountRisk = new DiscountRisk();
+
+        $this->discountRiskRate = (string) $discountRisk->findCode($this->discountRiskCode);
+
+        $this->discountRiskCategory = (string) $discountRisk->getDiscountRiskItem($this->discountRiskCode);
     }
 
     /**
@@ -622,6 +704,7 @@ class EstimateForm extends Component
         $this->isViewFactoryRateTable = false;
         $this->isViewOccupationalTable = false;
         $this->isViewWorkTable = false;
+        $this->isViewDiscountRiskTable = false;
 
         $this->dispatch('enableScroll');
     }
@@ -826,6 +909,18 @@ class EstimateForm extends Component
     private function getEarthquakeList()
     {
         return [15, 30, 50];
+    }
+
+    private function getDiscountCategoryList($propertyType, $rank)
+    {
+        $this->discountCategory = null;
+        if (in_array($propertyType, ['普通', '工場'], true) && $rank == '1級') {
+            return ['', 'リスク評価割引', '公有物件等割引'];
+        } elseif (in_array($propertyType, ['普通', '工場'], true) && in_array($rank, ['2級', '3級'], true)) {
+            return ['', '公有物件等割引'];
+        } else {
+            return [];
+        }
     }
 
     private function getAssessItemList()

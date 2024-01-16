@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Estimate\SaveRequest;
+use App\Http\Requests\TopRequest;
 use App\Services\EstimateService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -53,17 +54,19 @@ final class EstimateController extends Controller
         return redirect()->route($redirectName, ['id' => $estimate->id]);
     }
 
-    public function duplication(int $id)
+    public function duplication(TopRequest $request, int $id)
     {
+        $estimateType = $request->getEstimateType();
         $this->estimateService->duplication($id);
 
-        return redirect()->route('top.index');
+        return redirect()->route('top.index', compact('estimateType'));
     }
 
-    public function destroy(int $id)
+    public function destroy(TopRequest $request, int $id)
     {
+        $estimateType = $request->getEstimateType();
         $this->estimateService->destroy($id);
 
-        return redirect()->back();
+        return redirect()->route('top.index', compact('estimateType'));
     }
 }

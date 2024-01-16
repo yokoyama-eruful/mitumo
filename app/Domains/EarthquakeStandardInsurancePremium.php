@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domains;
 
-use App\Models\Estimate;
+use Illuminate\Database\Eloquent\Model;
 
 final class EarthquakeStandardInsurancePremium
 {
-    public readonly Estimate $estimate;
+    public readonly Model $estimate;
 
     public readonly string $propertyType;
 
@@ -17,6 +17,12 @@ final class EarthquakeStandardInsurancePremium
     public readonly int $insuranceYear;
 
     public readonly float $standardPremium;
+
+    public readonly float $chattelSurcharge;
+
+    public readonly float $occupationalSurchargeRate;
+
+    public readonly float $workSurchargeRate;
 
     public readonly float $totalStandard;
 
@@ -29,6 +35,9 @@ final class EarthquakeStandardInsurancePremium
         $this->payMethod = $estimate->pay_method;
         $this->insuranceYear = $estimate->insurance_year ?? 0;
         $this->standardPremium = $standardPremium;
+        $this->chattelSurcharge = $this->getChattelSurcharge($estimate);
+        $this->occupationalSurchargeRate = $this->getFloatValueByKey('occupational_surcharge_rate', $estimate->property_detail);
+        $this->workSurchargeRate = $this->getFloatValueByKey('work_surcharge_rate', $estimate->property_detail);
 
         $this->totalStandard = $this->calcTotalStandard();
         $this->totalEarthquakeStandard = $this->calcTotalEarthquakeStandard();
@@ -136,21 +145,26 @@ final class EarthquakeStandardInsurancePremium
     private function calcBuilding()
     {
         $estimate = $this->estimate;
+        $propertyType = $estimate->property_type;
+        if ($estimate->property_type === '住宅') {
+            $buildingAge = $estimate->building_age ?? '';
+        } else {
+            $buildingAge = '';
+        }
         //その他割引
 
-        $calcOtherDiscount = function ($estimate) {
-            $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
-            $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 1);
-
-            if ($otherDiscount != 1) {
-                $otherDiscount = 1 - $otherDiscount / 100;
+        if (in_array($propertyType, ['住宅', '普通'], true)) {
+            if ($estimate->getTable() == 'futsu2') {
+                $baseRate = new BuildingBaseRate($estimate, 'futsu2/rateTable/buildingBaseRateTable.csv');
+            } else {
+                $baseRate = new BuildingBaseRate($estimate, 'rateTable/buildingBaseRateTable.csv');
             }
+            $buildingBaseRate = $baseRate->findRate($estimate->property_type, $buildingAge, $estimate->rank);
+        } else {
+            $buildingBaseRate = $estimate->building_base_rate;
+        }
 
-            return round(($estimate->building_base_rate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
-        };
-
-        $otherDiscount = $calcOtherDiscount($estimate);
+        $otherDiscount = $this->getOtherDiscount($buildingBaseRate);
 
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
@@ -164,11 +178,11 @@ final class EarthquakeStandardInsurancePremium
 
         $longTermRate = $mutualAidPremium->longTerRate;
         $actualLossFactor = $this->getValueByKey('actual_loss_factor', $estimate->property_detail, 1);
-        $applyRate = $otherDiscount * $actualLossFactor * $longTermRate * $shortTermRate;
+        $applyRate = round(round(round($otherDiscount * $actualLossFactor, 2) * $longTermRate, 2) * $shortTermRate, 2);
 
         //掛け金
         $buildingInsurancePayout = $this->getValueByKey('building_insurance_payout', $estimate->property_detail);
-        $premium = $buildingInsurancePayout * $applyRate;
+        $premium = ceil(floor($buildingInsurancePayout * $applyRate * 10) / 10);
 
         return $premium;
     }
@@ -176,29 +190,21 @@ final class EarthquakeStandardInsurancePremium
     private function calcHouseHold()
     {
         $estimate = $this->estimate;
-        //その他割引
+        $propertyType = $estimate->property_type;
 
-        $calcOtherDiscount = function ($estimate) {
-            $propertyType = $estimate->property_type;
-
-            if (in_array($propertyType, ['住宅', '普通'], true)) {
-                $baseRate = new ChattelBaseRate($estimate);
-                $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
+        if (in_array($propertyType, ['住宅', '普通'], true)) {
+            if ($estimate->getTable() == 'futsu2') {
+                $baseRate = new ChattelBaseRate($estimate, 'futsu2/rateTable/chattelBaseTable.csv');
             } else {
-                $chattelBaseRate = $estimate->building_base_rate;
+                $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
             }
+            $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
+        } else {
+            $chattelBaseRate = $estimate->building_base_rate;
+        }
 
-            $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
-            $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
-            if ($otherDiscount != 1) {
-                $otherDiscount = 1 - $otherDiscount / 100;
-            }
-
-            return round(($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
-        };
-
-        $otherDiscount = $calcOtherDiscount($estimate);
+        //その他割引
+        $otherDiscount = $this->getOtherDiscount($chattelBaseRate, $this->chattelSurcharge);
 
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
@@ -211,11 +217,11 @@ final class EarthquakeStandardInsurancePremium
         }
 
         $longTermRate = $mutualAidPremium->longTerRate;
-        $applyRate = $otherDiscount * $longTermRate * $shortTermRate;
+        $applyRate = round(round($otherDiscount * $longTermRate, 2) * $shortTermRate, 2);
 
         //掛け金
         $householdInsurancePayout = $this->getValueByKey('household_insurance_payout', $estimate->property_detail);
-        $premium = $householdInsurancePayout * $applyRate;
+        $premium = ceil(floor($householdInsurancePayout * $applyRate * 10) / 10);
 
         return $premium;
     }
@@ -223,29 +229,21 @@ final class EarthquakeStandardInsurancePremium
     private function calcFacility()
     {
         $estimate = $this->estimate;
+        $propertyType = $estimate->property_type;
+
+        if (in_array($propertyType, ['住宅', '普通'], true)) {
+            if ($estimate->getTable() == 'futsu2') {
+                $baseRate = new ChattelBaseRate($estimate, 'futsu2/rateTable/chattelBaseTable.csv');
+            } else {
+                $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
+            }
+            $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
+        } else {
+            $chattelBaseRate = $estimate->building_base_rate;
+        }
         //その他割引
 
-        $calcOtherDiscount = function ($estimate) {
-            $propertyType = $estimate->property_type;
-
-            if (in_array($propertyType, ['住宅', '普通'], true)) {
-                $baseRate = new ChattelBaseRate($estimate);
-                $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
-            } else {
-                $chattelBaseRate = $estimate->building_base_rate;
-            }
-
-            $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail);
-            $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
-            if ($otherDiscount != 1) {
-                $otherDiscount = 1 - $otherDiscount / 100;
-            }
-
-            return round(($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
-        };
-
-        $otherDiscount = $calcOtherDiscount($estimate);
+        $otherDiscount = $this->getOtherDiscount($chattelBaseRate, $this->chattelSurcharge);
 
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
@@ -259,12 +257,12 @@ final class EarthquakeStandardInsurancePremium
 
         $longTermRate = $mutualAidPremium->longTerRate;
         $actualLossFactor = $this->getValueByKey('actual_loss_factor', $estimate->property_detail, 1);
-        $applyRate = $otherDiscount * $actualLossFactor * $longTermRate * $shortTermRate;
+        $applyRate = round(round(round($otherDiscount * $actualLossFactor, 2) * $longTermRate, 2) * $shortTermRate, 2);
 
         //掛け金
         $facilityInsurancePayout = $this->getValueByKey('facility_insurance_payout', $estimate->property_detail);
         $otherFacilityInsurancePayout = $this->getValueByKey('other_facility_insurance_payout', $estimate->property_detail);
-        $premium = ($facilityInsurancePayout + $otherFacilityInsurancePayout) * $applyRate;
+        $premium = ceil(floor(($facilityInsurancePayout + $otherFacilityInsurancePayout) * $applyRate * 10) / 10);
 
         return $premium;
     }
@@ -272,30 +270,21 @@ final class EarthquakeStandardInsurancePremium
     private function calcItem()
     {
         $estimate = $this->estimate;
+        $propertyType = $estimate->property_type;
+
+        if (in_array($propertyType, ['住宅', '普通'], true)) {
+            if ($estimate->getTable() == 'futsu2') {
+                $baseRate = new ChattelBaseRate($estimate, 'futsu2/rateTable/chattelBaseTable.csv');
+            } else {
+                $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
+            }
+            $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
+        } else {
+            $chattelBaseRate = $estimate->building_base_rate;
+        }
         //その他割引
 
-        $calcOtherDiscount = function ($estimate) {
-            $propertyType = $estimate->property_type;
-
-            if (in_array($propertyType, ['住宅', '普通'], true)) {
-                $baseRate = new ChattelBaseRate($estimate);
-                $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
-            } else {
-                $chattelBaseRate = $estimate->building_base_rate;
-            }
-
-            $occupationalSurchargeRate = $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail, 1);
-            $workSurchargeRate = $this->getValueByKey('work_surcharge_rate', $estimate->property_detail);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
-            $otherDiscount = $this->getValueByKey('other_discount', $estimate->property_detail, 100);
-            if ($otherDiscount != 1) {
-                $otherDiscount = 1 - $otherDiscount / 100;
-            }
-
-            return round(($chattelBaseRate + $occupationalSurchargeRate + $workSurchargeRate) * $otherDiscount, 2);
-        };
-
-        $otherDiscount = $calcOtherDiscount($estimate);
+        $otherDiscount = $this->getOtherDiscount($chattelBaseRate, $this->chattelSurcharge);
 
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
@@ -309,20 +298,59 @@ final class EarthquakeStandardInsurancePremium
 
         $longTermRate = $mutualAidPremium->longTerRate;
 
-        $chattelSurchargeRate = match ($estimate->property_type) {
-            '住宅' => 0,
-            '普通' => 0.2, //動産割増（カテゴリ）が１級でも２級でも料率は0.2
-            '工場' => $estimate->property_detail['chattel_surcharge'],
-        };
-
-        $applyRate = ($otherDiscount + $chattelSurchargeRate) * $longTermRate * $shortTermRate;
+        $applyRate = round(round(($otherDiscount) * $longTermRate, 2) * $shortTermRate, 2);
 
         //掛け金
         $itemInsurancePayout = $this->getValueByKey('item_insurance_payout', $estimate->property_detail);
         $otherItemInsurancePayout = $this->getValueByKey('other_item_insurance_payout', $estimate->property_detail);
-        $premium = ($itemInsurancePayout + $otherItemInsurancePayout) * $applyRate;
+        $premium = ceil(floor(($itemInsurancePayout + $otherItemInsurancePayout) * $applyRate * 10) / 10);
 
         return $premium;
+    }
+
+    private function getChattelSurcharge($estimate)
+    {
+        return match ($estimate->property_type) {
+            '住宅' => 0,
+            '普通' => 0.2, //動産割増（カテゴリ）が１級でも２級でも料率は0.2
+            '工場' => $this->getFloatValueByKey('chattel_surcharge', $estimate->property_detail),
+        };
+    }
+
+    /**
+     * 割引の適用判別
+     */
+    public function getOtherDiscount($baseRate, $chattelPremium = 0, $comprehensivePremium = 0)
+    {
+        $discountCategoryRate = 0;
+        $discountCategory = array_key_exists('discount_category', $this->estimate->property_detail) ? $this->estimate->property_detail['discount_category'] : '';
+
+        switch ($discountCategory) {
+            case 'リスク評価割引':
+                $discountRiskRate = $this->getFloatValueByKey('discount_risk_rate', $this->estimate->property_detail, 1);
+                $discountCategoryRate = round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) + $chattelPremium + $comprehensivePremium) * (1 - $discountRiskRate / 100), 2);
+                break;
+            case '公有物件等割引':
+                $discountFireExtinguisher = $this->getFloatValueByKey('discount_fire_extinguisher', $this->estimate->property_detail);
+                $discountFireExtinguisher = $discountFireExtinguisher == 0 ? 0 : $discountFireExtinguisher / 100;
+                $discountSecurity = $this->getFloatValueByKey('discount_security', $this->estimate->property_detail);
+                $discountSecurity = $discountSecurity == 0 ? 0 : $discountSecurity / 100;
+                $discount = $discountFireExtinguisher + $discountSecurity == 0 ? 1 : $discountFireExtinguisher + $discountSecurity;
+                $discountCategoryRate = (($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount + $chattelPremium + $comprehensivePremium) * (1 - 0.25);
+                break;
+
+            default:
+                $otherDiscount = $this->getValueByKey('other_discount', $this->estimate->property_detail, 0);
+                if ($otherDiscount == 0) {
+                    $otherDiscount = 1;
+                } else {
+                    $otherDiscount = 1 - $otherDiscount / 100;
+                }
+                $discountCategoryRate = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount + $chattelPremium + $comprehensivePremium, 2);
+                break;
+        }
+
+        return $discountCategoryRate;
     }
 
     /**
@@ -332,6 +360,15 @@ final class EarthquakeStandardInsurancePremium
     {
         if (array_key_exists($key, $array) && $array[$key]) {
             return intval($array[$key]);
+        }
+
+        return $defaultValue;
+    }
+
+    private function getFloatValueByKey(string $key, array $array, int $defaultValue = 0): float
+    {
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return (float) $array[$key];
         }
 
         return $defaultValue;
