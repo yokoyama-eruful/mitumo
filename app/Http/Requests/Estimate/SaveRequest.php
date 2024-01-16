@@ -66,6 +66,11 @@ final class SaveRequest extends FormRequest
             'chattel_surcharge' => ['nullable', 'string'],
 
             'actual_loss_factor' => ['nullable', 'numeric', 'min:0'],
+            'discount_category' => ['nullable', 'string'],
+            'discount_risk_code' => ['nullable', 'numeric'],
+            'discount_risk_rate' => ['nullable', 'numeric', 'min:0', 'max:99'],
+            'discount_fire_extinguisher' => ['nullable', 'numeric', 'min:0', 'max:99'],
+            'discount_security' => ['nullable', 'numeric', 'min:0', 'max:99'],
             'other_discount' => ['nullable', 'numeric', 'min:0', 'max:50'],
 
             'chattel_surcharge_category' => ['nullable', 'string'],
@@ -125,6 +130,12 @@ final class SaveRequest extends FormRequest
         $validator->after(function ($validator) {
             if ($this->input('insurance_year') && ($this->input('insurance_month') || $this->input('insurance_day'))) {
                 $validator->errors()->add('エラー', '共済期間が１年以上の場合は、月・日数は選択できません。');
+            }
+        });
+
+        $validator->after(function ($validator) {
+            if ($this->input('discount_category') == 'リスク評価割引' && $this->input('insurance_year') > 3) {
+                $validator->errors()->add('エラー', 'リスク評価割引を選択した場合、共済期間は最長で3年間です。');
             }
         });
 

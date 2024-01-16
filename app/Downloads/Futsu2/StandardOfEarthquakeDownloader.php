@@ -140,6 +140,11 @@ class StandardOfEarthquakeDownloader
         $worksheet->setCellValue('E27', $standardPremium->building['短期率']);
         $worksheet->setCellValue('E28', $standardPremium->building['長期率']);
         $worksheet->setCellValue('E29', $standardPremium->actualLossFactor);
-        $worksheet->setCellValue('E30', $standardPremium->getPayByLongTermFlag() == true ? '有' : '無');
+        $worksheet->setCellValue('E30', $standardPremium->getPayByLongTermFlag() == true ? '3%' : '');
+
+        $worksheet->setCellValue('L21', percentUnit($standardPremium->discountFireExtinguisher));
+        $worksheet->setCellValue('L22', percentUnit($standardPremium->discountSecurity));
+        $worksheet->setCellValue('L23', percentUnit($standardPremium->discountPublicProperty));
+        $worksheet->setCellValue('L24', percentUnit($standardPremium->discountRiskRate));
     }
 }

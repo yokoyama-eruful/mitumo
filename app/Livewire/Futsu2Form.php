@@ -12,6 +12,7 @@ use App\Domains\Assess\AssessRenovation;
 use App\Domains\Assess\AssessSolarPanel;
 use App\Domains\BuildingBaseRate;
 use App\Domains\ChattelBaseRate;
+use App\Domains\DiscountRisk;
 use App\Domains\OccupationalSurcharge;
 use App\Domains\WorkSurcharge;
 use App\Models\Futsu2;
@@ -103,7 +104,13 @@ class Futsu2Form extends Component
 
     public ?string $actualLossFactor = null;
 
+    public ?string $discountCategory = null;
+
     public ?string $otherDiscount = null;
+
+    public ?string $discountFireExtinguisher = null;
+
+    public ?string $discountSecurity = null;
 
     public ?string $chattelSurchargeCategory = null;
 
@@ -114,6 +121,12 @@ class Futsu2Form extends Component
     public ?string $workSurchargeCode = null;
 
     public ?string $workSurchargeRate = null;
+
+    public ?string $discountRiskCode = null;
+
+    public ?string $discountRiskRate = null;
+
+    public ?string $factoryBuildingCode = null;
 
     public ?string $buildingInsurancePayout = null;
 
@@ -189,6 +202,8 @@ class Futsu2Form extends Component
 
     public array $earthquakeList;
 
+    public array $discountCategoryList;
+
     public array $assessItemList;
 
     public array $assessUsageList;
@@ -205,11 +220,19 @@ class Futsu2Form extends Component
 
     public string $workSurchargeLargeCategory = 'すべて';
 
+    public bool $isViewDiscountRiskTable = false;
+
+    public string $discountRiskCategory = '';
+
     //標準コード
 
     public array $occupationalSurchargeCodeList = [];
 
     public array $workSurchargeCodeList = [];
+
+    public array $discountRiskCodeList = [];
+
+    public array $discountRiskLargeCodeList = [];
 
     public function mount($estimate)
     {
@@ -261,7 +284,11 @@ class Futsu2Form extends Component
 
         $this->chattelSurcharge = old('chattel_surcharge', $this->getValueByKey('chattel_surcharge', $estimate->property_detail));
         $this->actualLossFactor = old('actual_loss_factor', $this->getValueByKey('actual_loss_factor', $estimate->property_detail));
+        $this->discountCategory = old('discount_category', $this->getValueByKey('discount_category', $estimate->property_detail));
+        $this->discountRiskCategory = old('discount_risk_category', $this->getValueByKey('discount_risk_category', $estimate->property_detail));
         $this->otherDiscount = old('other_discount', $this->getValueByKey('other_discount', $estimate->property_detail));
+        $this->discountFireExtinguisher = old('discount_fire_extinguisher', $this->getValueByKey('discount_fire_extinguisher', $estimate->property_detail));
+        $this->discountSecurity = old('discount_security', $this->getValueByKey('discount_security', $estimate->property_detail));
         $this->chattelSurchargeCategory = old('chattel_surcharge_category', $this->getValueByKey('chattel_surcharge_category', $estimate->property_detail));
 
         $this->occupationalSurchargeCode = old('occupational_surcharge_code', $this->getValueByKey('occupational_surcharge_code', $estimate->property_detail));
@@ -269,6 +296,9 @@ class Futsu2Form extends Component
 
         $this->workSurchargeCode = old('work_surcharge_code', $this->getValueByKey('work_surcharge_code', $estimate->property_detail));
         $this->workSurchargeRate = old('work_surcharge_rate', $this->getValueByKey('work_surcharge_rate', $estimate->property_detail));
+
+        $this->discountRiskCode = old('discount_risk_code', $this->getValueByKey('discount_risk_code', $estimate->property_detail));
+        $this->discountRiskRate = old('discount_risk_rate', $this->getValueByKey('discount_risk_rate', $estimate->property_detail));
 
         $this->buildingInsurancePayout = old('building_insurance_payout', $this->getValueByKey('building_insurance_payout', $estimate->property_detail));
         $this->householdInsurancePayout = old('household_insurance_payout', $this->getValueByKey('household_insurance_payout', $estimate->property_detail));
@@ -311,6 +341,7 @@ class Futsu2Form extends Component
         if (isset($this->estimate->id)) {
             $this->onChangeAssessItem();
         }
+        $this->onChangeDiscountRiskCode();
 
         return view('futsu2.livewire.form');
     }
@@ -324,6 +355,7 @@ class Futsu2Form extends Component
     {
         $this->buildingBaseRate = '';
         $this->rankList = $this->getRankList($this->propertyType);
+        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
     }
 
     /**
@@ -343,11 +375,13 @@ class Futsu2Form extends Component
             return;
         }
 
+        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
+
         $buildingAge = '';
 
-        $buildingBaseRate = new BuildingBaseRate($this->estimate, 'futsu2/rateTable/buildingBaseRateTable.csv');
+        $buildingBaseRate = new BuildingBaseRate($this->estimate, 'estimateFutsu2/rateTable/buildingBaseRateTable.csv');
         $this->buildingBaseRate = (string) $buildingBaseRate->findRate($this->propertyType, $buildingAge, $this->rank);
-        $chattelBaseRate = new ChattelBaseRate($this->estimate, 'futsu2/rateTable/chattelBaseTable.csv');
+        $chattelBaseRate = new ChattelBaseRate($this->estimate, 'estimateFutsu2/rateTable/chattelBaseTable.csv');
         $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank);
 
         $this->occupationalSurchargeCode = null;
@@ -389,6 +423,11 @@ class Futsu2Form extends Component
 
     }
 
+    public function onChangeDiscountCategory()
+    {
+
+    }
+
     /**
      * 評価項目によって評価用途の選択肢を変更するトリガー
      *
@@ -423,7 +462,7 @@ class Futsu2Form extends Component
     public function onClickOccupationalLargeCategory($category = 'すべて')
     {
         $this->occupationalSurchargeLargeCategory = $category;
-        $occupationalSurcharge = new OccupationalSurcharge('futsu2/surchargeTable/occupationalSurchargeTable.csv');
+        $occupationalSurcharge = new OccupationalSurcharge('estimateFutsu2/surchargeTable/occupationalSurchargeTable.csv');
         $rateList = $occupationalSurcharge->rateList;
         $rank = $this->rank;
 
@@ -455,7 +494,7 @@ class Futsu2Form extends Component
     {
         $this->occupationalSurchargeCode = mb_convert_kana($this->occupationalSurchargeCode, 'n');
 
-        $occupationalSurcharge = new OccupationalSurcharge('futsu2/surchargeTable/occupationalSurchargeTable.csv');
+        $occupationalSurcharge = new OccupationalSurcharge('estimateFutsu2/surchargeTable/occupationalSurchargeTable.csv');
 
         $this->occupationalSurchargeRate = (string) $occupationalSurcharge->findCode($this->occupationalSurchargeCode, $this->rank);
     }
@@ -481,7 +520,7 @@ class Futsu2Form extends Component
     public function onClickWorkLargeCategory($category = 'すべて')
     {
         $this->workSurchargeLargeCategory = $category;
-        $workSurcharge = new WorkSurcharge('futsu2/surchargeTable/workSurchargeTable.csv');
+        $workSurcharge = new WorkSurcharge('estimateFutsu2/surchargeTable/workSurchargeTable.csv');
         $rateList = $workSurcharge->rateList;
         $rank = $this->rank;
 
@@ -517,9 +556,52 @@ class Futsu2Form extends Component
     {
         $this->workSurchargeCode = mb_convert_kana($this->workSurchargeCode, 'n');
 
-        $workSurcharge = new WorkSurcharge('futsu2/surchargeTable/workSurchargeTable.csv');
+        $workSurcharge = new WorkSurcharge('estimateFutsu2/surchargeTable/workSurchargeTable.csv');
 
         $this->workSurchargeRate = (string) $workSurcharge->findCode($this->workSurchargeCode, $this->rank);
+    }
+
+    /**
+     * リスク評価のための表を参照
+     *
+     * @return void
+     */
+    public function onClickDiscountRiskTable()
+    {
+        $this->onFindDiscountRiskCategory();
+
+        $this->dispatch('disableScroll');
+        $this->isViewDiscountRiskTable = true;
+    }
+
+    public function onFindDiscountRiskCategory()
+    {
+
+        $discountRisk = new DiscountRisk();
+        $rateList = $discountRisk->rateList;
+        $this->discountRiskCodeList = array_filter($rateList, function ($element) {
+            return is_array($element);
+        });
+
+        $this->discountRiskLargeCodeList = ['Ⅰ.危険分散', 'Ⅱ.消火設備', 'Ⅲ.セキュリティ', 'Ⅳ.火気管理', 'Ⅴ.ロス履歴'];
+    }
+
+    public function onSelectDiscountRiskCode($code)
+    {
+        $this->discountRiskCode = $code;
+        $this->onChangeDiscountRiskCode();
+        $this->onClickCloseTable();
+    }
+
+    public function onChangeDiscountRiskCode()
+    {
+        $this->discountRiskCode = mb_convert_kana($this->discountRiskCode, 'n');
+
+        $discountRisk = new DiscountRisk();
+
+        $this->discountRiskRate = (string) $discountRisk->findCode($this->discountRiskCode);
+
+        $this->discountRiskCategory = (string) $discountRisk->getDiscountRiskItem($this->discountRiskCode);
     }
 
     /**
@@ -531,6 +613,7 @@ class Futsu2Form extends Component
     {
         $this->isViewOccupationalTable = false;
         $this->isViewWorkTable = false;
+        $this->isViewDiscountRiskTable = false;
 
         $this->dispatch('enableScroll');
     }
@@ -727,6 +810,18 @@ class Futsu2Form extends Component
     private function getEarthquakeList()
     {
         return [15, 30, 50];
+    }
+
+    private function getDiscountCategoryList($propertyType, $rank)
+    {
+        $this->discountCategory = null;
+        if (in_array($propertyType, ['普通', '工場'], true) && $rank == '1級') {
+            return ['', 'リスク評価割引', '公有物件等割引'];
+        } elseif (in_array($propertyType, ['普通', '工場'], true) && $rank != '1級') {
+            return ['', '公有物件等割引'];
+        } else {
+            return [];
+        }
     }
 
     private function getAssessItemList()
