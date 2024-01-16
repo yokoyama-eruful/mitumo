@@ -56,8 +56,8 @@ class PreviewController extends Controller
     {
         $estimate = $this->futsu2Service->find($id);
         $standard = new StandardInsurancePremium($estimate);
-        $occupationalSurchargeItem = new OccupationalSurcharge('surchargeTable/occupationalSurchargeTable.csv');
-        $workSurchargeItem = new WorkSurcharge('surchargeTable/workSurchargeTable.csv');
+        $occupationalSurchargeItem = new OccupationalSurcharge('estimateFutsu2/surchargeTable/occupationalSurchargeTable.csv');
+        $workSurchargeItem = new WorkSurcharge('estimateFutsu2/surchargeTable/workSurchargeTable.csv');
         $factoryPropertyBasePremiumItem = new FactoryPropertyBasePremium();
         $comprehensive = new ComprehensiveInsurancePremium($estimate);
 
