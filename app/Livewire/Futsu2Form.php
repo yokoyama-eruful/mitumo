@@ -334,6 +334,7 @@ class Futsu2Form extends Component
         $this->assessItemList = $this->getAssessItemList();
         $this->assessUsageList = $this->getAssessUsageList();
         $this->assessStructureList = $this->getAssessStructureList();
+        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
     }
 
     public function render()
@@ -365,6 +366,9 @@ class Futsu2Form extends Component
      */
     public function onChangeBaseRate()
     {
+        $this->discountCategory = '';
+        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
+
         if (
             is_null($this->propertyType) ||
             is_null($this->rank)
@@ -374,8 +378,6 @@ class Futsu2Form extends Component
 
             return;
         }
-
-        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
 
         $buildingAge = '';
 
@@ -425,7 +427,7 @@ class Futsu2Form extends Component
 
     public function onChangeDiscountCategory()
     {
-
+        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
     }
 
     /**
@@ -814,11 +816,10 @@ class Futsu2Form extends Component
 
     private function getDiscountCategoryList($propertyType, $rank)
     {
-        $this->discountCategory = null;
-        if (in_array($propertyType, ['普通', '工場'], true) && $rank == '1級') {
+        if ($propertyType == '普通' && $rank == '1級') {
             return ['', 'リスク評価割引', '公有物件等割引'];
-        } elseif (in_array($propertyType, ['普通', '工場'], true) && $rank != '1級') {
-            return ['', '公有物件等割引'];
+        } elseif ($propertyType == '普通' && in_array($rank, ['2級', '3級'], true)) {
+            return ['', '公有物件割引'];
         } else {
             return [];
         }

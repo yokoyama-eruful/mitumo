@@ -336,7 +336,7 @@
                     wire:model="actualLossFactor">
             </div>
         @endif
-        @if (in_array($propertyType, ['普通', '工場'], true))
+        @if ($propertyType == '普通')
             <div class="estimate-input-box">
                 <label class="futsu2-label" for="discount_category">割引選択
                 </label>
@@ -374,10 +374,9 @@
                     </div>
                 </div>
             </div>
-        @endif
-        @if ($discountCategory == '公有物件等割引' && in_array($propertyType, ['住宅', '普通'], true))
+        @elseif ($discountCategory == '公有物件等割引')
             <div class="estimate-input-box">
-                <label class="futsu2-label" for="discount_fire_extinguisher">消化設備割引
+                <label class="futsu2-label" for="discount_fire_extinguisher">消火設備割引
                 </label>
                 <input id="discount_fire_extinguisher" name="discount_fire_extinguisher" class="estimate-input"
                     type="number" min="0" max="50" wire:model="discountFireExtinguisher">
@@ -389,6 +388,9 @@
                 <input id="discount_security" name="discount_security" class="estimate-input" type="number"
                     min="0" max="50" wire:model="discountSecurity">
                 <span class="my-auto mx-1">%</span>
+            </div>
+        @else
+            <div>
             </div>
         @endif
         @if ($discountCategory == '' && in_array($propertyType, ['普通'], true))

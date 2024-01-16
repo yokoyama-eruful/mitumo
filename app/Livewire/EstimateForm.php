@@ -343,6 +343,7 @@ class EstimateForm extends Component
         $this->assessItemList = $this->getAssessItemList();
         $this->assessUsageList = $this->getAssessUsageList();
         $this->assessStructureList = $this->getAssessStructureList();
+        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
     }
 
     public function render()
@@ -365,9 +366,7 @@ class EstimateForm extends Component
     public function onChangePropertyType()
     {
         $this->buildingBaseRate = '';
-        $this->discountFireExtinguisher = '';
-        $this->discountRiskCategory = '';
-        $this->discountSecurity = '';
+        $this->discountCategory = '';
         $this->rankList = $this->getRankList($this->propertyType);
         $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
     }
@@ -379,6 +378,7 @@ class EstimateForm extends Component
      */
     public function onChangeBaseRate()
     {
+        $this->discountCategory = '';
         $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
 
         if (
@@ -443,7 +443,7 @@ class EstimateForm extends Component
 
     public function onChangeDiscountCategory()
     {
-        $this->getDiscountCategoryList($this->propertyType, $this->rank);
+        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
     }
 
     /**
@@ -913,11 +913,12 @@ class EstimateForm extends Component
 
     private function getDiscountCategoryList($propertyType, $rank)
     {
-        $this->discountCategory = null;
-        if (in_array($propertyType, ['普通', '工場'], true) && $rank == '1級') {
+        if ('工場' && $rank == '1級') {
+            return ['', 'リスク評価割引'];
+        } elseif ($propertyType == '普通' && $rank == '1級') {
             return ['', 'リスク評価割引', '公有物件等割引'];
-        } elseif (in_array($propertyType, ['普通', '工場'], true) && in_array($rank, ['2級', '3級'], true)) {
-            return ['', '公有物件等割引'];
+        } elseif ($propertyType == '普通' && in_array($rank, ['2級', '3級'], true)) {
+            return ['', '公有物件割引'];
         } else {
             return [];
         }

@@ -182,17 +182,6 @@
                     {{ $standard->houseHold['基本率'] }}
                 </div>
             </div>
-
-        </div>
-        <div class="ms-10">
-            <div class="flex flex-row">
-                <div class="flex justify-center items-center h-10 w-32 outline outline-1 outline-gray-500">
-                    <div class="absolute w-32 h-[2px] transform -skew-y-[18deg] bg-gray-500"></div>
-                </div>
-                <div class="flex justify-center items-center h-10 w-28 bg-green-200 outline outline-1 outline-gray-500">
-                    料率
-                </div>
-            </div>
             <div class="flex flex-row">
                 <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
                     職業割増
@@ -228,15 +217,65 @@
                     料率
                 </div>
             </div>
-
-            <div class="flex flex-row">
-                <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
-                    その他割引
+            @if (!empty($standard->otherDiscount))
+                <div class="flex flex-row">
+                    <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
+                        その他割引
+                    </div>
+                    <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
+                        {{ percentUnit($standard->otherDiscount) }}
+                    </div>
                 </div>
-                <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-                    {{ percentUnit($standard->otherDiscount) }}
+            @endif
+            @if ($standard->discountCategory == '公有物件等割引')
+                <div class="flex flex-row">
+                    <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
+                        消火設備割引
+                    </div>
+                    <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
+                        {{ percentUnit($standard->discountFireExtinguisher) }}
+                    </div>
+                </div>
+                <div class="flex flex-row">
+                    <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
+                        セキュリティ割引
+                    </div>
+                    <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
+                        {{ percentUnit($standard->discountSecurity) }}
+                    </div>
+                </div>
+                <div class="flex flex-row">
+                    <div
+                        class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
+                        公有物件等割引
+                    </div>
+                    <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
+                        {{ percentUnit($standard->discountPublicProperty) }}
+                    </div>
+                </div>
+            @endif
+            @if ($standard->discountCategory == 'リスク評価割引')
+                <div class="flex flex-row">
+                    <div
+                        class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
+                        リスク評価割引
+                    </div>
+                    <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
+                        {{ percentUnit($standard->discountRiskRate) }}
+                    </div>
+                </div>
+            @endif
+        </div>
+        <div class="ms-10">
+            <div class="flex flex-row">
+                <div class="flex justify-center items-center h-10 w-32 outline outline-1 outline-gray-500">
+                    <div class="absolute w-32 h-[2px] transform -skew-y-[18deg] bg-gray-500"></div>
+                </div>
+                <div class="flex justify-center items-center h-10 w-28 bg-green-200 outline outline-1 outline-gray-500">
+                    料率
                 </div>
             </div>
+
             <div class="flex flex-row">
                 <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
                     短期係数
@@ -258,7 +297,7 @@
                     実損払係数
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-                    {{ $standard->actualLossFactor == 0 ? '' : $standard->actualLossFactor }}
+                    {{ $standard->actualLossFactor }}
                 </div>
             </div>
             <div class="flex flex-row">
