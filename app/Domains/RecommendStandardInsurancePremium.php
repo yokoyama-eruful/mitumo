@@ -120,7 +120,7 @@ final class RecommendStandardInsurancePremium
         }
 
         //その他割引
-        $otherDiscount = $this->getOtherDiscount($chattelBaseRate, $this->chattelSurcharge);
+        $otherDiscount = $this->getOtherDiscount($chattelBaseRate);
 
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $recommendYear); //おすすめ契約年数で長期率を取得

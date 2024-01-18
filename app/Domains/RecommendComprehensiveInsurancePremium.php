@@ -124,7 +124,7 @@ final class RecommendComprehensiveInsurancePremium
         $comprehensivePremium = new ComprehensivePremium($estimate);
         $comprehensivePremium = $comprehensivePremium->getRate('家財');
         //その他割引
-        $otherDiscount = $this->getOtherDiscount($chattelBaseRate, $this->chattelSurcharge, $comprehensivePremium);
+        $otherDiscount = $this->getOtherDiscount($chattelBaseRate, 0, $comprehensivePremium);
 
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $recommendYear);
