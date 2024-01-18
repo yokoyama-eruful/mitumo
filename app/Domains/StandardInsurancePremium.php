@@ -303,7 +303,7 @@ final class StandardInsurancePremium
         }
         //その他割引
 
-        $otherDiscount = $this->getOtherDiscount($chattelBaseRate, $this->chattelSurcharge);
+        $otherDiscount = $this->getOtherDiscount($chattelBaseRate);
 
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
