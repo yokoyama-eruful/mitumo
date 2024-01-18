@@ -337,6 +337,27 @@
             </div>
         @endif
         @if ($propertyType == '普通' && $rank == '1級')
+            <div class="estimate-input-box">
+                <label class="futsu2-label" for="discount_fire_extinguisher">消火設備割引
+                </label>
+                <input id="discount_fire_extinguisher" name="discount_fire_extinguisher" class="estimate-input"
+                    type="number" min="0" max="50" wire:model="discountFireExtinguisher">
+                <span class="my-auto mx-1">%</span>
+            </div>
+            <div class="estimate-input-box">
+                <label class="futsu2-label" for="discount_security">セキュリティ割引
+                </label>
+                <input id="discount_security" name="discount_security" class="estimate-input" type="number"
+                    min="0" max="50" wire:model="discountSecurity">
+                <span class="my-auto mx-1">%</span>
+            </div>
+            <div class="estimate-input-box">
+                <label class="futsu2-label" id="discount_public" for="discount_public">公有物件割引
+                </label>
+                <input id="discount_public" name="discount_public" class="estimate-input" type="number"
+                    min="0" max="50" wire:model="discountPublic">
+                <span class="my-auto mx-1">%</span>
+            </div>
             <div class="estimate-input-box w-auto">
                 <label class="futsu2-label h-auto">リスク評価割引</label>
                 <div class="w-auto">
@@ -355,46 +376,27 @@
                     </div>
                 </div>
             </div>
-            <div class="estimate-input-box w-auto">
-                <label class="futsu2-label h-auto">公有物件等割引</label>
-                <div class="w-auto">
-                    <div class="flex">
-                        <label class="futsu2-label w-32" for="discount_fire_extinguisher">消火設備割引
-                        </label>
-                        <input id="discount_fire_extinguisher" name="discount_fire_extinguisher"
-                            class="estimate-input w-[488px]" type="number" min="0" max="50"
-                            wire:model="discountFireExtinguisher">
-                        <span class="my-auto mx-1">%</span>
-                    </div>
-                    <div class="flex">
-                        <label class="futsu2-label w-32" for="discount_security">セキュリティ割引
-                        </label>
-                        <input id="discount_security" name="discount_security" class="estimate-input" type="number"
-                            min="0" max="50" wire:model="discountSecurity">
-                        <span class="my-auto mx-1">%</span>
-                    </div>
-                </div>
-            </div>
         @elseif ($propertyType == '普通' && in_array($rank, ['2級', '3級'], true))
-            <div class="estimate-input-box w-auto">
-                <label class="futsu2-label h-auto">公有物件等割引</label>
-                <div class="w-auto">
-                    <div class="flex">
-                        <label class="futsu2-label w-32" for="discount_fire_extinguisher">消火設備割引
-                        </label>
-                        <input id="discount_fire_extinguisher" name="discount_fire_extinguisher"
-                            class="estimate-input w-[488px]" type="number" min="0" max="50"
-                            wire:model="discountFireExtinguisher">
-                        <span class="my-auto mx-1">%</span>
-                    </div>
-                    <div class="flex">
-                        <label class="futsu2-label w-32" for="discount_security">セキュリティ割引
-                        </label>
-                        <input id="discount_security" name="discount_security" class="estimate-input" type="number"
-                            min="0" max="50" wire:model="discountSecurity">
-                        <span class="my-auto mx-1">%</span>
-                    </div>
-                </div>
+            <div class="estimate-input-box">
+                <label class="futsu2-label" for="discount_fire_extinguisher">消火設備割引
+                </label>
+                <input id="discount_fire_extinguisher" name="discount_fire_extinguisher" class="estimate-input"
+                    type="number" min="0" max="50" wire:model="discountFireExtinguisher">
+                <span class="my-auto mx-1">%</span>
+            </div>
+            <div class="estimate-input-box">
+                <label class="futsu2-label" for="discount_security">セキュリティ割引
+                </label>
+                <input id="discount_security" name="discount_security" class="estimate-input" type="number"
+                    min="0" max="50" wire:model="discountSecurity">
+                <span class="my-auto mx-1">%</span>
+            </div>
+            <div class="estimate-input-box">
+                <label class="futsu2-label" id="discount_public" for="discount_public">公有物件割引
+                </label>
+                <input id="discount_public" name="discount_public" class="estimate-input" type="number"
+                    min="0" max="50" wire:model="discountPublic">
+                <span class="my-auto mx-1">%</span>
             </div>
         @else
             <div>

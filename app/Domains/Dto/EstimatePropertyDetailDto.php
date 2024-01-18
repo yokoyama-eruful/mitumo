@@ -23,7 +23,7 @@ final class EstimatePropertyDetailDto
         return array_intersect_key($params, array_flip([
             'actual_loss_factor', 'discount_risk_code',
             'discount_risk_rate', 'discount_fire_extinguisher',
-            'discount_security', 'other_discount', 'building_insurance_payout',
+            'discount_security', 'discount_public', 'other_discount', 'building_insurance_payout',
             'household_insurance_payout', 'insurance_purpose',
             'recommend1', 'recommend2', 'recommend3', //おすすめ
             'earthquake1', 'earthquake2', 'earthquake3', //地震
@@ -35,7 +35,7 @@ final class EstimatePropertyDetailDto
         return array_intersect_key($params, array_flip([
             'actual_loss_factor',  'discount_risk_code',
             'discount_risk_rate', 'discount_fire_extinguisher',
-            'discount_security', 'other_discount', 'chattel_surcharge_category',
+            'discount_security', 'discount_public', 'other_discount', 'chattel_surcharge_category',
             'occupational_surcharge_code', 'occupational_surcharge_rate',
             'work_surcharge_code', 'work_surcharge_rate',
             'building_insurance_payout', 'household_insurance_payout', 'facility_insurance_payout',
@@ -51,7 +51,7 @@ final class EstimatePropertyDetailDto
         return array_intersect_key($params, array_flip([
             'chattel_surcharge', 'actual_loss_factor', 'discount_risk_code',
             'discount_risk_rate', 'discount_fire_extinguisher',
-            'discount_security', 'other_discount', 'factory_building_code',
+            'discount_security', 'discount_public', 'other_discount', 'factory_building_code',
             'building_insurance_payout', 'household_insurance_payout', 'facility_insurance_payout',
             'other_facility_insurance_payout', 'item_insurance_payout',
             'other_item_insurance_payout',

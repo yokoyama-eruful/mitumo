@@ -110,6 +110,8 @@ class Futsu2Form extends Component
 
     public ?string $discountSecurity = null;
 
+    public ?string $discountPublic = null;
+
     public ?string $chattelSurchargeCategory = null;
 
     public ?string $occupationalSurchargeCode = null;
@@ -284,6 +286,7 @@ class Futsu2Form extends Component
         $this->otherDiscount = old('other_discount', $this->getValueByKey('other_discount', $estimate->property_detail));
         $this->discountFireExtinguisher = old('discount_fire_extinguisher', $this->getValueByKey('discount_fire_extinguisher', $estimate->property_detail));
         $this->discountSecurity = old('discount_security', $this->getValueByKey('discount_security', $estimate->property_detail));
+        $this->discountPublic = old('discount_public', $this->getValueByKey('discount_public', $estimate->property_detail));
         $this->chattelSurchargeCategory = old('chattel_surcharge_category', $this->getValueByKey('chattel_surcharge_category', $estimate->property_detail));
 
         $this->occupationalSurchargeCode = old('occupational_surcharge_code', $this->getValueByKey('occupational_surcharge_code', $estimate->property_detail));
