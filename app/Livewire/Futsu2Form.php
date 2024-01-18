@@ -819,7 +819,7 @@ class Futsu2Form extends Component
         if ($propertyType == '普通' && $rank == '1級') {
             return ['', 'リスク評価割引', '公有物件等割引'];
         } elseif ($propertyType == '普通' && in_array($rank, ['2級', '3級'], true)) {
-            return ['', '公有物件割引'];
+            return ['', '公有物件等割引'];
         } else {
             return [];
         }
