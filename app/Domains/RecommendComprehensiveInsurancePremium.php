@@ -18,6 +18,18 @@ final class RecommendComprehensiveInsurancePremium
 
     public readonly float $workSurchargeRate;
 
+    public readonly float $otherDiscount;
+
+    public readonly float $actualLossFactor;
+
+    public readonly int $discountRiskRate;
+
+    public readonly int $discountFireExtinguisher;
+
+    public readonly int $discountSecurity;
+
+    public readonly int $discountPublicProperty;
+
     public function __construct($estimate, $comprehensivePremium)
     {
         $this->estimate = $estimate;
@@ -25,6 +37,12 @@ final class RecommendComprehensiveInsurancePremium
         $this->chattelSurcharge = $this->getChattelSurcharge($estimate);
         $this->occupationalSurchargeRate = $this->getFloatValueByKey('occupational_surcharge_rate', $estimate->property_detail);
         $this->workSurchargeRate = $this->getFloatValueByKey('work_surcharge_rate', $estimate->property_detail);
+        $this->otherDiscount = $this->getFloatValueByKey('other_discount', $estimate->property_detail);
+        $this->actualLossFactor = $this->getFloatValueByKey('actual_loss_factor', $estimate->property_detail);
+        $this->discountRiskRate = $this->getValueByKey('discount_risk_rate', $this->estimate->property_detail, 0);
+        $this->discountFireExtinguisher = $this->getValueByKey('discount_fire_extinguisher', $this->estimate->property_detail);
+        $this->discountSecurity = $this->getValueByKey('discount_security', $this->estimate->property_detail);
+        $this->discountPublicProperty = 25;
     }
 
     public function getRecommendPremium($recommendYear)
@@ -211,35 +229,40 @@ final class RecommendComprehensiveInsurancePremium
 
     public function getOtherDiscount($baseRate, $chattelPremium = 0, $comprehensivePremium = 0)
     {
-        $discountCategoryRate = 0;
-        $discountCategory = array_key_exists('discount_category', $this->estimate->property_detail) ? $this->estimate->property_detail['discount_category'] : '';
+        if ($this->discountRiskRate > 0) {
+            $discountRiskRate = $this->discountRiskRate;
+            if ($discountRiskRate == 0) {
+                $discountRiskRate = 1;
+            } else {
+                $discountRiskRate = 1 - $discountRiskRate / 100;
+            }
 
-        switch ($discountCategory) {
-            case 'リスク評価割引':
-                $discountRiskRate = $this->getFloatValueByKey('discount_risk_rate', $this->estimate->property_detail, 1);
-                $discountCategoryRate = round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) + $chattelPremium + $comprehensivePremium) * (1 - $discountRiskRate / 100), 2);
-                break;
-            case '公有物件等割引':
-                $discountFireExtinguisher = $this->getFloatValueByKey('discount_fire_extinguisher', $this->estimate->property_detail);
-                $discountFireExtinguisher = $discountFireExtinguisher == 0 ? 0 : $discountFireExtinguisher / 100;
-                $discountSecurity = $this->getFloatValueByKey('discount_security', $this->estimate->property_detail);
-                $discountSecurity = $discountSecurity == 0 ? 0 : $discountSecurity / 100;
-                $discount = $discountFireExtinguisher + $discountSecurity == 0 ? 1 : $discountFireExtinguisher + $discountSecurity;
-                $discountCategoryRate = (($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount + $chattelPremium + $comprehensivePremium) * (1 - 0.25);
-                break;
-
-            default:
-                $otherDiscount = $this->getValueByKey('other_discount', $this->estimate->property_detail, 0);
-                if ($otherDiscount == 0) {
-                    $otherDiscount = 1;
-                } else {
-                    $otherDiscount = 1 - $otherDiscount / 100;
-                }
-                $discountCategoryRate = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount + $chattelPremium + $comprehensivePremium, 2);
-                break;
+            return round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) + $chattelPremium + $comprehensivePremium) * $discountRiskRate, 2);
         }
 
-        return $discountCategoryRate;
+        if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0) {
+            $discountFireExtinguisher = $this->discountFireExtinguisher == 0 ? 0 : $this->discountFireExtinguisher / 100;
+            $discountSecurity = $this->discountSecurity == 0 ? 0 : $this->discountSecurity / 100;
+            $discount = $discountFireExtinguisher + $discountSecurity == 0 ? 1 : $discountFireExtinguisher + $discountSecurity;
+            $discountPublicProperty = $this->discountPublicProperty;
+            if ($discountPublicProperty == 0) {
+                $discountPublicProperty = 1;
+            } else {
+                $discountPublicProperty = 1 - $discountPublicProperty / 100;
+            }
+
+            return (($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount + $chattelPremium + $comprehensivePremium) * $discountPublicProperty;
+
+        }
+
+        $otherDiscount = $this->getValueByKey('other_discount', $this->estimate->property_detail, 0);
+        if ($otherDiscount == 0) {
+            $otherDiscount = 1;
+        } else {
+            $otherDiscount = 1 - $otherDiscount / 100;
+        }
+
+        return round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount + $chattelPremium + $comprehensivePremium, 2);
     }
 
     private function getChattelSurcharge($estimate)

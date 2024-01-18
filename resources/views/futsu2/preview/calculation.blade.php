@@ -217,17 +217,16 @@
                     料率
                 </div>
             </div>
-            @if (!empty($standard->otherDiscount))
+            @if ($standard->discountRiskRate > 0)
                 <div class="flex flex-row">
                     <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
-                        その他割引
+                        リスク評価割引
                     </div>
                     <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-                        {{ percentUnit($standard->otherDiscount) }}
+                        {{ percentUnit($standard->discountRiskRate) }}
                     </div>
                 </div>
-            @endif
-            @if ($standard->discountCategory == '公有物件等割引')
+            @elseif ($standard->discountFireExtinguisher > 0)
                 <div class="flex flex-row">
                     <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
                         消火設備割引
@@ -253,18 +252,19 @@
                         {{ percentUnit($standard->discountPublicProperty) }}
                     </div>
                 </div>
-            @endif
-            @if ($standard->discountCategory == 'リスク評価割引')
+            @else
                 <div class="flex flex-row">
                     <div
                         class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
-                        リスク評価割引
+                        その他割引
                     </div>
                     <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-                        {{ percentUnit($standard->discountRiskRate) }}
+                        {{ percentUnit($standard->otherDiscount) }}
                     </div>
                 </div>
             @endif
+
+
         </div>
         <div class="ms-10">
             <div class="flex flex-row">
