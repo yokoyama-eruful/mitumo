@@ -104,8 +104,6 @@ class Futsu2Form extends Component
 
     public ?string $actualLossFactor = null;
 
-    public ?string $discountCategory = null;
-
     public ?string $otherDiscount = null;
 
     public ?string $discountFireExtinguisher = null;
@@ -202,8 +200,6 @@ class Futsu2Form extends Component
 
     public array $earthquakeList;
 
-    public array $discountCategoryList;
-
     public array $assessItemList;
 
     public array $assessUsageList;
@@ -284,7 +280,6 @@ class Futsu2Form extends Component
 
         $this->chattelSurcharge = old('chattel_surcharge', $this->getValueByKey('chattel_surcharge', $estimate->property_detail));
         $this->actualLossFactor = old('actual_loss_factor', $this->getValueByKey('actual_loss_factor', $estimate->property_detail));
-        $this->discountCategory = old('discount_category', $this->getValueByKey('discount_category', $estimate->property_detail));
         $this->discountRiskCategory = old('discount_risk_category', $this->getValueByKey('discount_risk_category', $estimate->property_detail));
         $this->otherDiscount = old('other_discount', $this->getValueByKey('other_discount', $estimate->property_detail));
         $this->discountFireExtinguisher = old('discount_fire_extinguisher', $this->getValueByKey('discount_fire_extinguisher', $estimate->property_detail));
@@ -334,7 +329,6 @@ class Futsu2Form extends Component
         $this->assessItemList = $this->getAssessItemList();
         $this->assessUsageList = $this->getAssessUsageList();
         $this->assessStructureList = $this->getAssessStructureList();
-        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
     }
 
     public function render()
@@ -356,7 +350,6 @@ class Futsu2Form extends Component
     {
         $this->buildingBaseRate = '';
         $this->rankList = $this->getRankList($this->propertyType);
-        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
     }
 
     /**
@@ -366,8 +359,6 @@ class Futsu2Form extends Component
      */
     public function onChangeBaseRate()
     {
-        $this->discountCategory = '';
-        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
 
         if (
             is_null($this->propertyType) ||
@@ -423,11 +414,6 @@ class Futsu2Form extends Component
     public function onChangeRecommend()
     {
 
-    }
-
-    public function onChangeDiscountCategory()
-    {
-        $this->discountCategoryList = $this->getDiscountCategoryList($this->propertyType, $this->rank);
     }
 
     /**
@@ -812,17 +798,6 @@ class Futsu2Form extends Component
     private function getEarthquakeList()
     {
         return [15, 30, 50];
-    }
-
-    private function getDiscountCategoryList($propertyType, $rank)
-    {
-        if ($propertyType == '普通' && $rank == '1級') {
-            return ['', 'リスク評価割引', '公有物件等割引'];
-        } elseif ($propertyType == '普通' && in_array($rank, ['2級', '3級'], true)) {
-            return ['', '公有物件等割引'];
-        } else {
-            return [];
-        }
     }
 
     private function getAssessItemList()

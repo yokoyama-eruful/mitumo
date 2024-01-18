@@ -19,7 +19,7 @@
                         </tr>
                         @foreach ($this->discountRiskCodeList as $shortItem)
                             @if ($LargeItem == $shortItem['大分類'])
-                                <tr class="transition-colors hover:bg-gray-100 cursor-pointer"
+                                <tr class="transition-colors hover:bg-gray-100 cursor-pointer --}}"
                                     wire:click="onSelectDiscountRiskCode('{{ $shortItem['項目番号'] }}')">
                                     <td class="border-y px-6 py-4">
                                         <div class="text-lg font-semibold">{{ $shortItem['小分類'] }}</div>

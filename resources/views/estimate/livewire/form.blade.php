@@ -430,21 +430,7 @@
                     wire:model="actualLossFactor">
             </div>
         @endif
-        @if (($propertyType == '工場' && $rank == '1級') || $propertyType == '普通')
-            <div class="estimate-input-box">
-                <label class="estimate-label" for="discount_category">割引選択
-                </label>
-                <select id="discount_category" name="discount_category" wire:model="discountCategory"
-                    class="estimate-input" wire:change="onChangeDiscountCategory">
-                    <option value="" hidden>選択してください</option>
-                    @foreach ($discountCategoryList as $item)
-                        <option value="{{ $item }}" @if ($item === $discountCategory) selected @endif>
-                            {{ $item }}</option>
-                    @endforeach
-                </select>
-            </div>
-        @endif
-        @if ($discountCategory == 'リスク評価割引')
+        @if ($propertyType == '工場' && $rank == '1級')
             <div class="estimate-input-box w-auto">
                 <label class="estimate-label h-auto">リスク評価割引</label>
                 <div class="w-auto">
@@ -455,39 +441,79 @@
                         <input id="discount_risk_code" name="discount_risk_code" class="estimate-input"
                             wire:model="discountRiskCode" wire:change="onChangeDiscountRiskCode" hidden>
                     </div>
-                    <div class="flex">
-                        <label class="estimate-label w-32">選択項目</label>
-                        <input class="estimate-input w-[510px] overflow-auto"
-                            wire:model="discountRiskCategory"readonly>
-                    </div>
                     <div class=" flex">
                         <label class="estimate-label w-32" for="discount_risk_rate">割引率</label>
                         <input id="discount_risk_rate" name="discount_risk_rate" class="estimate-input"
-                            wire:model="discountRiskRate">
+                            wire:model="discountRiskRate" type="number" min="0" max="40">
                         <span class="my-auto mx-1">%</span>
                     </div>
                 </div>
             </div>
-        @elseif ($discountCategory == '公有物件等割引')
-            <div class="estimate-input-box">
-                <label class="estimate-label" for="discount_fire_extinguisher">消火設備割引
-                </label>
-                <input id="discount_fire_extinguisher" name="discount_fire_extinguisher" class="estimate-input"
-                    type="number" min="0" max="50" wire:model="discountFireExtinguisher">
-                <span class="my-auto mx-1">%</span>
+        @elseif($propertyType == '普通' && $rank == '1級')
+            <div class="estimate-input-box w-auto">
+                <label class="estimate-label h-auto">リスク評価割引</label>
+                <div class="w-auto">
+                    <div class="flex">
+                        <label class="estimate-label w-32" for="discount_risk_code"></label>
+                        <button type="button" wire:click="onClickDiscountRiskTable"
+                            class="mx-2 my-1 px-2 h-8 w-80 bg-gray-700 hover:bg-gray-600 text-white rounded">評価項目表を参照</button>
+                        <input id="discount_risk_code" name="discount_risk_code" class="estimate-input"
+                            wire:model="discountRiskCode" wire:change="onChangeDiscountRiskCode" hidden>
+                    </div>
+                    <div class=" flex">
+                        <label class="estimate-label w-32" for="discount_risk_rate">割引率</label>
+                        <input id="discount_risk_rate" name="discount_risk_rate" class="estimate-input"
+                            wire:model="discountRiskRate" type="number" min="0" max="40">
+                        <span class="my-auto mx-1">%</span>
+                    </div>
+                </div>
             </div>
-            <div class="estimate-input-box">
-                <label class="estimate-label" for="discount_security">セキュリティ割引
-                </label>
-                <input id="discount_security" name="discount_security" class="estimate-input" type="number"
-                    min="0" max="50" wire:model="discountSecurity">
-                <span class="my-auto mx-1">%</span>
+            <div class="estimate-input-box w-auto">
+                <label class="estimate-label h-auto">公有物件等割引</label>
+                <div class="w-auto">
+                    <div class="flex">
+                        <label class="estimate-label w-32" for="discount_fire_extinguisher">消火設備割引
+                        </label>
+                        <input id="discount_fire_extinguisher" name="discount_fire_extinguisher"
+                            class="estimate-input w-[488px]" type="number" min="0" max="50"
+                            wire:model="discountFireExtinguisher">
+                        <span class="my-auto mx-1">%</span>
+                    </div>
+                    <div class="flex">
+                        <label class="estimate-label w-32" for="discount_security">セキュリティ割引
+                        </label>
+                        <input id="discount_security" name="discount_security" class="estimate-input" type="number"
+                            min="0" max="50" wire:model="discountSecurity">
+                        <span class="my-auto mx-1">%</span>
+                    </div>
+                </div>
+            </div>
+        @elseif ($propertyType == '普通' && in_array($rank, ['2級', '3級'], true))
+            <div class="estimate-input-box w-auto">
+                <label class="estimate-label h-auto">公有物件等割引</label>
+                <div class="w-auto">
+                    <div class="flex">
+                        <label class="estimate-label w-32" for="discount_fire_extinguisher">消火設備割引
+                        </label>
+                        <input id="discount_fire_extinguisher" name="discount_fire_extinguisher"
+                            class="estimate-input w-[488px]" type="number" min="0" max="50"
+                            wire:model="discountFireExtinguisher">
+                        <span class="my-auto mx-1">%</span>
+                    </div>
+                    <div class="flex">
+                        <label class="estimate-label w-32" for="discount_security">セキュリティ割引
+                        </label>
+                        <input id="discount_security" name="discount_security" class="estimate-input" type="number"
+                            min="0" max="50" wire:model="discountSecurity">
+                        <span class="my-auto mx-1">%</span>
+                    </div>
+                </div>
             </div>
         @else
             <div>
             </div>
         @endif
-        @if ($discountCategory == '' && in_array($propertyType, ['普通', '工場'], true))
+        @if (in_array($propertyType, ['普通', '工場'], true))
             <div class="estimate-input-box">
                 <label class="estimate-label" for="other_discount">その他割引
                 </label>
