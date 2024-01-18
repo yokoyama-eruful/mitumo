@@ -240,7 +240,7 @@ final class RecommendComprehensiveInsurancePremium
             return round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) + $chattelPremium + $comprehensivePremium) * $discountRiskRate, 2);
         }
 
-        if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0) {
+        if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
             $discountFireExtinguisher = $this->discountFireExtinguisher == 0 ? 0 : $this->discountFireExtinguisher / 100;
             $discountSecurity = $this->discountSecurity == 0 ? 0 : $this->discountSecurity / 100;
             $discount = $discountFireExtinguisher + $discountSecurity == 0 ? 1 : $discountFireExtinguisher + $discountSecurity;

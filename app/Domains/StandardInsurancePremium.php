@@ -128,7 +128,7 @@ final class StandardInsurancePremium
             return false;
         }
 
-        if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0) {
+        if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
             return $this->payMethod == '長期年払' &&
             $estimate->insurance_year >= 5 &&
             is_null($estimate->property_detail['actual_loss_factor']) &&
@@ -151,7 +151,7 @@ final class StandardInsurancePremium
 
     private function calcStandardLongTerm()
     {
-        if ($this->standard2 > 2050 || $this->discountFireExtinguisher > 0 || $this->discountSecurity > 0) {
+        if ($this->standard2 > 2050 || $this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
             return round(ceil($this->standard2 * 0.97), -1);
         }
 
@@ -406,7 +406,7 @@ final class StandardInsurancePremium
             return round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) + $chattelPremium + $comprehensivePremium) * $discountRiskRate, 2);
         }
 
-        if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0) {
+        if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
             $discountFireExtinguisher = $this->discountFireExtinguisher == 0 ? 0 : $this->discountFireExtinguisher / 100;
             $discountSecurity = $this->discountSecurity == 0 ? 0 : $this->discountSecurity / 100;
             $discount = $discountFireExtinguisher + $discountSecurity == 0 ? 1 : $discountFireExtinguisher + $discountSecurity;

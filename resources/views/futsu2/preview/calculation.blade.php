@@ -226,7 +226,7 @@
                         {{ percentUnit($standard->discountRiskRate) }}
                     </div>
                 </div>
-            @elseif ($standard->discountFireExtinguisher > 0)
+            @elseif ($standard->discountFireExtinguisher > 0 || $standard->discountSecurity > 0 || $standard->discountPublicProperty > 0)
                 <div class="flex flex-row">
                     <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
                         消火設備割引
