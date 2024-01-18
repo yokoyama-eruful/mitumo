@@ -583,6 +583,10 @@ class Futsu2Form extends Component
 
     public function onChangeDiscountRiskCode()
     {
+        if ($this->discountRiskCode) {
+            return;
+        }
+
         $this->discountRiskCode = mb_convert_kana($this->discountRiskCode, 'n');
 
         $discountRisk = new DiscountRisk();
