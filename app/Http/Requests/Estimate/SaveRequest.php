@@ -67,10 +67,10 @@ final class SaveRequest extends FormRequest
 
             'actual_loss_factor' => ['nullable', 'numeric', 'min:0'],
             'discount_risk_code' => ['nullable', 'numeric'],
-            'discount_risk_rate' => ['nullable', 'numeric', 'min:0', 'max:40'],
-            'discount_fire_extinguisher' => ['nullable', 'numeric', 'min:0', 'max:99'],
-            'discount_security' => ['nullable', 'numeric', 'min:0', 'max:99'],
-            'discount_public' => ['nullable', 'numeric', 'min:0', 'max:40'],
+            'discount_risk_rate' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'discount_fire_extinguisher' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'discount_security' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'discount_public' => ['nullable', 'numeric', 'min:0', 'max:100'],
             'other_discount' => ['nullable', 'numeric', 'min:0', 'max:50'],
 
             'chattel_surcharge_category' => ['nullable', 'string'],
