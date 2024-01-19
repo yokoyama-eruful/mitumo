@@ -226,7 +226,7 @@ final class ComprehensiveInsurancePremium
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $longTermRate = $mutualAidPremium->longTerRate;
-        $actualLossFactor = $this->getValueByKey('actual_loss_factor', $estimate->property_detail, 1);
+        $actualLossFactor = $this->getFloatValueByKey('actual_loss_factor', $estimate->property_detail, 1);
         $applyRate = round(round(($otherDiscount) * $actualLossFactor, 2) * $longTermRate, 2);
 
         //掛け金
@@ -310,7 +310,7 @@ final class ComprehensiveInsurancePremium
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $longTermRate = $mutualAidPremium->longTerRate;
-        $actualLossFactor = $this->getValueByKey('actual_loss_factor', $estimate->property_detail, 1);
+        $actualLossFactor = $this->getFloatValueByKey('actual_loss_factor', $estimate->property_detail, 1);
         $applyRate = round(round(($otherDiscount) * $actualLossFactor, 2) * $longTermRate, 2);
 
         //掛け金
@@ -379,7 +379,7 @@ final class ComprehensiveInsurancePremium
                 $discountRiskRate = 1 - $discountRiskRate / 100;
             }
 
-            return round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) + $chattelPremium + $comprehensivePremium) * $discountRiskRate, 2);
+            $result = round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) + $chattelPremium + $comprehensivePremium) * $discountRiskRate, 2);
         }
 
         if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
@@ -387,13 +387,23 @@ final class ComprehensiveInsurancePremium
             $discountSecurity = $this->discountSecurity == 0 ? 0 : $this->discountSecurity / 100;
             $discount = $discountFireExtinguisher + $discountSecurity == 0 ? 1 : $discountFireExtinguisher + $discountSecurity;
             $discountPublicProperty = $this->discountPublicProperty;
+
+            if ($discount == 0) {
+                $discount = 1;
+            } else {
+                $discount = 1 - $discount;
+            }
+
             if ($discountPublicProperty == 0) {
                 $discountPublicProperty = 1;
             } else {
                 $discountPublicProperty = 1 - $discountPublicProperty / 100;
             }
 
-            return (($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount + $chattelPremium + $comprehensivePremium) * $discountPublicProperty;
+            $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount, 2);
+            $result = round(($result + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
+
+            return $result;
 
         }
 
@@ -404,7 +414,9 @@ final class ComprehensiveInsurancePremium
             $otherDiscount = 1 - $otherDiscount / 100;
         }
 
-        return round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount + $chattelPremium + $comprehensivePremium, 2);
+        $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
+
+        return $result + $chattelPremium + $comprehensivePremium;
     }
 
     private function getChattelSurcharge($estimate)
