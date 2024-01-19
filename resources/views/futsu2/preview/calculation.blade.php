@@ -217,54 +217,46 @@
                     料率
                 </div>
             </div>
-            @if ($standard->discountRiskRate > 0)
-                <div class="flex flex-row">
-                    <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
-                        リスク評価割引
-                    </div>
-                    <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-                        {{ percentUnit($standard->discountRiskRate) }}
-                    </div>
+            <div class="flex flex-row">
+                <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
+                    リスク評価割引
                 </div>
-            @elseif ($standard->discountFireExtinguisher > 0 || $standard->discountSecurity > 0 || $standard->discountPublicProperty > 0)
-                <div class="flex flex-row">
-                    <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
-                        消火設備割引
-                    </div>
-                    <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-                        {{ percentUnit($standard->discountFireExtinguisher) }}
-                    </div>
+                <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
+                    {{ percentUnit($standard->discountRiskRate) }}
                 </div>
-                <div class="flex flex-row">
-                    <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
-                        セキュリティ割引
-                    </div>
-                    <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-                        {{ percentUnit($standard->discountSecurity) }}
-                    </div>
+            </div>
+            <div class="flex flex-row">
+                <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
+                    消火設備割引
                 </div>
-                <div class="flex flex-row">
-                    <div
-                        class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
-                        公有物件等割引
-                    </div>
-                    <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-                        {{ percentUnit($standard->discountPublicProperty) }}
-                    </div>
+                <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
+                    {{ percentUnit($standard->discountFireExtinguisher) }}
                 </div>
-            @else
-                <div class="flex flex-row">
-                    <div
-                        class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
-                        その他割引
-                    </div>
-                    <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-                        {{ percentUnit($standard->otherDiscount) }}
-                    </div>
+            </div>
+            <div class="flex flex-row">
+                <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
+                    セキュリティ割引
                 </div>
-            @endif
-
-
+                <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
+                    {{ percentUnit($standard->discountSecurity) }}
+                </div>
+            </div>
+            <div class="flex flex-row">
+                <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
+                    公有物件等割引
+                </div>
+                <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
+                    {{ percentUnit($standard->discountPublicProperty) }}
+                </div>
+            </div>
+            <div class="flex flex-row">
+                <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
+                    その他割引
+                </div>
+                <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
+                    {{ percentUnit($standard->otherDiscount) }}
+                </div>
+            </div>
         </div>
         <div class="ms-10">
             <div class="flex flex-row">

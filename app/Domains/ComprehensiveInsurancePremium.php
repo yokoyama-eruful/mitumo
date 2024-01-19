@@ -372,20 +372,21 @@ final class ComprehensiveInsurancePremium
     public function getOtherDiscount($baseRate, $chattelPremium = 0, $comprehensivePremium = 0)
     {
         if ($this->discountRiskRate > 0) {
-            $discountRiskRate = $this->discountRiskRate;
+            $discountRiskRate = $this->discountRiskRate + $this->discountFireExtinguisher + $this->discountSecurity + $this->discountPublicProperty + $this->otherDiscount;
             if ($discountRiskRate == 0) {
                 $discountRiskRate = 1;
             } else {
                 $discountRiskRate = 1 - $discountRiskRate / 100;
             }
 
-            $result = round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) + $chattelPremium + $comprehensivePremium) * $discountRiskRate, 2);
+            return round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) + $chattelPremium + $comprehensivePremium) * $discountRiskRate, 2);
         }
 
         if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
             $discountFireExtinguisher = $this->discountFireExtinguisher == 0 ? 0 : $this->discountFireExtinguisher / 100;
             $discountSecurity = $this->discountSecurity == 0 ? 0 : $this->discountSecurity / 100;
-            $discount = $discountFireExtinguisher + $discountSecurity == 0 ? 1 : $discountFireExtinguisher + $discountSecurity;
+            $otherDiscount = $this->otherDiscount == 0 ? 0 : $this->otherDiscount / 100;
+            $discount = $discountFireExtinguisher + $discountSecurity + $otherDiscount == 0 ? 1 : $discountFireExtinguisher + $discountSecurity + $otherDiscount;
             $discountPublicProperty = $this->discountPublicProperty;
 
             if ($discount == 0) {
@@ -399,7 +400,6 @@ final class ComprehensiveInsurancePremium
             } else {
                 $discountPublicProperty = 1 - $discountPublicProperty / 100;
             }
-
             $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount, 2);
             $result = round(($result + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
 
