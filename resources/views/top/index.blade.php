@@ -1,98 +1,107 @@
 @extends('layouts.app')
 
 @section('main')
-    <main class="min-h-[800px]">
-        <div class="flex flex-row space-x-5 justify-center p-6 md:w-[1000px] mx-auto">
-            <a href="{{ route('estimate.create') }}"
-                class="flex items-center w-1/2 border border-solid border-slate-400 shadow-md rounded-lg p-3 hover:bg-gray-200">
-                <div
-                    class="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0">
-                    <i class="fa-solid fa-plus"></i>
-                </div>
-                <div class="flex-grow ml-4">
-                    <h2 class="text-gray-900 text-lg font-medium mb-1">普通火災共済見積書を作成</h2>
-                    <p class="text-sm text-gray-600">普通火災共済見積書を作成します。</p>
-                </div>
-            </a>
-            <a href="{{ route('futsu2.create') }}"
-                class="flex items-center w-1/2 border border-solid border-slate-400 shadow-md rounded-lg p-3 hover:bg-gray-200">
-                <div
-                    class="w-12 h-12 flex items-center justify-center rounded-full bg-lime-100 text-lime-500 flex-shrink-0">
-                    <i class="fa-solid fa-plus"></i>
-                </div>
-                <div class="flex-grow ml-4">
-                    <h2 class="text-gray-900 text-lg font-medium mb-1">普通火災共済Ⅱ見積書を作成</h2>
-                    <p class="text-sm text-gray-600">普通火災共済Ⅱ見積書を作成します。</p>
-                </div>
-            </a>
+    <p class="text-xl font-bold px-3 pt-3 ml-10">新規</p>
+    <main class="min-h-[800px] min-w-[1100px] flex flex-col overflow-y-auto overflow-x-hidden mt-5">
+        <div class="flex flex-row w-[1000px] mx-auto">
+            <div class="flex justify-center items-center w-full p-3">
+                <a href="{{ route('estimate.create') }}"
+                    class="transition bg-gray-100 border-2 border-gray-200 rounded shadow p-2 w-[500px] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-lg">
+                    <div class="flex flex-row items-center justify-center">
+                        <div class="flex-shrink pr-4">
+                            <div class="rounded p-3 bg-blue-600"><i class="fa fa-file-text fa-2x fa-fw fa-inverse"></i></div>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="font-bold text-3xl">普通火災共済</h3>
+                            <h5 class="font-bold uppercase text-gray-500">見積書を作成</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="flex justify-center items-center w-full p-3">
+                <a href="{{ route('futsu2.create') }}"
+                    class="transition bg-gray-100 border-2 border-gray-200 rounded shadow p-2 w-[500px] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-lg">
+                    <div class="flex flex-row items-center justify-center">
+                        <div class="flex-shrink pr-4">
+                            <div class="rounded p-3 bg-green-600"><i class="fa fa-file-text fa-2x fa-fw fa-inverse"></i>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="font-bold text-3xl">普通火災共済Ⅱ</h3>
+                            <h5 class="font-bold uppercase text-gray-500">見積書を作成</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
 
-        <div class="flex flex-row items-center justify-center">
+        <div class="flex justify-center">
+            <div class="w-screen border border-gray-300 mt-10 mb-5 mx-5"></div>
+        </div>
+        <div class="flex flex-row ml-10 space-x-5 text-xl">
             @if ($estimateType == 'futsu')
-                <a class="p-4 w-[480px] border border-gray-500 rounded-tl-lg bg-slate-300 shadow-inner">普通火災見積</a>
+                <a
+                    class="ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-blue-400 bg-blue-200">
+                    <i class="fas fa-fire fa-lg text-blue-500 mr-2"></i>
+                    普通火災
+                </a>
                 <a href="{{ route('top.index', ['estimateType' => 'futsu2']) }}"
-                    class="p-4 w-[480px] border border-black rounded-tr-lg bg-slate-100 hover:bg-slate-200">普通火災Ⅱ見積</a>
+                    class="ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-white hover:scale-110">
+                    <i class="fas fa-fire fa-lg text-green-500 mr-2"></i>
+                    普通火災Ⅱ
+                </a>
             @else
                 <a href="{{ route('top.index', ['estimateType' => 'futsu']) }}"
-                    class="p-4 w-[480px] border border-black rounded-tl-lg bg-slate-100 hover:bg-slate-200">普通火災見積</a>
-                <a class="p-4 w-[480px] border border-gray-500 rounded-tr-lg bg-slate-300 shadow-inner">普通火災Ⅱ見積</a>
+                    class="ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-white hover:scale-110">
+                    <i class="fas fa-fire fa-lg text-blue-500 mr-2"></i>
+                    普通火災
+                </a>
+                <a
+                    class="ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-green-400 bg-green-200">
+                    <i class="fas fa-fire fa-lg text-green-500 mr-2"></i>
+                    普通火災Ⅱ
+                </a>
             @endif
         </div>
 
-        <div class="container max-w-5xl px-4 mx-auto sm:px-8">
-            {{-- 検索機能は保留 --}}
-            {{-- <div class="flex flex-row justify-between w-full mb-3">
-            <form action="" class="flex justify-center flex-row w-full space-x-3 space-y-0">
-                <input type="text" name="search"
-                    class="rounded-lg border border-gray-300 py-2 w-[400px] ps-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                    placeholder="日付,所在地,契約者名,担当者名" />
-
-                <button
-                    class="flex-shrink-0 px-4 py-2 text-base font-semibold text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200"
-                    type="submit">
-                    検索
-                </button>
-            </form>
-        </div> --}}
-
-            <div
-                class="min-w-full rounded-b-lg min-h-[694px] overflow-hidden shadow outline outline-1 outline-gray-300 bg-gray-100">
-                <table class="min-w-full leading-normal">
-                    <thead>
-                        <tr class="bg-gray-600 text-white text-sm font-bold text-left">
-                            <th class="px-5 py-3">
-                                作成日
-                            </th>
-                            <th class="px-5 py-3">
-                                所在地
-                            </th>
-                            <th class="px-5 py-3">
-                                契約者名
-                            </th>
-                            <th class="px-5 py-3">
-                                担当者
-                            </th>
-                            <th class="p-3 w-[200px]">
-                            </th>
-                        </tr>
-                    </thead>
-                    @if ($estimateType == 'futsu')
-                        <tbody>
+        <div class="flex flex-col px-4 sm:px-10 my-5">
+            <div class="min-h-[632px] bg-gray-200 overflow-hidden border border-gray-200 shadow-md">
+                @if ($estimateType == 'futsu')
+                    <table class="w-screen border-collapse bg-gray-200 text-left text-sm text-gray-500 leading-normal">
+                        <thead class="bg-blue-300">
+                            <tr class="">
+                                <th class="px-5 py-3 w-1/5">
+                                    作成日
+                                </th>
+                                <th class="px-5 py-3 w-1/5">
+                                    所在地
+                                </th>
+                                <th class="px-5 py-3 w-1/5">
+                                    契約者名
+                                </th>
+                                <th class="px-5 py-3 w-1/5">
+                                    担当者
+                                </th>
+                                <th class="p-3 w-1/5">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="w-screen">
                             @foreach ($estimateList as $estimate)
                                 <tr class="text-sm text-black bg-white border-b border-gray-200 hover:bg-indigo-100">
-                                    <td class="p-3 w-[180px]">
-                                        {{ $estimate->created_at->isoFormat('YYYY年MM月DD日(ddd)') }}
+                                    <td class="p-3 w-1/5">
+                                        {{ $estimate->created_at->isoFormat('YYYY年MM月DD日') }}
                                     </td>
-                                    <td class="p-3 w-36">
+                                    <td class="p-3 w-1/5">
                                         {{ $estimate->location }}
                                     </td>
-                                    <td class="p-3">
+                                    <td class="p-3 w-1/5">
                                         {{ $estimate->contractee }}
                                     </td>
-                                    <td class="p-3">
+                                    <td class="p-3 w-1/5">
                                         {{ $estimate->staff_name }}
                                     </td>
-                                    <td class="p-3 flex gap-10 w-[200px]">
+                                    <td class="p-3 flex gap-10 w-1/5">
                                         <form action="{{ route('estimate.edit', ['id' => $estimate->id]) }}" method="GET">
                                             <button type="submit" class="text-indigo-600 hover:text-indigo-900 w-[30px]">
                                                 <i class="fa-solid fa-pen-to-square inline-block"></i>
@@ -124,23 +133,43 @@
                                 </tr>
                             @endforeach
                         </tbody>
-                    @else
-                        <tbody>
+                    </table>
+                @else
+                    <table class="w-screen border-collapse bg-gray-200 text-left text-sm text-gray-500 leading-normal">
+                        <thead class=" bg-green-300">
+                            <tr class="">
+                                <th class="px-5 py-3 w-1/5">
+                                    作成日
+                                </th>
+                                <th class="px-5 py-3 w-1/5">
+                                    所在地
+                                </th>
+                                <th class="px-5 py-3 w-1/5">
+                                    契約者名
+                                </th>
+                                <th class="px-5 py-3 w-1/5">
+                                    担当者
+                                </th>
+                                <th class="p-3  w-1/5">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="w-screen">
                             @foreach ($estimateList as $estimate)
                                 <tr class="text-sm text-black bg-white border-b border-gray-200 hover:bg-lime-100">
-                                    <td class="p-3 w-[180px]">
-                                        {{ $estimate->created_at->isoFormat('YYYY年MM月DD日(ddd)') }}
+                                    <td class="p-3  w-1/5">
+                                        {{ $estimate->created_at->isoFormat('YYYY年MM月DD日') }}
                                     </td>
-                                    <td class="p-3 w-36">
+                                    <td class="p-3  w-1/5">
                                         {{ $estimate->location }}
                                     </td>
-                                    <td class="p-3">
+                                    <td class="p-3  w-1/5">
                                         {{ $estimate->contractee }}
                                     </td>
-                                    <td class="p-3">
+                                    <td class="p-3  w-1/5">
                                         {{ $estimate->staff_name }}
                                     </td>
-                                    <td class="p-3 flex gap-10 w-[200px]">
+                                    <td class="p-3 flex gap-10  w-1/5">
                                         <form action="{{ route('futsu2.edit', ['id' => $estimate->id]) }}" method="GET">
                                             <button type="submit" class="text-indigo-600 hover:text-indigo-900 w-[30px]">
                                                 <i class="fa-solid fa-pen-to-square inline-block"></i>
@@ -172,15 +201,14 @@
                                 </tr>
                             @endforeach
                         </tbody>
-                    @endif
-                </table>
+                    </table>
+                @endif
+            </div>
+            <div class="flex flex-col items-center p-3 bg-white xs:flex-row xs:justify-between">
+                <div class="flex items-center">
+                    {{ $estimateList->appends(request()->query())->links('layouts.pagination') }}
+                </div>
             </div>
         </div>
-        <div class="flex flex-col items-center p-3 bg-white xs:flex-row xs:justify-between">
-            <div class="flex items-center">
-                {{ $estimateList->appends(request()->query())->links('layouts.pagination') }}
-            </div>
-        </div>
-
     </main>
 @endsection
