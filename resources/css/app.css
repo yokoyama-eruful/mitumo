@@ -6,7 +6,7 @@
 
 @layer components {
     .estimate-input-box {
-        @apply flex flex-row w-full border-b-2 mb-5
+        @apply flex flex-row w-full border-b-2
     }
 
     .estimate-input-required {

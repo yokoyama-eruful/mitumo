@@ -37,7 +37,11 @@ Route::middleware('auth:web')
             ->prefix('account')
             ->name('account.')
             ->group(function () {
-                Route::get('index/', 'index')->name('index');
+                Route::get('index', 'index')->name('index');
+                Route::get('create', 'create')->name('create');
+                Route::get('edit/{id}', 'edit')->name('edit');
+                Route::post('save/{id}', 'save')->name('save');
+                Route::delete('destroy/{id}', 'destroy')->name('destroy');
             });
 
         Route::controller(EstimateController::class)

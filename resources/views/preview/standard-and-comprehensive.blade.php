@@ -14,7 +14,7 @@
                 総合共済掛金
             </div>
             <div>
-                <div class="flex items-center h-10 w-[200px] outline outline-1 outline-gray-500 pl-5">
+                <div class="flex items-center justify-center h-10 w-[200px] outline outline-1 outline-gray-500">
                     {{ yenUnit($standardPremium->getStandardPremium()) }}
                 </div>
             </div>
@@ -22,7 +22,7 @@
                 普通共済掛金
             </div>
             <div>
-                <div class="flex items-center h-10 w-[200px] outline outline-1 outline-gray-500 pl-5">
+                <div class="flex items-center justify-center h-10 w-[200px] outline outline-1 outline-gray-500">
                     {{ yenUnit($comprehensivePremium->getComprehensivePremium()) }}
                 </div>
             </div>

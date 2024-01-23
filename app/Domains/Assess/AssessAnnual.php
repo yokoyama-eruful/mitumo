@@ -20,6 +20,8 @@ final class AssessAnnual
 
     public readonly int $annualPrice;
 
+    public readonly string $remarks;
+
     private AnnualCoefficient $annualCoefficient;
 
     private AgingDepreciation $agingDepreciation;
@@ -33,34 +35,35 @@ final class AssessAnnual
         $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
         $this->annualPrice = $this->getIntValueByKey('annual_price', $estimate->assess_detail);
+        $this->remarks =  $this->getStringValueByKey('remarks', $estimate->assess_detail);
 
-        $this->annualCoefficient = new AnnualCoefficient($this->rank, $estimate->building_year);
+        $this->annualCoefficient = new AnnualCoefficient($this->rank, $this->buildingAge);
         $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
     }
 
     /*
       ** LiveFireで使用する評価額
       */
-    public function viewReProcure($rank, $annualPrice, $buildingYear): string
+    public function viewReProcure($rank, $annualPrice, $buildingAge): string
     {
-        if ($rank == '' || $annualPrice == '' || $buildingYear == '') {
+        if ($rank == '' || $annualPrice == '' || $buildingAge == '') {
             return '';
         }
 
-        $annualCoefficient = new AnnualCoefficient($rank, $buildingYear);
+        $annualCoefficient = new AnnualCoefficient($rank, $buildingAge);
 
         $annualCoefficient = $annualCoefficient->annualCoefficient;
         $reProcure = (float) $annualPrice * $annualCoefficient;
 
-        return number_format($reProcure * 0.8, 2).'~'. number_format($reProcure * 1.2, 2);
+        return thousandYenUnit(floor($reProcure * 0.8)).'~'.thousandYenUnit(floor($reProcure * 1.2));
     }
 
     /*
     ** LiveFireで使用する評価額
     */
-    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $rank, $annualPrice, $buildingYear, $assessRank = ''): string
+    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $rank, $annualPrice, $buildingAge, $assessRank = ''): string
     {
-        $annualCoefficient = new AnnualCoefficient($rank, $buildingYear);
+        $annualCoefficient = new AnnualCoefficient($rank, $buildingAge);
         $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
 
         if ($assessRank == '') {
@@ -78,7 +81,7 @@ final class AssessAnnual
             $finalResidualValue = 1 - $residualValue;
         }
 
-        $marketPrice = number_format($reProcure * $finalResidualValue, 2);
+        $marketPrice = thousandYenUnit(floor($reProcure * $finalResidualValue));
 
         return (string) $marketPrice;
     }

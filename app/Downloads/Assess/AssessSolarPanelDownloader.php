@@ -73,7 +73,7 @@ class AssessSolarPanelDownloader
         $worksheet->setCellValue('B7', $assessData->assessUsage);
         $worksheet->setCellValue('E7', $assessData->assessStructure);
         $worksheet->setCellValue('H7', $assessData->floorArea);
-        $worksheet->setCellValue('K7', $this->ConvertYear($assessData->buildingYear).'01月01日');
+        $worksheet->setCellValue('K7', $assessData->buildingYear.'-01-01');
         $worksheet->setCellValue('B15', $assessData->installationDate);
         $worksheet->setCellValue('E15', $assessData->installationCost);
         $worksheet->setCellValue('H15', $assessData->getSolarPanelInfo()['経過年数']);
@@ -130,6 +130,8 @@ class AssessSolarPanelDownloader
         $worksheet->setCellValue('M25', $assessData->getCurrentMarketPrice('A')['太陽光付まるめ']);
         $worksheet->setCellValue('M26', $assessData->getCurrentMarketPrice('B')['太陽光付まるめ']);
         $worksheet->setCellValue('M27', $assessData->getCurrentMarketPrice('C')['太陽光付まるめ']);
+
+        $worksheet->setCellValue('B30',$assessData->remarks);
     }
 
     public function ConvertYear($fiscal_year)

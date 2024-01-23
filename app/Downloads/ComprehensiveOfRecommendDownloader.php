@@ -84,7 +84,7 @@ class ComprehensiveOfRecommendDownloader
         $worksheet->setCellValue('O22', $estimate->property_type);
         $worksheet->setCellValue('D31', $estimate->rank);
         $worksheet->setCellValue('M31', $estimate->pay_method);
-        $worksheet->setCellValue('M33', $estimate->InsurancePeriod);
+        $worksheet->setCellValue('D33', $estimate->InsurancePeriod);
         $worksheet->setCellValue('D35', $estimate->OtherItem);
         $worksheet->setCellValue('D41', thousandYenUnit(array_key_exists('building_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['building_insurance_payout'] : ''));
         $worksheet->setCellValue('K41', thousandYenUnit(array_key_exists('household_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['household_insurance_payout'] : ''));

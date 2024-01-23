@@ -20,6 +20,8 @@ final class AssessSolarPanel
 
     public readonly int $installationCost;
 
+    public readonly string $remarks;
+
     private StandardAmount $standardAmount;
 
     private AgingDepreciation $agingDepreciation;
@@ -33,6 +35,7 @@ final class AssessSolarPanel
         $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
         $this->installationDate = $this->getStringValueByKey('installation_date', $estimate->assess_detail);
         $this->installationCost = $this->getIntValueByKey('installation_cost', $estimate->assess_detail);
+        $this->remarks = $this->getStringValueByKey('remarks', $estimate->assess_detail);
 
         $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure);
         $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
@@ -52,7 +55,7 @@ final class AssessSolarPanel
         $amount = $standardAmount->findStandardAmount($assessRank);
         $reProcure = $amount * $floorArea;
 
-        return number_format($reProcure * 0.8, 2).'~'.number_format($reProcure * 1.2, 2);
+        return thousandYenUnit(floor($reProcure * 0.8)).'~'.thousandYenUnit(floor($reProcure * 1.2));
     }
 
     /*
@@ -82,7 +85,7 @@ final class AssessSolarPanel
             $finalResidualValue = 1 - $residualValue;
         }
 
-        $marketPrice = number_format($reProcure * $finalResidualValue, 2);
+        $marketPrice = thousandYenUnit(floor($reProcure * $finalResidualValue));
 
         return (string) $marketPrice;
     }

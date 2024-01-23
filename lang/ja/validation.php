@@ -201,7 +201,7 @@ return [
         'renovation_depreciation_rate' => '改装部分の償却率',
         'installation_date' => '設置日',
         'installation_cost' => '設置金額',
-        'annual_price' => '年次価額',
+        'annual_price' => '取得価額',
         'building_base_rate' => '建物基本率',
         'chattel_base_rate' => '動産基本率',
         'chattel_surcharge' => '動産割増',

@@ -110,5 +110,7 @@ class AssessRenovationDownloader
         $worksheet->setCellValue('L24', $assessData->residualValue);
         $worksheet->setCellValue('N24', $assessData->currentMarketPrice['時価額']);
         $worksheet->setCellValue('N25', $assessData->currentMarketPrice['時価額まるめ']);
+
+        $worksheet->setCellValue('C27',$assessData->remarks);
     }
 }

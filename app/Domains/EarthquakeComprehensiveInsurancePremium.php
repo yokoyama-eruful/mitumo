@@ -55,7 +55,7 @@ final class EarthquakeComprehensiveInsurancePremium
         $this->discountRiskRate = $this->getValueByKey('discount_risk_rate', $this->estimate->property_detail, 0);
         $this->discountFireExtinguisher = $this->getValueByKey('discount_fire_extinguisher', $this->estimate->property_detail);
         $this->discountSecurity = $this->getValueByKey('discount_security', $this->estimate->property_detail);
-        $this->discountPublicProperty = 25;
+        $this->discountPublicProperty = $this->getValueByKey('discount_public', $this->estimate->property_detail);
 
         $this->totalComprehensive = $this->calcTotalComprehensive();
         $this->totalEarthquakeComprehensive = $this->calcTotalEarthquakeComprehensive();

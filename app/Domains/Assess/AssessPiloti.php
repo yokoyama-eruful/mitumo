@@ -20,6 +20,8 @@ final class AssessPiloti
 
     public readonly string $assessStructure;
 
+    public readonly string $remarks;
+
     private StandardAmount $standardAmount;
 
     private AgingDepreciation $agingDepreciation;
@@ -33,6 +35,7 @@ final class AssessPiloti
         $this->buildingYear = $estimate->building_year ? $estimate->building_year : 0;
         $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
+        $this->remarks = $this->getStringValueByKey('remarks', $estimate->assess_detail);
 
         $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure);
         $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
@@ -54,7 +57,7 @@ final class AssessPiloti
 
         $reProcure = $standardAmount * ((float) $floorArea - (float) $pilotiFloorArea);
 
-        return number_format($reProcure * 0.8, 2).'~'.number_format($reProcure * 1.2, 2);
+        return thousandYenUnit(floor($reProcure * 0.8)).'~'.thousandYenUnit(floor($reProcure * 1.2));
     }
 
     /*
@@ -84,7 +87,7 @@ final class AssessPiloti
             $finalResidualValue = 1 - $residualValue;
         }
 
-        $marketPrice = number_format($reProcure * $finalResidualValue, 2);
+        $marketPrice = thousandYenUnit(floor($reProcure * $finalResidualValue));
 
         return (string) $marketPrice;
     }

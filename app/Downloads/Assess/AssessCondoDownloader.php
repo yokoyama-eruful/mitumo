@@ -72,14 +72,14 @@ class AssessCondoDownloader
         $worksheet->setCellValue('F4', $estimate->location);
         $worksheet->setCellValue('B7', $assessData->assessUsage);
         $worksheet->setCellValue('E7', $assessData->assessStructure);
-        $worksheet->setCellValue('H7', $assessData->floorArea);
-        $worksheet->setCellValue('K7', $this->ConvertYear($assessData->buildingYear).'01月01日');
+        $worksheet->setCellValue('H7', $assessData->exclusiveArea);
+        $worksheet->setCellValue('K7', $assessData->buildingYear.'-01-01');
 
         $worksheet->setCellValue('C15', $assessData->getReProcure('A')['標準単価']);
         $worksheet->setCellValue('C16', $assessData->getReProcure('B')['標準単価']);
         $worksheet->setCellValue('C17', $assessData->getReProcure('C')['標準単価']);
 
-        $worksheet->setCellValue('E15', $assessData->floorArea);
+        $worksheet->setCellValue('E15', $assessData->exclusiveArea);
 
         $worksheet->setCellValue('G15', $assessData->getReProcure('A')['100%']);
         $worksheet->setCellValue('G16', $assessData->getReProcure('B')['100%']);
@@ -118,6 +118,8 @@ class AssessCondoDownloader
         $worksheet->setCellValue('K22', $assessData->getCurrentMarketPrice('A')['時価額まるめ']);
         $worksheet->setCellValue('K23', $assessData->getCurrentMarketPrice('B')['時価額まるめ']);
         $worksheet->setCellValue('K24', $assessData->getCurrentMarketPrice('C')['時価額まるめ']);
+
+        $worksheet->setCellValue('B27',$assessData->remarks);
     }
 
     public function ConvertYear($fiscal_year)

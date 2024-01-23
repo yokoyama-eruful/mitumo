@@ -11,14 +11,18 @@ final class AnnualCoefficient
 {
     public float $annualCoefficient;
 
-    public function __construct($rank, $startYear)
+    public function __construct($rank, $buildingAge)
     {
-        $this->annualCoefficient = $this->findAnnualCoefficientList($rank, $startYear);
+        $this->annualCoefficient = $this->findAnnualCoefficientList($rank, $buildingAge);
     }
 
-    public function findAnnualCoefficientList($rank, $startYear)
+    public function findAnnualCoefficientList($rank, $buildingAge)
     {
-        if (! $rank || ! $startYear) {
+        if (! $rank || ! $buildingAge) {
+            return 0;
+        }
+
+        if ($buildingAge > 48) {
             return 0;
         }
 
@@ -40,7 +44,7 @@ final class AnnualCoefficient
                 continue;
             }
 
-            if ($data[0] == $startYear && $data[1] == $rank) {
+            if ($data[0] == $buildingAge && $data[1] == $rank) {
                 $annualCoefficientList = [
                     '年' => $data[0],
                     '級' => $data[1],

@@ -16,7 +16,7 @@ final class EstimateAssessDetailDto
             '太陽光付' => $this->convertSolarPanelParams($params),
             '分譲マンション' => $this->convertCondominiumParams($params),
             '年次取得' => $this->convertAnnualAcquisitionParams($params),
-            '改装物件' => $this->convertRenovatedParams($params),
+            '大規模改装' => $this->convertRenovatedParams($params),
 
             default => [],
         };
@@ -26,7 +26,7 @@ final class EstimateAssessDetailDto
     {
         return array_intersect_key($params, array_flip(
             [
-                'assess_usage', 'assess_structure',
+                'assess_usage', 'assess_structure','remarks',
             ]
         ));
     }
@@ -35,7 +35,7 @@ final class EstimateAssessDetailDto
     {
         return array_intersect_key($params, array_flip(
             [
-                'assess_usage', 'assess_structure', 'piloti_floor_area',
+                'assess_usage', 'assess_structure', 'piloti_floor_area','remarks',
             ]
         ));
     }
@@ -44,7 +44,7 @@ final class EstimateAssessDetailDto
     {
         return array_intersect_key($params, array_flip(
             [
-                'assess_usage', 'assess_structure', 'installation_date', 'installation_cost',
+                'assess_usage', 'assess_structure', 'installation_date', 'installation_cost','remarks',
             ]
         ));
     }
@@ -53,7 +53,7 @@ final class EstimateAssessDetailDto
     {
         return array_intersect_key($params, array_flip(
             [
-                'assess_usage', 'assess_structure',
+                'assess_usage', 'assess_structure','remarks',
             ]
         ));
     }
@@ -62,7 +62,7 @@ final class EstimateAssessDetailDto
     {
         return array_intersect_key($params, array_flip(
             [
-                'assess_usage', 'assess_structure', 'annual_price',
+                'assess_usage', 'assess_structure', 'annual_price','remarks',
             ]
         ));
     }
@@ -73,7 +73,7 @@ final class EstimateAssessDetailDto
             [
                 'replacement_price', 'renovation_cost',
                 'conventional_age', 'depreciation_rate', 'renovation_age',
-                'renovation_depreciation_rate',
+                'renovation_depreciation_rate','remarks',
             ]
         ));
     }

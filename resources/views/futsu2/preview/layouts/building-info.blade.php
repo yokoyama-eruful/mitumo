@@ -43,11 +43,6 @@
     </div>
     <div class="flex flex-row">
         <div class="flex justify-center items-center h-10 w-[100px] bg-green-200 outline outline-1 outline-gray-500">
-            地域(等地)
-        </div>
-        <div class="flex items-center h-10 w-[275px] outline outline-1 outline-gray-500 pl-5">
-        </div>
-        <div class="flex justify-center items-center h-10 w-[100px] bg-green-200 outline outline-1 outline-gray-500">
             共済期間
         </div>
         <div class="flex items-center h-10 w-[275px] outline outline-1 outline-gray-500 pl-5">

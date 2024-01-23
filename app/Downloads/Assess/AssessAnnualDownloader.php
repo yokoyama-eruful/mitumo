@@ -74,7 +74,7 @@ class AssessAnnualDownloader
         $worksheet->setCellValue('E7', $assessData->assessStructure);
         $worksheet->setCellValue('G7', $assessData->rank);
         $worksheet->setCellValue('H7', $assessData->floorArea);
-        $worksheet->setCellValue('K7', $this->ConvertYear($assessData->buildingYear).'01月01日');
+        $worksheet->setCellValue('K7', $assessData->buildingYear.'-01-01');
 
         $worksheet->setCellValue('B15', $assessData->annualPrice);
 
@@ -107,6 +107,8 @@ class AssessAnnualDownloader
         $worksheet->setCellValue('K20', $assessData->getCurrentMarketPrice('A')['時価額まるめ']);
         $worksheet->setCellValue('K21', $assessData->getCurrentMarketPrice('B')['時価額まるめ']);
         $worksheet->setCellValue('K22', $assessData->getCurrentMarketPrice('C')['時価額まるめ']);
+
+        $worksheet->setCellValue('B25',$assessData->remarks);
     }
 
     public function ConvertYear($fiscal_year)

@@ -41,9 +41,9 @@ final class SaveRequest extends FormRequest
             'other' => ['nullable', 'string'],
             'property_type' => ['required', 'string', 'in:住宅,普通,工場'],
             'rank' => ['required', 'string'],
-            'start_date' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,改装物件', 'date'],
-            'building_year' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,改装物件', 'digits:4', 'integer', 'min:1900', 'max:'.(date('Y') + 1)],
-            'building_age' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,改装物件', 'integer'],
+            'start_date' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'date'],
+            'building_year' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'digits:4', 'integer', 'min:1900', 'max:'.(date('Y') + 1)],
+            'building_age' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'integer'],
             'pay_method' => ['required', 'string'],
             'insurance_year' => ['nullable', 'required_without_all:insurance_month,insurance_day',  'integer'],
             'insurance_month' => ['nullable', 'required_without_all:insurance_year,insurance_day', 'integer', 'min:1', 'max:12'],
@@ -88,24 +88,26 @@ final class SaveRequest extends FormRequest
             'other_item_insurance_payout' => ['nullable', 'numeric', 'min:0'],
 
             //動的に変化する項目（評価トリガー）
-            'assess_item' => ['nullable', 'in:通常,ピロティー付,太陽光付,分譲マンション,年次取得,改装物件,選択しない'],
+            'assess_item' => ['nullable', 'in:通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装,選択しない'],
 
             'assess_usage' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得', 'string'],
             'assess_structure' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得', 'string'],
 
             'piloti_floor_area' => ['nullable', 'required_if:assess_item,ピロティー付', 'numeric', 'min:0'],
 
-            'replacement_price' => ['nullable', 'required_if:assess_item,改装物件', 'numeric', 'min:0'],
-            'renovation_cost' => ['nullable', 'required_if:assess_item,改装物件', 'numeric', 'min:0'],
-            'conventional_age' => ['nullable', 'required_if:assess_item,改装物件', 'numeric', 'min:0'],
-            'depreciation_rate' => ['nullable', 'required_if:assess_item,改装物件', 'numeric', 'min:0'],
-            'renovation_age' => ['nullable', 'required_if:assess_item,改装物件', 'numeric', 'min:0'],
-            'renovation_depreciation_rate' => ['nullable', 'required_if:assess_item,改装物件', 'numeric', 'min:0'],
+            'replacement_price' => ['nullable', 'required_if:assess_item,大規模改装', 'numeric', 'min:0'],
+            'renovation_cost' => ['nullable', 'required_if:assess_item,大規模改装', 'numeric', 'min:0'],
+            'conventional_age' => ['nullable', 'required_if:assess_item,大規模改装', 'numeric', 'min:0'],
+            'depreciation_rate' => ['nullable', 'required_if:assess_item,大規模改装', 'numeric', 'min:0'],
+            'renovation_age' => ['nullable', 'required_if:assess_item,大規模改装', 'numeric', 'min:0'],
+            'renovation_depreciation_rate' => ['nullable', 'required_if:assess_item,大規模改装', 'numeric', 'min:0'],
 
             'installation_date' => ['nullable', 'required_if:assess_item,太陽光付', 'date'],
             'installation_cost' => ['nullable', 'required_if:assess_item,太陽光付', 'numeric', 'min:0'],
 
             'annual_price' => ['nullable', 'required_if:assess_item,年次取得', 'numeric', 'min:0'],
+
+            'remarks' => ['nullable', 'string'],
         ];
     }
 
@@ -130,6 +132,36 @@ final class SaveRequest extends FormRequest
         $validator->after(function ($validator) {
             if ($this->input('insurance_year') && ($this->input('insurance_month') || $this->input('insurance_day'))) {
                 $validator->errors()->add('エラー', '共済期間が１年以上の場合は、月・日数は選択できません。');
+            }
+        });
+
+        $validator->after(function ($validator) {
+            if ($this->input('insurance_year') == 1 && $this->input('pay_method') == '長期年払') {
+                $validator->errors()->add('エラー', '共済期間が１年の場合、払込方法「長期年払」は選択できません。');
+            }
+        });
+
+        $validator->after(function ($validator) {
+            if ($this->input('assess_item') == '分譲マンション' && ! $this->input('exclusive_area')) {
+                $validator->errors()->add('エラー', '分譲マンションの評価を行う場合、専有面積は必須です。');
+            }
+        });
+
+        $validator->after(function ($validator) {
+            if (in_array($this->input('assess_item'), ['通常', 'ピロティー付', '太陽光付', '年次取得', '大規模改装'], true) && ! $this->input('floor_area')) {
+                $validator->errors()->add('エラー', 'この物件の評価を行うには、延床面積の入力が必須です。');
+            }
+        });
+
+        $validator->after(function ($validator) {
+            if (in_array($this->input('property_type'), ['普通', '住宅']) && ($this->input('item_insurance_payout') || $this->input('other_item_insurance_payout')) && $this->input('chattel_surcharge_category') == '-') {
+                $validator->errors()->add('エラー', '商品共済金額がある場合、動産割増を選択してください。');
+            }
+        });
+
+        $validator->after(function ($validator) {
+            if ($this->input('property_type') == '住宅' && ($this->input('building_insurance_payout') && (! $this->input('start_date') || ! $this->input('building_year') || ! $this->input('building_age')))) {
+                $validator->errors()->add('エラー', '物件が「住宅」であり、建物共済掛金の入力がある場合、築年数は必須です。');
             }
         });
 

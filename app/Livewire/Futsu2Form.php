@@ -167,6 +167,8 @@ class Futsu2Form extends Component
 
     public ?string $annualPrice = null;
 
+    public ?string $remarks = null;
+
     public ?string $reProcure = null;
 
     public ?string $reProcureA = null;
@@ -319,6 +321,7 @@ class Futsu2Form extends Component
         $this->installationDate = old('installation_date', $this->getValueByKey('installation_date', $estimate->assess_detail));
         $this->installationCost = old('installation_cost', $this->getValueByKey('installation_cost', $estimate->assess_detail));
         $this->annualPrice = old('annual_price', $this->getValueByKey('annual_price', $estimate->assess_detail));
+        $this->remarks = old('remarks', $this->getValueByKey('remarks', $estimate->assess_detail));
 
         //セレクトボックスの選択肢
         $this->structureList = $this->getStructureList();
@@ -426,6 +429,17 @@ class Futsu2Form extends Component
      */
     public function onChangeAssessItem()
     {
+        if ($this->floorArea) {
+            $this->floorArea = number_format((float) $this->floorArea, 2);
+            $this->floorArea = str_replace(',', '', $this->floorArea);
+        }
+
+        if ($this->exclusiveArea) {
+            $this->exclusiveArea = number_format((float) $this->exclusiveArea, 2);
+            $this->exclusiveArea = str_replace(',', '', $this->exclusiveArea);
+
+        }
+
         $this->assessUsageList = $this->getAssessUsageList();
         $this->assessStructureList = $this->getAssessStructureList();
         $this->onChangeAssessAmount();
@@ -586,7 +600,7 @@ class Futsu2Form extends Component
 
     public function onChangeDiscountRiskCode()
     {
-        if ($this->discountRiskCode) {
+        if (empty($this->discountRiskCode)) {
             return;
         }
 
@@ -689,13 +703,13 @@ class Futsu2Form extends Component
             case '年次取得':
                 $assessDomain = new AssessAnnual($this->estimate);
 
-                $this->reProcure = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingYear);
+                $this->reProcure = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge);
 
-                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingYear, 'A');
-                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingYear, 'B');
-                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingYear, 'C');
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'A');
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'B');
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'C');
                 break;
-            case '改装物件':
+            case '大規模改装':
 
                 if (! is_numeric($this->replacementPrice) ||
                 ! is_numeric($this->renovationCost) ||
@@ -809,7 +823,7 @@ class Futsu2Form extends Component
 
     private function getAssessItemList()
     {
-        return ['選択しない', '通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '改装物件'];
+        return ['選択しない', '通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'];
     }
 
     private function getAssessUsageList()

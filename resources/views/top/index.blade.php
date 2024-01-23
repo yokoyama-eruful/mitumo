@@ -6,7 +6,7 @@
         <div class="flex flex-row w-[1000px] mx-auto">
             <div class="flex justify-center items-center w-full p-3">
                 <a href="{{ route('estimate.create') }}"
-                    class="transition bg-gray-100 border-2 border-gray-200 rounded shadow p-2 w-[500px] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-lg">
+                    class="transition bg-gray-200 border-2 border-gray-300 rounded shadow p-2 w-[500px] hover:bg-gray-100 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-lg">
                     <div class="flex flex-row items-center justify-center">
                         <div class="flex-shrink pr-4">
                             <div class="rounded p-3 bg-blue-600"><i class="fa fa-file-text fa-2x fa-fw fa-inverse"></i></div>
@@ -20,7 +20,7 @@
             </div>
             <div class="flex justify-center items-center w-full p-3">
                 <a href="{{ route('futsu2.create') }}"
-                    class="transition bg-gray-100 border-2 border-gray-200 rounded shadow p-2 w-[500px] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-lg">
+                    class="transition bg-gray-200 border-2 border-gray-300 rounded shadow p-2 w-[500px] hover:bg-gray-100 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-lg">
                     <div class="flex flex-row items-center justify-center">
                         <div class="flex-shrink pr-4">
                             <div class="rounded p-3 bg-green-600"><i class="fa fa-file-text fa-2x fa-fw fa-inverse"></i>

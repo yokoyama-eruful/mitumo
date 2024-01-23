@@ -67,3 +67,19 @@ if (! function_exists('percentUnit')) {
         return $percent.'%';
     }
 }
+
+if (! function_exists('gainUnit')) {
+    function gainUnit($percent)
+    {
+        if (! $percent) {
+            return '';
+        }
+
+        //全角文字・数字が含まれているか判定
+        if (preg_match('/[^\x01-\x7E\xA1-\xDF]/u', (string) $percent) > 0) {
+            return $percent;
+        }
+
+        return $percent.'円お得';
+    }
+}

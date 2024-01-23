@@ -1,34 +1,57 @@
 @extends('layouts.app')
 
 @section('main')
-    <main class="w-[800px] m-auto text-black">
-        <div class="flex flex-wrap space-x-10 py-10 justify-center">
-            <form method="POST"
-                action="{{ route('futsu2.assess.download', ['id' => $estimate->id, 'fileType' => 'excel']) }}"
-                class="bg-green-50 hover:bg-green-100">
-                @csrf
-                <button
-                    class="h-48 w-48 outline outline-1 outline-slate-300 shadow-md rounded text-center flex justify-center items-center text-xl">
-                    <div class="flex flex-col justify-center items-center">
-                        <i class="fa-solid fa-file-excel text-3xl"></i>
-                        Excel
-                    </div>
-                </button>
-            </form>
-
-            <form method="POST" action="{{ route('futsu2.assess.download', ['id' => $estimate->id, 'fileType' => 'pdf']) }}"
-                class="bg-red-50 hover:bg-red-100">
-                @csrf
-                <button
-                    class="h-48 w-48 outline outline-1 outline-slate-300 shadow-md rounded text-center flex justify-center items-center text-xl">
-                    <div class="flex flex-col justify-center items-center">
-                        <i class="fa-solid fa-file-pdf text-3xl"></i>
-                        PDF
-                    </div>
-                </button>
-            </form>
-        </div>
-
+    <main class="text-gray-600 w-[900px] mx-auto mt-5 text-xl">
+        <div class="flex flex-col items-center">
+        <table class="w-[900px] border-collapse bg-gray-200 text-left text-sm text-gray-500 leading-normal">
+            <thead class="">
+                <tr class="">
+                    <th class="px-5 py-3 w-1/4">
+                        評価シート種類
+                    </th>
+                    <th class="px-5 py-3 w-1/4">
+                        ファイル
+                    </th>
+                    <th class="p-3 w-1/4">
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="w-screen">
+                    <tr class="text-sm text-black bg-white border-b border-gray-200 hover:bg-indigo-100">
+                        <td class="p-3 w-1/4">
+                            {{ $estimate->assess_item }}
+                        </td>
+                        <td class="p-3 w-1/4">
+                            excel
+                        </td>
+                                <td class="p-3 w-1/4">
+                                    <form method="POST"
+                                    action="{{ route('futsu2.assess.download', ['id' => $estimate->id, 'fileType' => 'excel']) }}">
+                                        @csrf
+                                        <button class="text-blue-500 hover:text-blue-800"><i
+                                                class="fa fa-download"></i>ダウンロード</button>
+                                    </form>
+                                </td>
+                    </tr>
+                    <tr class="text-sm text-black bg-white border-b border-gray-200 hover:bg-indigo-100">
+                        <td class="p-3 w-1/4">
+                            {{ $estimate->assess_item }}
+                        </td>
+                        <td class="p-3 w-1/4">
+                            pdf
+                        </td>
+                                <td class="p-3 w-1/4">
+                                    <form method="POST"
+                                    action="{{ route('futsu2.assess.download', ['id' => $estimate->id, 'fileType' => 'pdf']) }}">
+                                        @csrf
+                                        <button class="text-blue-500 hover:text-blue-800"><i
+                                                class="fa fa-download"></i>ダウンロード</button>
+                                    </form>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
         <div class="text-gray-600">
             <div class="px-5 py-5 mx-auto">
                 <a href="{{ route('futsu2.edit', ['id' => $estimate->id]) }}"
@@ -46,5 +69,6 @@
                 </a>
             </div>
         </div>
+
     </main>
 @endsection

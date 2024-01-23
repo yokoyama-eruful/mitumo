@@ -10,6 +10,11 @@
         onsubmit="return false;" method="POST" class="flex flex-col container p-2 mt-2">
         @csrf
         <div class="block border-2 p-5">
+
+            <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                <label class="p-3">取扱代理店情報</label>
+            </div>
+
             <div class="estimate-input-box">
                 <label class="futsu2-label" for="company">
                     取扱代理店名
@@ -36,6 +41,11 @@
                 </label>
                 <input id="staff_name" name="staff_name" class="estimate-input" wire:model="staffName" required>
             </div>
+
+            <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                <label class="p-3">共済契約者情報</label>
+            </div>
+
             <div class="estimate-input-box">
                 <label class="futsu2-label" for="contractee">ご契約者名
                     <div class="estimate-input-required">※必須</div>
@@ -49,21 +59,21 @@
                 <input id="location" name="location" class="estimate-input" wire:model="location" required>
             </div>
 
-            <div class="h-14 w-full flex flex-col items-center justify-center mt-10">
+            <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
                 <label class="p-3">共済の目的およびこれを収容する建物の構造・用法</label>
             </div>
 
             <div class="flex flex-row">
                 <div class="estimate-input-box">
                     <label for="floor_area" class="futsu2-label border">延床面積</label>
-                    <input id="floor_area" name="floor_area" type="text" class="estimate-input"
-                        wire:model="floorArea">
+                    <input id="floor_area" name="floor_area" type="text" class="estimate-input text-right"
+                        wire:model="floorArea"wire:change="onChangeAssessItem">
                     <span class="my-auto mx-1">m²</span>
                 </div>
                 <div class="estimate-input-box">
                     <label for="exclusive_area" class="futsu2-label">専有面積</label>
-                    <input id="exclusive_area" name="exclusive_area" type="text" class="estimate-input"
-                        wire:model="exclusiveArea">
+                    <input id="exclusive_area" name="exclusive_area" type="text" class="estimate-input text-right"
+                        wire:model="exclusiveArea"wire:change="onChangeAssessItem">
                     <span class="my-auto mx-1">m²</span>
                 </div>
             </div>
@@ -149,16 +159,17 @@
                 </div>
             </div>
 
-
-            <div class="estimate-input-box">
-                <label class="futsu2-label" for="floor">階
-                </label>
-                <input id="floor" name="floor" class="estimate-input" wire:model="floor" required>
-            </div>
-            <div class="estimate-input-box">
-                <label class="futsu2-label" for="building">棟
-                </label>
-                <input id="building" name="building" class="estimate-input" wire:model="building" required>
+            <div class="flex flex-row">
+                <div class="estimate-input-box">
+                    <label class="futsu2-label" for="floor">階
+                    </label>
+                    <input id="floor" name="floor" class="estimate-input" wire:model="floor" required>
+                </div>
+                <div class="estimate-input-box">
+                    <label class="futsu2-label" for="building">棟
+                    </label>
+                    <input id="building" name="building" class="estimate-input" wire:model="building" required>
+                </div>
             </div>
             <div class="estimate-input-box">
                 <label class="futsu2-label" for="other">その他</label>
@@ -197,6 +208,9 @@
                 </div>
             </div>
 
+            <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                <label class="p-3">払込方法・共済期間</label>
+            </div>
             <div class="estimate-input-box">
                 <label class="futsu2-label" for="pay_method">払込方法
                     <div class="estimate-input-required">※必須</div>
@@ -238,7 +252,7 @@
             <!-- 変動のある項目 -->
             @if ($payMethod === '一時払' && $insuranceYear == 1)
                 <div class="my-5">
-                    <div class="h-14 w-full flex flex-col items-center justify-center">
+                    <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
                         <label class="p-3">おすすめ契約期間指定（年数）</label>
                     </div>
                     <div class="estimate-input-box">
@@ -257,11 +271,12 @@
 
             @if (in_array($propertyType, ['普通'], true) && $insuranceYear == 1)
                 <div class="my-5">
-                    <div class="h-14 w-full flex flex-col items-center justify-center">
+                    <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
                         <label class="p-3">地震特約縮小支払割合指定</label>
                     </div>
                     <div class="estimate-input-box">
-                        <select id="earthquake1" name="earthquake1" wire:model="earthquake1" class="estimate-input">
+                        <select id="earthquake1" name="earthquake1" wire:model="earthquake1"
+                            class="estimate-input text-right">
                             <option value="15">
                                 15
                             </option>
@@ -270,7 +285,8 @@
                             </option>
                         </select>
                         <span class="my-auto mx-1">%</span>
-                        <select id="earthquake2" name="earthquake2" wire:model="earthquake2" class="estimate-input">
+                        <select id="earthquake2" name="earthquake2" wire:model="earthquake2"
+                            class="estimate-input text-right">
                             <option value="30">
                                 30
                             </option>
@@ -279,7 +295,8 @@
                             </option>
                         </select>
                         <span class="my-auto mx-1">%</span>
-                        <select id="earthquake3" name="earthquake3" wire:model="earthquake3" class="estimate-input">
+                        <select id="earthquake3" name="earthquake3" wire:model="earthquake3"
+                            class="estimate-input text-right">
                             <option value="50">
                                 50
                             </option>
@@ -293,6 +310,9 @@
             @endif
 
             @if (in_array($propertyType, ['住宅', '普通'], true))
+                <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                    <label class="p-3">料率・係数等</label>
+                </div>
                 <div class="estimate-input-box">
                     <label class="futsu2-label" for="building_base_rate">建物基本率
                         @if (!empty($buildingInsurancePayout))
@@ -323,7 +343,6 @@
                     </label>
                     <select id="chattel_surcharge_category" name="chattel_surcharge_category"
                         wire:model="chattelSurchargeCategory" class="estimate-input">
-                        <option value="" hidden>選択してください</option>
                         @foreach ($chattelSurchargeCategoryList as $item)
                             <option value="{{ $item }}" @if ($item === $chattelSurchargeCategory) selected @endif>
                                 {{ $item }}</option>
@@ -343,22 +362,23 @@
                 <div class="estimate-input-box">
                     <label class="futsu2-label" for="discount_fire_extinguisher">消火設備割引
                     </label>
-                    <input id="discount_fire_extinguisher" name="discount_fire_extinguisher" class="estimate-input"
-                        type="number" min="0" max="100" wire:model="discountFireExtinguisher">
+                    <input id="discount_fire_extinguisher" name="discount_fire_extinguisher"
+                        class="estimate-input text-right" type="number" min="0" max="100"
+                        wire:model="discountFireExtinguisher">
                     <span class="my-auto mx-1">%</span>
                 </div>
                 <div class="estimate-input-box">
                     <label class="futsu2-label" for="discount_security">セキュリティ割引
                     </label>
-                    <input id="discount_security" name="discount_security" class="estimate-input" type="number"
-                        min="0" max="100" wire:model="discountSecurity">
+                    <input id="discount_security" name="discount_security" class="estimate-input text-right"
+                        type="number" min="0" max="100" wire:model="discountSecurity">
                     <span class="my-auto mx-1">%</span>
                 </div>
                 <div class="estimate-input-box">
                     <label class="futsu2-label" id="discount_public" for="discount_public">公有物件割引
                     </label>
-                    <input id="discount_public" name="discount_public" class="estimate-input" type="number"
-                        min="0" max="100" wire:model="discountPublic">
+                    <input id="discount_public" name="discount_public" class="estimate-input text-right"
+                        type="number" min="0" max="100" wire:model="discountPublic">
                     <span class="my-auto mx-1">%</span>
                 </div>
                 <div class="estimate-input-box w-auto">
@@ -373,8 +393,9 @@
                         </div>
                         <div class=" flex">
                             <label class="futsu2-label w-32" for="discount_risk_rate">割引率</label>
-                            <input id="discount_risk_rate" name="discount_risk_rate" class="estimate-input"
-                                wire:model="discountRiskRate" type="number" min="0" max="100">
+                            <input id="discount_risk_rate" name="discount_risk_rate"
+                                class="estimate-input text-right" wire:model="discountRiskRate" type="number"
+                                min="0" max="100">
                             <span class="my-auto mx-1">%</span>
                         </div>
                     </div>
@@ -383,22 +404,23 @@
                 <div class="estimate-input-box">
                     <label class="futsu2-label" for="discount_fire_extinguisher">消火設備割引
                     </label>
-                    <input id="discount_fire_extinguisher" name="discount_fire_extinguisher" class="estimate-input"
-                        type="number" min="0" max="100" wire:model="discountFireExtinguisher">
+                    <input id="discount_fire_extinguisher" name="discount_fire_extinguisher"
+                        class="estimate-input text-right" type="number" min="0" max="100"
+                        wire:model="discountFireExtinguisher">
                     <span class="my-auto mx-1">%</span>
                 </div>
                 <div class="estimate-input-box">
                     <label class="futsu2-label" for="discount_security">セキュリティ割引
                     </label>
-                    <input id="discount_security" name="discount_security" class="estimate-input" type="number"
-                        min="0" max="100" wire:model="discountSecurity">
+                    <input id="discount_security" name="discount_security" class="estimate-input text-right"
+                        type="number" min="0" max="100" wire:model="discountSecurity">
                     <span class="my-auto mx-1">%</span>
                 </div>
                 <div class="estimate-input-box">
                     <label class="futsu2-label" id="discount_public" for="discount_public">公有物件割引
                     </label>
-                    <input id="discount_public" name="discount_public" class="estimate-input" type="number"
-                        min="0" max="100" wire:model="discountPublic">
+                    <input id="discount_public" name="discount_public" class="estimate-input text-right"
+                        type="number" min="0" max="100" wire:model="discountPublic">
                     <span class="my-auto mx-1">%</span>
                 </div>
             @else
@@ -409,7 +431,7 @@
                 <div class="estimate-input-box">
                     <label class="futsu2-label" for="other_discount">その他割引
                     </label>
-                    <input id="other_discount" name="other_discount" class="estimate-input"
+                    <input id="other_discount" name="other_discount" class="estimate-input text-right"
                         wire:model="otherDiscount" type="number" min="0" max="50">
                     <span class="my-auto mx-1">%</span>
                 </div>
@@ -467,16 +489,15 @@
                 </div>
             @endif
             @if (in_array($propertyType, ['住宅', '普通'], true))
-                <div class="estimate-input-box mt-5 flex justify-between">
-                    <label class="futsu2-label w-1/2 ">共済の目的</label>
-                    <label class="futsu2-label w-1/2 ">共済金額</label>
+                <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                    <label class="p-3">共済金額</label>
                 </div>
             @endif
             @if (in_array($propertyType, ['住宅', '普通'], true))
                 <div class="estimate-input-box">
                     <label class="futsu2-label w-1/2" for="building_insurance_payout">建物共済金額</label>
                     <input id="building_insurance_payout" name="building_insurance_payout"
-                        class="estimate-input  w-1/2" wire:model="buildingInsurancePayout">
+                        class="estimate-input  w-1/2 text-right" wire:model="buildingInsurancePayout">
                     <span class="w-16 p-1 flex items-center">千円</span>
 
                 </div>
@@ -485,7 +506,7 @@
                 <div class="estimate-input-box">
                     <label class="futsu2-label w-1/2" for="household_insurance_payout">家財共済金額</label>
                     <input id="household_insurance_payout" name="household_insurance_payout"
-                        class="estimate-input w-1/2" wire:model="householdInsurancePayout">
+                        class="estimate-input w-1/2 text-right" wire:model="householdInsurancePayout">
                     <span class="w-16 p-1 flex items-center">千円</span>
                 </div>
             @endif
@@ -495,7 +516,7 @@
                         設備共済金額
                     </label>
                     <input id="facility_insurance_payout" name="facility_insurance_payout"
-                        class="estimate-input w-1/2" wire:model="facilityInsurancePayout">
+                        class="estimate-input w-1/2 text-right" wire:model="facilityInsurancePayout">
                     <span class="w-16 p-1 flex items-center">千円</span>
                 </div>
             @endif
@@ -504,15 +525,15 @@
                     <label class="futsu2-label w-1/2" for="other_facility_insurance_payout">その他設備共済金額
                     </label>
                     <input id="other_facility_insurance_payout" name="other_facility_insurance_payout"
-                        class="estimate-input w-1/2" wire:model="otherFacilityInsurancePayout">
+                        class="estimate-input w-1/2 text-right" wire:model="otherFacilityInsurancePayout">
                     <span class="w-16 p-1 flex items-center">千円</span>
                 </div>
             @endif
             @if (in_array($propertyType, ['普通'], true))
                 <div class="estimate-input-box">
                     <label class="futsu2-label w-1/2" for="item_insurance_payout">商品共済金額</label>
-                    <input id="item_insurance_payout" name="item_insurance_payout" class="estimate-input w-1/2"
-                        wire:model="itemInsurancePayout">
+                    <input id="item_insurance_payout" name="item_insurance_payout"
+                        class="estimate-input w-1/2 text-right" wire:model="itemInsurancePayout">
                     <span class="w-16 p-1 flex items-center">千円</span>
                 </div>
             @endif
@@ -520,12 +541,15 @@
                 <div class="estimate-input-box">
                     <label class="futsu2-label w-1/2" for="other_item_insurance_payout">その他商品共済金額</label>
                     <input id="other_item_insurance_payout" name="other_item_insurance_payout"
-                        class="estimate-input w-1/2" wire:model="otherItemInsurancePayout">
+                        class="estimate-input w-1/2 text-right" wire:model="otherItemInsurancePayout">
                     <span class="w-16 p-1 flex items-center">千円</span>
                 </div>
             @endif
 
-            <div class="estimate-input-box mt-5">
+            <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                <label class="p-3">評価</label>
+            </div>
+            <div class="estimate-input-box">
                 <label class="futsu2-label" for="assess_item">評価項目</label>
                 <select id="assess_item" name="assess_item" wire:model="assessItem" wire:change="onChangeAssessItem"
                     class="estimate-input">
@@ -606,63 +630,63 @@
                     <span class="my-auto mx-1">m²</span>
                 </div>
             @endif
-            @if (in_array($assessItem, ['改装物件'], true))
+            @if (in_array($assessItem, ['大規模改装'], true))
                 <div class="estimate-input-box">
                     <label class="futsu2-label text-sm" for="replacement_price">従来建物の<br>再調達価格
                         <div class="estimate-input-required">※必須</div>
                     </label>
-                    <input id="replacement_price" name="replacement_price" class="estimate-input"
+                    <input id="replacement_price" name="replacement_price" class="estimate-input text-right"
                         wire:model="replacementPrice" wire:change="onChangeAssessItem">
                     <span class="my-auto mx-1">円</span>
                 </div>
             @endif
-            @if (in_array($assessItem, ['改装物件'], true))
+            @if (in_array($assessItem, ['大規模改装'], true))
                 <div class="estimate-input-box">
                     <label class="futsu2-label" for="renovation_cost">改装費用
                         <div class="estimate-input-required">※必須</div>
                     </label>
-                    <input id="renovation_cost" name="renovation_cost" class="estimate-input"
+                    <input id="renovation_cost" name="renovation_cost" class="estimate-input text-right"
                         wire:model="renovationCost" wire:change="onChangeAssessItem">
                     <span class="my-auto mx-1">円</span>
                 </div>
             @endif
-            @if (in_array($assessItem, ['改装物件'], true))
+            @if (in_array($assessItem, ['大規模改装'], true))
                 <div class="estimate-input-box">
                     <label class="futsu2-label" for="conventional_age">従来建物の築年
                         <div class="estimate-input-required">※必須</div>
                     </label>
-                    <input id="conventional_age" name="conventional_age" class="estimate-input"
+                    <input id="conventional_age" name="conventional_age" class="estimate-input text-right"
                         wire:model="conventionalAge" wire:change="onChangeAssessItem">
                     <span class="my-auto mx-1">年</span>
                 </div>
             @endif
-            @if (in_array($assessItem, ['改装物件'], true))
+            @if (in_array($assessItem, ['大規模改装'], true))
                 <div class="estimate-input-box">
                     <label class="futsu2-label" for="depreciation_rate">従来建物の償却率
                         <div class="estimate-input-required">※必須</div>
                     </label>
-                    <input id="depreciation_rate" name="depreciation_rate" class="estimate-input"
+                    <input id="depreciation_rate" name="depreciation_rate" class="estimate-input text-right"
                         wire:model="depreciationRate" wire:change="onChangeAssessItem">
                     <span class="my-auto mx-1">%</span>
                 </div>
             @endif
-            @if (in_array($assessItem, ['改装物件'], true))
+            @if (in_array($assessItem, ['大規模改装'], true))
                 <div class="estimate-input-box">
                     <label class="futsu2-label" for="renovation_age">改装部分の築年
                         <div class="estimate-input-required">※必須</div>
                     </label>
-                    <input id="renovation_age" name="renovation_age" class="estimate-input"
+                    <input id="renovation_age" name="renovation_age" class="estimate-input text-right"
                         wire:model="renovationAge" wire:change="onChangeAssessItem">
                     <span class="my-auto mx-1">年</span>
                 </div>
             @endif
-            @if (in_array($assessItem, ['改装物件'], true))
+            @if (in_array($assessItem, ['大規模改装'], true))
                 <div class="estimate-input-box">
                     <label class="futsu2-label" for="renovation_depreciation_rate">改装部分の償却率
                         <div class="estimate-input-required">※必須</div>
                     </label>
                     <input id="renovation_depreciation_rate" name="renovation_depreciation_rate"
-                        class="estimate-input" wire:model="renovationDepreciationRate"
+                        class="estimate-input text-right" wire:model="renovationDepreciationRate"
                         wire:change="onChangeAssessItem">
                     <span class="my-auto mx-1">%</span>
                 </div>
@@ -681,19 +705,28 @@
                     <label class="futsu2-label" for="installation_cost">設置金額
                         <div class="estimate-input-required">※必須</div>
                     </label>
-                    <input id="installation_cost" name="installation_cost" class="estimate-input"
+                    <input id="installation_cost" name="installation_cost" class="estimate-input text-right"
                         wire:model="installationCost" wire:change="onChangeAssessItem">
                     <span class="w-16 p-1 flex items-center">千円</span>
                 </div>
             @endif
             @if (in_array($assessItem, ['年次取得'], true))
                 <div class="estimate-input-box">
-                    <label class="futsu2-label" for="annual_price">年次価額
+                    <label class="futsu2-label" for="annual_price">取得価額
                         <div class="estimate-input-required">※必須</div>
                     </label>
-                    <input id="annual_price" name="annual_price" class="estimate-input" wire:model="annualPrice"
-                        wire:change="onChangeAssessItem">
+                    <input id="annual_price" name="annual_price" class="estimate-input text-right"
+                        wire:model="annualPrice" wire:change="onChangeAssessItem">
                     <span class="w-16 p-1 flex items-center">千円</span>
+                </div>
+            @endif
+            @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'], true))
+                <div class="estimate-input-box">
+                    <label class="estimate-label" for="remarks">備考
+                        <div class="estimate-input-required"></div>
+                    </label>
+                    <input id="remarks" name="remarks" class="estimate-input text-right" wire:model="remarks"
+                        wire:change="onChangeAssessItem">
                 </div>
             @endif
 
@@ -736,7 +769,7 @@
             </div>
 
 
-            @if (in_array($assessItem, ['改装物件'], true))
+            @if (in_array($assessItem, ['大規模改装'], true))
                 <div class="flex justify-center">
                     <div class="mt-5">
                         <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">時価額A
@@ -804,17 +837,19 @@
                     <p class="text-left pl-5">入力した内容で見積書をプレビューする。</p>
                 </button>
 
-                <button type="button" onclick="submitForm(this)" value="assessSheet"
-                    class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5">
-                    <div class="flex items-center mb-2">
-                        <div
-                            class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                            <i class="fa-solid fa-ranking-star"></i>
+                @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'], true))
+                    <button type="button" onclick="submitForm(this)" value="assessSheet"
+                        class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5">
+                        <div class="flex items-center mb-2">
+                            <div
+                                class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                                <i class="fa-solid fa-ranking-star"></i>
+                            </div>
+                            <div class="text-lg font-medium">評価シートを<br>ダウンロード</div>
                         </div>
-                        <div class="text-lg font-medium">評価シートを<br>ダウンロード</div>
-                    </div>
-                    <p class="text-left pl-5">評価シートをダウンロード方法を選択します。</p>
-                </button>
+                        <p class="text-left pl-5">評価シートをダウンロード方法を選択します。</p>
+                    </button>
+                @endif
 
                 <button type="button" onclick="submitForm(this)" value="download"
                     class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5">

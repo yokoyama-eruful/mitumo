@@ -14,7 +14,7 @@
                 総合共済掛金
             </div>
             <div>
-                <div class="flex items-center h-[120px] w-[200px] outline outline-1 outline-gray-500 pl-5">
+                <div class="flex items-center justify-center h-[120px] w-[200px] outline outline-1 outline-gray-500">
                     {{ yenUnit($comprehensivePremium->getComprehensivePremium()) }}
                 </div>
             </div>
@@ -39,13 +39,13 @@
             共済金支払最大額
         </div>
         <div class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-            {{ yenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake1'])['共済金支払最大額']) }}
+            {{ thousandYenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake1'])['共済金支払最大額']) }}
         </div>
         <div class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-            {{ yenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake2'])['共済金支払最大額']) }}
+            {{ thousandYenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake2'])['共済金支払最大額']) }}
         </div>
         <div class="flex justify-center items-center h-20 w-[200px] outline outline-1 outline-gray-500">
-            {{ yenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake3'])['共済金支払最大額']) }}
+            {{ thousandYenUnit($earthquakePremium->getEarthquakePremium($estimate->EarthquakeList['earthquake3'])['共済金支払最大額']) }}
         </div>
     </div>
     <div class="flex flex-row">
