@@ -15,7 +15,11 @@
             </div>
             <div>
                 <div class="flex items-center justify-center h-10 w-[200px] outline outline-1 outline-gray-500">
-                    {{ yenUnit($standardPremium->getStandardPremium()) }}
+                    @if ($shortTerm->shortTermRate != 0)
+                        -
+                    @else
+                        {{ yenUnit($comprehensivePremium->getComprehensivePremium()) }}
+                    @endif
                 </div>
             </div>
             <div class="flex justify-center items-center h-10 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
@@ -23,7 +27,7 @@
             </div>
             <div>
                 <div class="flex items-center justify-center h-10 w-[200px] outline outline-1 outline-gray-500">
-                    {{ yenUnit($comprehensivePremium->getComprehensivePremium()) }}
+                    {{ yenUnit($standardPremium->getStandardPremium()) }}
                 </div>
             </div>
         </div>

@@ -15,6 +15,7 @@ class ComprehensiveOfRecommendDownloader
         $standardPremium,
         $comprehensivePremium,
         $recommendComprehensivePremium,
+        $shortTerm,
         $fileType,
         $keisyo
     ) {
@@ -30,7 +31,7 @@ class ComprehensiveOfRecommendDownloader
         $reader = new Xlsx();
         $spreadSheet = $reader->load($filePath);
 
-        $this->setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium, $keisyo);
+        $this->setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium, $shortTerm, $keisyo);
 
         $this->setCalcInfo($spreadSheet, $standardPremium, $comprehensivePremium);
 
@@ -69,7 +70,7 @@ class ComprehensiveOfRecommendDownloader
         exit;
     }
 
-    private function setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium, $keisyo)
+    private function setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium, $shortTerm, $keisyo)
     {
         $worksheet = $spreadSheet->getSheetByName('おすすめ(総合)');
         $worksheet->setCellValue('O1', date('Y年m月d日'));
@@ -93,7 +94,7 @@ class ComprehensiveOfRecommendDownloader
         $worksheet->setCellValue('D45', thousandYenUnit(array_key_exists('other_facility_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_facility_insurance_payout'] : ''));
         $worksheet->setCellValue('K45', thousandYenUnit(array_key_exists('other_item_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_item_insurance_payout'] : ''));
 
-        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('O41', $shortTerm->shortTermRate != 0 ? '-' : $comprehensivePremium->getComprehensivePremium());
         $worksheet->setCellValue('D49', yearUnit(array_key_exists('recommend1', $estimate->property_detail) ? $estimate->property_detail['recommend1'] : ''));
         $worksheet->setCellValue('D51', $recommendComprehensivePremium->getRecommendPremium(array_key_exists('recommend1', $estimate->property_detail) ? $estimate->property_detail['recommend1'] : '')['共済掛金']);
         $worksheet->setCellValue('D53', $recommendComprehensivePremium->getRecommendPremium(array_key_exists('recommend1', $estimate->property_detail) ? $estimate->property_detail['recommend1'] : '')['１年更新の場合より']);

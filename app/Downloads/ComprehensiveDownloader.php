@@ -15,6 +15,7 @@ class ComprehensiveDownloader
         $standardPremium,
         $comprehensivePremium,
         $comprehensiveCompensation,
+        $shortTerm,
         $fileType,
         $keisyo
     ) {
@@ -47,7 +48,7 @@ class ComprehensiveDownloader
             'P53' => $comprehensiveCompensation->paymentOptions['損害防止費用'],
         ];
 
-        $this->setComprehensiveInfo($spreadSheet, $estimate, $comprehensivePremium, $comprehensiveCompensation, $keisyo);
+        $this->setComprehensiveInfo($spreadSheet, $estimate, $comprehensivePremium, $comprehensiveCompensation, $shortTerm, $keisyo);
 
         $this->setCalcInfo($spreadSheet, $standardPremium, $comprehensivePremium);
 
@@ -86,7 +87,7 @@ class ComprehensiveDownloader
         exit;
     }
 
-    private function setComprehensiveInfo($spreadSheet, $estimate, $comprehensivePremium, $comprehensiveCompensation, $keisyo)
+    private function setComprehensiveInfo($spreadSheet, $estimate, $comprehensivePremium, $comprehensiveCompensation, $shortTerm, $keisyo)
     {
         $worksheet = $spreadSheet->getSheetByName('総合');
         $worksheet->setCellValue('O1', date('Y年m月d日'));
@@ -110,7 +111,7 @@ class ComprehensiveDownloader
         $worksheet->setCellValue('D45', thousandYenUnit(array_key_exists('other_facility_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_facility_insurance_payout'] : ''));
         $worksheet->setCellValue('K45', thousandYenUnit(array_key_exists('other_item_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_item_insurance_payout'] : ''));
 
-        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('O41', $shortTerm->shortTermRate != 0 ? '-' : $comprehensivePremium->getComprehensivePremium());
         foreach ($comprehensiveCompensation as $key => $comprehensiveCompensation) {
             $worksheet->setCellValue($key, $comprehensiveCompensation);
         }

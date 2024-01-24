@@ -45,9 +45,9 @@ final class SaveRequest extends FormRequest
             'building_year' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'digits:4', 'integer', 'min:1900', 'max:'.(date('Y') + 1)],
             'building_age' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'integer'],
             'pay_method' => ['required', 'string'],
-            'insurance_year' => ['nullable', 'required_without_all:insurance_month,insurance_day',  'integer'],
-            'insurance_month' => ['nullable', 'required_without_all:insurance_year,insurance_day', 'integer', 'min:1', 'max:12'],
-            'insurance_day' => ['nullable', 'required_without_all:insurance_year,insurance_month,', 'integer', 'min:1', 'max:100'], //わからん
+            'insurance_year' => ['nullable', 'required_without_all:insurance_month,insurance_day',  'integer', 'min:1', 'max:10'],
+            'insurance_month' => ['nullable', 'required_without_all:insurance_year,insurance_day', 'integer', 'min:1', 'max:11'],
+            'insurance_day' => ['nullable', 'required_without_all:insurance_year,insurance_month,', 'integer', 'min:1', 'max:15'], //わからん
 
             //おすすめ契約の項目
             'recommend1' => ['nullable', new Recommend()],

@@ -14,6 +14,7 @@ class ComprehensiveOfEarthquakeDownloader
         $estimate,
         $standardPremium,
         $comprehensivePremium,
+        $shortTerm,
         $earthquakePremium,
         $fileType,
         $keisyo
@@ -30,7 +31,7 @@ class ComprehensiveOfEarthquakeDownloader
         $reader = new Xlsx();
         $spreadSheet = $reader->load($filePath);
 
-        $this->setComprehensiveOfEarthquakeInfo($spreadSheet, $estimate, $comprehensivePremium, $earthquakePremium, $keisyo);
+        $this->setComprehensiveOfEarthquakeInfo($spreadSheet, $estimate, $comprehensivePremium, $shortTerm, $earthquakePremium, $keisyo);
 
         $this->setCalcInfo($spreadSheet, $standardPremium, $comprehensivePremium);
 
@@ -69,7 +70,7 @@ class ComprehensiveOfEarthquakeDownloader
         exit;
     }
 
-    private function setComprehensiveOfEarthquakeInfo($spreadSheet, $estimate, $comprehensivePremium, $earthquakePremium, $keisyo)
+    private function setComprehensiveOfEarthquakeInfo($spreadSheet, $estimate, $comprehensivePremium, $shortTerm, $earthquakePremium, $keisyo)
     {
         $worksheet = $spreadSheet->getSheetByName('地震おすすめ(総合)');
         $worksheet->setCellValue('O1', date('Y年m月d日'));
@@ -93,7 +94,7 @@ class ComprehensiveOfEarthquakeDownloader
         $worksheet->setCellValue('D45', thousandYenUnit(array_key_exists('other_facility_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_facility_insurance_payout'] : ''));
         $worksheet->setCellValue('K45', thousandYenUnit(array_key_exists('other_item_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_item_insurance_payout'] : ''));
 
-        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('O41', $shortTerm->shortTermRate != 0 ? '-' : $comprehensivePremium->getComprehensivePremium());
 
         $worksheet->setCellValue('D49', array_key_exists('earthquake1', $estimate->property_detail) ? $estimate->property_detail['earthquake1'] : '');
         $worksheet->setCellValue('D51', $earthquakePremium->getEarthquakePremium(array_key_exists('earthquake1', $estimate->property_detail) ? $estimate->property_detail['earthquake1'] : '')['共済金支払最大額']);

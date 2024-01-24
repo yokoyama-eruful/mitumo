@@ -16,6 +16,7 @@ class StandardAndComprehensiveDownloader
         $comprehensivePremium,
         $standardCompensation,
         $comprehensiveCompensation,
+        $shortTerm,
         $fileType,
         $keisyo
     ) {
@@ -65,7 +66,7 @@ class StandardAndComprehensiveDownloader
             'Q53' => $comprehensiveCompensation->paymentOptions['損害防止費用'],
         ];
 
-        $this->setStandardAndComprehensiveInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation, $keisyo);
+        $this->setStandardAndComprehensiveInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation, $shortTerm, $keisyo);
 
         $this->setCalcInfo($spreadSheet, $standardPremium, $comprehensivePremium);
 
@@ -104,7 +105,7 @@ class StandardAndComprehensiveDownloader
         exit;
     }
 
-    private function setStandardAndComprehensiveInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation, $keisyo)
+    private function setStandardAndComprehensiveInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation, $shortTerm, $keisyo)
     {
         $worksheet = $spreadSheet->getSheetByName('普通&総合');
         $worksheet->setCellValue('O1', date('Y年m月d日'));
@@ -128,7 +129,7 @@ class StandardAndComprehensiveDownloader
         $worksheet->setCellValue('D45', thousandYenUnit(array_key_exists('other_facility_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_facility_insurance_payout'] : ''));
         $worksheet->setCellValue('K45', thousandYenUnit(array_key_exists('other_item_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_item_insurance_payout'] : ''));
 
-        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('O41', $shortTerm->shortTermRate != 0 ? '-' : $comprehensivePremium->getComprehensivePremium());
         $worksheet->setCellValue('O44', $standardPremium->getStandardPremium());
 
         foreach ($standardCompensation as $key => $standardCompensation) {

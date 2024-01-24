@@ -45,9 +45,9 @@ final class SaveRequest extends FormRequest
             'building_year' => ['nullable',  'digits:4', 'integer', 'min:1900', 'max:'.(date('Y') + 1)],
             'building_age' => ['nullable',  'integer'],
             'pay_method' => ['required', 'string'],
-            'insurance_year' => ['nullable', 'required_without_all:insurance_month,insurance_day',  'integer'],
-            'insurance_month' => ['nullable', 'required_without_all:insurance_year,insurance_day', 'integer', 'min:1', 'max:12'],
-            'insurance_day' => ['nullable', 'required_without_all:insurance_year,insurance_month,', 'integer', 'min:1', 'max:100'], //わからん
+            'insurance_year' => ['nullable', 'required_without_all:insurance_month,insurance_day',  'integer', 'min:1', 'max:10'],
+            'insurance_month' => ['nullable', 'required_without_all:insurance_year,insurance_day', 'integer', 'min:1', 'max:11'],
+            'insurance_day' => ['nullable', 'required_without_all:insurance_year,insurance_month,', 'integer', 'min:1', 'max:15'], //わからん
 
             //おすすめ契約の項目
             'recommend1' => ['nullable', new Recommend()],
@@ -76,9 +76,9 @@ final class SaveRequest extends FormRequest
             'chattel_surcharge_category' => ['nullable', 'string'],
 
             'occupational_surcharge_code' => ['nullable',  'string'], // 'required_if:property_type,普通　は一旦省略
-            'occupational_surcharge_rate' => ['nullable',  'numeric', 'min:0'],  // 'required_if:property_type,普通　は一旦省略
+            'occupational_surcharge_rate' => ['nullable',  'numeric', 'min:0', 'max:99.99'],  // 'required_if:property_type,普通　は一旦省略
             'work_surcharge_code' => ['nullable', 'string'], // 'required_if:property_type,普通　は一旦省略
-            'work_surcharge_rate' => ['nullable',  'numeric', 'min:0'], // 'required_if:property_type,普通　は一旦省略
+            'work_surcharge_rate' => ['nullable',  'numeric', 'min:0', 'max:99.99'], // 'required_if:property_type,普通　は一旦省略
 
             'building_insurance_payout' => ['nullable', 'numeric', 'min:0'],
             'household_insurance_payout' => ['nullable', 'numeric', 'min:0'],
@@ -180,6 +180,12 @@ final class SaveRequest extends FormRequest
         $validator->after(function ($validator) {
             if ($this->input('property_type') == '住宅' && ($this->input('building_insurance_payout') && (! $this->input('start_date') || ! $this->input('building_year') || ! $this->input('building_age')))) {
                 $validator->errors()->add('エラー', '物件が「住宅」であり、建物共済掛金の入力がある場合、築年数は必須です。');
+            }
+        });
+
+        $validator->after(function ($validator) {
+            if (($this->input('household_insurance_payout') || $this->input('facility_insurance_payout') || $this->input('other_facility_insurance_payout') || $this->input('item_insurance_payout') || $this->input('other_item_insurance_payout')) && $this->input('insurance_year') > 5) {
+                $validator->errors()->add('エラー', '動産に共済金額がある場合、共済期間は5年以下である必要があります。');
             }
         });
 

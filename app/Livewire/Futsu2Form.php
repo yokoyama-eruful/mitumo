@@ -414,12 +414,29 @@ class Futsu2Form extends Component
 
     /**
      * おすすめ契約期間指定の入力項目の表示トリガー
-     *
+     *共済期間（年）
      * @return void
      */
     public function onChangeRecommend()
     {
+        $this->insuranceMonth = null;
+        $this->insuranceDay = null;
+    }
 
+    /**
+     * 共済期間（月）
+     */
+    public function onChangeInsuranceMonth()
+    {
+        $this->insuranceYear = null;
+    }
+
+    /**
+     * 共済期間（日）
+     */
+    public function onChangeInsuranceDay()
+    {
+        $this->insuranceYear = null;
     }
 
     /**

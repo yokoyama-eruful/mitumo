@@ -278,22 +278,47 @@
                     <div class="estimate-input-required">※必須</div>
                 </label>
                 <div class="flex flex-row" class="estimate-input">
-                    <div class="w-1/3 flex flex-row">
-                        <input id="insurance_year" name="insurance_year" wire:model="insuranceYear"
-                            wire:change="onChangeRecommend" class="text-right estimate-input">
-                        <span class="my-auto mx-1">年</span>
-                    </div>
-                    <div class="w-1/3 flex flex-row">
-                        <input id="insurance_month" name="insurance_month" wire:model="insuranceMonth"
-                            class="text-right estimate-input">
-                        <span class="w-16 p-1 flex items-center">ヶ月</span>
-                    </div>
-                    <div class="w-1/3 flex flex-row">
-                        <input id="insurance_day" name="insurance_day" class="text-right estimate-input"
-                            wire:model="insuranceDay">
-                        <span class="my-auto mx-1">日</span>
-                        <!-- 任意・常時 -->
-                    </div>
+                    @if (!empty($insuranceMonth) || !empty($insuranceDay))
+                        <div class="w-1/3 flex flex-row">
+                            <input id="insurance_year" name="insurance_year"
+                                class="text-right estimate-input bg-gray-300 hover:bg-gray-300"
+                                wire:model="insuranceYear" wire:change="onChangeRecommend" readonly>
+                            <span class="my-auto mx-1">年</span>
+                        </div>
+                    @else
+                        <div class="w-1/3 flex flex-row">
+                            <input id="insurance_year" name="insurance_year" wire:model="insuranceYear"
+                                wire:change="onChangeRecommend" class="text-right estimate-input">
+                            <span class="my-auto mx-1">年</span>
+                        </div>
+                    @endif
+                    @if (!empty($insuranceYear))
+                        <div class="w-1/3 flex flex-row">
+                            <input id="insurance_month" name="insurance_month"
+                                class="text-right estimate-input bg-gray-300 hover:bg-gray-300"
+                                wire:model="insuranceMonth" wire:change="onChangeInsuranceMonth" readonly>
+                            <span class="w-16 p-1 flex items-center">ヶ月</span>
+                        </div>
+                        <div class="w-1/3 flex flex-row">
+                            <input id="insurance_day" name="insurance_day"
+                                class="text-right estimate-input bg-gray-300 hover:bg-gray-300"
+                                wire:change="onChangeInsuranceDay" wire:model="insuranceDay" readonly>
+                            <span class="my-auto mx-1">日</span>
+                            <!-- 任意・常時 -->
+                        </div>
+                    @else
+                        <div class="w-1/3 flex flex-row">
+                            <input id="insurance_month" name="insurance_month" wire:model="insuranceMonth"
+                                wire:change="onChangeInsuranceMonth" class="text-right estimate-input">
+                            <span class="w-16 p-1 flex items-center">ヶ月</span>
+                        </div>
+                        <div class="w-1/3 flex flex-row">
+                            <input id="insurance_day" name="insurance_day" class="text-right estimate-input"
+                                wire:change="onChangeInsuranceDay" wire:model="insuranceDay">
+                            <span class="my-auto mx-1">日</span>
+                            <!-- 任意・常時 -->
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -575,12 +600,11 @@
                             <label class="estimate-label w-32" for="occupational_surcharge_rate">率</label>
                             <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
                             <input id="occupational_surcharge_rate" name="occupational_surcharge_rate"
-                                class="estimate-input" wire:model="occupationalSurchargeRate">
+                                class="estimate-input" wire:model="occupationalSurchargeRate"
+                                wire:change="onChangeOccupationalSurchargeRate">
                         </div>
                     </div>
                 </div>
-            @endif
-            @if (in_array($propertyType, ['普通'], true))
                 <div class="estimate-input-box w-auto">
                     <label class="estimate-label h-auto">作業割増</label>
                     <div class="w-auto">
@@ -600,7 +624,7 @@
                             <label class="estimate-label w-32" for="work_surcharge_rate">率</label>
                             <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
                             <input id="work_surcharge_rate" name="work_surcharge_rate" class="estimate-input"
-                                wire:model="workSurchargeRate">
+                                wire:model="workSurchargeRate" wire:change="onChangeWorkSurchargeRate">
                         </div>
                     </div>
                 </div>
@@ -613,7 +637,7 @@
             @endif
             @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
                 <div class="estimate-input-box">
-                    <label class="estimate-label w-1/2" for="building_insurance_payout">建物共済金額</label>
+                    <label class="estimate-label w-1/2" for="building_insurance_payout">建物</label>
                     <input id="building_insurance_payout" name="building_insurance_payout"
                         class="estimate-input  w-1/2 text-right" wire:model="buildingInsurancePayout">
                     <span class="w-16 p-1 flex items-center">千円</span>
@@ -622,7 +646,7 @@
             @endif
             @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
                 <div class="estimate-input-box">
-                    <label class="estimate-label w-1/2" for="household_insurance_payout">家財共済金額</label>
+                    <label class="estimate-label w-1/2" for="household_insurance_payout">家財</label>
                     <input id="household_insurance_payout" name="household_insurance_payout"
                         class="estimate-input w-1/2 text-right" wire:model="householdInsurancePayout">
                     <span class="w-16 p-1 flex items-center">千円</span>
@@ -631,7 +655,7 @@
             @if (in_array($propertyType, ['普通', '工場'], true))
                 <div class="estimate-input-box">
                     <label class="estimate-label w-1/2" for="facility_insurance_payout">
-                        設備共済金額
+                        設備・什器等
                     </label>
                     <input id="facility_insurance_payout" name="facility_insurance_payout"
                         class="estimate-input w-1/2 text-right" wire:model="facilityInsurancePayout">
@@ -640,7 +664,7 @@
             @endif
             @if (in_array($propertyType, ['普通', '工場'], true))
                 <div class="estimate-input-box">
-                    <label class="estimate-label w-1/2" for="other_facility_insurance_payout">その他設備共済金額
+                    <label class="estimate-label w-1/2" for="other_facility_insurance_payout">その他設備
                     </label>
                     <input id="other_facility_insurance_payout" name="other_facility_insurance_payout"
                         class="estimate-input w-1/2 text-right" wire:model="otherFacilityInsurancePayout">
@@ -649,7 +673,7 @@
             @endif
             @if (in_array($propertyType, ['普通', '工場'], true))
                 <div class="estimate-input-box">
-                    <label class="estimate-label w-1/2" for="item_insurance_payout">商品共済金額</label>
+                    <label class="estimate-label w-1/2" for="item_insurance_payout">商品・製品等</label>
                     <input id="item_insurance_payout" name="item_insurance_payout"
                         class="estimate-input w-1/2 text-right" wire:model="itemInsurancePayout">
                     <span class="w-16 p-1 flex items-center">千円</span>
@@ -657,7 +681,7 @@
             @endif
             @if (in_array($propertyType, ['普通', '工場'], true))
                 <div class="estimate-input-box">
-                    <label class="estimate-label w-1/2" for="other_item_insurance_payout">その他商品共済金額</label>
+                    <label class="estimate-label w-1/2" for="other_item_insurance_payout">その他商品</label>
                     <input id="other_item_insurance_payout" name="other_item_insurance_payout"
                         class="estimate-input w-1/2 text-right" wire:model="otherItemInsurancePayout">
                     <span class="w-16 p-1 flex items-center">千円</span>
