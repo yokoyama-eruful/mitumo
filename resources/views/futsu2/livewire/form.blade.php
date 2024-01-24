@@ -11,7 +11,7 @@
         @csrf
         <div class="block border-2 p-5">
 
-            <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+            <div class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
                 <label class="p-3">取扱代理店情報</label>
             </div>
 
@@ -42,7 +42,7 @@
                 <input id="staff_name" name="staff_name" class="estimate-input" wire:model="staffName" required>
             </div>
 
-            <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+            <div class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
                 <label class="p-3">共済契約者情報</label>
             </div>
 
@@ -59,7 +59,7 @@
                 <input id="location" name="location" class="estimate-input" wire:model="location" required>
             </div>
 
-            <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+            <div class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
                 <label class="p-3">共済の目的およびこれを収容する建物の構造・用法</label>
             </div>
 
@@ -208,7 +208,7 @@
                 </div>
             </div>
 
-            <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+            <div class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
                 <label class="p-3">払込方法・共済期間</label>
             </div>
             <div class="estimate-input-box">
@@ -252,7 +252,8 @@
             <!-- 変動のある項目 -->
             @if ($payMethod === '一時払' && $insuranceYear == 1)
                 <div class="my-5">
-                    <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                    <div
+                        class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
                         <label class="p-3">おすすめ契約期間指定（年数）</label>
                     </div>
                     <div class="estimate-input-box">
@@ -271,7 +272,8 @@
 
             @if (in_array($propertyType, ['普通'], true) && $insuranceYear == 1)
                 <div class="my-5">
-                    <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                    <div
+                        class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
                         <label class="p-3">地震特約縮小支払割合指定</label>
                     </div>
                     <div class="estimate-input-box">
@@ -310,7 +312,7 @@
             @endif
 
             @if (in_array($propertyType, ['住宅', '普通'], true))
-                <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                <div class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
                     <label class="p-3">料率・係数等</label>
                 </div>
                 <div class="estimate-input-box">
@@ -489,7 +491,7 @@
                 </div>
             @endif
             @if (in_array($propertyType, ['住宅', '普通'], true))
-                <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                <div class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
                     <label class="p-3">共済金額</label>
                 </div>
             @endif
@@ -546,7 +548,7 @@
                 </div>
             @endif
 
-            <div class="h-14 font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+            <div class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
                 <label class="p-3">評価</label>
             </div>
             <div class="estimate-input-box">
