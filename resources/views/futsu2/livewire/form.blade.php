@@ -483,7 +483,8 @@
                             <label class="futsu2-label w-32" for="occupational_surcharge_rate">率</label>
                             <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
                             <input id="occupational_surcharge_rate" name="occupational_surcharge_rate"
-                                class="estimate-input" wire:model="occupationalSurchargeRate">
+                                class="estimate-input" wire:model="occupationalSurchargeRate"
+                                wire:change="onChangeOccupationalSurchargeRate">
                         </div>
                     </div>
                 </div>
@@ -508,7 +509,7 @@
                             <label class="futsu2-label w-32" for="work_surcharge_rate">率</label>
                             <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
                             <input id="work_surcharge_rate" name="work_surcharge_rate" class="estimate-input"
-                                wire:model="workSurchargeRate">
+                                wire:model="workSurchargeRate" wire:change="onChangeWorkSurchargeCode">
                         </div>
                     </div>
                 </div>

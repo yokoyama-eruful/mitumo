@@ -519,6 +519,14 @@ class Futsu2Form extends Component
         $occupationalSurcharge = new OccupationalSurcharge('estimateFutsu2/surchargeTable/occupationalSurchargeTable.csv');
 
         $this->occupationalSurchargeRate = (string) $occupationalSurcharge->findCode($this->occupationalSurchargeCode, $this->rank);
+
+        $this->onChangeOccupationalSurchargeRate();
+    }
+
+    public function onChangeOccupationalSurchargeRate()
+    {
+        $this->workSurchargeCode = null;
+        $this->workSurchargeRate = null;
     }
 
     /**
@@ -581,6 +589,14 @@ class Futsu2Form extends Component
         $workSurcharge = new WorkSurcharge('estimateFutsu2/surchargeTable/workSurchargeTable.csv');
 
         $this->workSurchargeRate = (string) $workSurcharge->findCode($this->workSurchargeCode, $this->rank);
+
+        $this->onChangeWorkSurchargeRate();
+    }
+
+    public function onChangeWorkSurchargeRate()
+    {
+        $this->occupationalSurchargeCode = null;
+        $this->occupationalSurchargeRate = null;
     }
 
     /**
