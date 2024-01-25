@@ -58,6 +58,19 @@
                 </div>
             </div>
             <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg overflow-hidden">
+                <thead>
+                    <tr>
+                        <th>
+                            項目
+                        </th>
+                        <th>
+                            標準コード
+                        </th>
+                        <th>
+                            割増率
+                        </th>
+                    </tr>
+                </thead>
                 <tbody>
                     @foreach ($this->workSurchargeCodeList as $item)
                         <tr class="transition-colors hover:bg-gray-100 cursor-pointer"
@@ -68,6 +81,9 @@
                             </td>
                             <td class="border-y px-6 py-4">
                                 {{ $item['作業工程コード'] }}
+                            </td>
+                            <td class="border-y px-6 py-4">
+                                {{ $item['割増率'] }}
                             </td>
                         </tr>
                     @endforeach
