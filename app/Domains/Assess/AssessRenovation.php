@@ -50,7 +50,7 @@ final class AssessRenovation
     /*
     ** LiveFireで使用する評価額
     */
-    public function viewCurrentMarketPrice($replacementPrice, $renovationCost, $conventionalAge, $depreciationRate, $renovationAge, $renovationDepreciationRate): string
+    public function viewCurrentMarketPrice($replacementPrice, $renovationCost, $conventionalAge, $depreciationRate, $renovationAge, $renovationDepreciationRate)
     {
         if (! $replacementPrice || ! $renovationCost || ! $conventionalAge || ! $depreciationRate || ! $renovationAge || ! $renovationDepreciationRate) {
             return '0';
@@ -58,7 +58,7 @@ final class AssessRenovation
 
         $priceStructureRatio = ((int) $replacementPrice - (int) $renovationCost) / $replacementPrice;
 
-        $depreciationRate = $conventionalAge * $depreciationRate/100;
+        $depreciationRate = $conventionalAge * $depreciationRate / 100;
 
         if ($depreciationRate >= 0.5) {
             $depreciationRate = 0.5;
@@ -68,7 +68,7 @@ final class AssessRenovation
 
         $priceStructureRatio = $renovationCost / $replacementPrice;
 
-        $depreciationRate = $renovationAge * $renovationDepreciationRate/100;
+        $depreciationRate = $renovationAge * $renovationDepreciationRate / 100;
 
         if ($depreciationRate >= 0.5) {
             $depreciationRate = 0.5;
@@ -78,7 +78,10 @@ final class AssessRenovation
 
         $marketPrice = thousandYenUnit(floor($replacementPrice * (1 - $conventionalDepreciationRate + $renovationCostRate)));
 
-        return (string) $marketPrice;
+        return [
+            '通常' => (string) $marketPrice,
+            'まるめ' => (string) thousandYenUnit(ceil(floor($replacementPrice * (1 - $conventionalDepreciationRate + $renovationCostRate)) / 1000) * 1000),
+        ];
     }
 
     private function getConventionalDepreciationRate()

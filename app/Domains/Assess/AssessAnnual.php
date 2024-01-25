@@ -35,7 +35,7 @@ final class AssessAnnual
         $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
         $this->annualPrice = $this->getIntValueByKey('annual_price', $estimate->assess_detail);
-        $this->remarks =  $this->getStringValueByKey('remarks', $estimate->assess_detail);
+        $this->remarks = $this->getStringValueByKey('remarks', $estimate->assess_detail);
 
         $this->annualCoefficient = new AnnualCoefficient($this->rank, $this->buildingAge);
         $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
@@ -44,7 +44,7 @@ final class AssessAnnual
     /*
       ** LiveFireで使用する評価額
       */
-    public function viewReProcure($rank, $annualPrice, $buildingAge): string
+    public function viewReProcure($rank, $annualPrice, $buildingAge)
     {
         if ($rank == '' || $annualPrice == '' || $buildingAge == '') {
             return '';
@@ -55,13 +55,17 @@ final class AssessAnnual
         $annualCoefficient = $annualCoefficient->annualCoefficient;
         $reProcure = (float) $annualPrice * $annualCoefficient;
 
-        return thousandYenUnit(floor($reProcure * 0.8)).'~'.thousandYenUnit(floor($reProcure * 1.2));
+        return [
+            '80' => (string) thousandYenUnit(floor($reProcure * 0.8)),
+            '100' => (string) thousandYenUnit($reProcure),
+            '100まるめ' => (string) thousandYenUnit(ceil($reProcure / 1000) * 1000),
+        ];
     }
 
     /*
     ** LiveFireで使用する評価額
     */
-    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $rank, $annualPrice, $buildingAge, $assessRank = ''): string
+    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $rank, $annualPrice, $buildingAge, $assessRank = '')
     {
         $annualCoefficient = new AnnualCoefficient($rank, $buildingAge);
         $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
@@ -83,7 +87,10 @@ final class AssessAnnual
 
         $marketPrice = thousandYenUnit(floor($reProcure * $finalResidualValue));
 
-        return (string) $marketPrice;
+        return [
+            '通常' => (string) $marketPrice,
+            'まるめ' => (string) thousandYenUnit(ceil(floor($reProcure * $finalResidualValue) / 1000) * 1000),
+        ];
     }
 
     public function getReProcure()

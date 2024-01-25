@@ -44,7 +44,7 @@ final class AssessSolarPanel
     /*
         ** LiveFireで使用する評価額
         */
-    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $assessRank = ''): string
+    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $assessRank = '')
     {
         if ($assessRank == '' || $assessUsage == '' ||
         $assessStructure == '' || $floorArea == '') {
@@ -55,13 +55,17 @@ final class AssessSolarPanel
         $amount = $standardAmount->findStandardAmount($assessRank);
         $reProcure = $amount * $floorArea;
 
-        return thousandYenUnit(floor($reProcure * 0.8)).'~'.thousandYenUnit(floor($reProcure * 1.2));
+        return [
+            '80' => (string) thousandYenUnit(floor($reProcure * 0.8)),
+            '100' => (string) thousandYenUnit($reProcure),
+            '100まるめ' => (string) thousandYenUnit(ceil($reProcure / 1000) * 1000),
+        ];
     }
 
     /*
     ** Livewireで使用する評価額
     */
-    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $buildingAge, $assessRank = ''): string
+    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $buildingAge, $assessRank = '')
     {
         if ($assessRank == '' || $assessUsage == '' ||
         $assessStructure == '' || $floorArea == '' ||
@@ -87,7 +91,10 @@ final class AssessSolarPanel
 
         $marketPrice = thousandYenUnit(floor($reProcure * $finalResidualValue));
 
-        return (string) $marketPrice;
+        return [
+            '通常' => (string) $marketPrice,
+            'まるめ' => (string) thousandYenUnit(ceil(floor($reProcure * $finalResidualValue) / 1000) * 1000),
+        ];
     }
 
     public function getSolarPanelInfo()

@@ -44,7 +44,7 @@ final class AssessPiloti
     /*
     ** LiveFireで使用する評価額
     */
-    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $assessRank = ''): string
+    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $assessRank = '')
     {
         if ($assessRank == '' || $assessUsage == '' ||
         $assessStructure == '' || $floorArea == '') {
@@ -57,13 +57,17 @@ final class AssessPiloti
 
         $reProcure = $standardAmount * ((float) $floorArea - (float) $pilotiFloorArea);
 
-        return thousandYenUnit(floor($reProcure * 0.8)).'~'.thousandYenUnit(floor($reProcure * 1.2));
+        return [
+            '80' => (string) thousandYenUnit(floor($reProcure * 0.8)),
+            '100' => (string) thousandYenUnit($reProcure),
+            '100まるめ' => (string) thousandYenUnit(ceil($reProcure / 1000) * 1000),
+        ];
     }
 
     /*
     ** LiveFireで使用する評価額
     */
-    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $buildingAge, $assessRank = ''): string
+    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $buildingAge, $assessRank = '')
     {
         if ($assessRank == '' || $assessUsage == '' ||
         $assessStructure == '' || $floorArea == '' ||
@@ -89,7 +93,10 @@ final class AssessPiloti
 
         $marketPrice = thousandYenUnit(floor($reProcure * $finalResidualValue));
 
-        return (string) $marketPrice;
+        return [
+            '通常' => (string) $marketPrice,
+            'まるめ' => (string) thousandYenUnit(ceil(floor($reProcure * $finalResidualValue) / 1000) * 1000),
+        ];
     }
 
     public function getExceptForPiloti($assessRank)
