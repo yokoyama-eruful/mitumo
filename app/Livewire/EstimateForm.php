@@ -354,6 +354,7 @@ class EstimateForm extends Component
 
         $this->findFactoryBuildingItem($this->factoryBuildingCode);
         $this->onChangeDiscountRiskCode();
+        $this->onChangeBaseRate();
 
         return view('estimate.livewire.form');
     }

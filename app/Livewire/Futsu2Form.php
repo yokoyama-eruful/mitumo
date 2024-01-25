@@ -343,6 +343,7 @@ class Futsu2Form extends Component
             $this->onChangeAssessItem();
         }
         $this->onChangeDiscountRiskCode();
+        $this->onChangeBaseRate();
 
         return view('futsu2.livewire.form');
     }
