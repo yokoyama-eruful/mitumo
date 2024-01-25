@@ -2,11 +2,11 @@
 
 @section('main')
     <p class="text-xl font-bold px-3 pt-3 ml-10">新規</p>
-    <main class="min-h-[800px] min-w-[1100px] flex flex-col overflow-y-auto overflow-x-hidden">
-        <div class="flex flex-row w-[1000px] mx-auto">
-            <div class="flex justify-center items-center w-full p-3">
+    <main class="min-h-[800px] flex flex-col overflow-y-auto overflow-x-hidden">
+        <div class="flex flex-row w-screen">
+            <div class="flex justify-center w-1/2">
                 <a href="{{ route('estimate.create') }}"
-                    class="transition bg-gray-200 border-2 border-gray-300 rounded shadow p-2 w-[500px] hover:bg-gray-100 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-lg">
+                    class="transition bg-gray-200 border-2 border-gray-300 rounded shadow p-2 hover:bg-gray-100 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-lg">
                     <div class="flex flex-row items-center justify-center">
                         <div class="flex-shrink pr-4">
                             <div class="rounded p-3 bg-blue-600"><i class="fa fa-file-text fa-2x fa-fw fa-inverse"></i></div>
@@ -18,9 +18,9 @@
                     </div>
                 </a>
             </div>
-            <div class="flex justify-center items-center w-full p-3">
+            <div class="flex justify-center w-1/2">
                 <a href="{{ route('futsu2.create') }}"
-                    class="transition bg-gray-200 border-2 border-gray-300 rounded shadow p-2 w-[500px] hover:bg-gray-100 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-lg">
+                    class="transition bg-gray-200 border-2 border-gray-300 rounded shadow p-2 hover:bg-gray-100 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-lg">
                     <div class="flex flex-row items-center justify-center">
                         <div class="flex-shrink pr-4">
                             <div class="rounded p-3 bg-green-600"><i class="fa fa-file-text fa-2x fa-fw fa-inverse"></i>
@@ -65,9 +65,9 @@
         </div>
 
         <div class="flex flex-col px-4 sm:px-10 my-5">
-            <div class="min-h-[522px] bg-gray-200 overflow-hidden border border-gray-200 shadow-md">
+            <div class="min-h-[522px] w-full bg-gray-200 overflow-hidden border border-gray-200 shadow-md">
                 @if ($estimateType == 'futsu')
-                    <table class="w-screen border-collapse bg-gray-200 text-left text-sm text-gray-500 leading-normal">
+                    <table class="w-full border-collapse bg-gray-200 text-left text-sm text-gray-500 leading-normal">
                         <thead class="bg-blue-300">
                             <tr class="">
                                 <th class="px-5 py-1 w-1/5">
@@ -135,7 +135,7 @@
                         </tbody>
                     </table>
                 @else
-                    <table class="w-screen border-collapse bg-gray-200 text-left text-sm text-gray-500 leading-normal">
+                    <table class="w-full border-collapse bg-gray-200 text-left text-sm text-gray-500 leading-normal">
                         <thead class=" bg-green-300">
                             <tr class="">
                                 <th class="px-5 py-1 w-1/5">

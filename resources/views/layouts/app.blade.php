@@ -12,8 +12,8 @@
 <body class="flex flex-col min-h-screen max-w-full">
     <header id="header" class="bg-white w-full z-10 top-0 shadow">
         <div class="w-full container mx-auto flex flex-wrap items-center mt-0 pt-3 pb-3 md:pb-0">
-            <div class="w-1/2 pl-2 md:pl-0">
-                <a class="text-gray-900 text-base xl:text-xl no-underline hover:no-underline font-bold"
+            <div class="w-1/2 pl-5 md:pl-0">
+                <a class="text-gray-900 text-base xl:text-xl no-underline hover:no-underline font-bold pl-4"
                     href="{{ route('top.index') }}">
                     <i class="fa-solid fa-file-invoice"></i> mitumo
                 </a>
@@ -24,7 +24,7 @@
 
             <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block mt-2 lg:mt-0 bg-white z-20"
                 id="nav-content">
-                <ul class="list-reset lg:flex flex-1 items-center px-4 md:px-0">
+                <ul class="list-reset lg:flex flex-1 items-center px-4">
                     <li class="mr-6 my-2 md:my-0">
                         <a href="{{ route('top.index') }}"
                             class="ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-white hover:border-pink-500">
