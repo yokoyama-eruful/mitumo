@@ -53,7 +53,10 @@ final class AssessRenovation
     public function viewCurrentMarketPrice($replacementPrice, $renovationCost, $conventionalAge, $depreciationRate, $renovationAge, $renovationDepreciationRate)
     {
         if (! $replacementPrice || ! $renovationCost || ! $conventionalAge || ! $depreciationRate || ! $renovationAge || ! $renovationDepreciationRate) {
-            return '0';
+            return [
+                '通常' => '',
+                'まるめ' => '',
+            ];
         }
 
         $priceStructureRatio = ((int) $replacementPrice - (int) $renovationCost) / $replacementPrice;

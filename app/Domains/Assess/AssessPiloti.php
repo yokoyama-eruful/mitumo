@@ -48,7 +48,11 @@ final class AssessPiloti
     {
         if ($assessRank == '' || $assessUsage == '' ||
         $assessStructure == '' || $floorArea == '') {
-            return '';
+            return [
+                '80' => '',
+                '100' => '',
+                '100まるめ' => '',
+            ];
         }
 
         $standardAmount = $this->standardAmount = new StandardAmount($assessUsage, $assessStructure);
@@ -72,7 +76,10 @@ final class AssessPiloti
         if ($assessRank == '' || $assessUsage == '' ||
         $assessStructure == '' || $floorArea == '' ||
         $pilotiFloorArea == '' || $buildingAge == '') {
-            return '';
+            return [
+                '通常' => '',
+                'まるめ' => '',
+            ];
         }
 
         $standardAmount = $this->standardAmount = new StandardAmount($assessUsage, $assessStructure);

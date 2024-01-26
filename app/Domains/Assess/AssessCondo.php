@@ -42,7 +42,11 @@ final class AssessCondo
     {
         if ($assessRank == '' || $assessUsage == '' ||
         $assessStructure == '' || $exclusiveArea == '') {
-            return '';
+            return [
+                '80' => '',
+                '100' => '',
+                '100まるめ' => '',
+            ];
         }
 
         $standardAmount = new StandardAmount($assessUsage, $assessStructure);
@@ -64,7 +68,10 @@ final class AssessCondo
         if ($assessRank == '' || $assessUsage == '' ||
         $assessStructure == '' || $exclusiveArea == '' ||
         $buildingAge == '') {
-            return '';
+            return [
+                '通常' => '',
+                'まるめ' => '',
+            ];
         }
 
         $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);

@@ -172,10 +172,6 @@ class EstimateForm extends Component
 
     public ?string $remarks = null;
 
-    public ?string $reProcure = null;
-
-    public ?string $reProcureRound = null;
-
     public ?string $reProcure80 = null;
 
     public ?string $reProcureA80 = null;
@@ -797,8 +793,6 @@ class EstimateForm extends Component
      */
     public function onChangeAssessAmount()
     {
-        $this->reProcure = '';
-        $this->reProcureRound = '';
         $this->reProcure80 = '';
         $this->reProcureA80 = '';
         $this->reProcureB80 = '';

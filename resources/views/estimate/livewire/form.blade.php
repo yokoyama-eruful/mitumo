@@ -879,7 +879,7 @@
                     @endif
                     @if (in_array($assessItem, ['年次取得'], true))
                         <div class="estimate-input-box">
-                            <label class="estimate-label" for="annual_price">年次価額
+                            <label class="estimate-label" for="annual_price">取得価額
                                 <div class="estimate-input-required">※必須</div>
                             </label>
                             <input id="annual_price" name="annual_price" class="estimate-input text-right"

@@ -169,13 +169,29 @@ class Futsu2Form extends Component
 
     public ?string $remarks = null;
 
-    public ?string $reProcure = null;
+    public ?string $reProcure80 = null;
 
-    public ?string $reProcureA = null;
+    public ?string $reProcureA80 = null;
 
-    public ?string $reProcureB = null;
+    public ?string $reProcureB80 = null;
 
-    public ?string $reProcureC = null;
+    public ?string $reProcureC80 = null;
+
+    public ?string $reProcure100 = null;
+
+    public ?string $reProcureA100 = null;
+
+    public ?string $reProcureB100 = null;
+
+    public ?string $reProcureC100 = null;
+
+    public ?string $reProcure100round = null;
+
+    public ?string $reProcureA100round = null;
+
+    public ?string $reProcureB100round = null;
+
+    public ?string $reProcureC100round = null;
 
     public ?string $currentMarketPrice = null;
 
@@ -184,6 +200,14 @@ class Futsu2Form extends Component
     public ?string $currentMarketPriceB = null;
 
     public ?string $currentMarketPriceC = null;
+
+    public ?string $currentMarketPriceRound = null;
+
+    public ?string $currentMarketPriceARound = null;
+
+    public ?string $currentMarketPriceBRound = null;
+
+    public ?string $currentMarketPriceCRound = null;
 
     //セレクトボックス
     public array $structureList;
@@ -668,11 +692,26 @@ class Futsu2Form extends Component
      */
     public function onChangeAssessAmount()
     {
-        $this->reProcure = '';
-        $this->reProcureA = '';
-        $this->reProcureB = '';
-        $this->reProcureC = '';
+        $this->reProcure80 = '';
+        $this->reProcureA80 = '';
+        $this->reProcureB80 = '';
+        $this->reProcureC80 = '';
+        $this->reProcure100 = '';
+        $this->reProcureA100 = '';
+        $this->reProcureB100 = '';
+        $this->reProcureC100 = '';
+        $this->reProcure100round = '';
+        $this->reProcureA100round = '';
+        $this->reProcureB100round = '';
+        $this->reProcureC100round = '';
         $this->currentMarketPrice = '';
+        $this->currentMarketPriceA = '';
+        $this->currentMarketPriceB = '';
+        $this->currentMarketPriceC = '';
+        $this->currentMarketPriceRound = '';
+        $this->currentMarketPriceARound = '';
+        $this->currentMarketPriceBRound = '';
+        $this->currentMarketPriceCRound = '';
 
         if (is_null($this->assessUsage) || is_null($this->assessStructure)) {
             return;
@@ -682,66 +721,123 @@ class Futsu2Form extends Component
             return;
         }
 
+        if (is_null($this->buildingAge) || $this->buildingAge == '') {
+            $this->dispatch('alert', '評価する場合は、築年数を入力してください。');
+
+            return;
+        }
+
         switch ($this->assessItem) {
             case '通常':
                 $assessDomain = new AssessNormal($this->estimate);
 
-                $this->reProcure = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, '');
-                $this->reProcureA = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A');
-                $this->reProcureB = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B');
-                $this->reProcureC = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C');
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['80'];
 
-                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, '');
-                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A');
-                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B');
-                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C');
+                $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['100'];
+                $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['100'];
+                $this->reProcureC100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['100'];
+
+                $this->reProcureA100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['100まるめ'];
+                $this->reProcureB100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['100まるめ'];
+                $this->reProcureC100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['100まるめ'];
+
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A')['通常'];
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B')['通常'];
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C')['通常'];
+
+                $this->currentMarketPriceARound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A')['まるめ'];
+                $this->currentMarketPriceBRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B')['まるめ'];
+                $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case 'ピロティー付':
                 $assessDomain = new AssessPiloti($this->estimate);
-                $this->reProcure = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, '');
-                $this->reProcureA = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'A');
-                $this->reProcureB = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'B');
-                $this->reProcureC = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'C');
 
-                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, '');
-                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'A');
-                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'B');
-                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'C');
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'A')['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'B')['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'C')['80'];
+
+                $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'A')['100'];
+                $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'B')['100'];
+                $this->reProcureC100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'C')['100'];
+
+                $this->reProcureA100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'A')['100まるめ'];
+                $this->reProcureB100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'B')['100まるめ'];
+                $this->reProcureC100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'C')['100まるめ'];
+
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'A')['通常'];
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'B')['通常'];
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'C')['通常'];
+
+                $this->currentMarketPriceARound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'A')['まるめ'];
+                $this->currentMarketPriceBRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'B')['まるめ'];
+                $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '太陽光付':
                 $assessDomain = new AssessSolarPanel($this->estimate);
 
-                $this->reProcure = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, '');
-                $this->reProcureA = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A');
-                $this->reProcureB = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B');
-                $this->reProcureC = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C');
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['80'];
 
-                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, '');
-                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A');
-                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B');
-                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C');
+                $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['100'];
+                $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['100'];
+                $this->reProcureC100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['100'];
+
+                $this->reProcureA100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['100まるめ'];
+                $this->reProcureB100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['100まるめ'];
+                $this->reProcureC100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['100まるめ'];
+
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A')['通常'];
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B')['通常'];
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C')['通常'];
+
+                $this->currentMarketPriceARound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A')['まるめ'];
+                $this->currentMarketPriceBRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B')['まるめ'];
+                $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '分譲マンション':
                 $assessDomain = new AssessCondo($this->estimate);
 
-                $this->reProcure = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, '');
-                $this->reProcureA = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A');
-                $this->reProcureB = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B');
-                $this->reProcureC = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C');
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C')['80'];
 
-                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, '');
-                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A');
-                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B');
-                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C');
+                $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['100'];
+                $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['100'];
+                $this->reProcureC100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C')['100'];
+
+                $this->reProcureA100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['100まるめ'];
+                $this->reProcureB100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['100まるめ'];
+                $this->reProcureC100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C')['100まるめ'];
+
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'A')['通常'];
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'B')['通常'];
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'C')['通常'];
+
+                $this->currentMarketPriceARound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'A')['まるめ'];
+                $this->currentMarketPriceBRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'B')['まるめ'];
+                $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '年次取得':
+                if ($this->buildingAge > 48) {
+                    $this->dispatch('alert', 'この築年数は評価できません。');
+                }
+
                 $assessDomain = new AssessAnnual($this->estimate);
 
-                $this->reProcure = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge);
+                $this->reProcure80 = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['80'];
+                $this->reProcure100 = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['100'];
+                $this->reProcure100round = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['100まるめ'];
 
-                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'A');
-                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'B');
-                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'C');
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'A')['通常'];
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'B')['通常'];
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'C')['通常'];
+
+                $this->currentMarketPriceARound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'A')['まるめ'];
+                $this->currentMarketPriceBRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'B')['まるめ'];
+                $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '大規模改装':
 
@@ -756,7 +852,8 @@ class Futsu2Form extends Component
 
                 $assessDomain = new AssessRenovation($this->estimate);
 
-                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->replacementPrice, $this->renovationCost, $this->conventionalAge, $this->depreciationRate, $this->renovationAge, $this->renovationDepreciationRate);
+                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->replacementPrice, $this->renovationCost, $this->conventionalAge, $this->depreciationRate, $this->renovationAge, $this->renovationDepreciationRate)['通常'];
+                $this->currentMarketPriceRound = $assessDomain->viewCurrentMarketPrice($this->replacementPrice, $this->renovationCost, $this->conventionalAge, $this->depreciationRate, $this->renovationAge, $this->renovationDepreciationRate)['まるめ'];
                 break;
 
         }

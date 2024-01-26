@@ -826,83 +826,139 @@
 
                     <br>
 
-                    @if (in_array($assessItem, ['年次取得'], true))
-                        <div class="flex justify-center">
-                            <div class="mt-5">
-                                <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">再調達価額
+                    <div class="flex flex-col justify-center">
+                        @if (in_array($assessItem, ['年次取得'], true))
+                            <div class="w-full flex flex-row">
+                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center"></label>
+                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">80%
                                 </label>
-                                <input class="w-56 text-center text-lg outline outline-1" wire:model="reProcure"
-                                    readonly>
+                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">100%
+                                </label>
+                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">100%まるめ
+                                </label>
                             </div>
-                        </div>
-                    @endif
-
-                    <div class="flex flex-row justify-center">
-                        @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
-                            <div class="mt-5">
-                                <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">再調達価額A
+                            <div class="w-full flex flex-row">
+                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">再調達価額
                                 </label>
-                                <input class="w-56 text-center text-lg outline outline-1" wire:model="reProcureA"
+                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcure80"
                                     readonly>
-                            </div>
-                        @endif
-
-                        @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
-                            <div class="mt-5">
-                                <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">再調達価額B
-                                </label>
-                                <input class="w-56 text-center text-lg outline outline-1" wire:model="reProcureB"
+                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcure100"
                                     readonly>
-                            </div>
-                        @endif
-
-                        @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
-                            <div class="mt-5">
-                                <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">再調達価額C
-                                </label>
-                                <input class="w-56 text-center text-lg outline outline-1" wire:model="reProcureC"
-                                    readonly>
+                                <input class="w-1/4 text-center text-lg outline outline-1"
+                                    wire:model="reProcure100round" readonly>
                             </div>
                         @endif
                     </div>
 
-
-                    @if (in_array($assessItem, ['大規模改装'], true))
-                        <div class="flex justify-center">
-                            <div class="mt-5">
-                                <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">時価額A
+                    <div class="flex flex-col justify-center">
+                        @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
+                            <div class="w-full flex flex-row">
+                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center"></label>
+                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">80%
                                 </label>
-                                <input class="w-56 text-center text-lg outline outline-1"
+                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">100%
+                                </label>
+                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">100%まるめ
+                                </label>
+                            </div>
+                            <div class="w-full flex flex-row">
+                                <label
+                                    class="w-1/4 bg-gray-700 text-white flex items-center justify-center">再調達A</label>
+
+                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcureA80"
+                                    readonly>
+                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcureA100"
+                                    readonly>
+                                <input class="w-1/4 text-center text-lg outline outline-1"
+                                    wire:model="reProcureA100round" readonly>
+                            </div>
+                        @endif
+
+                        @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
+                            <div class="w-full flex flex-row">
+                                <label
+                                    class="w-1/4 bg-gray-700 text-white flex items-center justify-center">再調達B</label>
+                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcureB80"
+                                    readonly>
+                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcureB100"
+                                    readonly>
+                                <input class="w-1/4 text-center text-lg outline outline-1"
+                                    wire:model="reProcureB100round" readonly>
+                            </div>
+                        @endif
+
+                        @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
+                            <div class="w-full flex flex-row">
+                                <label
+                                    class="w-1/4 bg-gray-700 text-white flex items-center justify-center">再調達C</label>
+                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcureC80"
+                                    readonly>
+                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcureC100"
+                                    readonly>
+                                <input class="w-1/4 text-center text-lg outline outline-1"
+                                    wire:model="reProcureC100round" readonly>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="flex flex-col justify-center mt-5">
+                        @if (in_array($assessItem, ['大規模改装'], true))
+                            <div class="w-full flex flex-row">
+                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center"></label>
+                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">通常
+                                </label>
+                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">まるめ
+                                </label>
+                            </div>
+                            <div class="w-full flex flex-row">
+                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">時価額
+                                </label>
+                                <input class="w-1/3 text-center text-lg outline outline-1"
                                     wire:model="currentMarketPrice" readonly>
+                                <input class="w-1/3 text-center text-lg outline outline-1"
+                                    wire:model="currentMarketPriceRound" readonly>
                             </div>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
 
-                    <div class="flex flex-row justify-center">
+                    <div class="flex flex-col justify-center mt-5">
                         @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
-                            <div class="mt-5">
-                                <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">時価額A
+                            <div class="w-full flex flex-row">
+                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center"></label>
+                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">通常
                                 </label>
-                                <input class="w-56 text-center text-lg outline outline-1"
+                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">まるめ
+                                </label>
+                            </div>
+                            <div class="w-full flex flex-row">
+                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">時価額A
+                                </label>
+                                <input class="w-1/3 text-center text-lg outline outline-1"
                                     wire:model="currentMarketPriceA" readonly>
+                                <input class="w-1/3 text-center text-lg outline outline-1"
+                                    wire:model="currentMarketPriceARound" readonly>
                             </div>
                         @endif
 
                         @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
-                            <div class="mt-5">
-                                <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">時価額B
+                            <div class="w-full flex flex-row">
+                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">時価額B
                                 </label>
-                                <input class="w-56 text-center text-lg outline outline-1"
+                                <input class="w-1/3 text-center text-lg outline outline-1"
                                     wire:model="currentMarketPriceB" readonly>
+                                <input class="w-1/3 text-center text-lg outline outline-1"
+                                    wire:model="currentMarketPriceBRound" readonly>
                             </div>
                         @endif
 
                         @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
-                            <div class="mt-5">
-                                <label class="h-8 w-56 bg-gray-700 text-white flex items-center justify-center">時価額C
+                            <div class="w-full flex flex-row">
+                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">時価額C
                                 </label>
-                                <input class="w-56 text-center text-lg outline outline-1"
+                                <input class="w-1/3 text-center text-lg outline outline-1"
                                     wire:model="currentMarketPriceC" readonly>
+                                <input class="w-1/3 text-center text-lg outline outline-1"
+                                    wire:model="currentMarketPriceCRound" readonly>
                             </div>
                         @endif
                     </div>

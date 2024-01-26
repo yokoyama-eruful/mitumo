@@ -47,7 +47,11 @@ final class AssessAnnual
     public function viewReProcure($rank, $annualPrice, $buildingAge)
     {
         if ($rank == '' || $annualPrice == '' || $buildingAge == '') {
-            return '';
+            return [
+                '80' => '',
+                '100' => '',
+                '100まるめ' => '',
+            ];
         }
 
         $annualCoefficient = new AnnualCoefficient($rank, $buildingAge);
@@ -71,7 +75,10 @@ final class AssessAnnual
         $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
 
         if ($assessRank == '') {
-            return '';
+            return [
+                '通常' => '',
+                'まるめ' => '',
+            ];
         }
         $annualCoefficient = $annualCoefficient->annualCoefficient;
         $reProcure = (float) $annualPrice * $annualCoefficient;
