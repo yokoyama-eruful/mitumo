@@ -52,6 +52,12 @@ final class MutualAidPremiums
             return $this->findShortTermRate('', $this->insuranceDay);
         }
 
+        if (is_null($this->insuranceMonth) || $this->insuranceMonth == 0 &&
+        isset($this->insuranceDay) || $this->insuranceDay > 0 &&
+         $this->insuranceDay >= 15) {
+            $shortTermRate = $this->findShortTermRate(1, '');
+        }
+
         if (isset($this->insuranceMonth)) {
             //上記以外なら( 共済期間_月 * 31 + 共済期間_日 ) / 31 小数以下切り上げ
             $month = ceil(($this->insuranceMonth * 31 + $this->insuranceDay) / 31);
