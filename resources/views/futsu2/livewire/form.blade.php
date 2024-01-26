@@ -492,9 +492,12 @@
                             <label class="futsu2-label h-auto">職業割増</label>
                             <div class="w-auto">
                                 <div class="flex">
-                                    <label class="futsu2-label" for="occupational_surcharge_code">標準コード</label>
+                                    <label class="futsu2-label"></label>
                                     <button type="button" wire:click="onClickOpenOccupationalSurchargeTable"
-                                        class="mx-2 my-1 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
+                                        class="mx-2 px-2 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
+                                </div>
+                                <div class="flex">
+                                    <label class="futsu2-label" for="occupational_surcharge_code">標準コード</label>
                                     <input id="occupational_surcharge_code" name="occupational_surcharge_code"
                                         class="estimate-input" wire:model="occupationalSurchargeCode"
                                         wire:change="onChangeOccupationalSurchargeCode">
@@ -519,9 +522,12 @@
                             <label class="futsu2-label h-auto">作業割増</label>
                             <div class="w-auto">
                                 <div class="flex">
-                                    <label class="futsu2-label" for="work_surcharge_code">作業工程コード</label>
+                                    <label class="futsu2-label"></label>
                                     <button type="button" wire:click="onClickOpenWorkSurchargeTable"
-                                        class="mx-2 my-1 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
+                                        class="mx-2 px-2 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
+                                </div>
+                                <div class="flex">
+                                    <label class="futsu2-label" for="work_surcharge_code">作業工程コード</label>
                                     <input id="work_surcharge_code" name="work_surcharge_code" class="estimate-input"
                                         wire:model="workSurchargeCode" wire:change="onChangeWorkSurchargeCode">
                                 </div>
