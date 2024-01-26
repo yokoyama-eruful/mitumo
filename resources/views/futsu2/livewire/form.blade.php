@@ -13,8 +13,7 @@
 
             <div class="flex flex-wrap">
                 <div class="w-1/2 px-2">
-                    <div
-                        class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                    <div class="futsu2-title">
                         <label class="p-3">取扱代理店情報</label>
                     </div>
 
@@ -47,8 +46,7 @@
                     </div>
                 </div>
                 <div class="w-1/2 px-2">
-                    <div
-                        class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                    <div class="futsu2-title">
                         <label class="p-3">共済契約者情報</label>
                     </div>
 
@@ -70,8 +68,7 @@
 
             <div class="flex flex-wrap">
                 <div class="w-1/2 px-2">
-                    <div
-                        class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                    <div class="futsu2-title">
                         <label class="p-3">共済の目的およびこれを収容する建物の構造・用法</label>
                     </div>
 
@@ -80,14 +77,14 @@
                             <label for="floor_area" class="futsu2-label border">延床面積</label>
                             <input id="floor_area" name="floor_area" type="text" class="estimate-input text-right"
                                 wire:model="floorArea"wire:change="onChangeAssessItem">
-                            <span class="my-auto mx-1">m²</span>
+                            <span class="unit-display">m²</span>
                         </div>
                         <div class="estimate-input-box">
                             <label for="exclusive_area" class="futsu2-label">専有面積</label>
                             <input id="exclusive_area" name="exclusive_area" type="text"
                                 class="estimate-input text-right"
                                 wire:model="exclusiveArea"wire:change="onChangeAssessItem">
-                            <span class="my-auto mx-1">m²</span>
+                            <span class="unit-display">m²</span>
                         </div>
                     </div>
 
@@ -193,13 +190,12 @@
                         <input id="other" name="other" class="estimate-input" wire:model="other">
                         <!-- 任意・常時 -->
                     </div>
-
-                    <div class="estimate-input-box mt-5">
+                    <div class="estimate-input-box">
                         <div class="flex">
                             <label class="futsu2-label" for="property_type">物件
                                 <div class="estimate-input-required">※必須</div>
                             </label>
-                            <select id="property_type" name="property_type" class="estimate-input w-44"
+                            <select id="property_type" name="property_type" class="estimate-input"
                                 wire:model="propertyType" wire:change="onChangePropertyType" required>
                                 <option value="" hidden>選択してください</option>
                                 @foreach ($propertyTypeList as $item)
@@ -214,7 +210,7 @@
                             <label class="futsu2-label" for="rank">級別
                                 <div class="estimate-input-required">※必須</div>
                             </label>
-                            <select id="rank" name="rank" class="estimate-input w-44" wire:model="rank"
+                            <select id="rank" name="rank" class="estimate-input" wire:model="rank"
                                 wire:change="onChangeBaseRate" required>
                                 <option value="" hidden>選択してください</option>
                                 @foreach ($rankList as $item)
@@ -229,8 +225,7 @@
                 </div>
 
                 <div class="w-1/2 px-2">
-                    <div
-                        class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                    <div class="futsu2-title">
                         <label class="p-3">払込方法・共済期間</label>
                     </div>
                     <div class="estimate-input-box">
@@ -256,13 +251,13 @@
                                 <input id="insurance_year" name="insurance_year"
                                     class="text-right estimate-input bg-gray-300 hover:bg-gray-300"
                                     wire:model="insuranceYear" wire:change="onChangeRecommend" readonly>
-                                <span class="my-auto mx-1">年</span>
+                                <span class="unit-display">年</span>
                             </div>
                         @else
                             <div class="w-1/3 flex flex-row">
                                 <input id="insurance_year" name="insurance_year" wire:model="insuranceYear"
                                     wire:change="onChangeRecommend" class="text-right estimate-input">
-                                <span class="my-auto mx-1">年</span>
+                                <span class="unit-display">年</span>
                             </div>
                         @endif
                         @if (!empty($insuranceYear))
@@ -270,25 +265,25 @@
                                 <input id="insurance_month" name="insurance_month"
                                     class="text-right estimate-input bg-gray-300 hover:bg-gray-300"
                                     wire:model="insuranceMonth" wire:change="onChangeInsuranceMonth" readonly>
-                                <span class="w-16 p-1 flex items-center">ヶ月</span>
+                                <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">ヶ月</span>
                             </div>
                             <div class="w-1/3 flex flex-row">
                                 <input id="insurance_day" name="insurance_day"
                                     class="text-right estimate-input bg-gray-300 hover:bg-gray-300"
                                     wire:change="onChangeInsuranceDay" wire:model="insuranceDay" readonly>
-                                <span class="my-auto mx-1">日</span>
+                                <span class="unit-display">日</span>
                                 <!-- 任意・常時 -->
                             </div>
                         @else
                             <div class="w-1/3 flex flex-row">
                                 <input id="insurance_month" name="insurance_month" wire:model="insuranceMonth"
                                     wire:change="onChangeInsuranceMonth" class="text-right estimate-input">
-                                <span class="w-16 p-1 flex items-center">ヶ月</span>
+                                <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">ヶ月</span>
                             </div>
                             <div class="w-1/3 flex flex-row">
                                 <input id="insurance_day" name="insurance_day" class="text-right estimate-input"
                                     wire:change="onChangeInsuranceDay" wire:model="insuranceDay">
-                                <span class="my-auto mx-1">日</span>
+                                <span class="unit-display">日</span>
                                 <!-- 任意・常時 -->
                             </div>
                         @endif
@@ -297,43 +292,40 @@
                     <!-- 変動のある項目 -->
                     @if ($payMethod === '一時払' && $insuranceYear == 1)
                         <div class="my-5">
-                            <div
-                                class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                            <div class="futsu2-title">
                                 <label class="p-3">おすすめ契約期間指定（年数）</label>
                             </div>
                             <div class="estimate-input-box">
                                 <input id="recommend1" name="recommend1" class="estimate-input text-right"
                                     wire:model="recommend1">
-                                <span class="my-auto mx-1">年</span>
+                                <span class="unit-display">年</span>
                                 <input id="recommend2" name="recommend2" class="estimate-input text-right"
                                     wire:model="recommend2">
-                                <span class="my-auto mx-1">年</span>
+                                <span class="unit-display">年</span>
                                 <input id="recommend3" name="recommend3" class="estimate-input text-right"
                                     wire:model="recommend3">
-                                <span class="my-auto mx-1">年</span>
+                                <span class="unit-display">年</span>
                             </div>
                         </div>
                     @else
                         <div class="my-5">
-                            <div
-                                class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-gray-300">
+                            <div class="futsu2-title bg-gray-300">
                                 <label class="p-3">おすすめ契約期間指定（年数）</label>
                             </div>
                             <div class="estimate-input-box bg-gray-300">
                                 <div class="estimate-input text-right"></div>
-                                <span class="my-auto mx-1">年</span>
+                                <span class="unit-display">年</span>
                                 <div class="estimate-input text-right"></div>
-                                <span class="my-auto mx-1">年</span>
+                                <span class="unit-display">年</span>
                                 <div class="estimate-input text-right"></div>
-                                <span class="my-auto mx-1">年</span>
+                                <span class="unit-display">年</span>
                             </div>
                         </div>
                     @endif
 
                     @if (in_array($propertyType, ['普通'], true) && $insuranceYear == 1)
                         <div class="my-5">
-                            <div
-                                class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                            <div class="futsu2-title">
                                 <label class="p-3">地震特約縮小支払割合指定</label>
                             </div>
                             <div class="estimate-input-box">
@@ -346,7 +338,7 @@
                                         選択しない
                                     </option>
                                 </select>
-                                <span class="my-auto mx-1">%</span>
+                                <span class="unit-display">%</span>
                                 <select id="earthquake2" name="earthquake2" wire:model="earthquake2"
                                     class="estimate-input text-right">
                                     <option value="30">
@@ -356,7 +348,7 @@
                                         選択しない
                                     </option>
                                 </select>
-                                <span class="my-auto mx-1">%</span>
+                                <span class="unit-display">%</span>
                                 <select id="earthquake3" name="earthquake3" wire:model="earthquake3"
                                     class="estimate-input text-right">
                                     <option value="50">
@@ -366,22 +358,21 @@
                                         選択しない
                                     </option>
                                 </select>
-                                <span class="my-auto mx-1">%</span>
+                                <span class="unit-display">%</span>
                             </div>
                         </div>
                     @else
                         <div class="my-5">
-                            <div
-                                class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-gray-300">
+                            <div class="futsu2-title bg-gray-300">
                                 <label class="p-3">地震特約縮小支払割合指定</label>
                             </div>
                             <div class="estimate-input-box bg-gray-300">
                                 <div class="estimate-input text-right"></div>
-                                <span class="my-auto mx-1">%</span>
+                                <span class="unit-display">%</span>
                                 <div class="estimate-input text-right"></div>
-                                <span class="my-auto mx-1">%</span>
+                                <span class="unit-display">%</span>
                                 <div class="estimate-input text-right"></div>
-                                <span class="my-auto mx-1">%</span>
+                                <span class="unit-display">%</span>
                             </div>
                         </div>
                     @endif
@@ -391,8 +382,7 @@
             <div class="flex flex-wrap">
                 <div class="w-1/2 px-2">
                     @if (in_array($propertyType, ['住宅', '普通'], true))
-                        <div
-                            class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                        <div class="futsu2-title">
                             <label class="p-3">料率・係数等</label>
                         </div>
                         <div class="estimate-input-box">
@@ -448,21 +438,21 @@
                             <input id="discount_fire_extinguisher" name="discount_fire_extinguisher"
                                 class="estimate-input text-right" type="number" min="0" max="100"
                                 wire:model="discountFireExtinguisher">
-                            <span class="my-auto mx-1">%</span>
+                            <span class="unit-display">%</span>
                         </div>
                         <div class="estimate-input-box">
                             <label class="futsu2-label" for="discount_security">セキュリティ割引
                             </label>
                             <input id="discount_security" name="discount_security" class="estimate-input text-right"
                                 type="number" min="0" max="100" wire:model="discountSecurity">
-                            <span class="my-auto mx-1">%</span>
+                            <span class="unit-display">%</span>
                         </div>
                         <div class="estimate-input-box">
                             <label class="futsu2-label" id="discount_public" for="discount_public">公有物件割引
                             </label>
                             <input id="discount_public" name="discount_public" class="estimate-input text-right"
                                 type="number" min="0" max="100" wire:model="discountPublic">
-                            <span class="my-auto mx-1">%</span>
+                            <span class="unit-display">%</span>
                         </div>
                         <div class="estimate-input-box w-auto">
                             <label class="futsu2-label h-auto">リスク評価割引</label>
@@ -470,7 +460,7 @@
                                 <div class="flex">
                                     <label class="futsu2-label" for="discount_risk_code"></label>
                                     <button type="button" wire:click="onClickDiscountRiskTable"
-                                        class="mx-2 my-1 px-2 h-8 w-full bg-gray-700 hover:bg-gray-600 text-white rounded">評価項目表を参照</button>
+                                        class="mx-2 my-1 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded">評価項目表を参照</button>
                                     <input id="discount_risk_code" name="discount_risk_code" class="estimate-input"
                                         wire:model="discountRiskCode" wire:change="onChangeDiscountRiskCode" hidden>
                                 </div>
@@ -480,7 +470,7 @@
                                         class="estimate-input text-right"
                                         wire:model="discountRiskRate"wire:change="onChangeDiscountRiskRate"
                                         type="number" min="0" max="100">
-                                    <span class="my-auto mx-1">%</span>
+                                    <span class="unit-display">%</span>
                                 </div>
                             </div>
                         </div>
@@ -494,7 +484,7 @@
                             </label>
                             <input id="other_discount" name="other_discount" class="estimate-input text-right"
                                 wire:model="otherDiscount" type="number" min="0" max="50">
-                            <span class="my-auto mx-1">%</span>
+                            <span class="unit-display">%</span>
                         </div>
                     @endif
                     @if (in_array($propertyType, ['普通'], true))
@@ -504,7 +494,7 @@
                                 <div class="flex">
                                     <label class="futsu2-label" for="occupational_surcharge_code">標準コード</label>
                                     <button type="button" wire:click="onClickOpenOccupationalSurchargeTable"
-                                        class="mx-2 my-1 px-2 h-8 w-full bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
+                                        class="mx-2 my-1 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
                                     <input id="occupational_surcharge_code" name="occupational_surcharge_code"
                                         class="estimate-input" wire:model="occupationalSurchargeCode"
                                         wire:change="onChangeOccupationalSurchargeCode">
@@ -531,7 +521,7 @@
                                 <div class="flex">
                                     <label class="futsu2-label" for="work_surcharge_code">作業工程コード</label>
                                     <button type="button" wire:click="onClickOpenWorkSurchargeTable"
-                                        class="mx-2 my-1 px-2 h-8 w-full bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
+                                        class="mx-2 my-1 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
                                     <input id="work_surcharge_code" name="work_surcharge_code" class="estimate-input"
                                         wire:model="workSurchargeCode" wire:change="onChangeWorkSurchargeCode">
                                 </div>
@@ -552,8 +542,7 @@
 
                 <div class="w-1/2 px-2">
                     @if (in_array($propertyType, ['住宅', '普通'], true))
-                        <div
-                            class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                        <div class="futsu2-title">
                             <label class="p-3">共済金額</label>
                         </div>
                     @endif
@@ -562,7 +551,7 @@
                             <label class="futsu2-label w-1/2" for="building_insurance_payout">建物</label>
                             <input id="building_insurance_payout" name="building_insurance_payout"
                                 class="estimate-input  w-1/2 text-right" wire:model="buildingInsurancePayout">
-                            <span class="w-16 p-1 flex items-center">千円</span>
+                            <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
 
                         </div>
                     @endif
@@ -571,7 +560,7 @@
                             <label class="futsu2-label w-1/2" for="household_insurance_payout">家財</label>
                             <input id="household_insurance_payout" name="household_insurance_payout"
                                 class="estimate-input w-1/2 text-right" wire:model="householdInsurancePayout">
-                            <span class="w-16 p-1 flex items-center">千円</span>
+                            <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
                         </div>
                     @endif
                     @if (in_array($propertyType, ['普通'], true))
@@ -581,7 +570,7 @@
                             </label>
                             <input id="facility_insurance_payout" name="facility_insurance_payout"
                                 class="estimate-input w-1/2 text-right" wire:model="facilityInsurancePayout">
-                            <span class="w-16 p-1 flex items-center">千円</span>
+                            <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
                         </div>
                     @endif
                     @if (in_array($propertyType, ['普通'], true))
@@ -590,7 +579,7 @@
                             </label>
                             <input id="other_facility_insurance_payout" name="other_facility_insurance_payout"
                                 class="estimate-input w-1/2 text-right" wire:model="otherFacilityInsurancePayout">
-                            <span class="w-16 p-1 flex items-center">千円</span>
+                            <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
                         </div>
                     @endif
                     @if (in_array($propertyType, ['普通'], true))
@@ -598,7 +587,7 @@
                             <label class="futsu2-label w-1/2" for="item_insurance_payout">商品・製品等</label>
                             <input id="item_insurance_payout" name="item_insurance_payout"
                                 class="estimate-input w-1/2 text-right" wire:model="itemInsurancePayout">
-                            <span class="w-16 p-1 flex items-center">千円</span>
+                            <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
                         </div>
                     @endif
                     @if (in_array($propertyType, ['普通'], true))
@@ -606,12 +595,11 @@
                             <label class="futsu2-label w-1/2" for="other_item_insurance_payout">その他商品</label>
                             <input id="other_item_insurance_payout" name="other_item_insurance_payout"
                                 class="estimate-input w-1/2 text-right" wire:model="otherItemInsurancePayout">
-                            <span class="w-16 p-1 flex items-center">千円</span>
+                            <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
                         </div>
                     @endif
 
-                    <div
-                        class="h-10 justify-center font-bold text-lg border-b-2 w-full flex flex-col mt-10 bg-lime-500">
+                    <div class="futsu2-title">
                         <label class="p-3">評価</label>
                     </div>
                     <div class="estimate-input-box">
@@ -643,7 +631,7 @@
                             <input id="building_year" name="building_year" class="estimate-input text-right"
                                 placeholder="西暦を入力してください" wire:model="buildingYear" wire:change="onChangeBuildingAge"
                                 required>
-                            <span class="my-auto mx-1">年</span>
+                            <span class="unit-display">年</span>
                         </div>
                         <div class="estimate-input-box">
                             <label class="futsu2-label" for="building_age">築年数
@@ -652,7 +640,7 @@
                             <input id="building_age" name="building_age"
                                 class="estimate-input hover:bg-white focus:bg-white text-right"
                                 wire:model="buildingAge" required readonly>
-                            <span class="my-auto mx-1">年</span>
+                            <span class="unit-display">年</span>
                         </div>
                     @endif
 
@@ -691,22 +679,22 @@
                     @endif
                     @if (in_array($assessItem, ['ピロティー付'], true))
                         <div class="estimate-input-box">
-                            <label class="futsu2-label" for="piloti_floor_area">ピロティーの延床面積
+                            <label class="futsu2-label sm:text-[0.6rem]" for="piloti_floor_area">ピロティーの延床面積
                                 <div class="estimate-input-required">※必須</div>
                             </label>
                             <input id="piloti_floor_area" name="piloti_floor_area" class="estimate-input"
                                 wire:model="pilotiFloorArea" wire:change="onChangeAssessItem">
-                            <span class="my-auto mx-1">m²</span>
+                            <span class="unit-display">m²</span>
                         </div>
                     @endif
                     @if (in_array($assessItem, ['大規模改装'], true))
                         <div class="estimate-input-box">
-                            <label class="futsu2-label text-sm" for="replacement_price">従来建物の<br>再調達価格
+                            <label class="futsu2-label sm:text-[0.6rem]" for="replacement_price">従来建物の再調達価格
                                 <div class="estimate-input-required">※必須</div>
                             </label>
                             <input id="replacement_price" name="replacement_price" class="estimate-input text-right"
                                 wire:model="replacementPrice" wire:change="onChangeAssessItem">
-                            <span class="my-auto mx-1">円</span>
+                            <span class="unit-display">円</span>
                         </div>
                     @endif
                     @if (in_array($assessItem, ['大規模改装'], true))
@@ -716,48 +704,48 @@
                             </label>
                             <input id="renovation_cost" name="renovation_cost" class="estimate-input text-right"
                                 wire:model="renovationCost" wire:change="onChangeAssessItem">
-                            <span class="my-auto mx-1">円</span>
+                            <span class="unit-display">円</span>
                         </div>
                     @endif
                     @if (in_array($assessItem, ['大規模改装'], true))
                         <div class="estimate-input-box">
-                            <label class="futsu2-label" for="conventional_age">従来建物の築年
+                            <label class="futsu2-label sm:text-[0.6rem]" for="conventional_age">従来建物の築年
                                 <div class="estimate-input-required">※必須</div>
                             </label>
                             <input id="conventional_age" name="conventional_age" class="estimate-input text-right"
                                 wire:model="conventionalAge" wire:change="onChangeAssessItem">
-                            <span class="my-auto mx-1">年</span>
+                            <span class="unit-display">年</span>
                         </div>
                     @endif
                     @if (in_array($assessItem, ['大規模改装'], true))
                         <div class="estimate-input-box">
-                            <label class="futsu2-label" for="depreciation_rate">従来建物の償却率
+                            <label class="futsu2-label sm:text-[0.6rem]" for="depreciation_rate">従来建物の償却率
                                 <div class="estimate-input-required">※必須</div>
                             </label>
                             <input id="depreciation_rate" name="depreciation_rate" class="estimate-input text-right"
                                 wire:model="depreciationRate" wire:change="onChangeAssessItem">
-                            <span class="my-auto mx-1">%</span>
+                            <span class="unit-display">%</span>
                         </div>
                     @endif
                     @if (in_array($assessItem, ['大規模改装'], true))
                         <div class="estimate-input-box">
-                            <label class="futsu2-label" for="renovation_age">改装部分の築年
+                            <label class="futsu2-label sm:text-[0.6rem]" for="renovation_age">改装部分の築年
                                 <div class="estimate-input-required">※必須</div>
                             </label>
                             <input id="renovation_age" name="renovation_age" class="estimate-input text-right"
                                 wire:model="renovationAge" wire:change="onChangeAssessItem">
-                            <span class="my-auto mx-1">年</span>
+                            <span class="unit-display">年</span>
                         </div>
                     @endif
                     @if (in_array($assessItem, ['大規模改装'], true))
                         <div class="estimate-input-box">
-                            <label class="futsu2-label" for="renovation_depreciation_rate">改装部分の償却率
+                            <label class="futsu2-label sm:text-[0.6rem]" for="renovation_depreciation_rate">改装部分の償却率
                                 <div class="estimate-input-required">※必須</div>
                             </label>
                             <input id="renovation_depreciation_rate" name="renovation_depreciation_rate"
                                 class="estimate-input text-right" wire:model="renovationDepreciationRate"
                                 wire:change="onChangeAssessItem">
-                            <span class="my-auto mx-1">%</span>
+                            <span class="unit-display">%</span>
                         </div>
                     @endif
                     @if (in_array($assessItem, ['太陽光付'], true))
@@ -777,7 +765,7 @@
                             </label>
                             <input id="installation_cost" name="installation_cost" class="estimate-input text-right"
                                 wire:model="installationCost" wire:change="onChangeAssessItem">
-                            <span class="w-16 p-1 flex items-center">千円</span>
+                            <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
                         </div>
                     @endif
                     @if (in_array($assessItem, ['年次取得'], true))
@@ -787,7 +775,7 @@
                             </label>
                             <input id="annual_price" name="annual_price" class="estimate-input text-right"
                                 wire:model="annualPrice" wire:change="onChangeAssessItem">
-                            <span class="w-16 p-1 flex items-center">千円</span>
+                            <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
                         </div>
                     @endif
                     @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'], true))
@@ -805,23 +793,20 @@
                     <div class="flex flex-col justify-center">
                         @if (in_array($assessItem, ['年次取得'], true))
                             <div class="w-full flex flex-row">
-                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center"></label>
-                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">80%
+                                <label class="assess-label"></label>
+                                <label class="assess-label">80%
                                 </label>
-                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">100%
+                                <label class="assess-label">100%
                                 </label>
-                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">100%まるめ
+                                <label class="assess-label">100%まるめ
                                 </label>
                             </div>
                             <div class="w-full flex flex-row">
-                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">再調達価額
+                                <label class="assess-label">再調達価額
                                 </label>
-                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcure80"
-                                    readonly>
-                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcure100"
-                                    readonly>
-                                <input class="w-1/4 text-center text-lg outline outline-1"
-                                    wire:model="reProcure100round" readonly>
+                                <input class="assess-input" wire:model="reProcure80" readonly>
+                                <input class="assess-input" wire:model="reProcure100" readonly>
+                                <input class="assess-input" wire:model="reProcure100round" readonly>
                             </div>
                         @endif
                     </div>
@@ -829,50 +814,38 @@
                     <div class="flex flex-col justify-center">
                         @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
                             <div class="w-full flex flex-row">
-                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center"></label>
-                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">80%
+                                <label class="assess-label"></label>
+                                <label class="assess-label">80%
                                 </label>
-                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">100%
+                                <label class="assess-label">100%
                                 </label>
-                                <label class="w-1/4 bg-gray-700 text-white flex items-center justify-center">100%まるめ
+                                <label class="assess-label">100%まるめ
                                 </label>
                             </div>
                             <div class="w-full flex flex-row">
-                                <label
-                                    class="w-1/4 bg-gray-700 text-white flex items-center justify-center">再調達A</label>
+                                <label class="assess-label">再調達A</label>
 
-                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcureA80"
-                                    readonly>
-                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcureA100"
-                                    readonly>
-                                <input class="w-1/4 text-center text-lg outline outline-1"
-                                    wire:model="reProcureA100round" readonly>
+                                <input class="assess-input" wire:model="reProcureA80" readonly>
+                                <input class="assess-input" wire:model="reProcureA100" readonly>
+                                <input class="assess-input" wire:model="reProcureA100round" readonly>
                             </div>
                         @endif
 
                         @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
                             <div class="w-full flex flex-row">
-                                <label
-                                    class="w-1/4 bg-gray-700 text-white flex items-center justify-center">再調達B</label>
-                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcureB80"
-                                    readonly>
-                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcureB100"
-                                    readonly>
-                                <input class="w-1/4 text-center text-lg outline outline-1"
-                                    wire:model="reProcureB100round" readonly>
+                                <label class="assess-label">再調達B</label>
+                                <input class="assess-input" wire:model="reProcureB80" readonly>
+                                <input class="assess-input" wire:model="reProcureB100" readonly>
+                                <input class="assess-input" wire:model="reProcureB100round" readonly>
                             </div>
                         @endif
 
                         @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
                             <div class="w-full flex flex-row">
-                                <label
-                                    class="w-1/4 bg-gray-700 text-white flex items-center justify-center">再調達C</label>
-                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcureC80"
-                                    readonly>
-                                <input class="w-1/4 text-center text-lg outline outline-1" wire:model="reProcureC100"
-                                    readonly>
-                                <input class="w-1/4 text-center text-lg outline outline-1"
-                                    wire:model="reProcureC100round" readonly>
+                                <label class="assess-label">再調達C</label>
+                                <input class="assess-input" wire:model="reProcureC80" readonly>
+                                <input class="assess-input" wire:model="reProcureC100" readonly>
+                                <input class="assess-input" wire:model="reProcureC100round" readonly>
                             </div>
                         @endif
                     </div>
@@ -880,19 +853,17 @@
                     <div class="flex flex-col justify-center mt-5">
                         @if (in_array($assessItem, ['大規模改装'], true))
                             <div class="w-full flex flex-row">
-                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center"></label>
-                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">通常
+                                <label class="market-price-label"></label>
+                                <label class="market-price-label">通常
                                 </label>
-                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">まるめ
+                                <label class="market-price-label">まるめ
                                 </label>
                             </div>
                             <div class="w-full flex flex-row">
-                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">時価額
+                                <label class="market-price-label">時価額
                                 </label>
-                                <input class="w-1/3 text-center text-lg outline outline-1"
-                                    wire:model="currentMarketPrice" readonly>
-                                <input class="w-1/3 text-center text-lg outline outline-1"
-                                    wire:model="currentMarketPriceRound" readonly>
+                                <input class="market-price-input" wire:model="currentMarketPrice" readonly>
+                                <input class="market-price-input" wire:model="currentMarketPriceRound" readonly>
                             </div>
                         @endif
                     </div>
@@ -900,41 +871,35 @@
                     <div class="flex flex-col justify-center mt-5">
                         @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
                             <div class="w-full flex flex-row">
-                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center"></label>
-                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">通常
+                                <label class="market-price-label"></label>
+                                <label class="market-price-label">通常
                                 </label>
-                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">まるめ
+                                <label class="market-price-label">まるめ
                                 </label>
                             </div>
                             <div class="w-full flex flex-row">
-                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">時価額A
+                                <label class="market-price-label">時価額A
                                 </label>
-                                <input class="w-1/3 text-center text-lg outline outline-1"
-                                    wire:model="currentMarketPriceA" readonly>
-                                <input class="w-1/3 text-center text-lg outline outline-1"
-                                    wire:model="currentMarketPriceARound" readonly>
+                                <input class="market-price-input" wire:model="currentMarketPriceA" readonly>
+                                <input class="market-price-input" wire:model="currentMarketPriceARound" readonly>
                             </div>
                         @endif
 
                         @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
                             <div class="w-full flex flex-row">
-                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">時価額B
+                                <label class="market-price-label">時価額B
                                 </label>
-                                <input class="w-1/3 text-center text-lg outline outline-1"
-                                    wire:model="currentMarketPriceB" readonly>
-                                <input class="w-1/3 text-center text-lg outline outline-1"
-                                    wire:model="currentMarketPriceBRound" readonly>
+                                <input class="market-price-input" wire:model="currentMarketPriceB" readonly>
+                                <input class="market-price-input" wire:model="currentMarketPriceBRound" readonly>
                             </div>
                         @endif
 
                         @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
                             <div class="w-full flex flex-row">
-                                <label class="w-1/3 bg-gray-700 text-white flex items-center justify-center">時価額C
+                                <label class="market-price-label">時価額C
                                 </label>
-                                <input class="w-1/3 text-center text-lg outline outline-1"
-                                    wire:model="currentMarketPriceC" readonly>
-                                <input class="w-1/3 text-center text-lg outline outline-1"
-                                    wire:model="currentMarketPriceCRound" readonly>
+                                <input class="market-price-input" wire:model="currentMarketPriceC" readonly>
+                                <input class="market-price-input" wire:model="currentMarketPriceCRound" readonly>
                             </div>
                         @endif
                     </div>
@@ -956,7 +921,7 @@
         </button>
 
         @if ($estimate->id)
-            <div class="grid grid-cols-3 gap-4 mb-6 mx-48">
+            <div class="grid sm:grid-cols-3 grid-rows-3 gap-4 mb-6 mx-48">
                 <button type="button" onclick="submitForm(this)" value="preview"
                     class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5">
                     <div class="flex items-center mt-2 mb-5">
