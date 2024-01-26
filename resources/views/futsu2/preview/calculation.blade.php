@@ -257,6 +257,17 @@
                     {{ percentUnit($standard->otherDiscount) }}
                 </div>
             </div>
+            <div class="flex flex-row">
+                <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
+                    長期年払割引
+                </div>
+                <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
+                    @if ($standard->getPayByLongTermFlag() == true)
+                        3%
+                    @else
+                    @endif
+                </div>
+            </div>
         </div>
         <div class="ms-10">
             <div class="flex flex-row">
@@ -290,17 +301,6 @@
                 </div>
                 <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
                     {{ $standard->actualLossFactor }}
-                </div>
-            </div>
-            <div class="flex flex-row">
-                <div class="flex justify-center items-center h-10 w-32 bg-green-200 outline outline-1 outline-gray-500">
-                    長期年払割引
-                </div>
-                <div class="flex items-center h-10 w-28 outline outline-1 outline-gray-500 pl-5">
-                    @if ($standard->getPayByLongTermFlag() == true)
-                        3%
-                    @else
-                    @endif
                 </div>
             </div>
         </div>

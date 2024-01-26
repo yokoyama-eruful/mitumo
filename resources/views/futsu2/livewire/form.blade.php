@@ -441,7 +441,7 @@
                                 wire:model="actualLossFactor">
                         </div>
                     @endif
-                    @if ($propertyType == '普通' && $rank == '1級')
+                    @if ($propertyType == '普通')
                         <div class="estimate-input-box">
                             <label class="futsu2-label" for="discount_fire_extinguisher">消火設備割引
                             </label>
@@ -477,34 +477,12 @@
                                 <div class=" flex">
                                     <label class="futsu2-label" for="discount_risk_rate">割引率</label>
                                     <input id="discount_risk_rate" name="discount_risk_rate"
-                                        class="estimate-input text-right" wire:model="discountRiskRate"
+                                        class="estimate-input text-right"
+                                        wire:model="discountRiskRate"wire:change="onChangeDiscountRiskRate"
                                         type="number" min="0" max="100">
                                     <span class="my-auto mx-1">%</span>
                                 </div>
                             </div>
-                        </div>
-                    @elseif ($propertyType == '普通' && in_array($rank, ['2級', '3級'], true))
-                        <div class="estimate-input-box">
-                            <label class="futsu2-label" for="discount_fire_extinguisher">消火設備割引
-                            </label>
-                            <input id="discount_fire_extinguisher" name="discount_fire_extinguisher"
-                                class="estimate-input text-right" type="number" min="0" max="100"
-                                wire:model="discountFireExtinguisher">
-                            <span class="my-auto mx-1">%</span>
-                        </div>
-                        <div class="estimate-input-box">
-                            <label class="futsu2-label" for="discount_security">セキュリティ割引
-                            </label>
-                            <input id="discount_security" name="discount_security" class="estimate-input text-right"
-                                type="number" min="0" max="100" wire:model="discountSecurity">
-                            <span class="my-auto mx-1">%</span>
-                        </div>
-                        <div class="estimate-input-box">
-                            <label class="futsu2-label" id="discount_public" for="discount_public">公有物件割引
-                            </label>
-                            <input id="discount_public" name="discount_public" class="estimate-input text-right"
-                                type="number" min="0" max="100" wire:model="discountPublic">
-                            <span class="my-auto mx-1">%</span>
                         </div>
                     @else
                         <div>
@@ -539,7 +517,6 @@
                     </div> --}}
                                 <div class="flex">
                                     <label class="futsu2-label" for="occupational_surcharge_rate">率</label>
-                                    <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
                                     <input id="occupational_surcharge_rate" name="occupational_surcharge_rate"
                                         class="estimate-input" wire:model="occupationalSurchargeRate"
                                         wire:change="onChangeOccupationalSurchargeRate">
@@ -565,7 +542,6 @@
                     </div> --}}
                                 <div class=" flex">
                                     <label class="futsu2-label" for="work_surcharge_rate">率</label>
-                                    <div class="mx-2 w-64 text-sm">※調整は,手動でお願いします</div>
                                     <input id="work_surcharge_rate" name="work_surcharge_rate" class="estimate-input"
                                         wire:model="workSurchargeRate" wire:change="onChangeWorkSurchargeCode">
                                 </div>

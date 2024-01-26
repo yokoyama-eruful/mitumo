@@ -80,6 +80,6 @@ if (! function_exists('gainUnit')) {
             return $percent;
         }
 
-        return $percent.'円お得';
+        return number_format($percent).'円お得';
     }
 }

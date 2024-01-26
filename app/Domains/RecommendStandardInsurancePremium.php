@@ -238,13 +238,13 @@ final class RecommendStandardInsurancePremium
             $discountFireExtinguisher = $this->discountFireExtinguisher == 0 ? 0 : $this->discountFireExtinguisher / 100;
             $discountSecurity = $this->discountSecurity == 0 ? 0 : $this->discountSecurity / 100;
             $otherDiscount = $this->otherDiscount == 0 ? 0 : $this->otherDiscount / 100;
-            $discount = $discountFireExtinguisher + $discountSecurity + $otherDiscount == 0 ? 1 : $discountFireExtinguisher + $discountSecurity + $otherDiscount;
+            $discount = $discountFireExtinguisher + $discountSecurity + $otherDiscount == 0 ? 0 : $discountFireExtinguisher + $discountSecurity + $otherDiscount;
             $discountPublicProperty = $this->discountPublicProperty;
 
             if ($discount == 0) {
                 $discount = 1;
             } else {
-                $discount = 1 - $discount;
+                $discount = 1 - $discount / 100;
             }
 
             if ($discountPublicProperty == 0) {
@@ -275,7 +275,7 @@ final class RecommendStandardInsurancePremium
     {
         return match ($estimate->property_type) {
             '住宅' => 0,
-            '普通' => 0.2, //動産割増（カテゴリ）が１級でも２級でも料率は0.2
+            '普通' => $this->getStringValueByKey('chattel_surcharge_category', $estimate->property_detail) == '-' ? 0 : 0.2, //動産割増（カテゴリ）が１級でも２級でも料率は0.2
             '工場' => $this->getFloatValueByKey('chattel_surcharge', $estimate->property_detail),
         };
     }
@@ -296,6 +296,15 @@ final class RecommendStandardInsurancePremium
     {
         if (array_key_exists($key, $array) && $array[$key]) {
             return (float) $array[$key];
+        }
+
+        return $defaultValue;
+    }
+
+    private function getStringValueByKey(string $key, array $array, string $defaultValue = '-'): string
+    {
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return (string) $array[$key];
         }
 
         return $defaultValue;

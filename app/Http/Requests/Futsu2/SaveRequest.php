@@ -47,7 +47,7 @@ final class SaveRequest extends FormRequest
             'pay_method' => ['required', 'string'],
             'insurance_year' => ['nullable', 'required_without_all:insurance_month,insurance_day',  'integer', 'min:1', 'max:10'],
             'insurance_month' => ['nullable', 'required_without_all:insurance_year,insurance_day', 'integer', 'min:1', 'max:11'],
-            'insurance_day' => ['nullable', 'required_without_all:insurance_year,insurance_month,', 'integer', 'min:1', 'max:15'], //わからん
+            'insurance_day' => ['nullable', 'required_without_all:insurance_year,insurance_month,', 'integer', 'min:1', 'max:31'], //わからん
 
             //おすすめ契約の項目
             'recommend1' => ['nullable', new Recommend()],

@@ -376,9 +376,15 @@ class EstimateForm extends Component
             $this->onChangeAssessItem();
         }
 
-        $this->findFactoryBuildingItem($this->factoryBuildingCode);
+        if ($this->propertyType == '工場') {
+            $this->findFactoryBuildingItem($this->factoryBuildingCode);
+        }
+
+        if (in_array($this->propertyType, ['普通', '住宅'], true)) {
+            $this->onChangeBaseRate();
+        }
+
         $this->onChangeDiscountRiskCode();
-        $this->onChangeBaseRate();
 
         return view('estimate.livewire.form');
     }
@@ -403,11 +409,17 @@ class EstimateForm extends Component
     {
         if (
             is_null($this->propertyType) ||
-            is_null($this->rank) ||
-            $this->propertyType == '工場'
+            is_null($this->rank)
         ) {
             $this->buildingBaseRate = null;
             $this->chattelBaseRate = null;
+            $this->factoryBuildingCode = null;
+
+            return;
+        }
+
+        if ($this->propertyType === '工場') {
+            $this->onChangeFactoryBuildingCode();
 
             return;
         }
@@ -422,10 +434,14 @@ class EstimateForm extends Component
         $this->buildingBaseRate = (string) $buildingBaseRate->findRate($this->propertyType, $buildingAge, $this->rank);
         $chattelBaseRate = new ChattelBaseRate($this->estimate, 'rateTable/chattelBaseTable.csv');
         $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank);
-        $this->occupationalSurchargeCode = null;
-        $this->occupationalSurchargeRate = null;
-        $this->workSurchargeCode = null;
-        $this->workSurchargeRate = null;
+
+        if (isset($this->occupationalSurchargeCode)) {
+            $this->onChangeOccupationalSurchargeCode();
+        }
+
+        if (isset($this->workSurchargeCode)) {
+            $this->onChangeWorkSurchargeCode();
+        }
     }
 
     /**
@@ -539,6 +555,10 @@ class EstimateForm extends Component
 
     public function onChangeFactoryBuildingCode()
     {
+        if (empty($this->factoryBuildingCode)) {
+            return;
+        }
+
         $this->factoryBuildingCode = mb_convert_kana($this->factoryBuildingCode, 'n');
 
         $factoryPropertyBasePremium = new FactoryPropertyBasePremium();
@@ -651,6 +671,11 @@ class EstimateForm extends Component
     {
         $this->workSurchargeCode = null;
         $this->workSurchargeRate = null;
+
+        if (empty($this->occupationalSurchargeRate)) {
+            $this->occupationalSurchargeRate = '';
+            $this->occupationalSurchargeCode = '';
+        }
     }
 
     /**
@@ -721,6 +746,11 @@ class EstimateForm extends Component
     {
         $this->occupationalSurchargeCode = null;
         $this->occupationalSurchargeRate = null;
+
+        if (empty($this->workSurchargeRate)) {
+            $this->workSurchargeCode = '';
+            $this->workSurchargeRate = '';
+        }
     }
 
     /**
@@ -769,6 +799,17 @@ class EstimateForm extends Component
         $this->discountRiskRate = (string) $discountRisk->findCode($this->discountRiskCode);
 
         $this->discountRiskCategory = (string) $discountRisk->getDiscountRiskItem($this->discountRiskCode);
+    }
+
+    public function onChangeDiscountRiskRate()
+    {
+        $this->discountRiskCode = '';
+
+        if (empty($this->discountRiskRate)) {
+            $this->discountRiskRate = '';
+            $this->discountRiskCode = '';
+            $this->discountRiskCategory = '';
+        }
     }
 
     /**

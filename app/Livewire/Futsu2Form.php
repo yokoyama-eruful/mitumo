@@ -408,10 +408,13 @@ class Futsu2Form extends Component
         $chattelBaseRate = new ChattelBaseRate($this->estimate, 'estimateFutsu2/rateTable/chattelBaseTable.csv');
         $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank);
 
-        $this->occupationalSurchargeCode = null;
-        $this->occupationalSurchargeRate = null;
-        $this->workSurchargeCode = null;
-        $this->workSurchargeRate = null;
+        if (isset($this->occupationalSurchargeCode)) {
+            $this->onChangeOccupationalSurchargeCode();
+        }
+
+        if (isset($this->workSurchargeCode)) {
+            $this->onChangeWorkSurchargeCode();
+        }
     }
 
     /**
@@ -552,6 +555,11 @@ class Futsu2Form extends Component
     {
         $this->workSurchargeCode = null;
         $this->workSurchargeRate = null;
+
+        if (empty($this->occupationalSurchargeRate)) {
+            $this->occupationalSurchargeRate = '';
+            $this->occupationalSurchargeCode = '';
+        }
     }
 
     /**
@@ -622,6 +630,11 @@ class Futsu2Form extends Component
     {
         $this->occupationalSurchargeCode = null;
         $this->occupationalSurchargeRate = null;
+
+        if (empty($this->workSurchargeRate)) {
+            $this->workSurchargeCode = '';
+            $this->workSurchargeRate = '';
+        }
     }
 
     /**
@@ -671,6 +684,17 @@ class Futsu2Form extends Component
         $this->discountRiskCategory = (string) $discountRisk->getDiscountRiskItem($this->discountRiskCode);
     }
 
+    public function onChangeDiscountRiskRate()
+    {
+        $this->discountRiskCode = '';
+
+        if (empty($this->discountRiskRate)) {
+            $this->discountRiskRate = '';
+            $this->discountRiskCode = '';
+            $this->discountRiskCategory = '';
+        }
+    }
+
     /**
      * 職業 テーブル情報から標準コードを参照する
      *
@@ -718,12 +742,6 @@ class Futsu2Form extends Component
         }
 
         if ($this->assessItem == '選択しない' || is_null($this->assessItem)) {
-            return;
-        }
-
-        if (is_null($this->buildingAge) || $this->buildingAge == '') {
-            $this->dispatch('alert', '評価する場合は、築年数を入力してください。');
-
             return;
         }
 
