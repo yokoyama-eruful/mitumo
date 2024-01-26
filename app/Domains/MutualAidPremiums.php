@@ -46,16 +46,18 @@ final class MutualAidPremiums
         //短期率
         //もし共済期間_年が空なら↓,そうでなければ''
         //共済期間_月 が空 かつ 共済期間_日 が入力 かつ　その値が15以下なら"15日以内",そうでなければ1
-        if (is_null($this->insuranceMonth) || $this->insuranceMonth == 0 &&
-         isset($this->insuranceDay) || $this->insuranceDay > 0 &&
+        if ((is_null($this->insuranceMonth) || $this->insuranceMonth == 0) &&
+         (isset($this->insuranceDay) && $this->insuranceDay > 0) &&
           $this->insuranceDay <= 15) {
+
             return $this->findShortTermRate('', $this->insuranceDay);
         }
 
-        if (is_null($this->insuranceMonth) || $this->insuranceMonth == 0 &&
-        isset($this->insuranceDay) || $this->insuranceDay > 0 &&
+        if ((is_null($this->insuranceMonth) || $this->insuranceMonth == 0) &&
+        (isset($this->insuranceDay) || $this->insuranceDay > 0) &&
          $this->insuranceDay >= 15) {
-            $shortTermRate = $this->findShortTermRate(1, '');
+
+            return $shortTermRate = $this->findShortTermRate(1, '');
         }
 
         if (isset($this->insuranceMonth)) {
