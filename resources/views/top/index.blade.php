@@ -70,38 +70,38 @@
                     <table class="w-full border-collapse bg-gray-200 text-left text-sm text-gray-500 leading-normal">
                         <thead class="bg-blue-300">
                             <tr class="">
-                                <th class="px-5 py-1 w-1/5">
+                                <th class="px-5 py-1 w-2/12">
                                     作成日
                                 </th>
-                                <th class="px-5 py-1 w-1/5">
+                                <th class="px-5 py-1 w-4/12">
                                     所在地
                                 </th>
-                                <th class="px-5 py-1 w-1/5">
+                                <th class="px-5 py-1 w-2/12">
                                     契約者名
                                 </th>
-                                <th class="px-5 py-1 w-1/5">
+                                <th class="px-5 py-1 w-2/12">
                                     担当者
                                 </th>
-                                <th class="p-1 w-1/5">
+                                <th class="p-1 w-2/12">
                                 </th>
                             </tr>
                         </thead>
                         <tbody class="w-screen">
                             @foreach ($estimateList as $estimate)
                                 <tr class="text-sm text-black bg-white border-b border-gray-200 hover:bg-indigo-100">
-                                    <td class="p-1 w-1/5">
+                                    <td class="p-1 w-2/12">
                                         {{ $estimate->created_at->isoFormat('YYYY年MM月DD日') }}
                                     </td>
-                                    <td class="p-1 w-1/5">
+                                    <td class="p-1 w-4/12">
                                         {{ $estimate->location }}
                                     </td>
-                                    <td class="p-1 w-1/5">
+                                    <td class="p-1 w-2/12">
                                         {{ $estimate->contractee }}
                                     </td>
-                                    <td class="p-1 w-1/5">
+                                    <td class="p-1 w-2/12">
                                         {{ $estimate->staff_name }}
                                     </td>
-                                    <td class="p-1 flex gap-10 w-1/5">
+                                    <td class="p-1 flex gap-10 w-2/12">
                                         <form action="{{ route('estimate.edit', ['id' => $estimate->id]) }}" method="GET">
                                             <button type="submit" class="text-indigo-600 hover:text-indigo-900 w-[30px]">
                                                 <i class="fa-solid fa-pen-to-square inline-block"></i>
@@ -138,38 +138,38 @@
                     <table class="w-full border-collapse bg-gray-200 text-left text-sm text-gray-500 leading-normal">
                         <thead class=" bg-green-300">
                             <tr class="">
-                                <th class="px-5 py-1 w-1/5">
+                                <th class="px-5 py-1 w-2/12">
                                     作成日
                                 </th>
-                                <th class="px-5 py-1 w-1/5">
+                                <th class="px-5 py-1 w-4/12">
                                     所在地
                                 </th>
-                                <th class="px-5 py-1 w-1/5">
+                                <th class="px-5 py-1 w-2/12">
                                     契約者名
                                 </th>
-                                <th class="px-5 py-1 w-1/5">
+                                <th class="px-5 py-1 w-2/12">
                                     担当者
                                 </th>
-                                <th class="p-1  w-1/5">
+                                <th class="p-1  w-2/12">
                                 </th>
                             </tr>
                         </thead>
                         <tbody class="w-screen">
                             @foreach ($estimateList as $estimate)
                                 <tr class="text-sm text-black bg-white border-b border-gray-200 hover:bg-lime-100">
-                                    <td class="p-1  w-1/5">
+                                    <td class="p-1  w-2/12">
                                         {{ $estimate->created_at->isoFormat('YYYY年MM月DD日') }}
                                     </td>
-                                    <td class="p-1  w-1/5">
+                                    <td class="p-1  w-4/12">
                                         {{ $estimate->location }}
                                     </td>
-                                    <td class="p-1  w-1/5">
+                                    <td class="p-1  w-2/12">
                                         {{ $estimate->contractee }}
                                     </td>
-                                    <td class="p-1  w-1/5">
+                                    <td class="p-1  w-2/12">
                                         {{ $estimate->staff_name }}
                                     </td>
-                                    <td class="p-1 flex gap-10  w-1/5">
+                                    <td class="p-1 flex gap-10  w-2/12">
                                         <form action="{{ route('futsu2.edit', ['id' => $estimate->id]) }}" method="GET">
                                             <button type="submit" class="text-indigo-600 hover:text-indigo-900 w-[30px]">
                                                 <i class="fa-solid fa-pen-to-square inline-block"></i>
