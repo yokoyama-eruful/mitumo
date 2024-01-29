@@ -457,14 +457,14 @@
                         <div class="estimate-input-box w-auto">
                             <label class="futsu2-label h-auto">リスク評価割引</label>
                             <div class="w-auto">
-                                <div class="flex">
+                                <div class="estimate-input-box flex">
                                     <label class="futsu2-label" for="discount_risk_code"></label>
                                     <button type="button" wire:click="onClickDiscountRiskTable"
-                                        class="mx-2 my-1 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded">評価項目表を参照</button>
+                                        class="mx-2 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded">評価項目表を参照</button>
                                     <input id="discount_risk_code" name="discount_risk_code" class="estimate-input"
                                         wire:model="discountRiskCode" wire:change="onChangeDiscountRiskCode" hidden>
                                 </div>
-                                <div class=" flex">
+                                <div class="flex">
                                     <label class="futsu2-label" for="discount_risk_rate">割引率</label>
                                     <input id="discount_risk_rate" name="discount_risk_rate"
                                         class="estimate-input text-right"
