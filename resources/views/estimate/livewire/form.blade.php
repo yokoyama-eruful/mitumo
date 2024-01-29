@@ -462,18 +462,18 @@
                                     <button type="button" wire:click="onOpenFactoryRateTable"
                                         class="mx-2 px-2 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
                                 </div>
-                                <div class="flex">
+                                <div class="estimate-input-box flex">
                                     <label class="estimate-label" for="work_surcharge_code">作業工程コード</label>
                                     <input id="factory_building_code" name="factory_building_code"
                                         class="estimate-input" wire:model="factoryBuildingCode"
                                         wire:change="onChangeFactoryBuildingCode">
                                 </div>
-                                <div class=" flex">
+                                <div class="estimate-input-box flex">
                                     <label class="estimate-label" for="">備考</label>
                                     <div class="text-sm"></div>
                                     <input class="estimate-input" wire:model="selectFactory">
                                 </div>
-                                <div class=" flex">
+                                <div class="flex">
                                     <label class="estimate-label" for="building_base_rate">率</label>
                                     <input id="building_base_rate" name="building_base_rate" class="estimate-input"
                                         wire:model="buildingBaseRate" wire:change="onChangeFactoryBuildingRate">
@@ -596,26 +596,24 @@
                         </div>
                     @endif
                     @if (in_array($propertyType, ['普通'], true))
-                        <div class="estimate-input-box mt-5 w-auto">
+                        <div class="estimate-input-box mt-5">
                             <label class="estimate-label h-auto">職業割増</label>
-                            <div class="w-auto">
-                                <div class="flex">
+                            <div class="">
+                                <div class="estimate-input-box flex">
                                     <label class="estimate-label"></label>
                                     <button type="button" wire:click="onClickOpenOccupationalSurchargeTable"
                                         class="mx-2 px-2 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
                                 </div>
-                                <div class="flex">
+                                <div class="estimate-input-box flex">
                                     <label class="estimate-label" for="occupational_surcharge_code">標準コード</label>
                                     <input id="occupational_surcharge_code" name="occupational_surcharge_code"
                                         class="estimate-input" wire:model="occupationalSurchargeCode"
                                         wire:change="onChangeOccupationalSurchargeCode">
                                 </div>
-                                {{-- <div class="flex">
-                        <label class="estimate-label w-32" for="occupational_surcharge_rate">備考</label>
-                        <div class="mx-2 w-64 text-sm"></div>
-                        <input id="occupational_surcharge_note" name="occupational_surcharge_note"
-                            placeholder="自動で入力されます" class="estimate-input">
-                    </div> --}}
+                                <div class="estimate-input-box flex">
+                                    <label class="estimate-label">選択項目</label>
+                                    <input wire:model="occupationalSurchargeItem" class="estimate-input" readonly>
+                                </div>
                                 <div class="flex">
                                     <label class="estimate-label" for="occupational_surcharge_rate">率</label>
                                     <input id="occupational_surcharge_rate" name="occupational_surcharge_rate"
@@ -624,25 +622,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="estimate-input-box w-auto">
+                        <div class="estimate-input-box">
                             <label class="estimate-label h-auto">作業割増</label>
-                            <div class="w-auto">
-                                <div class="flex">
+                            <div class="">
+                                <div class="estimate-input-box flex">
                                     <label class="estimate-label" for=""></label>
                                     <button type="button" wire:click="onClickOpenWorkSurchargeTable"
                                         class="mx-2 px-2 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded">コードを参照する</button>
                                 </div>
-                                <div class="flex">
+                                <div class="estimate-input-box flex">
                                     <label class="estimate-label" for="work_surcharge_code">作業工程コード</label>
                                     <input id="work_surcharge_code" name="work_surcharge_code" class="estimate-input"
                                         wire:model="workSurchargeCode" wire:change="onChangeWorkSurchargeCode">
                                 </div>
-                                {{-- <div class=" flex">
-                        <label class="estimate-label w-32" for="work_surcharge_note">備考</label>
-                        <div class="mx-2 w-64 text-sm"></div>
-                        <input id="work_surcharge_note" name="work_surcharge_note" class="estimate-input">
-                    </div> --}}
-                                <div class=" flex">
+                                <div class="estimate-input-box flex">
+                                    <label class="estimate-label">選択項目</label>
+                                    <input wire:model="workSurchargeItem" class="estimate-input">
+                                </div>
+                                <div class="flex">
                                     <label class="estimate-label" for="work_surcharge_rate">率</label>
                                     <input id="work_surcharge_rate" name="work_surcharge_rate" class="estimate-input"
                                         wire:model="workSurchargeRate" wire:change="onChangeWorkSurchargeRate">

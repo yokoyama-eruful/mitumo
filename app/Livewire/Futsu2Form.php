@@ -118,9 +118,13 @@ class Futsu2Form extends Component
 
     public ?string $occupationalSurchargeRate = null;
 
+    public ?string $occupationalSurchargeItem = null;
+
     public ?string $workSurchargeCode = null;
 
     public ?string $workSurchargeRate = null;
+
+    public ?string $workSurchargeItem = null;
 
     public ?string $discountRiskCode = null;
 
@@ -548,6 +552,8 @@ class Futsu2Form extends Component
 
         $this->occupationalSurchargeRate = (string) $occupationalSurcharge->findCode($this->occupationalSurchargeCode, $this->rank);
 
+        $this->occupationalSurchargeItem = (string) $occupationalSurcharge->getOccupationalSurchargeItem($this->occupationalSurchargeCode, $this->rank);
+
         $this->onChangeOccupationalSurchargeRate();
     }
 
@@ -555,10 +561,12 @@ class Futsu2Form extends Component
     {
         $this->workSurchargeCode = null;
         $this->workSurchargeRate = null;
+        $this->workSurchargeItem = null;
 
         if (empty($this->occupationalSurchargeRate)) {
             $this->occupationalSurchargeRate = '';
             $this->occupationalSurchargeCode = '';
+            $this->occupationalSurchargeItem = '';
         }
     }
 
@@ -623,6 +631,8 @@ class Futsu2Form extends Component
 
         $this->workSurchargeRate = (string) $workSurcharge->findCode($this->workSurchargeCode, $this->rank);
 
+        $this->workSurchargeItem = (string) $workSurcharge->getWorkSurchargeItem($this->workSurchargeCode, $this->rank);
+
         $this->onChangeWorkSurchargeRate();
     }
 
@@ -630,10 +640,12 @@ class Futsu2Form extends Component
     {
         $this->occupationalSurchargeCode = null;
         $this->occupationalSurchargeRate = null;
+        $this->occupationalSurchargeItem = null;
 
         if (empty($this->workSurchargeRate)) {
             $this->workSurchargeCode = '';
             $this->workSurchargeRate = '';
+            $this->workSurchargeItem = '';
         }
     }
 

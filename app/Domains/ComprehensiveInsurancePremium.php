@@ -163,7 +163,7 @@ final class ComprehensiveInsurancePremium
 
     private function calcComprehensiveLongTerm()
     {
-        if ($this->comprehensive2 > 2050 || $this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
+        if ($this->comprehensive2 >= 2060) {
             return round(ceil($this->comprehensive2 * 0.97), -1);
         }
 
@@ -383,9 +383,9 @@ final class ComprehensiveInsurancePremium
         }
 
         if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
-            $discountFireExtinguisher = $this->discountFireExtinguisher == 0 ? 0 : $this->discountFireExtinguisher / 100;
-            $discountSecurity = $this->discountSecurity == 0 ? 0 : $this->discountSecurity / 100;
-            $otherDiscount = $this->otherDiscount == 0 ? 0 : $this->otherDiscount / 100;
+            $discountFireExtinguisher = $this->discountFireExtinguisher == 0 ? 0 : $this->discountFireExtinguisher;
+            $discountSecurity = $this->discountSecurity == 0 ? 0 : $this->discountSecurity;
+            $otherDiscount = $this->otherDiscount == 0 ? 0 : $this->otherDiscount;
             $discount = $discountFireExtinguisher + $discountSecurity + $otherDiscount == 0 ? 0 : $discountFireExtinguisher + $discountSecurity + $otherDiscount;
             $discountPublicProperty = $this->discountPublicProperty;
 
@@ -400,7 +400,7 @@ final class ComprehensiveInsurancePremium
             } else {
                 $discountPublicProperty = 1 - $discountPublicProperty / 100;
             }
-            $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount, 2);
+            $result = ($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount;
             $result = round(($result + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
 
             return $result;
@@ -414,9 +414,9 @@ final class ComprehensiveInsurancePremium
             $otherDiscount = 1 - $otherDiscount / 100;
         }
 
-        $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
+        $result = ($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount;
 
-        return $result + $chattelPremium + $comprehensivePremium;
+        return round($result + $chattelPremium + $comprehensivePremium, 2);
     }
 
     private function getChattelSurcharge($estimate)
