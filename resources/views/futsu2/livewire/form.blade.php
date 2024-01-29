@@ -456,7 +456,7 @@
                         </div>
                         <div class="estimate-input-box w-auto">
                             <label class="futsu2-label h-auto">リスク評価割引</label>
-                            <div class="w-auto">
+                            <div class="w-11/12">
                                 <div class="estimate-input-box flex">
                                     <label class="futsu2-label" for="discount_risk_code"></label>
                                     <button type="button" wire:click="onClickDiscountRiskTable"
@@ -490,7 +490,7 @@
                     @if (in_array($propertyType, ['普通'], true))
                         <div class="estimate-input-box mt-5">
                             <label class="futsu2-label h-auto">職業割増</label>
-                            <div class="">
+                            <div class="w-11/12">
                                 <div class="estimate-input-box flex">
                                     <label class="futsu2-label"></label>
                                     <button type="button" wire:click="onClickOpenOccupationalSurchargeTable"
@@ -519,7 +519,7 @@
                     @if (in_array($propertyType, ['普通'], true))
                         <div class="estimate-input-box">
                             <label class="futsu2-label h-auto">作業割増</label>
-                            <div class="">
+                            <div class="w-11/12">
                                 <div class="estimate-input-box flex">
                                     <label class="futsu2-label"></label>
                                     <button type="button" wire:click="onClickOpenWorkSurchargeTable"

@@ -851,7 +851,7 @@ class Futsu2Form extends Component
                 $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '年次取得':
-                if ($this->buildingAge > 48) {
+                if ($this->buildingAge > 49) {
                     $this->dispatch('alert', 'この築年数は評価できません。');
                 }
 

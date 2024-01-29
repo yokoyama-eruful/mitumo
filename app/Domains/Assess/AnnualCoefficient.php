@@ -22,7 +22,7 @@ final class AnnualCoefficient
             return 0;
         }
 
-        if ($buildingAge > 48) {
+        if ($buildingAge > 49) {
             return 0;
         }
 

@@ -456,7 +456,7 @@
                             <label class="estimate-label h-auto">建物基本率
                                 <div class="estimate-input-required">※必須</div>
                             </label>
-                            <div class="w-auto">
+                            <div class="w-11/12">
                                 <div class="flex">
                                     <label class="estimate-label"></label>
                                     <button type="button" wire:click="onOpenFactoryRateTable"
@@ -519,9 +519,9 @@
                         </div>
                     @endif
                     @if ($propertyType == '工場')
-                        <div class="estimate-input-box w-auto">
+                        <div class="estimate-input-box">
                             <label class="estimate-label h-auto">リスク評価割引</label>
-                            <div class="w-auto">
+                            <div class="w-11/12">
                                 <div class="estimate-input-box flex">
                                     <label class="estimate-label" for="discount_risk_code"></label>
                                     <button type="button" wire:click="onClickDiscountRiskTable"
@@ -562,9 +562,9 @@
                                 type="number" min="0" max="100" wire:model="discountPublic">
                             <span class="unit-display">%</span>
                         </div>
-                        <div class="estimate-input-box w-auto">
+                        <div class="estimate-input-box">
                             <label class="estimate-label h-auto">リスク評価割引</label>
-                            <div class="w-auto">
+                            <div class="w-11/12">
                                 <div class="estimate-input-box flex">
                                     <label class="estimate-label" for="discount_risk_code"></label>
                                     <button type="button" wire:click="onClickDiscountRiskTable"
@@ -598,7 +598,7 @@
                     @if (in_array($propertyType, ['普通'], true))
                         <div class="estimate-input-box mt-5">
                             <label class="estimate-label h-auto">職業割増</label>
-                            <div class="">
+                            <div class="w-11/12">
                                 <div class="estimate-input-box flex">
                                     <label class="estimate-label"></label>
                                     <button type="button" wire:click="onClickOpenOccupationalSurchargeTable"
@@ -622,9 +622,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="estimate-input-box">
+                        <div class="flex flex-row">
                             <label class="estimate-label h-auto">作業割増</label>
-                            <div class="">
+                            <div class="w-11/12">
                                 <div class="estimate-input-box flex">
                                     <label class="estimate-label" for=""></label>
                                     <button type="button" wire:click="onClickOpenWorkSurchargeTable"
