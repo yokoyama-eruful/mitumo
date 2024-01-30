@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domains;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 final class Version
@@ -13,6 +14,24 @@ final class Version
     public function __construct()
     {
         $this->rateList = $this->makeRateList();
+    }
+
+    public function Comparative($date)
+    {
+        if (! $date) {
+            return '';
+        }
+
+        $value = '~2.1';
+
+        foreach ($this->rateList as $item) {
+            if (Carbon::parse($item['更新日時'])->gte($date)) {
+                $value = $item['バージョン'];
+            }
+
+        }
+
+        return $value;
     }
 
     private function makeRateList()
