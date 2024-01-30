@@ -17,7 +17,7 @@ final class Version
 
     private function makeRateList()
     {
-        $filePath = Storage::path('version.csv');
+        $filePath = Storage::path('version/version.csv');
 
         $rateList = [];
 
