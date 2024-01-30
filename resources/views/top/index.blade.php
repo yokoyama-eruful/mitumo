@@ -70,7 +70,7 @@
                     <table class="w-full border-collapse bg-gray-200 text-left text-sm text-gray-500 leading-normal">
                         <thead class="bg-blue-300">
                             <tr class="">
-                                <th class="px-5 py-1 w-2/12">
+                                <th class="px-5 py-1 w-1/12">
                                     作成日
                                 </th>
                                 <th class="px-5 py-1 w-4/12">
@@ -84,12 +84,14 @@
                                 </th>
                                 <th class="p-1 w-2/12">
                                 </th>
+                                <th class="p-1 w-1/12">
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="w-screen">
                             @foreach ($estimateList as $estimate)
                                 <tr class="text-sm text-black bg-white border-b border-gray-200 hover:bg-indigo-100">
-                                    <td class="p-1 w-2/12">
+                                    <td class="p-1 w-1/12">
                                         {{ $estimate->created_at->isoFormat('YYYY年MM月DD日') }}
                                     </td>
                                     <td class="p-1 w-4/12">
@@ -129,6 +131,9 @@
                                                 削除
                                             </button>
                                         </form>
+                                    </td>
+                                    <td class="p-1 w-1/12">
+                                        {{ $versionDomain->Comparative($estimate->updated_at) }}
                                     </td>
                                 </tr>
                             @endforeach

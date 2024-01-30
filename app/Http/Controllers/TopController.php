@@ -27,7 +27,9 @@ final class TopController extends Controller
             $estimateList = $this->futsu2Service->paginate(10);
         }
 
-        return view('top.index', ['estimateList' => $estimateList, 'estimateType' => $estimateType]);
+        $versionDomain = new Version();
+
+        return view('top.index', compact('estimateList', 'estimateType', 'versionDomain'));
     }
 
     public function show()
