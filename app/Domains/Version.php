@@ -25,7 +25,7 @@ final class Version
         $value = '~2.1';
 
         foreach ($this->rateList as $item) {
-            if (Carbon::parse($item['更新日時'])->gte($date)) {
+            if ($date->gte(Carbon::parse($item['更新日時']))) {
                 $value = $item['バージョン'];
             }
 
