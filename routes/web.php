@@ -31,6 +31,7 @@ Route::middleware('auth:web')
             ->name('top.')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
+                Route::get('/version/show', 'show')->name('show');
             });
 
         Route::controller(AccountController::class)
