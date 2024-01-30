@@ -13,7 +13,7 @@ final class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    public const UPDATED_AT = null;
+    public const CREATED_AT = null;
 
     protected $rememberTokenName = false;
 
@@ -25,6 +25,7 @@ final class User extends Authenticatable
     protected $fillable = [
         'name',
         'staff_id',
+        'email',
         'password',
     ];
 

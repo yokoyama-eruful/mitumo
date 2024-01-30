@@ -15,6 +15,7 @@ class ComprehensiveOfRecommendDownloader
         $standardPremium,
         $comprehensivePremium,
         $recommendComprehensivePremium,
+        $shortTerm,
         $fileType,
         $keisyo
     ) {
@@ -30,7 +31,7 @@ class ComprehensiveOfRecommendDownloader
         $reader = new Xlsx();
         $spreadSheet = $reader->load($filePath);
 
-        $this->setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium, $keisyo);
+        $this->setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium, $shortTerm, $keisyo);
 
         $this->setCalcInfo($spreadSheet, $standardPremium, $comprehensivePremium);
 
@@ -69,7 +70,7 @@ class ComprehensiveOfRecommendDownloader
         exit;
     }
 
-    private function setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium, $keisyo)
+    private function setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium, $shortTerm, $keisyo)
     {
         $worksheet = $spreadSheet->getSheetByName('おすすめ(総合)');
         $worksheet->setCellValue('O1', date('Y年m月d日'));
@@ -84,7 +85,7 @@ class ComprehensiveOfRecommendDownloader
         $worksheet->setCellValue('O22', $estimate->property_type);
         $worksheet->setCellValue('D31', $estimate->rank);
         $worksheet->setCellValue('M31', $estimate->pay_method);
-        $worksheet->setCellValue('M33', $estimate->InsurancePeriod);
+        $worksheet->setCellValue('D33', $estimate->InsurancePeriod);
         $worksheet->setCellValue('D35', $estimate->OtherItem);
         $worksheet->setCellValue('D41', thousandYenUnit(array_key_exists('building_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['building_insurance_payout'] : ''));
         $worksheet->setCellValue('K41', thousandYenUnit(array_key_exists('household_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['household_insurance_payout'] : ''));
@@ -93,7 +94,7 @@ class ComprehensiveOfRecommendDownloader
         $worksheet->setCellValue('D45', thousandYenUnit(array_key_exists('other_facility_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_facility_insurance_payout'] : ''));
         $worksheet->setCellValue('K45', thousandYenUnit(array_key_exists('other_item_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_item_insurance_payout'] : ''));
 
-        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('O41', $shortTerm->shortTermRate != 0 ? '-' : $comprehensivePremium->getComprehensivePremium());
         $worksheet->setCellValue('D49', yearUnit(array_key_exists('recommend1', $estimate->property_detail) ? $estimate->property_detail['recommend1'] : ''));
         $worksheet->setCellValue('D51', $recommendComprehensivePremium->getRecommendPremium(array_key_exists('recommend1', $estimate->property_detail) ? $estimate->property_detail['recommend1'] : '')['共済掛金']);
         $worksheet->setCellValue('D53', $recommendComprehensivePremium->getRecommendPremium(array_key_exists('recommend1', $estimate->property_detail) ? $estimate->property_detail['recommend1'] : '')['１年更新の場合より']);
@@ -153,10 +154,15 @@ class ComprehensiveOfRecommendDownloader
         $worksheet->setCellValue('E23', $standardPremium->occupationalSurchargeRate);
         $worksheet->setCellValue('E24', $standardPremium->workSurchargeRate);
         $worksheet->setCellValue('E25', $standardPremium->chattelSurcharge);
-        $worksheet->setCellValue('E26', $standardPremium->otherDiscount);
-        $worksheet->setCellValue('E27', $standardPremium->building['短期率']);
-        $worksheet->setCellValue('E28', $standardPremium->building['長期率']);
-        $worksheet->setCellValue('E29', $standardPremium->actualLossFactor);
-        $worksheet->setCellValue('E30', $standardPremium->getPayByLongTermFlag() == true ? '3%' : '');
+        $worksheet->setCellValue('E26', $standardPremium->building['短期率']);
+        $worksheet->setCellValue('E27', $standardPremium->building['長期率']);
+        $worksheet->setCellValue('E28', $standardPremium->actualLossFactor);
+
+        $worksheet->setCellValue('L21', percentUnit($standardPremium->discountFireExtinguisher));
+        $worksheet->setCellValue('L22', percentUnit($standardPremium->discountSecurity));
+        $worksheet->setCellValue('L23', percentUnit($standardPremium->discountPublicProperty));
+        $worksheet->setCellValue('L24', percentUnit($standardPremium->discountRiskRate));
+        $worksheet->setCellValue('L25', $standardPremium->otherDiscount);
+        $worksheet->setCellValue('E26', $standardPremium->getPayByLongTermFlag() == true ? '3%' : '');
     }
 }

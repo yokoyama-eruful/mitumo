@@ -12,8 +12,12 @@
                 総合共済掛金
             </div>
             <div>
-                <div class="flex items-center h-[120px] w-[200px] outline outline-1 outline-gray-500 pl-5">
-                    {{ yenUnit($comprehensivePremium->getComprehensivePremium()) }}
+                <div class="flex items-center justify-center h-[120px] w-[200px] outline outline-1 outline-gray-500">
+                    @if ($shortTerm->shortTermRate != 0)
+                        -
+                    @else
+                        {{ yenUnit($comprehensivePremium->getComprehensivePremium()) }}
+                    @endif
                 </div>
             </div>
         </div>

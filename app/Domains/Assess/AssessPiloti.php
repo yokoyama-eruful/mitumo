@@ -20,6 +20,8 @@ final class AssessPiloti
 
     public readonly string $assessStructure;
 
+    public readonly string $remarks;
+
     private StandardAmount $standardAmount;
 
     private AgingDepreciation $agingDepreciation;
@@ -33,6 +35,7 @@ final class AssessPiloti
         $this->buildingYear = $estimate->building_year ? $estimate->building_year : 0;
         $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
+        $this->remarks = $this->getStringValueByKey('remarks', $estimate->assess_detail);
 
         $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure);
         $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
@@ -41,11 +44,15 @@ final class AssessPiloti
     /*
     ** LiveFireで使用する評価額
     */
-    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $assessRank = ''): string
+    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $assessRank = '')
     {
         if ($assessRank == '' || $assessUsage == '' ||
         $assessStructure == '' || $floorArea == '') {
-            return '';
+            return [
+                '80' => '',
+                '100' => '',
+                '100まるめ' => '',
+            ];
         }
 
         $standardAmount = $this->standardAmount = new StandardAmount($assessUsage, $assessStructure);
@@ -54,18 +61,25 @@ final class AssessPiloti
 
         $reProcure = $standardAmount * ((float) $floorArea - (float) $pilotiFloorArea);
 
-        return number_format($reProcure * 0.8, 2).'~'.number_format($reProcure * 1.2, 2);
+        return [
+            '80' => (string) thousandYenUnit(floor($reProcure * 0.8)),
+            '100' => (string) thousandYenUnit($reProcure),
+            '100まるめ' => (string) thousandYenUnit(ceil($reProcure / 1000) * 1000),
+        ];
     }
 
     /*
     ** LiveFireで使用する評価額
     */
-    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $buildingAge, $assessRank = ''): string
+    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $buildingAge, $assessRank = '')
     {
         if ($assessRank == '' || $assessUsage == '' ||
         $assessStructure == '' || $floorArea == '' ||
         $pilotiFloorArea == '' || $buildingAge == '') {
-            return '';
+            return [
+                '通常' => '',
+                'まるめ' => '',
+            ];
         }
 
         $standardAmount = $this->standardAmount = new StandardAmount($assessUsage, $assessStructure);
@@ -84,9 +98,12 @@ final class AssessPiloti
             $finalResidualValue = 1 - $residualValue;
         }
 
-        $marketPrice = number_format($reProcure * $finalResidualValue, 2);
+        $marketPrice = thousandYenUnit(floor($reProcure * $finalResidualValue));
 
-        return (string) $marketPrice;
+        return [
+            '通常' => (string) $marketPrice,
+            'まるめ' => (string) thousandYenUnit(ceil(floor($reProcure * $finalResidualValue) / 1000) * 1000),
+        ];
     }
 
     public function getExceptForPiloti($assessRank)

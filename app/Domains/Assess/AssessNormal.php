@@ -16,6 +16,8 @@ final class AssessNormal
 
     public readonly string $assessStructure;
 
+    public readonly string $remarks;
+
     private StandardAmount $standardAmount;
 
     private AgingDepreciation $agingDepreciation;
@@ -27,6 +29,7 @@ final class AssessNormal
         $this->buildingYear = $estimate->building_year ? $estimate->building_year : 0;
         $this->assessUsage = $this->getValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getValueByKey('assess_structure', $estimate->assess_detail);
+        $this->remarks = $this->getValueByKey('remarks', $estimate->assess_detail);
 
         $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure);
         $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
@@ -35,29 +38,40 @@ final class AssessNormal
     /*
     ** LiveFireで使用する評価額
     */
-    public function viewReProcure(string $assessUsage, string $assessStructure, string $floorArea, string $assessRank = ''): string
+    public function viewReProcure(string $assessUsage, string $assessStructure, string $floorArea, string $assessRank = '')
     {
         if ($assessRank == '' || $assessUsage == '' ||
         $assessStructure == '' || $floorArea == '') {
-            return '';
+            return [
+                '80' => '',
+                '100' => '',
+                '100まるめ' => '',
+            ];
         }
 
         $standardAmount = new StandardAmount($assessUsage, $assessStructure);
         $amount = $standardAmount->findStandardAmount($assessRank);
         $reProcure = $amount * $floorArea;
 
-        return number_format($reProcure * 0.8, 2).'~'.number_format($reProcure * 1.2, 2);
+        return [
+            '80' => (string) thousandYenUnit(floor($reProcure * 0.8)),
+            '100' => (string) thousandYenUnit($reProcure),
+            '100まるめ' => (string) thousandYenUnit(ceil($reProcure / 1000) * 1000),
+        ];
     }
 
     /*
     ** Livewireで使用する評価額
     */
-    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $buildingAge, $assessRank = ''): string
+    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $buildingAge, $assessRank = '')
     {
         if ($assessRank == '' || $assessUsage == '' ||
         $assessStructure == '' || $floorArea == '' ||
         $buildingAge == '') {
-            return '';
+            return [
+                '通常' => '',
+                'まるめ' => '',
+            ];
         }
 
         $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
@@ -76,9 +90,12 @@ final class AssessNormal
             $finalResidualValue = 1 - $residualValue;
         }
 
-        $marketPrice = number_format($reProcure * $finalResidualValue, 2);
+        $marketPrice = thousandYenUnit(floor($reProcure * $finalResidualValue));
 
-        return (string) $marketPrice;
+        return [
+            '通常' => (string) $marketPrice,
+            'まるめ' => (string) thousandYenUnit(ceil(floor($reProcure * $finalResidualValue) / 1000) * 1000),
+        ];
     }
 
     public function getReProcure($assessRank = '')

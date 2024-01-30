@@ -73,7 +73,7 @@ class AssessPilotiDownloader
         $worksheet->setCellValue('B7', $assessData->assessUsage);
         $worksheet->setCellValue('E7', $assessData->assessStructure);
         $worksheet->setCellValue('H7', $assessData->exceptForPilotiFloorArea);
-        $worksheet->setCellValue('K7', $this->ConvertYear($assessData->buildingYear).'01月01日');
+        $worksheet->setCellValue('K7', $assessData->buildingYear.'-01-01');
         $worksheet->setCellValue('H12', $assessData->pilotiFloorArea);
         $worksheet->setCellValue('K12', $assessData->floorArea);
 

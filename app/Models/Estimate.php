@@ -103,7 +103,7 @@ class Estimate extends Model
     public function getOtherItemAttribute()
     {
         $otherItem = [
-            isset($this->property_detail['chattel_surcharge_category']) ? '動産割増' : '',
+            (isset($this->property_detail['chattel_surcharge_category'])&&$this->property_detail['chattel_surcharge_category']!='-') ? '動産割増' : '',
             isset($this->property_detail['chattel_surcharge']) ? '動産割増' : '',
             isset($this->property_detail['occupational_surcharge_rate']) ? '職業割増' : '',
             isset($this->property_detail['work_surcharge_rate']) ? '作業割増' : '',

@@ -4,20 +4,28 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TopRequest;
 use App\Services\EstimateService;
+use App\Services\Futsu2\Futsu2Service;
 
 final class TopController extends Controller
 {
     public function __construct(
         private EstimateService $estimateService,
+        private Futsu2Service $futsu2Service,
     ) {
 
     }
 
-    public function index()
+    public function index(TopRequest $request)
     {
-        $estimateList = $this->estimateService->paginate(10);
+        $estimateType = $request->getEstimateType();
+        if ($estimateType == 'futsu') {
+            $estimateList = $this->estimateService->paginate(10);
+        } else {
+            $estimateList = $this->futsu2Service->paginate(10);
+        }
 
-        return view('top.index', ['estimateList' => $estimateList]);
+        return view('top.index', ['estimateList' => $estimateList, 'estimateType' => $estimateType]);
     }
 }

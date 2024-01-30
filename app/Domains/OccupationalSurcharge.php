@@ -10,9 +10,9 @@ final class OccupationalSurcharge
 {
     public readonly array $rateList;
 
-    public function __construct()
+    public function __construct($path)
     {
-        $this->rateList = $this->makeRateList();
+        $this->rateList = $this->makeRateList($path);
     }
 
     public function findCode($code, $rank)
@@ -45,9 +45,9 @@ final class OccupationalSurcharge
         return $result['中項目'].' '.$result['小項目'];
     }
 
-    private function makeRateList()
+    private function makeRateList($path)
     {
-        $filePath = Storage::path('surchargeTable/occupationalSurchargeTable.csv');
+        $filePath = Storage::path($path);
 
         $rateList = [];
 

@@ -80,6 +80,22 @@
                 </div>
             </div>
             <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg overflow-hidden">
+                <thead>
+                    <tr>
+                        <th>
+                            項目
+                        </th>
+                        <th>
+                            作業工程コード
+                        </th>
+                        <th>
+                            基本率
+                        </th>
+                        <th>
+                            動産割増
+                        </th>
+                    </tr>
+                </thead>
                 <tbody>
                     @foreach ($this->factoryCodeList as $item)
                         <tr class="transition-colors hover:bg-gray-100 cursor-pointer"
@@ -90,6 +106,12 @@
                             </td>
                             <td class="border-y px-6 py-4">
                                 {{ $item['作業工程コード'] }}
+                            </td>
+                            <td class="border-y px-6 py-4">
+                                {{ $item['基本率'] }}
+                            </td>
+                            <td class="border-y px-6 py-4">
+                                {{ $item['動産割増'] }}
                             </td>
                         </tr>
                     @endforeach

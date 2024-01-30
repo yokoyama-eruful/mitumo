@@ -28,6 +28,8 @@ final class AssessRenovation
 
     public readonly array $currentMarketPrice;
 
+    public readonly string $remarks;
+
     public function __construct($estimate)
     {
         $this->replacementPrice = $this->getIntValueByKey('replacement_price', $estimate->assess_detail);
@@ -36,6 +38,7 @@ final class AssessRenovation
         $this->depreciationRate = $this->getFloatValueByKey('depreciation_rate', $estimate->assess_detail);
         $this->renovationAge = $this->getIntValueByKey('renovation_age', $estimate->assess_detail);
         $this->renovationDepreciationRate = $this->getFloatValueByKey('renovation_depreciation_rate', $estimate->assess_detail);
+        $this->remarks = $this->getStringValueByKey('remarks', $estimate->assess_detail);
 
         $this->conventionalDepreciationRate = $this->getConventionalDepreciationRate();
         $this->renovationCostRate = $this->getRenovationCostRate();
@@ -47,15 +50,18 @@ final class AssessRenovation
     /*
     ** LiveFireで使用する評価額
     */
-    public function viewCurrentMarketPrice($replacementPrice, $renovationCost, $conventionalAge, $depreciationRate, $renovationAge, $renovationDepreciationRate): string
+    public function viewCurrentMarketPrice($replacementPrice, $renovationCost, $conventionalAge, $depreciationRate, $renovationAge, $renovationDepreciationRate)
     {
         if (! $replacementPrice || ! $renovationCost || ! $conventionalAge || ! $depreciationRate || ! $renovationAge || ! $renovationDepreciationRate) {
-            return '0';
+            return [
+                '通常' => '',
+                'まるめ' => '',
+            ];
         }
 
         $priceStructureRatio = ((int) $replacementPrice - (int) $renovationCost) / $replacementPrice;
 
-        $depreciationRate = $conventionalAge * $depreciationRate;
+        $depreciationRate = $conventionalAge * $depreciationRate / 100;
 
         if ($depreciationRate >= 0.5) {
             $depreciationRate = 0.5;
@@ -65,7 +71,7 @@ final class AssessRenovation
 
         $priceStructureRatio = $renovationCost / $replacementPrice;
 
-        $depreciationRate = $renovationAge * $renovationDepreciationRate;
+        $depreciationRate = $renovationAge * $renovationDepreciationRate / 100;
 
         if ($depreciationRate >= 0.5) {
             $depreciationRate = 0.5;
@@ -73,9 +79,12 @@ final class AssessRenovation
 
         $renovationCostRate = round(round($priceStructureRatio, 2) * $depreciationRate, 3);
 
-        $marketPrice = $replacementPrice * (1 - $conventionalDepreciationRate + $renovationCostRate);
+        $marketPrice = thousandYenUnit(floor($replacementPrice * (1 - $conventionalDepreciationRate + $renovationCostRate)));
 
-        return (string) $marketPrice;
+        return [
+            '通常' => (string) $marketPrice,
+            'まるめ' => (string) thousandYenUnit(ceil(floor($replacementPrice * (1 - $conventionalDepreciationRate + $renovationCostRate)) / 1000) * 1000),
+        ];
     }
 
     private function getConventionalDepreciationRate()
@@ -91,7 +100,7 @@ final class AssessRenovation
 
         $priceStructureRatio = ($this->replacementPrice - $this->renovationCost) / $this->replacementPrice;
 
-        $depreciationRate = $this->conventionalAge * $this->depreciationRate;
+        $depreciationRate = $this->conventionalAge * $this->depreciationRate / 100;
 
         if ($depreciationRate >= 0.5) {
             $depreciationRate = 0.5;
@@ -118,7 +127,7 @@ final class AssessRenovation
 
         $priceStructureRatio = $this->renovationCost / $this->replacementPrice;
 
-        $depreciationRate = $this->renovationAge * $this->renovationDepreciationRate;
+        $depreciationRate = $this->renovationAge * $this->renovationDepreciationRate / 100;
 
         if ($depreciationRate >= 0.5) {
             $depreciationRate = 0.5;
@@ -173,6 +182,19 @@ final class AssessRenovation
 
         if (array_key_exists($key, $array) && $array[$key]) {
             return (float) $array[$key];
+        }
+
+        return $defaultValue;
+    }
+
+    private function getStringValueByKey(string $key, ?array $array, string $defaultValue = ''): string
+    {
+        if (is_null($array)) {
+            return $defaultValue;
+        }
+
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return (string) $array[$key];
         }
 
         return $defaultValue;

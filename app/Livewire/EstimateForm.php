@@ -12,6 +12,7 @@ use App\Domains\Assess\AssessRenovation;
 use App\Domains\Assess\AssessSolarPanel;
 use App\Domains\BuildingBaseRate;
 use App\Domains\ChattelBaseRate;
+use App\Domains\DiscountRisk;
 use App\Domains\FactoryPropertyBasePremium;
 use App\Domains\OccupationalSurcharge;
 use App\Domains\WorkSurcharge;
@@ -106,15 +107,29 @@ class EstimateForm extends Component
 
     public ?string $otherDiscount = null;
 
+    public ?string $discountFireExtinguisher = null;
+
+    public ?string $discountSecurity = null;
+
+    public ?string $discountPublic = null;
+
     public ?string $chattelSurchargeCategory = null;
 
     public ?string $occupationalSurchargeCode = null;
 
     public ?string $occupationalSurchargeRate = null;
 
+    public ?string $occupationalSurchargeItem = null;
+
     public ?string $workSurchargeCode = null;
 
     public ?string $workSurchargeRate = null;
+
+    public ?string $workSurchargeItem = null;
+
+    public ?string $discountRiskCode = null;
+
+    public ?string $discountRiskRate = null;
 
     public ?string $factoryBuildingCode = null;
 
@@ -159,13 +174,31 @@ class EstimateForm extends Component
 
     public ?string $annualPrice = null;
 
-    public ?string $reProcure = null;
+    public ?string $remarks = null;
 
-    public ?string $reProcureA = null;
+    public ?string $reProcure80 = null;
 
-    public ?string $reProcureB = null;
+    public ?string $reProcureA80 = null;
 
-    public ?string $reProcureC = null;
+    public ?string $reProcureB80 = null;
+
+    public ?string $reProcureC80 = null;
+
+    public ?string $reProcure100 = null;
+
+    public ?string $reProcureA100 = null;
+
+    public ?string $reProcureB100 = null;
+
+    public ?string $reProcureC100 = null;
+
+    public ?string $reProcure100round = null;
+
+    public ?string $reProcureA100round = null;
+
+    public ?string $reProcureB100round = null;
+
+    public ?string $reProcureC100round = null;
 
     public ?string $currentMarketPrice = null;
 
@@ -174,6 +207,14 @@ class EstimateForm extends Component
     public ?string $currentMarketPriceB = null;
 
     public ?string $currentMarketPriceC = null;
+
+    public ?string $currentMarketPriceRound = null;
+
+    public ?string $currentMarketPriceARound = null;
+
+    public ?string $currentMarketPriceBRound = null;
+
+    public ?string $currentMarketPriceCRound = null;
 
     //セレクトボックス
     public array $structureList;
@@ -213,6 +254,10 @@ class EstimateForm extends Component
 
     public string $workSurchargeLargeCategory = 'すべて';
 
+    public bool $isViewDiscountRiskTable = false;
+
+    public string $discountRiskCategory = '';
+
     //標準コード
 
     public array $factoryCodeList = [];
@@ -220,6 +265,10 @@ class EstimateForm extends Component
     public array $occupationalSurchargeCodeList = [];
 
     public array $workSurchargeCodeList = [];
+
+    public array $discountRiskCodeList = [];
+
+    public array $discountRiskLargeCodeList = [];
 
     public function mount($estimate)
     {
@@ -272,7 +321,11 @@ class EstimateForm extends Component
 
         $this->chattelSurcharge = old('chattel_surcharge', $this->getValueByKey('chattel_surcharge', $estimate->property_detail));
         $this->actualLossFactor = old('actual_loss_factor', $this->getValueByKey('actual_loss_factor', $estimate->property_detail));
+        $this->discountRiskCategory = old('discount_risk_category', $this->getValueByKey('discount_risk_category', $estimate->property_detail));
         $this->otherDiscount = old('other_discount', $this->getValueByKey('other_discount', $estimate->property_detail));
+        $this->discountFireExtinguisher = old('discount_fire_extinguisher', $this->getValueByKey('discount_fire_extinguisher', $estimate->property_detail));
+        $this->discountSecurity = old('discount_security', $this->getValueByKey('discount_security', $estimate->property_detail));
+        $this->discountPublic = old('discount_public', $this->getValueByKey('discount_public', $estimate->property_detail));
         $this->chattelSurchargeCategory = old('chattel_surcharge_category', $this->getValueByKey('chattel_surcharge_category', $estimate->property_detail));
 
         $this->occupationalSurchargeCode = old('occupational_surcharge_code', $this->getValueByKey('occupational_surcharge_code', $estimate->property_detail));
@@ -280,6 +333,9 @@ class EstimateForm extends Component
 
         $this->workSurchargeCode = old('work_surcharge_code', $this->getValueByKey('work_surcharge_code', $estimate->property_detail));
         $this->workSurchargeRate = old('work_surcharge_rate', $this->getValueByKey('work_surcharge_rate', $estimate->property_detail));
+
+        $this->discountRiskCode = old('discount_risk_code', $this->getValueByKey('discount_risk_code', $estimate->property_detail));
+        $this->discountRiskRate = old('discount_risk_rate', $this->getValueByKey('discount_risk_rate', $estimate->property_detail));
 
         $this->buildingInsurancePayout = old('building_insurance_payout', $this->getValueByKey('building_insurance_payout', $estimate->property_detail));
         $this->householdInsurancePayout = old('household_insurance_payout', $this->getValueByKey('household_insurance_payout', $estimate->property_detail));
@@ -302,6 +358,7 @@ class EstimateForm extends Component
         $this->installationDate = old('installation_date', $this->getValueByKey('installation_date', $estimate->assess_detail));
         $this->installationCost = old('installation_cost', $this->getValueByKey('installation_cost', $estimate->assess_detail));
         $this->annualPrice = old('annual_price', $this->getValueByKey('annual_price', $estimate->assess_detail));
+        $this->remarks = old('remarks', $this->getValueByKey('remarks', $estimate->assess_detail));
 
         //セレクトボックスの選択肢
         $this->structureList = $this->getStructureList();
@@ -323,7 +380,15 @@ class EstimateForm extends Component
             $this->onChangeAssessItem();
         }
 
-        $this->findFactoryBuildingItem($this->factoryBuildingCode);
+        if ($this->propertyType == '工場') {
+            $this->findFactoryBuildingItem($this->factoryBuildingCode);
+        }
+
+        if (in_array($this->propertyType, ['普通', '住宅'], true)) {
+            $this->onChangeBaseRate();
+        }
+
+        $this->onChangeDiscountRiskCode();
 
         return view('estimate.livewire.form');
     }
@@ -348,11 +413,17 @@ class EstimateForm extends Component
     {
         if (
             is_null($this->propertyType) ||
-            is_null($this->rank) ||
-            $this->propertyType == '工場'
+            is_null($this->rank)
         ) {
             $this->buildingBaseRate = null;
             $this->chattelBaseRate = null;
+            $this->factoryBuildingCode = null;
+
+            return;
+        }
+
+        if ($this->propertyType === '工場') {
+            $this->onChangeFactoryBuildingCode();
 
             return;
         }
@@ -363,15 +434,18 @@ class EstimateForm extends Component
             $buildingAge = '';
         }
 
-        $buildingBaseRate = new BuildingBaseRate($this->estimate);
+        $buildingBaseRate = new BuildingBaseRate($this->estimate, 'rateTable/buildingBaseRateTable.csv');
         $this->buildingBaseRate = (string) $buildingBaseRate->findRate($this->propertyType, $buildingAge, $this->rank);
-        $chattelBaseRate = new ChattelBaseRate($this->estimate);
+        $chattelBaseRate = new ChattelBaseRate($this->estimate, 'rateTable/chattelBaseTable.csv');
         $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank);
 
-        $this->occupationalSurchargeCode = null;
-        $this->occupationalSurchargeRate = null;
-        $this->workSurchargeCode = null;
-        $this->workSurchargeRate = null;
+        if (isset($this->occupationalSurchargeCode)) {
+            $this->onChangeOccupationalSurchargeCode();
+        }
+
+        if (isset($this->workSurchargeCode)) {
+            $this->onChangeWorkSurchargeCode();
+        }
     }
 
     /**
@@ -399,12 +473,29 @@ class EstimateForm extends Component
 
     /**
      * おすすめ契約期間指定の入力項目の表示トリガー
-     *
+     *共済期間（年）
      * @return void
      */
     public function onChangeRecommend()
     {
+        $this->insuranceMonth = null;
+        $this->insuranceDay = null;
+    }
 
+    /**
+     * 共済期間（月）
+     */
+    public function onChangeInsuranceMonth()
+    {
+        $this->insuranceYear = null;
+    }
+
+    /**
+     * 共済期間（日）
+     */
+    public function onChangeInsuranceDay()
+    {
+        $this->insuranceYear = null;
     }
 
     /**
@@ -414,9 +505,29 @@ class EstimateForm extends Component
      */
     public function onChangeAssessItem()
     {
+        if ($this->floorArea) {
+            $this->floorArea = number_format((float) $this->floorArea, 2);
+            $this->floorArea = str_replace(',', '', $this->floorArea);
+        }
+
+        if ($this->exclusiveArea) {
+            $this->exclusiveArea = number_format((float) $this->exclusiveArea, 2);
+            $this->exclusiveArea = str_replace(',', '', $this->exclusiveArea);
+        }
+
         $this->assessUsageList = $this->getAssessUsageList();
         $this->assessStructureList = $this->getAssessStructureList();
         $this->onChangeAssessAmount();
+    }
+
+    /**
+     * 工場物件建物基本率エラー
+     */
+    public function onChangeFactoryBuildingRate()
+    {
+        if ($this->buildingBaseRate > 100) {
+            $this->dispatch('alert', '100以上の値は存在しません。');
+        }
     }
 
     /**
@@ -448,6 +559,10 @@ class EstimateForm extends Component
 
     public function onChangeFactoryBuildingCode()
     {
+        if (empty($this->factoryBuildingCode)) {
+            return;
+        }
+
         $this->factoryBuildingCode = mb_convert_kana($this->factoryBuildingCode, 'n');
 
         $factoryPropertyBasePremium = new FactoryPropertyBasePremium();
@@ -466,6 +581,10 @@ class EstimateForm extends Component
 
     public function findFactoryBuildingItem($code)
     {
+        if (is_null($code)) {
+            return;
+        }
+
         $this->factoryBuildingCode = mb_convert_kana($code, 'n');
 
         $factoryPropertyBasePremium = new FactoryPropertyBasePremium();
@@ -513,7 +632,7 @@ class EstimateForm extends Component
     public function onClickOccupationalLargeCategory($category = 'すべて')
     {
         $this->occupationalSurchargeLargeCategory = $category;
-        $occupationalSurcharge = new OccupationalSurcharge();
+        $occupationalSurcharge = new OccupationalSurcharge('surchargeTable/occupationalSurchargeTable.csv');
         $rateList = $occupationalSurcharge->rateList;
         $rank = $this->rank;
 
@@ -545,9 +664,26 @@ class EstimateForm extends Component
     {
         $this->occupationalSurchargeCode = mb_convert_kana($this->occupationalSurchargeCode, 'n');
 
-        $occupationalSurcharge = new OccupationalSurcharge();
+        $occupationalSurcharge = new OccupationalSurcharge('surchargeTable/occupationalSurchargeTable.csv');
 
         $this->occupationalSurchargeRate = (string) $occupationalSurcharge->findCode($this->occupationalSurchargeCode, $this->rank);
+
+        $this->occupationalSurchargeItem = (string) $occupationalSurcharge->getOccupationalSurchargeItem($this->occupationalSurchargeCode, $this->rank);
+
+        $this->onChangeOccupationalSurchargeRate();
+    }
+
+    public function onChangeOccupationalSurchargeRate()
+    {
+        $this->workSurchargeCode = null;
+        $this->workSurchargeRate = null;
+        $this->workSurchargeItem = null;
+
+        if (empty($this->occupationalSurchargeRate)) {
+            $this->occupationalSurchargeRate = '';
+            $this->occupationalSurchargeCode = '';
+            $this->occupationalSurchargeItem = '';
+        }
     }
 
     /**
@@ -571,7 +707,7 @@ class EstimateForm extends Component
     public function onClickWorkLargeCategory($category = 'すべて')
     {
         $this->workSurchargeLargeCategory = $category;
-        $workSurcharge = new WorkSurcharge();
+        $workSurcharge = new WorkSurcharge('surchargeTable/workSurchargeTable.csv');
         $rateList = $workSurcharge->rateList;
         $rank = $this->rank;
 
@@ -607,9 +743,85 @@ class EstimateForm extends Component
     {
         $this->workSurchargeCode = mb_convert_kana($this->workSurchargeCode, 'n');
 
-        $workSurcharge = new WorkSurcharge();
+        $workSurcharge = new WorkSurcharge('surchargeTable/workSurchargeTable.csv');
 
         $this->workSurchargeRate = (string) $workSurcharge->findCode($this->workSurchargeCode, $this->rank);
+
+        $this->workSurchargeItem = (string) $workSurcharge->getWorkSurchargeItem($this->workSurchargeCode, $this->rank);
+
+        $this->onChangeWorkSurchargeRate();
+    }
+
+    public function onChangeWorkSurchargeRate()
+    {
+        $this->occupationalSurchargeCode = null;
+        $this->occupationalSurchargeRate = null;
+        $this->occupationalSurchargeItem = null;
+
+        if (empty($this->workSurchargeRate)) {
+            $this->workSurchargeCode = '';
+            $this->workSurchargeRate = '';
+            $this->workSurchargeItem = '';
+        }
+    }
+
+    /**
+     * リスク評価のための表を参照
+     *
+     * @return void
+     */
+    public function onClickDiscountRiskTable()
+    {
+        $this->onFindDiscountRiskCategory();
+
+        $this->dispatch('disableScroll');
+        $this->isViewDiscountRiskTable = true;
+    }
+
+    public function onFindDiscountRiskCategory()
+    {
+
+        $discountRisk = new DiscountRisk();
+        $rateList = $discountRisk->rateList;
+        $this->discountRiskCodeList = array_filter($rateList, function ($element) {
+            return is_array($element);
+        });
+
+        $this->discountRiskLargeCodeList = ['Ⅰ.危険分散', 'Ⅱ.消火設備', 'Ⅲ.セキュリティ', 'Ⅳ.火気管理', 'Ⅴ.ロス履歴'];
+    }
+
+    public function onSelectDiscountRiskCode($code)
+    {
+        $this->discountRiskCode = $code;
+        $this->onChangeDiscountRiskCode();
+        $this->onClickCloseTable();
+    }
+
+    public function onChangeDiscountRiskCode()
+    {
+
+        if (empty($this->discountRiskCode)) {
+            return;
+        }
+
+        $this->discountRiskCode = mb_convert_kana($this->discountRiskCode, 'n');
+
+        $discountRisk = new DiscountRisk();
+
+        $this->discountRiskRate = (string) $discountRisk->findCode($this->discountRiskCode);
+
+        $this->discountRiskCategory = (string) $discountRisk->getDiscountRiskItem($this->discountRiskCode);
+    }
+
+    public function onChangeDiscountRiskRate()
+    {
+        $this->discountRiskCode = '';
+
+        if (empty($this->discountRiskRate)) {
+            $this->discountRiskRate = '';
+            $this->discountRiskCode = '';
+            $this->discountRiskCategory = '';
+        }
     }
 
     /**
@@ -622,6 +834,7 @@ class EstimateForm extends Component
         $this->isViewFactoryRateTable = false;
         $this->isViewOccupationalTable = false;
         $this->isViewWorkTable = false;
+        $this->isViewDiscountRiskTable = false;
 
         $this->dispatch('enableScroll');
     }
@@ -633,11 +846,26 @@ class EstimateForm extends Component
      */
     public function onChangeAssessAmount()
     {
-        $this->reProcure = '';
-        $this->reProcureA = '';
-        $this->reProcureB = '';
-        $this->reProcureC = '';
+        $this->reProcure80 = '';
+        $this->reProcureA80 = '';
+        $this->reProcureB80 = '';
+        $this->reProcureC80 = '';
+        $this->reProcure100 = '';
+        $this->reProcureA100 = '';
+        $this->reProcureB100 = '';
+        $this->reProcureC100 = '';
+        $this->reProcure100round = '';
+        $this->reProcureA100round = '';
+        $this->reProcureB100round = '';
+        $this->reProcureC100round = '';
         $this->currentMarketPrice = '';
+        $this->currentMarketPriceA = '';
+        $this->currentMarketPriceB = '';
+        $this->currentMarketPriceC = '';
+        $this->currentMarketPriceRound = '';
+        $this->currentMarketPriceARound = '';
+        $this->currentMarketPriceBRound = '';
+        $this->currentMarketPriceCRound = '';
 
         if (is_null($this->assessUsage) || is_null($this->assessStructure)) {
             return;
@@ -657,64 +885,115 @@ class EstimateForm extends Component
             case '通常':
                 $assessDomain = new AssessNormal($this->estimate);
 
-                $this->reProcure = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, '');
-                $this->reProcureA = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A');
-                $this->reProcureB = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B');
-                $this->reProcureC = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C');
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['80'];
 
-                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, '');
-                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A');
-                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B');
-                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C');
+                $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['100'];
+                $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['100'];
+                $this->reProcureC100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['100'];
+
+                $this->reProcureA100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['100まるめ'];
+                $this->reProcureB100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['100まるめ'];
+                $this->reProcureC100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['100まるめ'];
+
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A')['通常'];
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B')['通常'];
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C')['通常'];
+
+                $this->currentMarketPriceARound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A')['まるめ'];
+                $this->currentMarketPriceBRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B')['まるめ'];
+                $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case 'ピロティー付':
                 $assessDomain = new AssessPiloti($this->estimate);
-                $this->reProcure = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, '');
-                $this->reProcureA = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'A');
-                $this->reProcureB = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'B');
-                $this->reProcureC = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'C');
 
-                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, '');
-                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'A');
-                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'B');
-                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'C');
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'A')['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'B')['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'C')['80'];
+
+                $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'A')['100'];
+                $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'B')['100'];
+                $this->reProcureC100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'C')['100'];
+
+                $this->reProcureA100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'A')['100まるめ'];
+                $this->reProcureB100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'B')['100まるめ'];
+                $this->reProcureC100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'C')['100まるめ'];
+
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'A')['通常'];
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'B')['通常'];
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'C')['通常'];
+
+                $this->currentMarketPriceARound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'A')['まるめ'];
+                $this->currentMarketPriceBRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'B')['まるめ'];
+                $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '太陽光付':
                 $assessDomain = new AssessSolarPanel($this->estimate);
 
-                $this->reProcure = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, '');
-                $this->reProcureA = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A');
-                $this->reProcureB = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B');
-                $this->reProcureC = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C');
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['80'];
 
-                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, '');
-                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A');
-                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B');
-                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C');
+                $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['100'];
+                $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['100'];
+                $this->reProcureC100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['100'];
+
+                $this->reProcureA100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['100まるめ'];
+                $this->reProcureB100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['100まるめ'];
+                $this->reProcureC100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['100まるめ'];
+
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A')['通常'];
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B')['通常'];
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C')['通常'];
+
+                $this->currentMarketPriceARound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A')['まるめ'];
+                $this->currentMarketPriceBRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B')['まるめ'];
+                $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '分譲マンション':
                 $assessDomain = new AssessCondo($this->estimate);
 
-                $this->reProcure = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, '');
-                $this->reProcureA = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A');
-                $this->reProcureB = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B');
-                $this->reProcureC = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C');
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C')['80'];
 
-                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, '');
-                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A');
-                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B');
-                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C');
+                $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['100'];
+                $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['100'];
+                $this->reProcureC100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C')['100'];
+
+                $this->reProcureA100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['100まるめ'];
+                $this->reProcureB100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['100まるめ'];
+                $this->reProcureC100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C')['100まるめ'];
+
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'A')['通常'];
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'B')['通常'];
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'C')['通常'];
+
+                $this->currentMarketPriceARound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'A')['まるめ'];
+                $this->currentMarketPriceBRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'B')['まるめ'];
+                $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '年次取得':
+                if ($this->buildingAge > 49) {
+                    $this->dispatch('alert', 'この築年数は評価できません。');
+                }
+
                 $assessDomain = new AssessAnnual($this->estimate);
 
-                $this->reProcure = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingYear);
+                $this->reProcure80 = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['80'];
+                $this->reProcure100 = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['100'];
+                $this->reProcure100round = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['100まるめ'];
 
-                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingYear, 'A');
-                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingYear, 'B');
-                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingYear, 'C');
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'A')['通常'];
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'B')['通常'];
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'C')['通常'];
+
+                $this->currentMarketPriceARound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'A')['まるめ'];
+                $this->currentMarketPriceBRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'B')['まるめ'];
+                $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->rank, $this->annualPrice, $this->buildingAge, 'C')['まるめ'];
                 break;
-            case '改装物件':
+            case '大規模改装':
 
                 if (! is_numeric($this->replacementPrice) ||
                 ! is_numeric($this->renovationCost) ||
@@ -727,7 +1006,8 @@ class EstimateForm extends Component
 
                 $assessDomain = new AssessRenovation($this->estimate);
 
-                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->replacementPrice, $this->renovationCost, $this->conventionalAge, $this->depreciationRate, $this->renovationAge, $this->renovationDepreciationRate);
+                $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->replacementPrice, $this->renovationCost, $this->conventionalAge, $this->depreciationRate, $this->renovationAge, $this->renovationDepreciationRate)['通常'];
+                $this->currentMarketPriceRound = $assessDomain->viewCurrentMarketPrice($this->replacementPrice, $this->renovationCost, $this->conventionalAge, $this->depreciationRate, $this->renovationAge, $this->renovationDepreciationRate)['まるめ'];
                 break;
 
         }
@@ -830,7 +1110,7 @@ class EstimateForm extends Component
 
     private function getAssessItemList()
     {
-        return ['選択しない', '通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '改装物件'];
+        return ['選択しない', '通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'];
     }
 
     private function getAssessUsageList()

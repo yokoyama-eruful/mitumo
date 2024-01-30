@@ -85,7 +85,7 @@ class StandardOfRecommendAndComprehensiveOfRecommendDownloader
         $worksheet->setCellValue('O22', $estimate->property_type);
         $worksheet->setCellValue('D31', $estimate->rank);
         $worksheet->setCellValue('M31', $estimate->pay_method);
-        $worksheet->setCellValue('M33', $estimate->InsurancePeriod);
+        $worksheet->setCellValue('D33', $estimate->InsurancePeriod);
         $worksheet->setCellValue('D35', $estimate->OtherItem);
         $worksheet->setCellValue('D41', thousandYenUnit(array_key_exists('building_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['building_insurance_payout'] : ''));
         $worksheet->setCellValue('K41', thousandYenUnit(array_key_exists('household_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['household_insurance_payout'] : ''));
@@ -166,10 +166,15 @@ class StandardOfRecommendAndComprehensiveOfRecommendDownloader
         $worksheet->setCellValue('E23', $standardPremium->occupationalSurchargeRate);
         $worksheet->setCellValue('E24', $standardPremium->workSurchargeRate);
         $worksheet->setCellValue('E25', $standardPremium->chattelSurcharge);
-        $worksheet->setCellValue('E26', $standardPremium->otherDiscount);
-        $worksheet->setCellValue('E27', $standardPremium->building['短期率']);
-        $worksheet->setCellValue('E28', $standardPremium->building['長期率']);
-        $worksheet->setCellValue('E29', $standardPremium->actualLossFactor);
-        $worksheet->setCellValue('E30', $standardPremium->getPayByLongTermFlag() == true ? '3%' : '');
+        $worksheet->setCellValue('E26', $standardPremium->building['短期率']);
+        $worksheet->setCellValue('E27', $standardPremium->building['長期率']);
+        $worksheet->setCellValue('E28', $standardPremium->actualLossFactor);
+
+        $worksheet->setCellValue('L21', percentUnit($standardPremium->discountFireExtinguisher));
+        $worksheet->setCellValue('L22', percentUnit($standardPremium->discountSecurity));
+        $worksheet->setCellValue('L23', percentUnit($standardPremium->discountPublicProperty));
+        $worksheet->setCellValue('L24', percentUnit($standardPremium->discountRiskRate));
+        $worksheet->setCellValue('L25', $standardPremium->otherDiscount);
+        $worksheet->setCellValue('E26', $standardPremium->getPayByLongTermFlag() == true ? '3%' : '');
     }
 }

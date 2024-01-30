@@ -6,7 +6,7 @@ namespace App\Domains\Assess;
 
 final class AssessCondo
 {
-    public readonly float $floorArea;
+    public readonly float $exclusiveArea;
 
     public readonly int $buildingAge;
 
@@ -16,17 +16,20 @@ final class AssessCondo
 
     public readonly string $assessStructure;
 
+    public readonly string $remarks;
+
     private StandardAmount $standardAmount;
 
     private AgingDepreciation $agingDepreciation;
 
     public function __construct($estimate)
     {
-        $this->floorArea = $estimate->floor_area ? $estimate->floor_area : 0;
+        $this->exclusiveArea = $estimate->exclusive_area ? $estimate->exclusive_area : 0;
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
         $this->buildingYear = $estimate->building_year ? $estimate->building_year : 0;
         $this->assessUsage = $this->getValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getValueByKey('assess_structure', $estimate->assess_detail);
+        $this->remarks = $this->getValueByKey('remarks', $estimate->assess_detail);
 
         $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure);
         $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
@@ -35,36 +38,47 @@ final class AssessCondo
     /*
        ** LiveFireで使用する評価額
        */
-    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $assessRank = ''): string
+    public function viewReProcure($assessUsage, $assessStructure, $exclusiveArea, $assessRank = '')
     {
         if ($assessRank == '' || $assessUsage == '' ||
-        $assessStructure == '' || $floorArea == '') {
-            return '';
+        $assessStructure == '' || $exclusiveArea == '') {
+            return [
+                '80' => '',
+                '100' => '',
+                '100まるめ' => '',
+            ];
         }
 
         $standardAmount = new StandardAmount($assessUsage, $assessStructure);
         $amount = $standardAmount->findStandardAmount($assessRank);
-        $reProcure = $amount * $floorArea;
+        $reProcure = $amount * $exclusiveArea;
 
-        return number_format($reProcure * 0.8, 2).'~'.number_format($reProcure * 1.2, 2);
+        return [
+            '80' => (string) thousandYenUnit(floor($reProcure * 0.8)),
+            '100' => (string) thousandYenUnit($reProcure),
+            '100まるめ' => (string) thousandYenUnit(ceil($reProcure / 1000) * 1000),
+        ];
     }
 
     /*
     ** Livewireで使用する評価額
     */
-    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $buildingAge, $assessRank = ''): string
+    public function viewCurrentMarketPrice($assessUsage, $assessStructure, $exclusiveArea, $buildingAge, $assessRank = '')
     {
         if ($assessRank == '' || $assessUsage == '' ||
-        $assessStructure == '' || $floorArea == '' ||
+        $assessStructure == '' || $exclusiveArea == '' ||
         $buildingAge == '') {
-            return '';
+            return [
+                '通常' => '',
+                'まるめ' => '',
+            ];
         }
 
         $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
         $standardAmount = new StandardAmount($assessUsage, $assessStructure);
 
         $amount = $standardAmount->findStandardAmount($assessRank);
-        $reProcure = $amount * $floorArea;
+        $reProcure = $amount * $exclusiveArea;
 
         $agingDepreciation = $agingDepreciation->findAgingDepreciation($assessRank);
 
@@ -76,15 +90,18 @@ final class AssessCondo
             $finalResidualValue = 1 - $residualValue;
         }
 
-        $marketPrice = number_format($reProcure * $finalResidualValue, 2);
+        $marketPrice = thousandYenUnit(floor($reProcure * $finalResidualValue));
 
-        return (string) $marketPrice;
+        return [
+            '通常' => (string) $marketPrice,
+            'まるめ' => (string) thousandYenUnit(ceil(floor($reProcure * $finalResidualValue) / 1000) * 1000),
+        ];
     }
 
     public function getReProcure($assessRank = '')
     {
         $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
-        $reProcure = $standardAmount * $this->floorArea;
+        $reProcure = $standardAmount * $this->exclusiveArea;
 
         return [
             '標準単価' => $standardAmount,

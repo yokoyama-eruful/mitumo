@@ -7,6 +7,10 @@ use App\Http\Controllers\AssessController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\EstimateController;
+use App\Http\Controllers\Futsu2\AssessController as Futsu2AssessController;
+use App\Http\Controllers\Futsu2\DownloadController as Futsu2DownloadController;
+use App\Http\Controllers\Futsu2\Futsu2Controller;
+use App\Http\Controllers\Futsu2\PreviewController as Futsu2PreviewController;
 use App\Http\Controllers\PreviewController;
 use App\Http\Controllers\TopController;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +37,11 @@ Route::middleware('auth:web')
             ->prefix('account')
             ->name('account.')
             ->group(function () {
-                Route::get('index/', 'index')->name('index');
+                Route::get('index', 'index')->name('index');
+                Route::get('create', 'create')->name('create');
+                Route::get('edit/{id}', 'edit')->name('edit');
+                Route::post('save/{id}', 'save')->name('save');
+                Route::delete('destroy/{id}', 'destroy')->name('destroy');
             });
 
         Route::controller(EstimateController::class)
@@ -78,4 +86,40 @@ Route::middleware('auth:web')
                 Route::post('{category}', 'download')->name('type');
             });
 
+        Route::controller(Futsu2Controller::class)
+            ->prefix('futsu2/')
+            ->name('futsu2.')
+            ->group(function () {
+                Route::get('create', 'create')->name('create');
+                Route::get('edit/{id}', 'edit')->name('edit');
+                Route::post('save/{id}', 'save')->name('save');
+                Route::post('duplication/{id}', 'duplication')->name('duplication');
+                Route::delete('destroy/{id}', 'destroy')->name('destroy');
+            });
+
+        Route::controller(Futsu2PreviewController::class)
+            ->prefix('futsu2/preview/{id}')
+            ->name('futsu2.preview.')
+            ->group(function () {
+                Route::get('standard', 'standard')->name('standard');
+                Route::get('standardOfRecommend', 'standardOfRecommend')->name('standardOfRecommend');
+                Route::get('standardOfEarthquake', 'standardOfEarthquake')->name('standardOfEarthquake');
+                Route::get('calculation', 'calculation')->name('calculation');
+            });
+
+        Route::controller(Futsu2DownloadController::class)
+            ->prefix('futsu2/download/{id}')
+            ->name('futsu2.download.')
+            ->group(function () {
+                Route::get('index/', 'index')->name('index');
+                Route::post('{category}', 'download')->name('type');
+            });
+
+        Route::controller(Futsu2AssessController::class)
+            ->prefix('futsu2/assess')
+            ->name('futsu2.assess.')
+            ->group(function () {
+                Route::get('{id}', 'show')->name('show');
+                Route::post('{id}/download/{fileType}', 'download')->name('download');
+            });
     });
