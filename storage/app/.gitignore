@@ -19,3 +19,5 @@
 !estimateFutsu2/rateTable/*
 !estimateFutsu2/surchargeTable/
 !estimateFutsu2/surchargeTable/*
+!version.csv/
+!version.csv/*
