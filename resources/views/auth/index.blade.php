@@ -14,7 +14,7 @@
         <h1 class="text-center text-2xl text-blue-500 font-bold mb-4 tracking-wider">
             <i class="fa-solid fa-file-invoice text-8xl mb-4"></i>
             <div>mitumo</div>
-            <div class="text-xs text-black">{{ config('app.version') }}2404.1.1</div>
+            <div class="text-xs text-black">{{ config('app.version') }}2404.1.2</div>
         </h1>
         <form action="{{ route('auth.login') }}" method="POST">
             @csrf

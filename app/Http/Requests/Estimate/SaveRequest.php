@@ -177,11 +177,11 @@ final class SaveRequest extends FormRequest
             }
         });
 
-        $validator->after(function ($validator) {
-            if ($this->input('property_type') == '住宅' && ($this->input('building_insurance_payout') && (! $this->input('start_date') || ! $this->input('building_year') || ! $this->input('building_age')))) {
-                $validator->errors()->add('エラー', '物件が「住宅」であり、建物共済掛金の入力がある場合、築年数は必須です。');
-            }
-        });
+        // $validator->after(function ($validator) {
+        //     if ($this->input('property_type') == '住宅' && ($this->input('building_insurance_payout') && (! $this->input('start_date') || ! $this->input('building_year') || ! $this->input('building_age')))) {
+        //         $validator->errors()->add('エラー', '物件が「住宅」であり、建物共済掛金の入力がある場合、築年数は必須です。');
+        //     }
+        // });
 
         $validator->after(function ($validator) {
             if (($this->input('household_insurance_payout') || $this->input('facility_insurance_payout') || $this->input('other_facility_insurance_payout') || $this->input('item_insurance_payout') || $this->input('other_item_insurance_payout')) && $this->input('insurance_year') > 5) {
