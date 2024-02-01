@@ -431,7 +431,7 @@
                                 wire:model="actualLossFactor">
                         </div>
                     @endif
-                    @if ($propertyType == '普通')
+                    @if (in_array($propertyType, ['住宅', '普通'], true))
                         <div class="estimate-input-box">
                             <label class="futsu2-label" for="discount_fire_extinguisher">消火設備割引
                             </label>

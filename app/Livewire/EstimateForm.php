@@ -330,9 +330,11 @@ class EstimateForm extends Component
 
         $this->occupationalSurchargeCode = old('occupational_surcharge_code', $this->getValueByKey('occupational_surcharge_code', $estimate->property_detail));
         $this->occupationalSurchargeRate = old('occupational_surcharge_rate', $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail));
+        $this->occupationalSurchargeItem = old('occupational_surcharge_item', $this->getValueByKey('occupational_surcharge_item', $estimate->property_detail));
 
         $this->workSurchargeCode = old('work_surcharge_code', $this->getValueByKey('work_surcharge_code', $estimate->property_detail));
         $this->workSurchargeRate = old('work_surcharge_rate', $this->getValueByKey('work_surcharge_rate', $estimate->property_detail));
+        $this->workSurchargeItem = old('work_surcharge_item', $this->getValueByKey('work_surcharge_item', $estimate->property_detail));
 
         $this->discountRiskCode = old('discount_risk_code', $this->getValueByKey('discount_risk_code', $estimate->property_detail));
         $this->discountRiskRate = old('discount_risk_rate', $this->getValueByKey('discount_risk_rate', $estimate->property_detail));
@@ -376,6 +378,10 @@ class EstimateForm extends Component
 
     public function render()
     {
+        if (is_null($this->buildingAge)) {
+            $this->onChangeBuildingAge();
+        }
+
         if (isset($this->estimate->id)) {
             $this->onChangeAssessItem();
         }
@@ -384,8 +390,16 @@ class EstimateForm extends Component
             $this->findFactoryBuildingItem($this->factoryBuildingCode);
         }
 
-        if (in_array($this->propertyType, ['普通', '住宅'], true)) {
-            $this->onChangeBaseRate();
+        // if (in_array($this->propertyType, ['普通', '住宅'], true)) {
+        //     $this->onChangeBaseRate();
+        // }
+
+        if ($this->occupationalSurchargeCode) {
+            $this->findOccupationalItem();
+        }
+
+        if ($this->workSurchargeCode) {
+            $this->findWorkSurchargeItem();
         }
 
         $this->onChangeDiscountRiskCode();
@@ -673,17 +687,20 @@ class EstimateForm extends Component
         $this->onChangeOccupationalSurchargeRate();
     }
 
+    public function findOccupationalItem()
+    {
+        $this->occupationalSurchargeCode = mb_convert_kana($this->occupationalSurchargeCode, 'n');
+
+        $occupationalSurcharge = new OccupationalSurcharge('surchargeTable/occupationalSurchargeTable.csv');
+
+        $this->occupationalSurchargeItem = (string) $occupationalSurcharge->getOccupationalSurchargeItem($this->occupationalSurchargeCode, $this->rank);
+    }
+
     public function onChangeOccupationalSurchargeRate()
     {
         $this->workSurchargeCode = null;
         $this->workSurchargeRate = null;
         $this->workSurchargeItem = null;
-
-        if (empty($this->occupationalSurchargeRate)) {
-            $this->occupationalSurchargeRate = '';
-            $this->occupationalSurchargeCode = '';
-            $this->occupationalSurchargeItem = '';
-        }
     }
 
     /**
@@ -752,17 +769,20 @@ class EstimateForm extends Component
         $this->onChangeWorkSurchargeRate();
     }
 
+    public function findWorkSurchargeItem()
+    {
+        $this->workSurchargeCode = mb_convert_kana($this->workSurchargeCode, 'n');
+
+        $workSurcharge = new WorkSurcharge('surchargeTable/workSurchargeTable.csv');
+
+        $this->workSurchargeItem = (string) $workSurcharge->getWorkSurchargeItem($this->workSurchargeCode, $this->rank);
+    }
+
     public function onChangeWorkSurchargeRate()
     {
         $this->occupationalSurchargeCode = null;
         $this->occupationalSurchargeRate = null;
         $this->occupationalSurchargeItem = null;
-
-        if (empty($this->workSurchargeRate)) {
-            $this->workSurchargeCode = '';
-            $this->workSurchargeRate = '';
-            $this->workSurchargeItem = '';
-        }
     }
 
     /**
@@ -975,7 +995,7 @@ class EstimateForm extends Component
                 $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '年次取得':
-                if ($this->buildingAge > 49) {
+                if ($this->buildingAge > 48) {
                     $this->dispatch('alert', 'この築年数は評価できません。');
                 }
 
@@ -1117,7 +1137,7 @@ class EstimateForm extends Component
     {
         return match ($this->assessItem) {
             '通常', 'ピロティー付', '太陽光付', '年次取得' => ['専用住宅', '併用住宅', '専用店舗', '工場・倉庫', 'プレハブ'],
-            '分譲マンション' => ['分譲マンション'],
+            '分譲マンション' => ['分譲マンション', '分譲マンション以外'],
             default => [],
         };
     }

@@ -520,6 +520,21 @@
                     @endif
                     @if ($propertyType == '工場')
                         <div class="estimate-input-box">
+                            <label class="estimate-label" for="discount_fire_extinguisher">消火設備割引
+                            </label>
+                            <input id="discount_fire_extinguisher" name="discount_fire_extinguisher"
+                                class="estimate-input text-right" type="number" min="0" max="100"
+                                wire:model="discountFireExtinguisher">
+                            <span class="unit-display">%</span>
+                        </div>
+                        <div class="estimate-input-box">
+                            <label class="estimate-label" for="discount_security">セキュリティ割引
+                            </label>
+                            <input id="discount_security" name="discount_security" class="estimate-input text-right"
+                                type="number" min="0" max="100" wire:model="discountSecurity">
+                            <span class="unit-display">%</span>
+                        </div>
+                        <div class="estimate-input-box">
                             <label class="estimate-label h-auto">リスク評価割引</label>
                             <div class="w-11/12">
                                 <div class="estimate-input-box flex">
@@ -539,7 +554,7 @@
                                 </div>
                             </div>
                         </div>
-                    @elseif($propertyType == '普通')
+                    @elseif(in_array($propertyType, ['普通', '住宅'], true))
                         <div class="estimate-input-box">
                             <label class="estimate-label" for="discount_fire_extinguisher">消火設備割引
                             </label>
@@ -586,7 +601,7 @@
                         <div>
                         </div>
                     @endif
-                    @if (in_array($propertyType, ['普通', '工場'], true))
+                    @if (in_array($propertyType, ['普通', '工場', '住宅'], true))
                         <div class="estimate-input-box">
                             <label class="estimate-label" for="other_discount">その他割引
                             </label>
@@ -611,8 +626,9 @@
                                         wire:change="onChangeOccupationalSurchargeCode">
                                 </div>
                                 <div class="estimate-input-box flex">
-                                    <label class="estimate-label">選択項目</label>
-                                    <input wire:model="occupationalSurchargeItem" class="estimate-input" readonly>
+                                    <label class="estimate-label" for="occupational_surcharge_item">選択項目</label>
+                                    <input wire:model="occupationalSurchargeItem" name="occupational_surcharge_item"
+                                        class="estimate-input" readonly>
                                 </div>
                                 <div class="flex">
                                     <label class="estimate-label" for="occupational_surcharge_rate">率</label>
@@ -636,8 +652,9 @@
                                         wire:model="workSurchargeCode" wire:change="onChangeWorkSurchargeCode">
                                 </div>
                                 <div class="estimate-input-box flex">
-                                    <label class="estimate-label">選択項目</label>
-                                    <input wire:model="workSurchargeItem" class="estimate-input">
+                                    <label class="estimate-label" for="work_surcharge_item">選択項目</label>
+                                    <input wire:model="workSurchargeItem" name="work_surcharge_item"
+                                        class="estimate-input">
                                 </div>
                                 <div class="flex">
                                     <label class="estimate-label" for="work_surcharge_rate">率</label>

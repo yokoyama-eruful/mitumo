@@ -148,6 +148,24 @@ final class SaveRequest extends FormRequest
         });
 
         $validator->after(function ($validator) {
+            if ($this->input('assess_item') == '分譲マンション' && $this->input('structure') != 'コンクリート造等') {
+                $validator->errors()->add('エラー', '分譲マンションを評価する場合、構造は「コンクリート造等」にしてください。');
+            }
+        });
+
+        $validator->after(function ($validator) {
+            if ($this->input('assess_item') == '分譲マンション' && $this->input('assess_usage') == '分譲マンション' && $this->input('property_type') != '住宅') {
+                $validator->errors()->add('エラー', '分譲マンションを評価する場合、物件は「住宅」にしてください。');
+            }
+        });
+
+        $validator->after(function ($validator) {
+            if ($this->input('assess_item') == '分譲マンション' && $this->input('assess_usage') == '分譲マンション' && $this->input('rank') != 'M') {
+                $validator->errors()->add('エラー', '分譲マンションを評価する場合、級別は「M」にしてください。');
+            }
+        });
+
+        $validator->after(function ($validator) {
             if (in_array($this->input('assess_item'), ['通常', 'ピロティー付', '太陽光付', '年次取得', '大規模改装'], true) && ! $this->input('floor_area')) {
                 $validator->errors()->add('エラー', 'この物件の評価を行うには、延床面積の入力が必須です。');
             }

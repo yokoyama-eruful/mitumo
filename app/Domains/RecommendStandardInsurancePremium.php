@@ -252,7 +252,8 @@ final class RecommendStandardInsurancePremium
             } else {
                 $discountPublicProperty = 1 - $discountPublicProperty / 100;
             }
-            $result = ($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount;
+
+            $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount, 2);
             $result = round(($result + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
 
             return $result;
@@ -266,7 +267,7 @@ final class RecommendStandardInsurancePremium
             $otherDiscount = 1 - $otherDiscount / 100;
         }
 
-        $result = ($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount;
+        $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
 
         return round($result + $chattelPremium + $comprehensivePremium, 2);
     }

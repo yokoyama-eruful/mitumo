@@ -367,6 +367,10 @@ class Futsu2Form extends Component
 
     public function render()
     {
+        if (is_null($this->buildingAge)) {
+            $this->onChangeBuildingAge();
+        }
+
         if (isset($this->estimate->id)) {
             $this->onChangeAssessItem();
         }
@@ -851,7 +855,7 @@ class Futsu2Form extends Component
                 $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '年次取得':
-                if ($this->buildingAge > 49) {
+                if ($this->buildingAge > 48) {
                     $this->dispatch('alert', 'この築年数は評価できません。');
                 }
 
@@ -991,7 +995,7 @@ class Futsu2Form extends Component
     {
         return match ($this->assessItem) {
             '通常', 'ピロティー付', '太陽光付', '年次取得' => ['専用住宅', '併用住宅', '専用店舗', 'プレハブ'],
-            '分譲マンション' => ['分譲マンション'],
+            '分譲マンション' => ['分譲マンション', '分譲マンション以外'],
             default => [],
         };
     }

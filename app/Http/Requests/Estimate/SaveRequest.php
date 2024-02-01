@@ -160,13 +160,13 @@ final class SaveRequest extends FormRequest
         });
 
         $validator->after(function ($validator) {
-            if ($this->input('assess_item') == '分譲マンション' && $this->input('property_type') != '住宅') {
+            if ($this->input('assess_item') == '分譲マンション' && $this->input('assess_usage') == '分譲マンション' && $this->input('property_type') != '住宅') {
                 $validator->errors()->add('エラー', '分譲マンションを評価する場合、物件は「住宅」にしてください。');
             }
         });
 
         $validator->after(function ($validator) {
-            if ($this->input('assess_item') == '分譲マンション' && $this->input('rank') != 'M') {
+            if ($this->input('assess_item') == '分譲マンション' && $this->input('assess_usage') == '分譲マンション' && $this->input('rank') != 'M') {
                 $validator->errors()->add('エラー', '分譲マンションを評価する場合、級別は「M」にしてください。');
             }
         });
