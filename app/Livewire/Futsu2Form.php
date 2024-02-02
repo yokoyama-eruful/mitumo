@@ -374,6 +374,15 @@ class Futsu2Form extends Component
         if (isset($this->estimate->id)) {
             $this->onChangeAssessItem();
         }
+
+        if ($this->occupationalSurchargeCode) {
+            $this->findOccupationalItem();
+        }
+
+        if ($this->workSurchargeCode) {
+            $this->findWorkSurchargeItem();
+        }
+
         $this->onChangeDiscountRiskCode();
         $this->onChangeBaseRate();
 
@@ -561,17 +570,23 @@ class Futsu2Form extends Component
         $this->onChangeOccupationalSurchargeRate();
     }
 
+    public function findOccupationalItem()
+    {
+        $this->occupationalSurchargeCode = mb_convert_kana($this->occupationalSurchargeCode, 'n');
+
+        $occupationalSurcharge = new OccupationalSurcharge('surchargeTable/occupationalSurchargeTable.csv');
+
+        $this->occupationalSurchargeItem = (string) $occupationalSurcharge->getOccupationalSurchargeItem($this->occupationalSurchargeCode, $this->rank);
+    }
+
     public function onChangeOccupationalSurchargeRate()
     {
+        if ($this->workSurchargeRate) {
+            $this->dispatch('alert', '職業割増、作業割増は一方しか適用できません。作業割増を削除します。');
+        }
         $this->workSurchargeCode = null;
         $this->workSurchargeRate = null;
         $this->workSurchargeItem = null;
-
-        if (empty($this->occupationalSurchargeRate)) {
-            $this->occupationalSurchargeRate = '';
-            $this->occupationalSurchargeCode = '';
-            $this->occupationalSurchargeItem = '';
-        }
     }
 
     /**
@@ -640,17 +655,23 @@ class Futsu2Form extends Component
         $this->onChangeWorkSurchargeRate();
     }
 
+    public function findWorkSurchargeItem()
+    {
+        $this->workSurchargeCode = mb_convert_kana($this->workSurchargeCode, 'n');
+
+        $workSurcharge = new WorkSurcharge('surchargeTable/workSurchargeTable.csv');
+
+        $this->workSurchargeItem = (string) $workSurcharge->getWorkSurchargeItem($this->workSurchargeCode, $this->rank);
+    }
+
     public function onChangeWorkSurchargeRate()
     {
+        if ($this->occupationalSurchargeRate) {
+            $this->dispatch('alert', '職業割増、作業割増は一方しか適用できません。職業割増を削除します。');
+        }
         $this->occupationalSurchargeCode = null;
         $this->occupationalSurchargeRate = null;
         $this->occupationalSurchargeItem = null;
-
-        if (empty($this->workSurchargeRate)) {
-            $this->workSurchargeCode = '';
-            $this->workSurchargeRate = '';
-            $this->workSurchargeItem = '';
-        }
     }
 
     /**

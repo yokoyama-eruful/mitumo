@@ -504,8 +504,8 @@
                                 </div>
                                 <div class="estimate-input-box flex">
                                     <label class="futsu2-label">選択項目</label>
-                                    <input wire:model="occupationalSurchargeItem" class="futsu2-input outline-none"
-                                        readonly>
+                                    <input wire:model="occupationalSurchargeItem" name="occupational_surcharge_item"
+                                        class="estimate-input outline-none" readonly>
                                 </div>
                                 <div class="flex">
                                     <label class="futsu2-label" for="occupational_surcharge_rate">率</label>
@@ -532,7 +532,8 @@
                                 </div>
                                 <div class="estimate-input-box flex">
                                     <label class="futsu2-label">選択項目</label>
-                                    <input wire:model="workSurchargeItem" class="futsu2-input outline-none">
+                                    <input wire:model="workSurchargeItem" name="work_surcharge_item"
+                                        class="estimate-input outline-none">
                                 </div>
                                 <div class="flex">
                                     <label class="futsu2-label" for="work_surcharge_rate">率</label>
