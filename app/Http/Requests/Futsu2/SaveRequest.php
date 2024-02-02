@@ -42,7 +42,7 @@ final class SaveRequest extends FormRequest
             'property_type' => ['required', 'string', 'in:住宅,普通,工場'],
             'rank' => ['required', 'string'],
             'start_date' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'date'],
-            'building_year' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'digits:4', 'integer', 'min:1900', 'max:'.(date('Y') + 1)],
+            'building_year' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装',  'integer', 'min:0', 'max:'.(date('Y') + 1)],
             'building_age' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'integer'],
             'pay_method' => ['required', 'string'],
             'insurance_year' => ['nullable', 'required_without_all:insurance_month,insurance_day',  'integer', 'min:1', 'max:10'],

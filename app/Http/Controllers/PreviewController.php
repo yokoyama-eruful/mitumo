@@ -33,8 +33,9 @@ class PreviewController extends Controller
 
         $standardPremium = new StandardInsurancePremium($estimate);
         $standardCompensation = new StandardCompensation($estimate->property_type);
+        $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
-        return view('preview.standard', compact('estimate', 'standardPremium', 'standardCompensation'));
+        return view('preview.standard', compact('estimate', 'standardPremium', 'standardCompensation', 'shortTerm'));
     }
 
     public function comprehensive(int $id)

@@ -25,9 +25,9 @@ class DownloadController extends Controller
         $keisyo = $request->getKeisyo();
 
         $estimateType = [
-            '普通火災見積',
-            '普通火災見積おすすめ契約',
-            '普通火災見積地震おすすめ契約',
+            '普通火災Ⅱ見積',
+            '普通火災Ⅱ見積おすすめ契約',
+            '普通火災Ⅱ見積地震おすすめ契約',
         ];
 
         $termRate = new MutualAidPremiums($estimate, $estimate->insurance_year);

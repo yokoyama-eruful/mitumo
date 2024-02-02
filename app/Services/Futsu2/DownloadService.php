@@ -17,13 +17,13 @@ final class DownloadService
     public function dropEstimate($category, $estimate, $fileType, $keisyo)
     {
         switch ($category) {
-            case '普通火災見積':
+            case '普通火災Ⅱ見積':
                 $this->dropStandard($estimate, $fileType, $keisyo);
                 break;
-            case '普通火災見積おすすめ契約':
+            case '普通火災Ⅱ見積おすすめ契約':
                 $this->dropStandardOfRecommend($estimate, $fileType, $keisyo);
                 break;
-            case '普通火災見積地震おすすめ契約':
+            case '普通火災Ⅱ見積地震おすすめ契約':
                 $this->dropStandardOfEarthquake($estimate, $fileType, $keisyo);
                 break;
         }
@@ -64,7 +64,7 @@ final class DownloadService
 
             if (in_array(
                 $estimateType,
-                ['普通火災見積おすすめ契約'],
+                ['普通火災Ⅱ見積おすすめ契約'],
                 true) && ! array_keys_exists(['recommend1', 'recommend2', 'recommend3'], $estimate->property_detail)) {
                 $enableDisableList = array_merge($enableDisableList, [$estimateType => 'disable']);
 
@@ -73,7 +73,7 @@ final class DownloadService
 
             if (in_array(
                 $estimateType,
-                ['普通火災見積地震おすすめ契約'],
+                ['普通火災Ⅱ見積地震おすすめ契約'],
                 true) && ! array_keys_exists(['earthquake1', 'earthquake2', 'earthquake3'], $estimate->property_detail)) {
                 $enableDisableList = array_merge($enableDisableList, [$estimateType => 'disable']);
 

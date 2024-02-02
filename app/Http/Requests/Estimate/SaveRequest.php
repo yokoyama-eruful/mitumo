@@ -42,7 +42,7 @@ final class SaveRequest extends FormRequest
             'property_type' => ['required', 'string', 'in:住宅,普通,工場'],
             'rank' => ['required', 'string'],
             'start_date' => ['nullable',  'date'],
-            'building_year' => ['nullable',  'digits:4', 'integer', 'min:1900', 'max:'.(date('Y') + 1)],
+            'building_year' => ['nullable', 'integer', 'min:0', 'max:'.(date('Y') + 1)],
             'building_age' => ['nullable',  'integer'],
             'pay_method' => ['required', 'string'],
             'insurance_year' => ['nullable', 'required_without_all:insurance_month,insurance_day',  'integer', 'min:1', 'max:10'],

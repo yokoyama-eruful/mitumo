@@ -2,13 +2,13 @@
 @section('普通2', 'text-white bg-blue-400 hover:bg-blue-400')
 
 @section('contents')
-    <h1 class="text-[26px] font-bold mb-2 -mt-3">普通火災</h1>
+    <h1 class="text-[26px] font-bold mb-2 -mt-3">普通火災Ⅱ</h1>
     @include('futsu2.preview.layouts.building-info')
     <div class="flex flex-row">
         @include('futsu2.preview.layouts.insurance-payout')
         <div>
             <div class="flex justify-center items-center h-10 w-[200px] bg-green-200 outline outline-1 outline-gray-500">
-                普通共済掛金
+                普通Ⅱ共済掛金
             </div>
             <div>
                 <div class="flex items-center justify-center h-[120px] w-[200px] outline outline-1 outline-gray-500 pl-5">

@@ -698,6 +698,9 @@ class EstimateForm extends Component
 
     public function onChangeOccupationalSurchargeRate()
     {
+        if ($this->workSurchargeRate) {
+            $this->dispatch('alert', '職業割増、作業割増は一方しか適用できません。作業割増を削除します。');
+        }
         $this->workSurchargeCode = null;
         $this->workSurchargeRate = null;
         $this->workSurchargeItem = null;
@@ -780,6 +783,9 @@ class EstimateForm extends Component
 
     public function onChangeWorkSurchargeRate()
     {
+        if ($this->occupationalSurchargeRate) {
+            $this->dispatch('alert', '職業割増、作業割増は一方しか適用できません。職業割増を削除します。');
+        }
         $this->occupationalSurchargeCode = null;
         $this->occupationalSurchargeRate = null;
         $this->occupationalSurchargeItem = null;
