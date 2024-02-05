@@ -324,9 +324,11 @@ class Futsu2Form extends Component
 
         $this->occupationalSurchargeCode = old('occupational_surcharge_code', $this->getValueByKey('occupational_surcharge_code', $estimate->property_detail));
         $this->occupationalSurchargeRate = old('occupational_surcharge_rate', $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail));
+        $this->occupationalSurchargeItem = old('occupational_surcharge_item', $this->getValueByKey('occupational_surcharge_item', $estimate->property_detail));
 
         $this->workSurchargeCode = old('work_surcharge_code', $this->getValueByKey('work_surcharge_code', $estimate->property_detail));
         $this->workSurchargeRate = old('work_surcharge_rate', $this->getValueByKey('work_surcharge_rate', $estimate->property_detail));
+        $this->workSurchargeItem = old('work_surcharge_item', $this->getValueByKey('work_surcharge_item', $estimate->property_detail));
 
         $this->discountRiskCode = old('discount_risk_code', $this->getValueByKey('discount_risk_code', $estimate->property_detail));
         $this->discountRiskRate = old('discount_risk_rate', $this->getValueByKey('discount_risk_rate', $estimate->property_detail));
@@ -782,6 +784,12 @@ class Futsu2Form extends Component
         }
 
         if ($this->assessItem == '選択しない' || is_null($this->assessItem)) {
+            return;
+        }
+
+        if (is_null($this->buildingAge) || $this->buildingAge == '') {
+            $this->dispatch('alert', '評価する場合は、築年数を入力してください。');
+
             return;
         }
 

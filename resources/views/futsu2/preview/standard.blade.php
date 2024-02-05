@@ -24,7 +24,7 @@
                 補償内容
             </div>
             <div class="flex justify-center items-center h-6 w-[100px] bg-green-200 outline outline-1 outline-gray-500">
-                普通火災
+                普通火災Ⅱ
             </div>
         </div>
 

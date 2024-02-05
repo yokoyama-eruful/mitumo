@@ -77,9 +77,9 @@ final class SaveRequest extends FormRequest
             'chattel_surcharge_category' => ['nullable', 'string'],
 
             'occupational_surcharge_code' => ['nullable',  'string'], // 'required_if:property_type,普通　は一旦省略
-            'occupational_surcharge_rate' => ['nullable',  'numeric', 'min:0'],  // 'required_if:property_type,普通　は一旦省略
+            'occupational_surcharge_rate' => ['nullable',  'numeric', 'min:0', 'max:99.99'],  // 'required_if:property_type,普通　は一旦省略
             'work_surcharge_code' => ['nullable', 'string'], // 'required_if:property_type,普通　は一旦省略
-            'work_surcharge_rate' => ['nullable',  'numeric', 'min:0'], // 'required_if:property_type,普通　は一旦省略
+            'work_surcharge_rate' => ['nullable',  'numeric', 'min:0', 'max:99.99'], // 'required_if:property_type,普通　は一旦省略
 
             'building_insurance_payout' => ['nullable', 'numeric', 'min:0'],
             'household_insurance_payout' => ['nullable', 'numeric', 'min:0'],
@@ -149,6 +149,12 @@ final class SaveRequest extends FormRequest
         });
 
         $validator->after(function ($validator) {
+            if (in_array($this->input('assess_item'), ['通常', 'ピロティー付', '太陽光付', '年次取得', '大規模改装'], true) && ! $this->input('floor_area')) {
+                $validator->errors()->add('エラー', 'この物件の評価を行うには、延床面積の入力が必須です。');
+            }
+        });
+
+        $validator->after(function ($validator) {
             if ($this->input('assess_item') == '分譲マンション' && $this->input('structure') != 'コンクリート造等') {
                 $validator->errors()->add('エラー', '分譲マンションを評価する場合、構造は「コンクリート造等」にしてください。');
             }
@@ -167,12 +173,6 @@ final class SaveRequest extends FormRequest
         });
 
         $validator->after(function ($validator) {
-            if (in_array($this->input('assess_item'), ['通常', 'ピロティー付', '太陽光付', '年次取得', '大規模改装'], true) && ! $this->input('floor_area')) {
-                $validator->errors()->add('エラー', 'この物件の評価を行うには、延床面積の入力が必須です。');
-            }
-        });
-
-        $validator->after(function ($validator) {
             if (in_array($this->input('property_type'), ['普通', '住宅']) && ($this->input('item_insurance_payout') || $this->input('other_item_insurance_payout')) && $this->input('chattel_surcharge_category') == '-') {
                 $validator->errors()->add('エラー', '商品共済金額がある場合、動産割増を選択してください。');
             }
@@ -183,6 +183,11 @@ final class SaveRequest extends FormRequest
         //         $validator->errors()->add('エラー', '物件が「住宅」であり、建物共済掛金の入力がある場合、築年数は必須です。');
         //     }
         // });
+        $validator->after(function ($validator) {
+            if (($this->input('household_insurance_payout') || $this->input('facility_insurance_payout') || $this->input('other_facility_insurance_payout') || $this->input('item_insurance_payout') || $this->input('other_item_insurance_payout')) && $this->input('insurance_year') > 5) {
+                $validator->errors()->add('エラー', '動産に共済金額がある場合、共済期間は5年以下である必要があります。');
+            }
+        });
 
         $validator->after(function ($validator) {
             if ($this->input('assess_item') == '年次取得' && ($this->input('building_year') > 2020 || $this->input('building_year') < 1976)) {

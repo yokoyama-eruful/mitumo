@@ -229,14 +229,14 @@
                     </div>
                     @if (is_null($buildingInsurancePayout) || $buildingInsurancePayout == '')
                         <div class="estimate-input-box">
-                            <label class="estimate-label" for="start_date">始期日
+                            <label class="futsu2-label" for="start_date">始期日
                             </label>
                             <input id="start_date" name="start_date" type="month"
                                 class="estimate-input text-right" placeholder="西暦を入力してください" wire:model="startDate"
                                 wire:change="onChangeBuildingAge" required>
                         </div>
                         <div class="estimate-input-box">
-                            <label class="estimate-label" for="building_year">建築年
+                            <label class="futsu2-label" for="building_year">建築年
                             </label>
                             <input id="building_year" name="building_year" class="estimate-input text-right"
                                 placeholder="西暦を入力してください" wire:model="buildingYear" wire:change="onChangeBuildingAge"
@@ -244,7 +244,7 @@
                             <span class="unit-display">年</span>
                         </div>
                         <div class="estimate-input-box">
-                            <label class="estimate-label" for="building_age">築年数
+                            <label class="futsu2-label" for="building_age">築年数
                             </label>
                             <input id="building_age" name="building_age"
                                 class="estimate-input hover:bg-white focus:bg-white text-right"

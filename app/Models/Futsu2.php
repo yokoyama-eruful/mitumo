@@ -70,7 +70,8 @@ class Futsu2 extends Model
         $buildingStructure = [
             $this->structure, $this->other_structure, $this->pillar,
             $this->other_pillar, $this->fire_resistance, $this->other_fire_resistance,
-            $this->usage, $this->other_usage, '築'.$this->building_age.'年', '西暦'.$this->building_year.'年築',
+            $this->usage, $this->other_usage, $this->building_age ? '築'.$this->building_age.'年' : '',
+            $this->building_year ? '('.$this->building_year.'年築)' : '',
         ];
         $buildingStructure = array_filter($buildingStructure);
 
