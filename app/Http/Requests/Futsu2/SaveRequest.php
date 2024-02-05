@@ -178,14 +178,14 @@ final class SaveRequest extends FormRequest
             }
         });
 
-        $validator->after(function ($validator) {
-            if ($this->input('property_type') == '住宅' && ($this->input('building_insurance_payout') && (! $this->input('start_date') || ! $this->input('building_year') || ! $this->input('building_age')))) {
-                $validator->errors()->add('エラー', '物件が「住宅」であり、建物共済掛金の入力がある場合、築年数は必須です。');
-            }
-        });
+        // $validator->after(function ($validator) {
+        //     if ($this->input('property_type') == '住宅' && ($this->input('building_insurance_payout') && (! $this->input('start_date') || ! $this->input('building_year') || ! $this->input('building_age')))) {
+        //         $validator->errors()->add('エラー', '物件が「住宅」であり、建物共済掛金の入力がある場合、築年数は必須です。');
+        //     }
+        // });
 
         $validator->after(function ($validator) {
-            if ($this->input('building_year') > 2020 || $this->input('building_year') < 1976) {
+            if ($this->input('assess_item') == '年次取得' && ($this->input('building_year') > 2020 || $this->input('building_year') < 1976)) {
                 $validator->errors()->add('エラー', '建築年は「2020年~1976年」でなくてはいけません。');
             }
         });
