@@ -19,6 +19,7 @@ class Futsu2 extends Model
         'address',
         'phone_number',
         'staff_name',
+        'certificate_number',
         'contractee',
         'location',
 

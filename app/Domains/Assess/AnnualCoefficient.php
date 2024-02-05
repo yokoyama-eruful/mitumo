@@ -11,18 +11,22 @@ final class AnnualCoefficient
 {
     public float $annualCoefficient;
 
-    public function __construct($rank, $buildingAge)
+    public function __construct($rank, $buildingYear)
     {
-        $this->annualCoefficient = $this->findAnnualCoefficientList($rank, $buildingAge);
+        $this->annualCoefficient = $this->findAnnualCoefficientList($rank, $buildingYear);
     }
 
-    public function findAnnualCoefficientList($rank, $buildingAge)
+    public function findAnnualCoefficientList($rank, $buildingYear)
     {
-        if (! $rank || ! $buildingAge) {
+        if (! $rank || ! $buildingYear) {
             return 0;
         }
 
-        if ($buildingAge > 48) {
+        if ($buildingYear > 2020) {
+            return 0;
+        }
+
+        if ($buildingYear < 1976) {
             return 0;
         }
 
@@ -44,13 +48,30 @@ final class AnnualCoefficient
                 continue;
             }
 
-            if ($data[0] == $buildingAge && $data[1] == $rank) {
+            if ($data[0] == $buildingYear) {
+                $annualRate = match ($rank) {
+                    'M' => $data[1],
+                    'T' => $data[2],
+                    'H' => $data[3],
+                    '1級' => $data[4],
+                    '2級' => $data[5],
+                    '3級' => $data[6],
+                };
+
                 $annualCoefficientList = [
                     '年' => $data[0],
-                    '級' => $data[1],
-                    '年次係数' => $data[2],
+                    '級' => $rank,
+                    '年次係数' => $annualRate,
                 ];
             }
+
+            // if ($data[0] == $buildingYear && $data[1] == $rank) {
+            //     $annualCoefficientList = [
+            //         '年' => $data[0],
+            //         '級' => $data[1],
+            //         '年次係数' => $data[2],
+            //     ];
+            // }
         }
 
         fclose($handle);

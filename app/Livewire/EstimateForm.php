@@ -301,7 +301,7 @@ class EstimateForm extends Component
         $this->onChangePropertyType();
 
         $this->rank = old('rank', $estimate->rank);
-        $this->startDate = old('start_date', $estimate->start_date?->format('Y-m'));
+        $this->startDate = old('start_date', $estimate->start_date?->format('Y-m')) != null ? old('start_date', $estimate->start_date?->format('Y-m')) : now()->format('Y-m');
         $this->buildingYear = old('building_year', (string) $estimate->building_year);
         $this->buildingAge = old('building_age', (string) $estimate->building_age);
         $this->payMethod = old('pay_method', $estimate->pay_method);
@@ -1004,8 +1004,9 @@ class EstimateForm extends Component
                 $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '年次取得':
-                if ($this->buildingAge > 48) {
-                    $this->dispatch('alert', 'この築年数は評価できません。');
+                if ($this->buildingYear > 2020 || $this->buildingYear < 1976) {
+                    $this->dispatch('alert', '建築年は「2020年~1976年」でなくて評価できません。');
+                    break;
                 }
 
                 $assessDomain = new AssessAnnual($this->estimate);

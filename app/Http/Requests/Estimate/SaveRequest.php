@@ -191,6 +191,12 @@ final class SaveRequest extends FormRequest
         });
 
         $validator->after(function ($validator) {
+            if ($this->input('building_year') > 2020 || $this->input('building_year') < 1976) {
+                $validator->errors()->add('エラー', '建築年は「2020年~1976年」でなくてはいけません。');
+            }
+        });
+
+        $validator->after(function ($validator) {
             if ($this->input('floor')) {
                 if (preg_match('/^[+]?[0]*[1-9]*[.]?[0-9 ０-９]*$/', $this->input('floor')) == 0) {
                     $validator->errors()->add('エラー', '階は整数でなくてはいけません。');
