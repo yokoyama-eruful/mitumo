@@ -12,7 +12,7 @@ final class EstimateStandardInfoDto
     {
         $tmpParams = array_intersect_key($params, array_flip([
             'company', 'address', 'phone_number', 'staff_name',
-            'contractee', 'location', 'floor_area', 'exclusive_area',
+            'contractee', 'certificate_number', 'location', 'floor_area', 'exclusive_area',
             'structure', 'other_structure', 'pillar', 'other_pillar',
             'fire_resistance', 'other_fire_resistance', 'usage',
             'other_usage', 'floor', 'building', 'other', 'property_type',

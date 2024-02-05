@@ -24,6 +24,7 @@ final class SaveRequest extends FormRequest
             'address' => ['required', 'string'],
             'phone_number' => ['required', 'regex:/^[0-9-]+$/'],
             'staff_name' => ['required', 'string'],
+            'certificate_number' => ['nullable', 'numeric'],
             'contractee' => ['required', 'string'],
             'location' => ['required', 'string'],
             'floor_area' => ['nullable', 'required_without:exclusive_area', 'numeric', 'min:0'],

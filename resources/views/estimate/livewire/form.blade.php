@@ -48,6 +48,12 @@
                         <label class="p-3">共済契約者情報</label>
                     </div>
                     <div class="estimate-input-box">
+                        <label class="estimate-label" for="certificate_number">証書番号
+                        </label>
+                        <input id="certificate_number" name="certificate_number" class="estimate-input"
+                            wire:model="certificateNumber" required>
+                    </div>
+                    <div class="estimate-input-box">
                         <label class="estimate-label" for="contractee">ご契約者名
                             <div class="estimate-input-required">※必須</div>
                         </label>

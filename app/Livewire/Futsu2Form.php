@@ -34,6 +34,8 @@ class Futsu2Form extends Component
 
     public ?string $staffName = null;
 
+    public ?string $certificateNumber = null;
+
     public ?string $contractee = null;
 
     public ?string $location = null;
@@ -269,6 +271,7 @@ class Futsu2Form extends Component
         $this->address = old('address', $estimate->address) != null ? old('address', $estimate->address) : '広島市中区竹屋町4-17';
         $this->phoneNumber = old('phone_number', $estimate->phone_number) != null ? old('phone_number', $estimate->phone_number) : '082-243-4411';
         $this->staffName = old('staff_name', $estimate->staff_name) != null ? old('staff_name', $estimate->staff_name) : Auth::user()->name;
+        $this->certificateNumber = old('certificate_number', (string) $estimate->certificate_number);
         $this->contractee = old('contractee', $estimate->contractee);
         $this->location = old('location', $estimate->location);
 
