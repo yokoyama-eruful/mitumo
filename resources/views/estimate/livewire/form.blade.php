@@ -13,11 +13,11 @@
             <div class="flex flex-wrap">
                 <div class="w-1/2 px-2">
                     <div class="estimate-title">
-                        <label class="p-3">取扱代理店情報</label>
+                        <label class="p-3">取扱代理所情報</label>
                     </div>
                     <div class=" estimate-input-box">
                         <label class="estimate-label" for="company">
-                            取扱代理店名
+                            取扱代理所名
                             <div class="estimate-input-required">※必須</div>
                         </label>
                         <input id="company" name="company" class="estimate-input" wire:model="company" required>
@@ -55,14 +55,12 @@
                     </div>
                     <div class="estimate-input-box">
                         <label class="estimate-label" for="contractee">ご契約者名
-                            <div class="estimate-input-required">※必須</div>
                         </label>
                         <input id="contractee" name="contractee" class="estimate-input" wire:model="contractee"
                             required>
                     </div>
                     <div class="estimate-input-box">
                         <label class="estimate-label" for="location">所在地
-                            <div class="estimate-input-required">※必須</div>
                         </label>
                         <input id="location" name="location" class="estimate-input" wire:model="location" required>
                     </div>

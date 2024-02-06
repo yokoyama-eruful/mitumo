@@ -37,7 +37,7 @@ class AllDownloader
 
         $mutualItem = [
             'O1' => date('Y年m月d日'),
-            'A3' => $estimate->contractee.$keisyo,
+            'A3' => $estimate->contractee ? $estimate->contractee.$keisyo : '',
             'R5' => $estimate->company,
             'R6' => $estimate->address,
             'R7' => 'ＴＥＬ ： '.$estimate->phone_number,

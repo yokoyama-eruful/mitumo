@@ -91,7 +91,7 @@ class ComprehensiveDownloader
     {
         $worksheet = $spreadSheet->getSheetByName('総合');
         $worksheet->setCellValue('O1', date('Y年m月d日'));
-        $worksheet->setCellValue('A3', $estimate->contractee.$keisyo);
+        $worksheet->setCellValue('A3', $estimate->contractee ? $estimate->contractee.$keisyo : '');
         $worksheet->setCellValue('R5', $estimate->company);
         $worksheet->setCellValue('R6', $estimate->address);
         $worksheet->setCellValue('R7', 'ＴＥＬ ： '.$estimate->phone_number);
