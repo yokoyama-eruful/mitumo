@@ -983,6 +983,13 @@ class EstimateForm extends Component
             case '分譲マンション':
                 $assessDomain = new AssessCondo($this->estimate);
 
+                if ($this->structure != 'コンクリート造等' ||
+                $this->propertyType == '工場' ||
+                ($this->propertyType == '住宅' && $this->rank != 'M' ||
+                $this->propertyType == '普通' && ($this->rank != '1級' || $this->occupationalSurchargeCode != 899))) {
+                    break;
+                }
+
                 $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['80'];
                 $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['80'];
                 $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C')['80'];
@@ -1147,7 +1154,7 @@ class EstimateForm extends Component
     {
         return match ($this->assessItem) {
             '通常', 'ピロティー付', '太陽光付', '年次取得' => ['専用住宅', '併用住宅', '専用店舗', '工場・倉庫', 'プレハブ'],
-            '分譲マンション' => ['分譲マンション', '分譲マンション以外'],
+            '分譲マンション' => ['分譲マンション'],
             default => [],
         };
     }

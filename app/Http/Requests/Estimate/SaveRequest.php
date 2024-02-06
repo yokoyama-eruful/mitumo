@@ -156,19 +156,28 @@ final class SaveRequest extends FormRequest
 
         $validator->after(function ($validator) {
             if ($this->input('assess_item') == '分譲マンション' && $this->input('structure') != 'コンクリート造等') {
-                $validator->errors()->add('エラー', '分譲マンションを評価する場合、構造は「コンクリート造等」にしてください。');
+                $validator->errors()->add('エラー', '分譲マンションを評価する場合、「構造」が「コンクリート造等」でなくてはいけません。');
             }
         });
 
         $validator->after(function ($validator) {
-            if ($this->input('assess_item') == '分譲マンション' && $this->input('assess_usage') == '分譲マンション' && $this->input('property_type') != '住宅') {
-                $validator->errors()->add('エラー', '分譲マンションを評価する場合、物件は「住宅」にしてください。');
+            if ($this->input('assess_item') == '分譲マンション' && $this->input('property_type') == '工場') {
+                $validator->errors()->add('エラー', '分譲マンションを評価する場合、「物件」が「住宅」または「普通」でなくてはいけません。');
             }
         });
 
         $validator->after(function ($validator) {
-            if ($this->input('assess_item') == '分譲マンション' && $this->input('assess_usage') == '分譲マンション' && $this->input('rank') != 'M') {
-                $validator->errors()->add('エラー', '分譲マンションを評価する場合、級別は「M」にしてください。');
+            if ($this->input('assess_item') == '分譲マンション' &&
+            ($this->input('property_type') == '住宅' && $this->input('rank') != 'M' ||
+            $this->input('property_type') == '普通' && ($this->input('rank') != '1級' || $this->input('occupational_surcharge_code') != 899))) {
+
+                if ($this->input('property_type') == '住宅' && $this->input('rank') != 'M') {
+                    $validator->errors()->add('エラー', '「物件」が「住宅」で分譲マンションを評価する場合「級別」は「M」でなくてはいけません。');
+                }
+
+                if ($this->input('property_type') == '普通' && ($this->input('rank') != '1級' || $this->input('occupational_surcharge_code') != 899)) {
+                    $validator->errors()->add('エラー', '「物件」が「普通」で分譲マンションを評価する場合「級別」は「1級」かつ「職業割増」で販売用物件、空き家を選択する必要があります。');
+                }
             }
         });
 
