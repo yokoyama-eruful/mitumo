@@ -16,6 +16,7 @@ class StandardOfRecommendAndComprehensiveOfRecommendDownloader
         $comprehensivePremium,
         $recommendStandardPremium,
         $recommendComprehensivePremium,
+        $shortTerm,
         $fileType,
         $keisyo
     ) {
@@ -31,7 +32,7 @@ class StandardOfRecommendAndComprehensiveOfRecommendDownloader
         $reader = new Xlsx();
         $spreadSheet = $reader->load($filePath);
 
-        $this->setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium, $keisyo);
+        $this->setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium, $shortTerm, $keisyo);
 
         $this->setCalcInfo($spreadSheet, $standardPremium, $comprehensivePremium);
 
@@ -70,7 +71,7 @@ class StandardOfRecommendAndComprehensiveOfRecommendDownloader
         exit;
     }
 
-    private function setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium, $keisyo)
+    private function setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium, $shortTerm, $keisyo)
     {
         $worksheet = $spreadSheet->getSheetByName('おすすめ(普&総)');
         $worksheet->setCellValue('O1', date('Y年m月d日'));
@@ -94,7 +95,7 @@ class StandardOfRecommendAndComprehensiveOfRecommendDownloader
         $worksheet->setCellValue('D45', thousandYenUnit(array_key_exists('other_facility_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_facility_insurance_payout'] : ''));
         $worksheet->setCellValue('K45', thousandYenUnit(array_key_exists('other_item_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_item_insurance_payout'] : ''));
 
-        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('O41', $shortTerm->shortTermRate != 0 ? '-' : $comprehensivePremium->getComprehensivePremium());
         $worksheet->setCellValue('O44', $standardPremium->getStandardPremium());
 
         $worksheet->setCellValue('D49', yearUnit(array_key_exists('recommend1', $estimate->property_detail) ? $estimate->property_detail['recommend1'] : ''));
