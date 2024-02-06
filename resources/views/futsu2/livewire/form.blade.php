@@ -49,7 +49,12 @@
                     <div class="futsu2-title">
                         <label class="p-3">共済契約者情報</label>
                     </div>
-
+                    <div class="estimate-input-box">
+                        <label class="futsu2-label" for="certificate_number">証書番号
+                        </label>
+                        <input id="certificate_number" name="certificate_number" class="estimate-input"
+                            wire:model="certificateNumber" required>
+                    </div>
                     <div class="estimate-input-box">
                         <label class="futsu2-label" for="contractee">ご契約者名
                             <div class="estimate-input-required">※必須</div>
@@ -222,6 +227,58 @@
                             </select>
                         </div>
                     </div>
+                    @if (is_null($buildingInsurancePayout) || $buildingInsurancePayout == '')
+                        <div class="estimate-input-box">
+                            <label class="futsu2-label" for="start_date">始期日
+                            </label>
+                            <input id="start_date" name="start_date" type="month"
+                                class="estimate-input text-right" placeholder="西暦を入力してください" wire:model="startDate"
+                                wire:change="onChangeBuildingAge" required>
+                        </div>
+                        <div class="estimate-input-box">
+                            <label class="futsu2-label" for="building_year">建築年
+                            </label>
+                            <input id="building_year" name="building_year" class="estimate-input text-right"
+                                placeholder="西暦を入力してください" wire:model="buildingYear" wire:change="onChangeBuildingAge"
+                                required>
+                            <span class="unit-display">年</span>
+                        </div>
+                        <div class="estimate-input-box">
+                            <label class="futsu2-label" for="building_age">築年数
+                            </label>
+                            <input id="building_age" name="building_age"
+                                class="estimate-input hover:bg-white focus:bg-white text-right"
+                                wire:model="buildingAge"wire:change="onChangeAssessItem" required readonly>
+                            <span class="unit-display">年</span>
+                        </div>
+                    @else
+                        <div class="estimate-input-box">
+                            <label class="futsu2-label" for="start_date">始期日
+                                <div class="estimate-input-required">※必須</div>
+                            </label>
+                            <input id="start_date" name="start_date" type="month"
+                                class="estimate-input text-right" placeholder="西暦を入力してください" wire:model="startDate"
+                                wire:change="onChangeBuildingAge" required>
+                        </div>
+                        <div class="estimate-input-box">
+                            <label class="futsu2-label" for="building_year">建築年
+                                <div class="estimate-input-required">※必須</div>
+                            </label>
+                            <input id="building_year" name="building_year" class="estimate-input text-right"
+                                placeholder="西暦を入力してください" wire:model="buildingYear" wire:change="onChangeBuildingAge"
+                                required>
+                            <span class="unit-display">年</span>
+                        </div>
+                        <div class="estimate-input-box">
+                            <label class="futsu2-label" for="building_age">築年数
+                                <div class="estimate-input-required">※必須</div>
+                            </label>
+                            <input id="building_age" name="building_age"
+                                class="estimate-input hover:bg-white focus:bg-white text-right"
+                                wire:model="buildingAge" required readonly>
+                            <span class="unit-display">年</span>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="w-1/2 px-2">
@@ -431,7 +488,7 @@
                                 wire:model="actualLossFactor">
                         </div>
                     @endif
-                    @if ($propertyType == '普通')
+                    @if (in_array($propertyType, ['住宅', '普通'], true))
                         <div class="estimate-input-box">
                             <label class="futsu2-label" for="discount_fire_extinguisher">消火設備割引
                             </label>
@@ -504,8 +561,8 @@
                                 </div>
                                 <div class="estimate-input-box flex">
                                     <label class="futsu2-label">選択項目</label>
-                                    <input wire:model="occupationalSurchargeItem" class="futsu2-input outline-none"
-                                        readonly>
+                                    <input wire:model="occupationalSurchargeItem" name="occupational_surcharge_item"
+                                        class="estimate-input outline-none" readonly>
                                 </div>
                                 <div class="flex">
                                     <label class="futsu2-label" for="occupational_surcharge_rate">率</label>
@@ -532,7 +589,8 @@
                                 </div>
                                 <div class="estimate-input-box flex">
                                     <label class="futsu2-label">選択項目</label>
-                                    <input wire:model="workSurchargeItem" class="futsu2-input outline-none">
+                                    <input wire:model="workSurchargeItem" name="work_surcharge_item"
+                                        class="estimate-input outline-none">
                                 </div>
                                 <div class="flex">
                                     <label class="futsu2-label" for="work_surcharge_rate">率</label>
@@ -618,35 +676,6 @@
                             @endforeach
                         </select>
                     </div>
-
-                    @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
-                        <div class="estimate-input-box">
-                            <label class="futsu2-label" for="start_date">始期日
-                                <div class="estimate-input-required">※必須</div>
-                            </label>
-                            <input id="start_date" name="start_date" type="month"
-                                class="estimate-input text-right" placeholder="西暦を入力してください" wire:model="startDate"
-                                wire:change="onChangeBuildingAge" required>
-                        </div>
-                        <div class="estimate-input-box">
-                            <label class="futsu2-label" for="building_year">建築年
-                                <div class="estimate-input-required">※必須</div>
-                            </label>
-                            <input id="building_year" name="building_year" class="estimate-input text-right"
-                                placeholder="西暦を入力してください" wire:model="buildingYear" wire:change="onChangeBuildingAge"
-                                required>
-                            <span class="unit-display">年</span>
-                        </div>
-                        <div class="estimate-input-box">
-                            <label class="futsu2-label" for="building_age">築年数
-                                <div class="estimate-input-required">※必須</div>
-                            </label>
-                            <input id="building_age" name="building_age"
-                                class="estimate-input hover:bg-white focus:bg-white text-right"
-                                wire:model="buildingAge" required readonly>
-                            <span class="unit-display">年</span>
-                        </div>
-                    @endif
 
                     @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
                         <div class="estimate-input-box">

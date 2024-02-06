@@ -34,6 +34,8 @@ class Futsu2Form extends Component
 
     public ?string $staffName = null;
 
+    public ?string $certificateNumber = null;
+
     public ?string $contractee = null;
 
     public ?string $location = null;
@@ -269,6 +271,7 @@ class Futsu2Form extends Component
         $this->address = old('address', $estimate->address) != null ? old('address', $estimate->address) : '広島市中区竹屋町4-17';
         $this->phoneNumber = old('phone_number', $estimate->phone_number) != null ? old('phone_number', $estimate->phone_number) : '082-243-4411';
         $this->staffName = old('staff_name', $estimate->staff_name) != null ? old('staff_name', $estimate->staff_name) : Auth::user()->name;
+        $this->certificateNumber = old('certificate_number', (string) $estimate->certificate_number);
         $this->contractee = old('contractee', $estimate->contractee);
         $this->location = old('location', $estimate->location);
 
@@ -290,7 +293,7 @@ class Futsu2Form extends Component
         $this->onChangePropertyType();
 
         $this->rank = old('rank', $estimate->rank);
-        $this->startDate = old('start_date', $estimate->start_date?->format('Y-m'));
+        $this->startDate = old('start_date', $estimate->start_date?->format('Y-m')) != null ? old('start_date', $estimate->start_date?->format('Y-m')) : now()->format('Y-m');
         $this->buildingYear = old('building_year', (string) $estimate->building_year);
         $this->buildingAge = old('building_age', (string) $estimate->building_age);
         $this->payMethod = old('pay_method', $estimate->pay_method);
@@ -321,9 +324,11 @@ class Futsu2Form extends Component
 
         $this->occupationalSurchargeCode = old('occupational_surcharge_code', $this->getValueByKey('occupational_surcharge_code', $estimate->property_detail));
         $this->occupationalSurchargeRate = old('occupational_surcharge_rate', $this->getValueByKey('occupational_surcharge_rate', $estimate->property_detail));
+        $this->occupationalSurchargeItem = old('occupational_surcharge_item', $this->getValueByKey('occupational_surcharge_item', $estimate->property_detail));
 
         $this->workSurchargeCode = old('work_surcharge_code', $this->getValueByKey('work_surcharge_code', $estimate->property_detail));
         $this->workSurchargeRate = old('work_surcharge_rate', $this->getValueByKey('work_surcharge_rate', $estimate->property_detail));
+        $this->workSurchargeItem = old('work_surcharge_item', $this->getValueByKey('work_surcharge_item', $estimate->property_detail));
 
         $this->discountRiskCode = old('discount_risk_code', $this->getValueByKey('discount_risk_code', $estimate->property_detail));
         $this->discountRiskRate = old('discount_risk_rate', $this->getValueByKey('discount_risk_rate', $estimate->property_detail));
@@ -367,9 +372,22 @@ class Futsu2Form extends Component
 
     public function render()
     {
+        if (is_null($this->buildingAge)) {
+            $this->onChangeBuildingAge();
+        }
+
         if (isset($this->estimate->id)) {
             $this->onChangeAssessItem();
         }
+
+        if ($this->occupationalSurchargeCode) {
+            $this->findOccupationalItem();
+        }
+
+        if ($this->workSurchargeCode) {
+            $this->findWorkSurchargeItem();
+        }
+
         $this->onChangeDiscountRiskCode();
         $this->onChangeBaseRate();
 
@@ -557,17 +575,23 @@ class Futsu2Form extends Component
         $this->onChangeOccupationalSurchargeRate();
     }
 
+    public function findOccupationalItem()
+    {
+        $this->occupationalSurchargeCode = mb_convert_kana($this->occupationalSurchargeCode, 'n');
+
+        $occupationalSurcharge = new OccupationalSurcharge('surchargeTable/occupationalSurchargeTable.csv');
+
+        $this->occupationalSurchargeItem = (string) $occupationalSurcharge->getOccupationalSurchargeItem($this->occupationalSurchargeCode, $this->rank);
+    }
+
     public function onChangeOccupationalSurchargeRate()
     {
+        if ($this->workSurchargeRate) {
+            $this->dispatch('alert', '職業割増、作業割増は一方しか適用できません。作業割増を削除します。');
+        }
         $this->workSurchargeCode = null;
         $this->workSurchargeRate = null;
         $this->workSurchargeItem = null;
-
-        if (empty($this->occupationalSurchargeRate)) {
-            $this->occupationalSurchargeRate = '';
-            $this->occupationalSurchargeCode = '';
-            $this->occupationalSurchargeItem = '';
-        }
     }
 
     /**
@@ -636,17 +660,23 @@ class Futsu2Form extends Component
         $this->onChangeWorkSurchargeRate();
     }
 
+    public function findWorkSurchargeItem()
+    {
+        $this->workSurchargeCode = mb_convert_kana($this->workSurchargeCode, 'n');
+
+        $workSurcharge = new WorkSurcharge('surchargeTable/workSurchargeTable.csv');
+
+        $this->workSurchargeItem = (string) $workSurcharge->getWorkSurchargeItem($this->workSurchargeCode, $this->rank);
+    }
+
     public function onChangeWorkSurchargeRate()
     {
+        if ($this->occupationalSurchargeRate) {
+            $this->dispatch('alert', '職業割増、作業割増は一方しか適用できません。職業割増を削除します。');
+        }
         $this->occupationalSurchargeCode = null;
         $this->occupationalSurchargeRate = null;
         $this->occupationalSurchargeItem = null;
-
-        if (empty($this->workSurchargeRate)) {
-            $this->workSurchargeCode = '';
-            $this->workSurchargeRate = '';
-            $this->workSurchargeItem = '';
-        }
     }
 
     /**
@@ -757,6 +787,12 @@ class Futsu2Form extends Component
             return;
         }
 
+        if (is_null($this->buildingAge) || $this->buildingAge == '') {
+            $this->dispatch('alert', '評価する場合は、築年数を入力してください。');
+
+            return;
+        }
+
         switch ($this->assessItem) {
             case '通常':
                 $assessDomain = new AssessNormal($this->estimate);
@@ -830,6 +866,13 @@ class Futsu2Form extends Component
             case '分譲マンション':
                 $assessDomain = new AssessCondo($this->estimate);
 
+                if ($this->structure != 'コンクリート造等' ||
+                $this->propertyType == '工場' ||
+                ($this->propertyType == '住宅' && $this->rank != 'M' ||
+                $this->propertyType == '普通' && ($this->rank != '1級' || $this->occupationalSurchargeCode != 899))) {
+                    break;
+                }
+
                 $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['80'];
                 $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['80'];
                 $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C')['80'];
@@ -851,8 +894,9 @@ class Futsu2Form extends Component
                 $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '年次取得':
-                if ($this->buildingAge > 49) {
-                    $this->dispatch('alert', 'この築年数は評価できません。');
+                if ($this->assessItem == '年次取得' && ($this->buildingYear > 2020 || $this->buildingYear < 1976)) {
+                    $this->dispatch('alert', '建築年は「2020年~1976年」でなくて評価できません。');
+                    break;
                 }
 
                 $assessDomain = new AssessAnnual($this->estimate);

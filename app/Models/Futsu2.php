@@ -19,6 +19,7 @@ class Futsu2 extends Model
         'address',
         'phone_number',
         'staff_name',
+        'certificate_number',
         'contractee',
         'location',
 
@@ -69,7 +70,8 @@ class Futsu2 extends Model
         $buildingStructure = [
             $this->structure, $this->other_structure, $this->pillar,
             $this->other_pillar, $this->fire_resistance, $this->other_fire_resistance,
-            $this->usage, $this->other_usage, '築'.$this->building_age.'年',
+            $this->usage, $this->other_usage, $this->building_age ? '築'.$this->building_age.'年' : '',
+            $this->building_year ? '('.$this->building_year.'年築)' : '',
         ];
         $buildingStructure = array_filter($buildingStructure);
 
@@ -105,8 +107,8 @@ class Futsu2 extends Model
     public function getOtherItemAttribute()
     {
         $otherItem = [
-            isset($this->property_detail['chattel_surcharge_category']) ? '動産割増' : '',
-            isset($this->property_detail['chattel_surcharge']) ? '動産割増' : '',
+            (isset($this->property_detail['chattel_surcharge_category']) && ($this->property_detail['item_insurance_payout'] || $this->property_detail['other_item_insurance_payout'])) ? '動産割増' : '',
+            (isset($this->property_detail['chattel_surcharge']) && ($this->property_detail['item_insurance_payout'] || $this->property_detail['other_item_insurance_payout'])) ? '動産割増' : '',
             isset($this->property_detail['occupational_surcharge_rate']) ? '職業割増' : '',
             isset($this->property_detail['work_surcharge_rate']) ? '作業割増' : '',
             isset($this->property_detail['other_discount']) ? 'その他割引' : '',

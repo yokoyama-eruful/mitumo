@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('estimate_futsu2', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
+            // $table->integer('certificate_number')->nullable()->comment('証書番号');
             $table->string('company')->comment('取扱代理店');
             $table->string('address')->comment('住所');
             $table->string('phone_number')->comment('TEL（電話番号）');

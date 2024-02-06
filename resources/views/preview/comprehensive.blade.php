@@ -29,13 +29,13 @@
                 補償内容
             </div>
             <div class="flex justify-center items-center h-6 w-[100px] bg-green-200 outline outline-1 outline-gray-500">
-                普通火災
+                総合火災
             </div>
             <div class="flex justify-center items-center h-6 w-[275px] bg-green-200 outline outline-1 outline-gray-500">
                 費用
             </div>
             <div class="flex justify-center items-center h-6 w-[100px] bg-green-200 outline outline-1 outline-gray-500">
-                普通火災
+                総合火災
             </div>
         </div>
 

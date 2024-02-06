@@ -76,7 +76,7 @@ final class DownloadService
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $comprehensiveCompensation = new ComprehensiveCompensation($estimate->property_type, $shortTerm->shortTermRate);
-        $comprehensiveEstimate->dropFile($estimate, $standardPremium, $comprehensivePremium, $shortTerm, $comprehensiveCompensation, $fileType, $keisyo);
+        $comprehensiveEstimate->dropFile($estimate, $standardPremium, $comprehensivePremium, $comprehensiveCompensation, $shortTerm, $fileType, $keisyo);
     }
 
     //普通&総合火災見積書ダウンロード

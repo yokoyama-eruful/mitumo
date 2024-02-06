@@ -24,6 +24,7 @@ final class SaveRequest extends FormRequest
             'address' => ['required', 'string'],
             'phone_number' => ['required', 'regex:/^[0-9-]+$/'],
             'staff_name' => ['required', 'string'],
+            'certificate_number' => ['nullable', 'numeric'],
             'contractee' => ['required', 'string'],
             'location' => ['required', 'string'],
             'floor_area' => ['nullable', 'required_without:exclusive_area', 'numeric', 'min:0'],
@@ -41,9 +42,9 @@ final class SaveRequest extends FormRequest
             'other' => ['nullable', 'string'],
             'property_type' => ['required', 'string', 'in:住宅,普通,工場'],
             'rank' => ['required', 'string'],
-            'start_date' => ['nullable',  'date'],
-            'building_year' => ['nullable',  'digits:4', 'integer', 'min:1900', 'max:'.(date('Y') + 1)],
-            'building_age' => ['nullable',  'integer'],
+            'start_date' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'date'],
+            'building_year' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'integer', 'min:0', 'max:'.(date('Y') + 1)],
+            'building_age' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'integer'],
             'pay_method' => ['required', 'string'],
             'insurance_year' => ['nullable', 'required_without_all:insurance_month,insurance_day',  'integer', 'min:1', 'max:10'],
             'insurance_month' => ['nullable', 'required_without_all:insurance_year,insurance_day', 'integer', 'min:1', 'max:11'],
@@ -155,19 +156,28 @@ final class SaveRequest extends FormRequest
 
         $validator->after(function ($validator) {
             if ($this->input('assess_item') == '分譲マンション' && $this->input('structure') != 'コンクリート造等') {
-                $validator->errors()->add('エラー', '分譲マンションを評価する場合、構造は「コンクリート造等」にしてください。');
+                $validator->errors()->add('エラー', '分譲マンションを評価する場合、「構造」が「コンクリート造等」でなくてはいけません。');
             }
         });
 
         $validator->after(function ($validator) {
-            if ($this->input('assess_item') == '分譲マンション' && $this->input('property_type') != '住宅') {
-                $validator->errors()->add('エラー', '分譲マンションを評価する場合、物件は「住宅」にしてください。');
+            if ($this->input('assess_item') == '分譲マンション' && $this->input('property_type') == '工場') {
+                $validator->errors()->add('エラー', '分譲マンションを評価する場合、「物件」が「住宅」または「普通」でなくてはいけません。');
             }
         });
 
         $validator->after(function ($validator) {
-            if ($this->input('assess_item') == '分譲マンション' && $this->input('rank') != 'M') {
-                $validator->errors()->add('エラー', '分譲マンションを評価する場合、級別は「M」にしてください。');
+            if ($this->input('assess_item') == '分譲マンション' &&
+            ($this->input('property_type') == '住宅' && $this->input('rank') != 'M' ||
+            $this->input('property_type') == '普通' && ($this->input('rank') != '1級' || $this->input('occupational_surcharge_code') != 899))) {
+
+                if ($this->input('property_type') == '住宅' && $this->input('rank') != 'M') {
+                    $validator->errors()->add('エラー', '「物件」が「住宅」で分譲マンションを評価する場合「級別」は「M」でなくてはいけません。');
+                }
+
+                if ($this->input('property_type') == '普通' && ($this->input('rank') != '1級' || $this->input('occupational_surcharge_code') != 899)) {
+                    $validator->errors()->add('エラー', '「物件」が「普通」で分譲マンションを評価する場合「級別」は「1級」かつ「職業割増」で販売用物件、空き家を選択する必要があります。');
+                }
             }
         });
 
@@ -177,15 +187,21 @@ final class SaveRequest extends FormRequest
             }
         });
 
-        $validator->after(function ($validator) {
-            if ($this->input('property_type') == '住宅' && ($this->input('building_insurance_payout') && (! $this->input('start_date') || ! $this->input('building_year') || ! $this->input('building_age')))) {
-                $validator->errors()->add('エラー', '物件が「住宅」であり、建物共済掛金の入力がある場合、築年数は必須です。');
-            }
-        });
+        // $validator->after(function ($validator) {
+        //     if ($this->input('property_type') == '住宅' && ($this->input('building_insurance_payout') && (! $this->input('start_date') || ! $this->input('building_year') || ! $this->input('building_age')))) {
+        //         $validator->errors()->add('エラー', '物件が「住宅」であり、建物共済掛金の入力がある場合、築年数は必須です。');
+        //     }
+        // });
 
         $validator->after(function ($validator) {
             if (($this->input('household_insurance_payout') || $this->input('facility_insurance_payout') || $this->input('other_facility_insurance_payout') || $this->input('item_insurance_payout') || $this->input('other_item_insurance_payout')) && $this->input('insurance_year') > 5) {
                 $validator->errors()->add('エラー', '動産に共済金額がある場合、共済期間は5年以下である必要があります。');
+            }
+        });
+
+        $validator->after(function ($validator) {
+            if ($this->input('assess_item') == '年次取得' && ($this->input('building_year') > 2020 || $this->input('building_year') < 1976)) {
+                $validator->errors()->add('エラー', '建築年は「2020年~1976年」でなくてはいけません。');
             }
         });
 
