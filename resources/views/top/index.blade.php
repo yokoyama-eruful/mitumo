@@ -12,7 +12,7 @@
                             <div class="rounded p-3 bg-blue-600"><i class="fa fa-file-text fa-2x fa-fw fa-inverse"></i></div>
                         </div>
                         <div class="text-center">
-                            <h3 class="font-bold text-3xl">普通火災共済</h3>
+                            <h3 class="font-bold text-3xl">普通・総合火災共済</h3>
                             <h5 class="font-bold uppercase text-gray-500">見積書を作成</h5>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                 <a
                     class="ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-blue-400 bg-blue-200">
                     <i class="fas fa-fire fa-lg text-blue-500 mr-2"></i>
-                    普通火災
+                    普通・総合火災
                 </a>
                 <a href="{{ route('top.index', ['estimateType' => 'futsu2']) }}"
                     class="ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-white hover:scale-110">
@@ -54,7 +54,7 @@
                 <a href="{{ route('top.index', ['estimateType' => 'futsu']) }}"
                     class="ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-white hover:scale-110">
                     <i class="fas fa-fire fa-lg text-blue-500 mr-2"></i>
-                    普通火災
+                    普通・総合火災
                 </a>
                 <a
                     class="ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-green-400 bg-green-200">
