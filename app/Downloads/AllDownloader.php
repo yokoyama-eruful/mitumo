@@ -48,7 +48,7 @@ class AllDownloader
             'O22' => $estimate->property_type,
             'D31' => $estimate->rank,
             'M31' => $estimate->pay_method,
-            'M33' => $estimate->InsurancePeriod,
+            'D33' => $estimate->InsurancePeriod,
             'D35' => $estimate->OtherItem,
             'D41' => thousandYenUnit(array_key_exists('building_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['building_insurance_payout'] : ''),
             'K41' => thousandYenUnit(array_key_exists('household_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['household_insurance_payout'] : ''),
