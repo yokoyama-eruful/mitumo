@@ -275,10 +275,10 @@ class EstimateForm extends Component
     public function mount($estimate)
     {
         $this->estimate = $estimate;
-        $this->company = old('company', $estimate->company) != null ? old('company', $estimate->company) : '広島県中小企業共済協同組合';
-        $this->address = old('address', $estimate->address) != null ? old('address', $estimate->address) : '広島市中区竹屋町4-17';
-        $this->phoneNumber = old('phone_number', $estimate->phone_number) != null ? old('phone_number', $estimate->phone_number) : '082-243-4411';
-        $this->staffName = old('staff_name', $estimate->staff_name) != null ? old('staff_name', $estimate->staff_name) : Auth::user()->name;
+        $this->company = $this->setCompany($estimate);
+        $this->address = $this->setAddress($estimate);
+        $this->phoneNumber = $this->setPhoneNumber($estimate);
+        $this->staffName = $this->setStaffName($estimate);
         $this->certificateNumber = old('certificate_number', (string) $estimate->certificate_number);
         $this->contractee = old('contractee', $estimate->contractee);
         $this->location = old('location', $estimate->location);
@@ -1182,5 +1182,41 @@ class EstimateForm extends Component
         }
 
         return '';
+    }
+
+    private function setCompany($estimate)
+    {
+        if (is_null($estimate->id)) {
+            return '広島県中小企業共済協同組合';
+        }
+
+        return old('company', $estimate->company);
+    }
+
+    private function setAddress($estimate)
+    {
+        if (is_null($estimate->id)) {
+            return '広島市中区竹屋町4-17';
+        }
+
+        return old('address', $estimate->address);
+    }
+
+    private function setPhoneNumber($estimate)
+    {
+        if (is_null($estimate->id)) {
+            return '082-243-4411';
+        }
+
+        return old('phone_number', $estimate->phone_number);
+    }
+
+    private function setStaffName($estimate)
+    {
+        if (is_null($estimate->id)) {
+            return Auth::user()->name;
+        }
+
+        return old('staff_name', $estimate->staff_name);
     }
 }

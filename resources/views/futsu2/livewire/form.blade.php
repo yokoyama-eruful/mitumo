@@ -20,27 +20,23 @@
                     <div class="estimate-input-box">
                         <label class="futsu2-label" for="company">
                             取扱代理所名
-                            <div class="estimate-input-required">※必須</div>
                         </label>
                         <input id="company" name="company" class="estimate-input" wire:model="company" required>
                     </div>
 
                     <div class="estimate-input-box">
                         <label class="futsu2-label" for="address">住所
-                            <div class="estimate-input-required">※必須</div>
                         </label>
                         <input id="address" name="address" class="estimate-input" wire:model="address" required>
                     </div>
                     <div class="estimate-input-box">
                         <label class="futsu2-label" for="phone_number">電話番号
-                            <div class="estimate-input-required">※必須</div>
                         </label>
                         <input id="phone_number" name="phone_number" class="estimate-input" wire:model="phoneNumber"
                             required>
                     </div>
                     <div class="estimate-input-box">
                         <label class="futsu2-label" for="staff_name">担当者
-                            <div class="estimate-input-required">※必須</div>
                         </label>
                         <input id="staff_name" name="staff_name" class="estimate-input" wire:model="staffName" required>
                     </div>

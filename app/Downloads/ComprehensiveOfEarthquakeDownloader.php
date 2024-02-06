@@ -77,8 +77,8 @@ class ComprehensiveOfEarthquakeDownloader
         $worksheet->setCellValue('A3', $estimate->contractee ? $estimate->contractee.$keisyo : '');
         $worksheet->setCellValue('R5', $estimate->company);
         $worksheet->setCellValue('R6', $estimate->address);
-        $worksheet->setCellValue('R7', 'ＴＥＬ ： '.$estimate->phone_number);
-        $worksheet->setCellValue('R8', '担当 ： '.$estimate->staff_name);
+        $worksheet->setCellValue('R7', $estimate->phone_number ? 'ＴＥＬ ： '.$estimate->phone_number : '');
+        $worksheet->setCellValue('R8', $estimate->staff_name ? '担当 ： '.$estimate->staff_name : '');
         $worksheet->setCellValue('D20', $estimate->location);
         $worksheet->setCellValue('D23', $estimate->BuildingStructure);
         $worksheet->setCellValue('D27', $estimate->OtherBuildingStructure);

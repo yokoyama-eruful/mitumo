@@ -20,10 +20,10 @@ final class SaveRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company' => ['required', 'string'],
-            'address' => ['required', 'string'],
-            'phone_number' => ['required', 'regex:/^[0-9-]+$/'],
-            'staff_name' => ['required', 'string'],
+            'company' => ['nullable', 'string'],
+            'address' => ['nullable', 'string'],
+            'phone_number' => ['nullable', 'regex:/^[0-9-]+$/'],
+            'staff_name' => ['nullable', 'string'],
             'certificate_number' => ['nullable', 'numeric'],
             'contractee' => ['nullable', 'string'],
             'location' => ['nullable', 'string'],
