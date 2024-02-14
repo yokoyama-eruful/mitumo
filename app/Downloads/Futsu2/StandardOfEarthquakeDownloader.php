@@ -59,6 +59,9 @@ class StandardOfEarthquakeDownloader
             header('Cache-Control: max-age=0');
 
             readfile($pdf);
+
+            Storage::deleteDirectory('/excel');
+            Storage::deleteDirectory('/pdf');
         }
 
         if ($fileType === 'excel') {
