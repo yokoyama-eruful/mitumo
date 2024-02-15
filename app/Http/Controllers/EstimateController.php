@@ -28,6 +28,10 @@ final class EstimateController extends Controller
     {
         $estimate = $this->estimateService->find($id);
 
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         return view('estimate.edit', ['estimate' => $estimate]);
     }
 
@@ -56,6 +60,12 @@ final class EstimateController extends Controller
 
     public function duplication(TopRequest $request, int $id)
     {
+        $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $estimateType = $request->getEstimateType();
         $this->estimateService->duplication($id);
 
@@ -64,6 +74,12 @@ final class EstimateController extends Controller
 
     public function destroy(TopRequest $request, int $id)
     {
+        $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $estimateType = $request->getEstimateType();
         $this->estimateService->destroy($id);
 

@@ -18,6 +18,7 @@ use App\Domains\StandardCompensation;
 use App\Domains\StandardInsurancePremium;
 use App\Domains\WorkSurcharge;
 use App\Services\EstimateService;
+use Illuminate\Support\Facades\Auth;
 
 class PreviewController extends Controller
 {
@@ -29,6 +30,11 @@ class PreviewController extends Controller
     public function standard(int $id): \Illuminate\View\View
     {
         $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $test = new AssessNormal($estimate);
 
         $standardPremium = new StandardInsurancePremium($estimate);
@@ -41,6 +47,11 @@ class PreviewController extends Controller
     public function comprehensive(int $id)
     {
         $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $comprehensiveCompensation = new ComprehensiveCompensation($estimate->property_type, $shortTerm->shortTermRate);
@@ -51,6 +62,11 @@ class PreviewController extends Controller
     public function standardAndComprehensive(int $id)
     {
         $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $standardPremium = new StandardInsurancePremium($estimate);
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $standardCompensation = new StandardCompensation($estimate->property_type);
@@ -63,6 +79,11 @@ class PreviewController extends Controller
     public function standardOfRecommend(int $id)
     {
         $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $standardPremium = new StandardInsurancePremium($estimate);
         $recommendStandardPremium = new RecommendStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
 
@@ -72,6 +93,11 @@ class PreviewController extends Controller
     public function comprehensiveOfRecommend(int $id)
     {
         $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $recommendComprehensivePremium = new RecommendComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
@@ -82,6 +108,11 @@ class PreviewController extends Controller
     public function standardOfRecommendAndComprehensiveOfRecommend(int $id)
     {
         $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $standardPremium = new StandardInsurancePremium($estimate);
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
@@ -94,6 +125,11 @@ class PreviewController extends Controller
     public function standardOfEarthquake(int $id)
     {
         $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $standardPremium = new StandardInsurancePremium($estimate);
         $earthquakePremium = new EarthquakeStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
 
@@ -103,6 +139,11 @@ class PreviewController extends Controller
     public function comprehensiveOfEarthquake(int $id)
     {
         $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $earthquakePremium = new EarthquakeComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
@@ -113,6 +154,11 @@ class PreviewController extends Controller
     public function calculation(int $id)
     {
         $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $standard = new StandardInsurancePremium($estimate);
         $occupationalSurchargeItem = new OccupationalSurcharge('surchargeTable/occupationalSurchargeTable.csv');
         $workSurchargeItem = new WorkSurcharge('surchargeTable/workSurchargeTable.csv');

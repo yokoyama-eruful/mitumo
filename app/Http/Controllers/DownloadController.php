@@ -8,6 +8,7 @@ use App\Domains\MutualAidPremiums;
 use App\Http\Requests\Estimate\DownloadRequest;
 use App\Services\DownloadService;
 use App\Services\EstimateService;
+use Illuminate\Support\Facades\Auth;
 
 class DownloadController extends Controller
 {
@@ -20,6 +21,11 @@ class DownloadController extends Controller
     public function index(DownloadRequest $request, int $id)
     {
         $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $fileType = $request->getFileType();
         $keisyo = $request->getKeisyo();
 
@@ -46,6 +52,11 @@ class DownloadController extends Controller
         $keisyo = $request->keisyo;
 
         $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $this->downloadService->dropEstimate($category, $estimate, $fileType, $keisyo);
     }
 }

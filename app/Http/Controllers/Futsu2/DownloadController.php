@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Estimate\DownloadRequest;
 use App\Services\Futsu2\DownloadService;
 use App\Services\Futsu2\Futsu2Service;
+use Illuminate\Support\Facades\Auth;
 
 class DownloadController extends Controller
 {
@@ -21,6 +22,11 @@ class DownloadController extends Controller
     public function index(DownloadRequest $request, int $id)
     {
         $estimate = $this->futsu2Service->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $fileType = $request->getFileType();
         $keisyo = $request->getKeisyo();
 
@@ -45,6 +51,11 @@ class DownloadController extends Controller
         $keisyo = $request->keisyo;
 
         $estimate = $this->futsu2Service->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $this->downloadService->dropEstimate($category, $estimate, $fileType, $keisyo);
     }
 }

@@ -29,6 +29,10 @@ class Futsu2Controller extends Controller
     {
         $estimate = $this->futsu2Service->find($id);
 
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         return view('futsu2.edit', ['estimate' => $estimate]);
     }
 
@@ -57,6 +61,12 @@ class Futsu2Controller extends Controller
 
     public function duplication(TopRequest $request, int $id)
     {
+        $estimate = $this->futsu2Service->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $estimateType = $request->getEstimateType();
         $this->futsu2Service->duplication($id);
 
@@ -65,6 +75,12 @@ class Futsu2Controller extends Controller
 
     public function destroy(TopRequest $request, int $id)
     {
+        $estimate = $this->futsu2Service->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $estimateType = $request->getEstimateType();
         $this->futsu2Service->destroy($id);
 
