@@ -83,7 +83,7 @@ class AllDownloader
             Storage::makeDirectory('/excel');
             Storage::makeDirectory('/pdf');
 
-            $export_excel_path = storage_path('app/excel/all.xlsx');
+            $export_excel_path = storage_path('app/excel/all'.$estimate->id.'.xlsx');
 
             $writer->save($export_excel_path);
 
@@ -93,7 +93,7 @@ class AllDownloader
                 exec($cmd);
             }
 
-            $pdf = storage_path('app/pdf/all.pdf');
+            $pdf = storage_path('app/pdf/all'.$estimate->id.'.pdf');
             $fileName = '火災共済見積書_' .$estimate->contractee . date('YmdHi') . '.pdf';
 
             header('Content-Type:' . $pdf);

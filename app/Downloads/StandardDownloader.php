@@ -58,7 +58,7 @@ class StandardDownloader
             Storage::makeDirectory('/excel');
             Storage::makeDirectory('/pdf');
 
-            $export_excel_path = storage_path('app/excel/standard.xlsx');
+            $export_excel_path = storage_path('app/excel/standard'.$estimate->id.'.xlsx');
 
             $writer->save($export_excel_path);
 
@@ -68,7 +68,7 @@ class StandardDownloader
                 exec($cmd);
             }
 
-            $pdf = storage_path('app/pdf/standard.pdf');
+            $pdf = storage_path('app/pdf/standard'.$estimate->id.'.pdf');
             $fileName = '普通火災共済見積書_' .$estimate->contractee. date('YmdHi'). '.pdf';
 
             header('Content-Type:' . $pdf);
