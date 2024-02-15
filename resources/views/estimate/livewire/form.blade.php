@@ -128,7 +128,7 @@
                             <label class="estimate-label" for="fire_resistance">耐火基準</label>
                             <select id="fire_resistance" name="fire_resistance" wire:model="fireResistance"
                                 class="estimate-input">
-                                <option value="" hidden>選択してください</option>
+                                <option value="" hidden></option>
                                 @foreach ($fireResistanceList as $item)
                                     <option value={{ $item }} @if ($item === $fireResistance) selected @endif>
                                         {{ $item }}</option>
@@ -150,7 +150,7 @@
                             </label>
                             <select id="usage" name="usage" wire:model="usage" class="estimate-input"
                                 required>
-                                <option value="" hidden>選択してください</option>
+                                <option value="" hidden></option>
                                 @foreach ($usageList as $item)
                                     <option value={{ $item }} @if ($item === $usage) selected @endif>
                                         {{ $item }}</option>
