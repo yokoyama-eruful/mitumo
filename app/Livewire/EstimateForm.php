@@ -416,21 +416,38 @@ class EstimateForm extends Component
      */
     public function onClickCertificateNumber()
     {
-        $resp = Http::get('http://'.config('app.certificate_api').'/api/code/'.$this->certificateNumber);
+        $mitumoApiDomainName =config('app.certificate_api');
+        $apiToken = config('app.api_token');
 
-        if($resp->json()==null){
+        if(is_null( $apiToken)){
+            $this->dispatch('alert', 'APIトークンが適切ではありません。管理者にご確認ください。');
+            return;
+        }
+        $headers = [
+                'Content-Type' => 'application/json',
+                'authorization' => 'Bearer '.$apiToken,
+        ];
+
+        $response = Http::withHeaders($headers)
+            ->get('http://'.$mitumoApiDomainName.'/api/code/'.$this->certificateNumber);
+
+        if($response->clientError()){
+            $this->dispatch('alert', '参照機能が現在ご利用できません');
+            return;
+        }
+
+        if($response->json()==null){
             $this->dispatch('alert', '証書番号を入力してください');
             return;
         }
 
-
-        if($resp->json()['status']=='404'){
+        if($response->json()['status']=='404' || $response->json()['status']=='302'){
             $this->dispatch('alert', '証書番号:'.$this->certificateNumber.'のデータは見つかりません');
             return;
         }
 
-        if($resp->json()['status']=='200'){
-            $estimateInfo=$resp->json()['data'];
+        if($response->json()['status']=='200'){
+            $estimateInfo=$response->json()['data'];
             $this->contractee=$estimateInfo['契約者名'];
             $this->location=$estimateInfo['住所'];
             $this->payMethod=$estimateInfo['払い込み方法'];
