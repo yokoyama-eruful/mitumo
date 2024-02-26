@@ -20,7 +20,7 @@ services:
             - '.:/var/www/html'
             - ~/.ssh:/home/sail/.ssh
         networks:
-            - sail
+            - mitumo
         depends_on:
             - mysql
     mysql:
@@ -46,10 +46,11 @@ services:
             retries: 3
             timeout: 5s
         networks:
-            - sail
+            - mitumo
 networks:
-    sail:
-        driver: bridge
+    mitumo:
+        external: true
+
 volumes:
     sail-mysql:
         driver: local
