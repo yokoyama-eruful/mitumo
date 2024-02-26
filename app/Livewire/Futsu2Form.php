@@ -20,6 +20,7 @@ use App\Utils\FullWidthDigitConverter;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Illuminate\Support\Facades\Http;
 
 class Futsu2Form extends Component
 {
@@ -394,6 +395,53 @@ class Futsu2Form extends Component
         return view('futsu2.livewire.form');
     }
 
+     /**
+     * 証書番号
+     */
+    public function onClickCertificateNumber()
+    {
+        $resp = Http::get('http://'.config('app.certificate_api').'/api/code/'.$this->certificateNumber);
+
+        if($resp->json()==null){
+            $this->dispatch('alert', '証書番号を入力してください');
+            return;
+        }
+
+
+        if($resp->json()['status']=='404'){
+            $this->dispatch('alert', '証書番号:'.$this->certificateNumber.'のデータは見つかりません');
+            return;
+        }
+
+        if($resp->json()['status']=='200'){
+            $estimateInfo=$resp->json()['data'];
+            $this->contractee=$estimateInfo['契約者名'];
+            $this->location=$estimateInfo['住所'];
+            $this->payMethod=$estimateInfo['払い込み方法'];
+            $this->structure=$estimateInfo['構造'];
+            $this->pillar=$estimateInfo['柱無地'];
+            $this->usage=$estimateInfo['用法'];
+            $this->propertyType=$estimateInfo['物件'];
+            $this->rankList = $this->getRankList($this->propertyType);
+            $this->rank=$estimateInfo['級別'];
+
+            $this->onChangeBaseRate();
+
+            if($estimateInfo['共済期間']['年']){
+                $this->insuranceYear=$estimateInfo['共済期間']['年'];
+            }
+
+            if($estimateInfo['共済期間']['月']&&!$this->insuranceYear){
+                $this->insuranceMonth=$estimateInfo['共済期間']['月'];
+            }
+
+            if($estimateInfo['共済期間']['日']&&!$this->insuranceYear){
+                $this->insuranceDay=$estimateInfo['共済期間']['日'];
+            }
+            return;
+        }
+    }
+
     /**
      * 物件情報に連動した級別セレクトボックスを設置する
      *
@@ -471,6 +519,10 @@ class Futsu2Form extends Component
     {
         $this->insuranceMonth = null;
         $this->insuranceDay = null;
+
+        if ($this->insuranceYear) {
+            $this->insuranceYear = mb_convert_kana($this->insuranceYear, 'n');
+        }
     }
 
     /**
@@ -479,6 +531,10 @@ class Futsu2Form extends Component
     public function onChangeInsuranceMonth()
     {
         $this->insuranceYear = null;
+
+        if ($this->insuranceMonth) {
+            $this->insuranceMonth = mb_convert_kana($this->insuranceMonth, 'n');
+        }
     }
 
     /**
@@ -487,6 +543,10 @@ class Futsu2Form extends Component
     public function onChangeInsuranceDay()
     {
         $this->insuranceYear = null;
+
+        if ($this->insuranceDay) {
+            $this->insuranceDay = mb_convert_kana($this->insuranceDay, 'n');
+        }
     }
 
     /**
@@ -497,11 +557,13 @@ class Futsu2Form extends Component
     public function onChangeAssessItem()
     {
         if ($this->floorArea) {
+            $this->floorArea = mb_convert_kana($this->floorArea, 'n');
             $this->floorArea = number_format((float) $this->floorArea, 2);
             $this->floorArea = str_replace(',', '', $this->floorArea);
         }
 
         if ($this->exclusiveArea) {
+            $this->exclusiveArea = mb_convert_kana($this->exclusiveArea, 'n');
             $this->exclusiveArea = number_format((float) $this->exclusiveArea, 2);
             $this->exclusiveArea = str_replace(',', '', $this->exclusiveArea);
 

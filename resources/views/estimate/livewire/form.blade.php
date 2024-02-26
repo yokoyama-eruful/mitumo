@@ -43,11 +43,13 @@
                     <div class="estimate-title">
                         <label class="p-3">共済契約者情報</label>
                     </div>
-                    <div class="estimate-input-box">
+                    <div class="estimate-input-box flex">
                         <label class="estimate-label" for="certificate_number">証書番号
                         </label>
                         <input id="certificate_number" name="certificate_number" class="estimate-input"
                             wire:model="certificateNumber" required>
+                        <button type="button" wire:click="onClickCertificateNumber"
+                            class="mx-2 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded whitespace-nowrap">証書番号参照</button>
                     </div>
                     <div class="estimate-input-box">
                         <label class="estimate-label" for="contractee">ご契約者名
@@ -335,13 +337,13 @@
                             </div>
                             <div class="estimate-input-box">
                                 <input id="recommend1" name="recommend1" class="estimate-input text-right"
-                                    wire:model="recommend1">
+                                    wire:model="recommend1" wire:change="onChangeRecommend1">
                                 <span class="unit-display">年</span>
                                 <input id="recommend2" name="recommend2" class="estimate-input text-right"
-                                    wire:model="recommend2">
+                                    wire:model="recommend2" wire:change="onChangeRecommend2">
                                 <span class="unit-display">年</span>
                                 <input id="recommend3" name="recommend3" class="estimate-input text-right"
-                                    wire:model="recommend3">
+                                    wire:model="recommend3" wire:change="onChangeRecommend3">
                                 <span class="unit-display">年</span>
                             </div>
                         </div>

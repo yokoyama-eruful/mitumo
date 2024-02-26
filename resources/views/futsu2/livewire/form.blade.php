@@ -45,11 +45,13 @@
                     <div class="futsu2-title">
                         <label class="p-3">共済契約者情報</label>
                     </div>
-                    <div class="estimate-input-box">
+                    <div class="estimate-input-box flex">
                         <label class="futsu2-label" for="certificate_number">証書番号
                         </label>
                         <input id="certificate_number" name="certificate_number" class="estimate-input"
-                            wire:model="certificateNumber" required>
+                        wire:model="certificateNumber" required>
+                    <button type="button" wire:click="onClickCertificateNumber"
+                        class="mx-2 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded whitespace-nowrap">証書番号参照</button>
                     </div>
                     <div class="estimate-input-box">
                         <label class="futsu2-label" for="contractee">ご契約者名
