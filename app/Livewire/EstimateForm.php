@@ -512,7 +512,7 @@ class EstimateForm extends Component
             // if ($estimateInfo['共済期間']['日'] && ! $this->insuranceYear) {
             //     $this->insuranceDay = $estimateInfo['共済期間']['日'];
             // }
-dd($this->propertyType);
+// dd($this->propertyType);
             return;
         }
     }
