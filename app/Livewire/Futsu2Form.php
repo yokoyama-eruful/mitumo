@@ -401,6 +401,12 @@ class Futsu2Form extends Component
      */
     public function onClickCertificateNumber()
     {
+        if ($this->certificateNumber == '') {
+            $this->dispatch('alert', '証書番号を入力してください。');
+
+            return;
+        }
+
         $apiServer = config('api.server');
         $apiToken = config('api.token');
 
@@ -417,20 +423,18 @@ class Futsu2Form extends Component
         try {
             $response = Http::withHeaders($headers)
                 ->get('http://'.$apiServer.'/api/code/'.$this->certificateNumber);
+
+            if ($response->json() == null
+                || $response->json()['status'] == '404'
+                || $response->json()['status'] == '302'
+            ) {
+                $this->dispatch('alert', '証書番号:'.$this->certificateNumber.'のデータは見つかりません');
+
+                return;
+            }
+
         } catch (HttpClientException $e) {
-            $this->dispatch('alert', '参照機能が現在ご利用できません');
-
-            return;
-        }
-
-        if ($response->json() == null) {
-            $this->dispatch('alert', '証書番号を入力してください');
-
-            return;
-        }
-
-        if ($response->json()['status'] == '404' || $response->json()['status'] == '302') {
-            $this->dispatch('alert', '証書番号:'.$this->certificateNumber.'のデータは見つかりません');
+            $this->dispatch('alert', '現在、参照機能がご利用できません');
 
             return;
         }
