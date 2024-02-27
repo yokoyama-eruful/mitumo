@@ -438,6 +438,7 @@ class Futsu2Form extends Component
 
             return;
         }
+
         if ($response->json()['status'] == '200') {
             $estimateInfo = $response->json()['data'];
             $this->contractee = $estimateInfo['契約者名'];
@@ -449,6 +450,17 @@ class Futsu2Form extends Component
             $this->propertyType = $estimateInfo['物件'];
             $this->rankList = $this->getRankList($this->propertyType);
             $this->rank = $estimateInfo['級別'];
+            $this->floorArea = $estimateInfo['延床面積'];
+            $this->exclusiveArea = $estimateInfo['専有面積'];
+            $this->floor = $estimateInfo['階'];
+            $this->building = $estimateInfo['棟'];
+            $this->buildingAge = $estimateInfo['築年数'] == 0 ? null : $estimateInfo['築年数'];
+            $this->buildingInsurancePayout = $estimateInfo['共済掛金']['建物'];
+            $this->householdInsurancePayout = $estimateInfo['共済掛金']['家財'];
+            $this->facilityInsurancePayout = $estimateInfo['共済掛金']['什器備品'];
+            $this->otherFacilityInsurancePayout = $estimateInfo['共済掛金']['その他什器備品'];
+            $this->itemInsurancePayout = $estimateInfo['共済掛金']['商品'];
+            $this->otherItemInsurancePayout = $estimateInfo['共済掛金']['その他商品'];
 
             $this->onChangeBaseRate();
 
@@ -467,7 +479,6 @@ class Futsu2Form extends Component
             return;
         }
     }
-
     /**
      * 物件情報に連動した級別セレクトボックスを設置する
      *
