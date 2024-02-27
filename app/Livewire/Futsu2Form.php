@@ -447,7 +447,7 @@ class Futsu2Form extends Component
             $this->structure = $estimateInfo['構造'];
             $this->pillar = $estimateInfo['柱無地'];
             $this->usage = $estimateInfo['用法'];
-            $this->propertyType = $estimateInfo['物件'];
+            $this->propertyType = $estimateInfo['物件']!=''? $estimateInfo['物件']:null;
             $this->rankList = $this->getRankList($this->propertyType);
             $this->rank = $estimateInfo['級別'];
             $this->floorArea = $estimateInfo['延床面積'];
