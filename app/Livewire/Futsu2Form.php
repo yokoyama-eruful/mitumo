@@ -469,7 +469,7 @@ class Futsu2Form extends Component
 
             //物件で工場が選択された時の動産割増が0以外の値の場合、決め打ちで1級（カテゴリー）
             if($this->propertyType=='工場'){
-                $this->chattelSurchargeCategory =  $estimateInfo['動産割増']!='0'?$estimateInfo['動産割増']:'1級';
+                $this->chattelSurchargeCategory =  $estimateInfo['動産割増']!='0'?$estimateInfo['動産割増']:'1級品';
             }
 
             if($this->propertyType=='工場'){
