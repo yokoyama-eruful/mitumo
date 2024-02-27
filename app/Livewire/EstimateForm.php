@@ -465,7 +465,7 @@ class EstimateForm extends Component
             $this->usage = $estimateInfo['用法'];
 
 
-            $this->propertyType =null;
+            // $this->propertyType =null;
 
                         // dd($this->propertyType,$estimateInfo['物件']);
         // if ($this->propertyType == '工場') {
@@ -512,7 +512,6 @@ class EstimateForm extends Component
             // if ($estimateInfo['共済期間']['日'] && ! $this->insuranceYear) {
             //     $this->insuranceDay = $estimateInfo['共済期間']['日'];
             // }
-// dd($this->propertyType);
             return;
         }
     }
