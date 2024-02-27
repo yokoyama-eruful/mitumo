@@ -483,8 +483,8 @@ class EstimateForm extends Component
 
             $this->onChangeBaseRate();
 
-            //物件で工場が選択された時の動産割増が0以外の値の場合、決め打ちで1級（カテゴリー）
-            if($this->propertyType=='工場'){
+            //物件で普通が選択された時の動産割増が0以外の値の場合、決め打ちで1級（カテゴリー）
+            if($this->propertyType=='普通'){
                 $this->chattelSurchargeCategory =  $estimateInfo['動産割増']!='0'?'1級品':'-';
             }
 
