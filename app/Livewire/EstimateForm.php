@@ -465,7 +465,7 @@ class EstimateForm extends Component
             $this->usage = $estimateInfo['用法'];
 
 
-            $this->propertyType =null;
+            $this->propertyType = $estimateInfo['物件'];
             
             $this->rankList = $this->getRankList($this->propertyType);
             $this->rank = $estimateInfo['級別'];
