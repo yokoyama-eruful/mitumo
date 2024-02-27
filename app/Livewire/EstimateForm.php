@@ -470,9 +470,11 @@ class EstimateForm extends Component
             $this->exclusiveArea = $estimateInfo['専有面積'];
             $this->floor = $estimateInfo['階'];
             $this->building = $estimateInfo['棟'];
-            $this->buildingAge = $estimateInfo['築年数'];
+            $this->buildingAge = $estimateInfo['築年数'] == 0 ? null : $estimateInfo['築年数'];
             $this->buildingInsurancePayout = $estimateInfo['共済掛金']['建物'];
             $this->householdInsurancePayout = $estimateInfo['共済掛金']['家財'];
+            $this->facilityInsurancePayout = $estimateInfo['共済掛金']['什器備品'];
+            $this->itemInsurancePayout = $estimateInfo['共済掛金']['商品'];
 
             $this->onChangeBaseRate();
 
