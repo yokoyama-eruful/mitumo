@@ -464,10 +464,10 @@ class EstimateForm extends Component
             $this->pillar = $estimateInfo['柱無地'];
             $this->usage = $estimateInfo['用法'];
 
-                        // dd($this->propertyType,$estimateInfo['物件']);
+
             $this->propertyType =$estimateInfo['物件'];
             if ($this->propertyType == '工場') {
-                $this->findFactoryBuildingItem($this->factoryBuildingCode);
+
             }
             
             $this->rankList = $this->getRankList($this->propertyType);
@@ -496,7 +496,7 @@ class EstimateForm extends Component
 
             if($this->propertyType=='工場'){
                 $this->factoryBuildingCode =  $estimateInfo['職作業コード'];
-                $this->onChangeFactoryBuildingCode();
+                $this->findFactoryBuildingItem($this->factoryBuildingCode);
             }
 
             if ($estimateInfo['共済期間']['年']) {
