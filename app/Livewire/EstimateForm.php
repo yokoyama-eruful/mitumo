@@ -493,7 +493,7 @@ class EstimateForm extends Component
 
             if($this->propertyType=='工場'){
                 $this->factoryBuildingCode =  $estimateInfo['職作業コード'];
-                $this->findFactoryBuildingItem($this->factoryBuildingCode);
+                $this->onChangeFactoryBuildingCode();
             }
 
             if ($estimateInfo['共済期間']['年']) {
