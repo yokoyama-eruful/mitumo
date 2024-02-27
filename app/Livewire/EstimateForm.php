@@ -465,7 +465,7 @@ class EstimateForm extends Component
             $this->usage = $estimateInfo['用法'];
 
 
-            // $this->propertyType =null;
+            $this->propertyType =$estimateInfo['物件'];
 
                         // dd($this->propertyType,$estimateInfo['物件']);
         // if ($this->propertyType == '工場') {
