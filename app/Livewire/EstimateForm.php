@@ -464,54 +464,53 @@ class EstimateForm extends Component
             $this->pillar = $estimateInfo['柱無地'];
             $this->usage = $estimateInfo['用法'];
 
-
-            $this->propertyType ='工場';
-
                         // dd($this->propertyType,$estimateInfo['物件']);
-        // if ($this->propertyType == '工場') {
-        //     $this->findFactoryBuildingItem($this->factoryBuildingCode);
-        // }
+            $this->propertyType =$estimateInfo['物件'];
+            if ($this->propertyType == '工場') {
+                $this->findFactoryBuildingItem($this->factoryBuildingCode);
+            }
             
             $this->rankList = $this->getRankList($this->propertyType);
-            // $this->rank = $estimateInfo['級別'];
-            // $this->floorArea = $estimateInfo['延床面積'];
-            // $this->exclusiveArea = $estimateInfo['専有面積'];
-            // $this->floor = $estimateInfo['階'];
-            // $this->building = $estimateInfo['棟'];
+            $this->rank = $estimateInfo['級別'];
+            $this->floorArea = $estimateInfo['延床面積'];
+            $this->exclusiveArea = $estimateInfo['専有面積'];
+            $this->floor = $estimateInfo['階'];
+            $this->building = $estimateInfo['棟'];
 
-            // $this->buildingYear = $estimateInfo['築年数'] == 0 ? null : $estimateInfo['築年数'];
-            // $this->onChangeBuildingAge();
+            $this->buildingYear = $estimateInfo['築年数'] == 0 ? null : $estimateInfo['築年数'];
+            $this->onChangeBuildingAge();
             
-            // $this->buildingInsurancePayout = $estimateInfo['共済掛金']['建物'];
-            // $this->householdInsurancePayout = $estimateInfo['共済掛金']['家財'];
-            // $this->facilityInsurancePayout = $estimateInfo['共済掛金']['什器備品'];
-            // $this->otherFacilityInsurancePayout = $estimateInfo['共済掛金']['その他什器備品'];
-            // $this->itemInsurancePayout = $estimateInfo['共済掛金']['商品'];
-            // $this->otherItemInsurancePayout = $estimateInfo['共済掛金']['その他商品'];
+            $this->buildingInsurancePayout = $estimateInfo['共済掛金']['建物'];
+            $this->householdInsurancePayout = $estimateInfo['共済掛金']['家財'];
+            $this->facilityInsurancePayout = $estimateInfo['共済掛金']['什器備品'];
+            $this->otherFacilityInsurancePayout = $estimateInfo['共済掛金']['その他什器備品'];
+            $this->itemInsurancePayout = $estimateInfo['共済掛金']['商品'];
+            $this->otherItemInsurancePayout = $estimateInfo['共済掛金']['その他商品'];
 
-            // $this->onChangeBaseRate();
+            $this->onChangeBaseRate();
 
-            // //物件で普通が選択された時の動産割増が0以外の値の場合、決め打ちで1級（カテゴリー）
-            // if($this->propertyType=='普通'){
-            //     $this->chattelSurchargeCategory =  $estimateInfo['動産割増']!='0'?'1級品':'-';
-            // }
+            //物件で普通が選択された時の動産割増が0以外の値の場合、決め打ちで1級（カテゴリー）
+            if($this->propertyType=='普通'){
+                $this->chattelSurchargeCategory =  $estimateInfo['動産割増']!='0'?'1級品':'-';
+            }
 
-            // if($this->propertyType=='工場'){
-            //     $this->factoryBuildingCode =  $estimateInfo['職作業コード'];
-            //     $this->onChangeFactoryBuildingCode();
-            // }
+            if($this->propertyType=='工場'){
+                $this->factoryBuildingCode =  $estimateInfo['職作業コード'];
+                $this->onChangeFactoryBuildingCode();
+            }
 
-            // if ($estimateInfo['共済期間']['年']) {
-            //     $this->insuranceYear = $estimateInfo['共済期間']['年'];
-            // }
+            if ($estimateInfo['共済期間']['年']) {
+                $this->insuranceYear = $estimateInfo['共済期間']['年'];
+            }
 
-            // if ($estimateInfo['共済期間']['月'] && ! $this->insuranceYear) {
-            //     $this->insuranceMonth = $estimateInfo['共済期間']['月'];
-            // }
+            if ($estimateInfo['共済期間']['月'] && ! $this->insuranceYear) {
+                $this->insuranceMonth = $estimateInfo['共済期間']['月'];
+            }
 
-            // if ($estimateInfo['共済期間']['日'] && ! $this->insuranceYear) {
-            //     $this->insuranceDay = $estimateInfo['共済期間']['日'];
-            // }
+            if ($estimateInfo['共済期間']['日'] && ! $this->insuranceYear) {
+                $this->insuranceDay = $estimateInfo['共済期間']['日'];
+            }
+
             return;
         }
     }
