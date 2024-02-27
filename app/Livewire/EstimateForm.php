@@ -464,10 +464,10 @@ class EstimateForm extends Component
             $this->pillar = $estimateInfo['柱無地'];
             $this->usage = $estimateInfo['用法'];
 
-            dd($this->propertyType,$estimateInfo['物件']);
-            $this->propertyType ='普通';
 
-            
+            $this->propertyType =$estimateInfo['物件'];
+
+                        dd($this->propertyType,$estimateInfo['物件']);
         // if ($this->propertyType == '工場') {
         //     $this->findFactoryBuildingItem($this->factoryBuildingCode);
         // }
