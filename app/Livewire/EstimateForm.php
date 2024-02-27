@@ -472,7 +472,7 @@ class EstimateForm extends Component
         //     $this->findFactoryBuildingItem($this->factoryBuildingCode);
         // }
             
-            // $this->rankList = $this->getRankList($this->propertyType);
+            $this->rankList = $this->getRankList($this->propertyType);
             // $this->rank = $estimateInfo['級別'];
             // $this->floorArea = $estimateInfo['延床面積'];
             // $this->exclusiveArea = $estimateInfo['専有面積'];
