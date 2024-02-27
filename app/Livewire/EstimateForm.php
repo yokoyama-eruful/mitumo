@@ -466,6 +466,13 @@ class EstimateForm extends Component
             $this->propertyType = $estimateInfo['物件'];
             $this->rankList = $this->getRankList($this->propertyType);
             $this->rank = $estimateInfo['級別'];
+            $this->floorArea = $estimateInfo['延床面積'];
+            $this->exclusiveArea = $estimateInfo['専有面積'];
+            $this->floor = $estimateInfo['階'];
+            $this->building = $estimateInfo['棟'];
+            $this->buildingAge = $estimateInfo['築年数'];
+            $this->buildingInsurancePayout = $estimateInfo['共済掛金']['建物'];
+            $this->householdInsurancePayout = $estimateInfo['共済掛金']['家財'];
 
             $this->onChangeBaseRate();
 
