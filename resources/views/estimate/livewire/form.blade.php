@@ -188,7 +188,7 @@
                             <div class="estimate-input-required">※必須</div>
                         </label>
                         <select id="property_type" name="property_type" class="estimate-input"
-                            wire:model.lazy="propertyType" wire:change="onChangePropertyType" required>
+                            wire:change="onChangePropertyType" required>
                             <option value="" hidden>選択してください</option>
                             @foreach ($propertyTypeList as $item)
                                 <option value={{ $item }} @if ($item === $usage) selected @endif>
