@@ -470,7 +470,10 @@ class EstimateForm extends Component
             $this->exclusiveArea = $estimateInfo['専有面積'];
             $this->floor = $estimateInfo['階'];
             $this->building = $estimateInfo['棟'];
-            $this->buildingAge = $estimateInfo['築年数'] == 0 ? null : $estimateInfo['築年数'];
+
+            $this->buildingYear = $estimateInfo['築年数'] == 0 ? null : $estimateInfo['築年数'];
+            $this->onChangeBuildingAge();
+            
             $this->buildingInsurancePayout = $estimateInfo['共済掛金']['建物'];
             $this->householdInsurancePayout = $estimateInfo['共済掛金']['家財'];
             $this->facilityInsurancePayout = $estimateInfo['共済掛金']['什器備品'];
@@ -479,6 +482,16 @@ class EstimateForm extends Component
             $this->otherItemInsurancePayout = $estimateInfo['共済掛金']['その他商品'];
 
             $this->onChangeBaseRate();
+
+            //物件で工場が選択された時の動産割増が0以外の値の場合、決め打ちで1級（カテゴリー）
+            if($this->propertyType=='工場'){
+                $this->chattelSurchargeCategory =  $estimateInfo['動産割増']!='0'?$estimateInfo['動産割増']:'1級';
+            }
+
+            if($this->propertyType=='工場'){
+                $this->factoryBuildingCode =  $estimateInfo['職作業コード'];
+                $this->onChangeFactoryBuildingCode();
+            }
 
             if ($estimateInfo['共済期間']['年']) {
                 $this->insuranceYear = $estimateInfo['共済期間']['年'];
