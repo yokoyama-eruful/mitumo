@@ -18,9 +18,10 @@ use App\Domains\WorkSurcharge;
 use App\Models\Futsu2;
 use App\Utils\FullWidthDigitConverter;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use Livewire\Component;
 
 class Futsu2Form extends Component
 {
@@ -395,49 +396,70 @@ class Futsu2Form extends Component
         return view('futsu2.livewire.form');
     }
 
-     /**
+    /**
      * 証書番号
      */
     public function onClickCertificateNumber()
     {
-        $resp = Http::get('http://'.config('app.certificate_api').'/api/code/'.$this->certificateNumber);
+        $apiServer = config('api.server');
+        $apiToken = config('api.token');
 
-        if($resp->json()==null){
+        if (is_null($apiToken)) {
+            $this->dispatch('alert', 'APIトークンが適切ではありません。管理者にご確認ください。');
+
+            return;
+        }
+        $headers = [
+            'Content-Type' => 'application/json',
+            'authorization' => 'Bearer '.$apiToken,
+        ];
+
+        try {
+            $response = Http::withHeaders($headers)
+                ->get('http://'.$apiServer.'/api/code/'.$this->certificateNumber);
+        } catch (HttpClientException $e) {
+            $this->dispatch('alert', '参照機能が現在ご利用できません');
+
+            return;
+        }
+
+        if ($response->json() == null) {
             $this->dispatch('alert', '証書番号を入力してください');
+
             return;
         }
 
-
-        if($resp->json()['status']=='404'){
+        if ($response->json()['status'] == '404' || $response->json()['status'] == '302') {
             $this->dispatch('alert', '証書番号:'.$this->certificateNumber.'のデータは見つかりません');
+
             return;
         }
-
-        if($resp->json()['status']=='200'){
-            $estimateInfo=$resp->json()['data'];
-            $this->contractee=$estimateInfo['契約者名'];
-            $this->location=$estimateInfo['住所'];
-            $this->payMethod=$estimateInfo['払い込み方法'];
-            $this->structure=$estimateInfo['構造'];
-            $this->pillar=$estimateInfo['柱無地'];
-            $this->usage=$estimateInfo['用法'];
-            $this->propertyType=$estimateInfo['物件'];
+        if ($response->json()['status'] == '200') {
+            $estimateInfo = $response->json()['data'];
+            $this->contractee = $estimateInfo['契約者名'];
+            $this->location = $estimateInfo['住所'];
+            $this->payMethod = $estimateInfo['払い込み方法'];
+            $this->structure = $estimateInfo['構造'];
+            $this->pillar = $estimateInfo['柱無地'];
+            $this->usage = $estimateInfo['用法'];
+            $this->propertyType = $estimateInfo['物件'];
             $this->rankList = $this->getRankList($this->propertyType);
-            $this->rank=$estimateInfo['級別'];
+            $this->rank = $estimateInfo['級別'];
 
             $this->onChangeBaseRate();
 
-            if($estimateInfo['共済期間']['年']){
-                $this->insuranceYear=$estimateInfo['共済期間']['年'];
+            if ($estimateInfo['共済期間']['年']) {
+                $this->insuranceYear = $estimateInfo['共済期間']['年'];
             }
 
-            if($estimateInfo['共済期間']['月']&&!$this->insuranceYear){
-                $this->insuranceMonth=$estimateInfo['共済期間']['月'];
+            if ($estimateInfo['共済期間']['月'] && ! $this->insuranceYear) {
+                $this->insuranceMonth = $estimateInfo['共済期間']['月'];
             }
 
-            if($estimateInfo['共済期間']['日']&&!$this->insuranceYear){
-                $this->insuranceDay=$estimateInfo['共済期間']['日'];
+            if ($estimateInfo['共済期間']['日'] && ! $this->insuranceYear) {
+                $this->insuranceDay = $estimateInfo['共済期間']['日'];
             }
+
             return;
         }
     }

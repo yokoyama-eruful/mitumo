@@ -19,9 +19,10 @@ use App\Domains\WorkSurcharge;
 use App\Models\Estimate;
 use App\Utils\FullWidthDigitConverter;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use Livewire\Component;
 
 class EstimateForm extends Component
 {
@@ -416,61 +417,66 @@ class EstimateForm extends Component
      */
     public function onClickCertificateNumber()
     {
-        $mitumoApiDomainName =config('app.certificate_api');
-        $apiToken = config('app.api_token');
+        $apiServer = config('api.server');
+        $apiToken = config('api.token');
 
-        if(is_null( $apiToken)){
+        if (is_null($apiToken)) {
             $this->dispatch('alert', 'APIトークンが適切ではありません。管理者にご確認ください。');
+
             return;
         }
         $headers = [
-                'Content-Type' => 'application/json',
-                'authorization' => 'Bearer '.$apiToken,
+            'Content-Type' => 'application/json',
+            'authorization' => 'Bearer '.$apiToken,
         ];
 
-        $response = Http::withHeaders($headers)
-            ->get('http://'.$mitumoApiDomainName.'/api/code/'.$this->certificateNumber);
-
-        if($response->clientError()){
+        try {
+            $response = Http::withHeaders($headers)
+                ->get('http://'.$apiServer.'/api/code/'.$this->certificateNumber);
+        } catch (HttpClientException $e) {
             $this->dispatch('alert', '参照機能が現在ご利用できません');
+
             return;
         }
 
-        if($response->json()==null){
+        if ($response->json() == null) {
             $this->dispatch('alert', '証書番号を入力してください');
+
             return;
         }
 
-        if($response->json()['status']=='404' || $response->json()['status']=='302'){
+        if ($response->json()['status'] == '404' || $response->json()['status'] == '302') {
             $this->dispatch('alert', '証書番号:'.$this->certificateNumber.'のデータは見つかりません');
+
             return;
         }
 
-        if($response->json()['status']=='200'){
-            $estimateInfo=$response->json()['data'];
-            $this->contractee=$estimateInfo['契約者名'];
-            $this->location=$estimateInfo['住所'];
-            $this->payMethod=$estimateInfo['払い込み方法'];
-            $this->structure=$estimateInfo['構造'];
-            $this->pillar=$estimateInfo['柱無地'];
-            $this->usage=$estimateInfo['用法'];
-            $this->propertyType=$estimateInfo['物件'];
+        if ($response->json()['status'] == '200') {
+            $estimateInfo = $response->json()['data'];
+            $this->contractee = $estimateInfo['契約者名'];
+            $this->location = $estimateInfo['住所'];
+            $this->payMethod = $estimateInfo['払い込み方法'];
+            $this->structure = $estimateInfo['構造'];
+            $this->pillar = $estimateInfo['柱無地'];
+            $this->usage = $estimateInfo['用法'];
+            $this->propertyType = $estimateInfo['物件'];
             $this->rankList = $this->getRankList($this->propertyType);
-            $this->rank=$estimateInfo['級別'];
+            $this->rank = $estimateInfo['級別'];
 
             $this->onChangeBaseRate();
 
-            if($estimateInfo['共済期間']['年']){
-                $this->insuranceYear=$estimateInfo['共済期間']['年'];
+            if ($estimateInfo['共済期間']['年']) {
+                $this->insuranceYear = $estimateInfo['共済期間']['年'];
             }
 
-            if($estimateInfo['共済期間']['月']&&!$this->insuranceYear){
-                $this->insuranceMonth=$estimateInfo['共済期間']['月'];
+            if ($estimateInfo['共済期間']['月'] && ! $this->insuranceYear) {
+                $this->insuranceMonth = $estimateInfo['共済期間']['月'];
             }
 
-            if($estimateInfo['共済期間']['日']&&!$this->insuranceYear){
-                $this->insuranceDay=$estimateInfo['共済期間']['日'];
+            if ($estimateInfo['共済期間']['日'] && ! $this->insuranceYear) {
+                $this->insuranceDay = $estimateInfo['共済期間']['日'];
             }
+
             return;
         }
     }
