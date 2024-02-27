@@ -467,7 +467,7 @@ class EstimateForm extends Component
 
             $this->propertyType =$estimateInfo['物件'];
 
-                        dd($this->propertyType,$estimateInfo['物件']);
+                        // dd($this->propertyType,$estimateInfo['物件']);
         // if ($this->propertyType == '工場') {
         //     $this->findFactoryBuildingItem($this->factoryBuildingCode);
         // }
