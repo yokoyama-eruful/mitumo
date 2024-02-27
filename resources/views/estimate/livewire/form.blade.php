@@ -187,14 +187,14 @@
                         <label class="estimate-label" for="property_type">物件
                             <div class="estimate-input-required">※必須</div>
                         </label>
-                        <select id="property_type" name="property_type" class="estimate-input" required>
+                        {{-- <select id="property_type" name="property_type" class="estimate-input" required>
                             <option value="" hidden>選択してください</option>
                             @foreach ($propertyTypeList as $item)
                                 <option value={{ $item }} @if ($item === $usage) selected @endif>
                                     {{ $item }}
                                 </option>
                             @endforeach
-                        </select>
+                        </select> --}}
                         <label class="estimate-label" for="rank">級別
                             <div class="estimate-input-required">※必須</div>
                         </label>
