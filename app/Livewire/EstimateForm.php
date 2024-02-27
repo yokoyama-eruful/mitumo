@@ -474,7 +474,9 @@ class EstimateForm extends Component
             $this->buildingInsurancePayout = $estimateInfo['共済掛金']['建物'];
             $this->householdInsurancePayout = $estimateInfo['共済掛金']['家財'];
             $this->facilityInsurancePayout = $estimateInfo['共済掛金']['什器備品'];
+            $this->otherFacilityInsurancePayout = $estimateInfo['共済掛金']['その他什器備品'];
             $this->itemInsurancePayout = $estimateInfo['共済掛金']['商品'];
+            $this->otherItemInsurancePayout = $estimateInfo['共済掛金']['その他商品'];
 
             $this->onChangeBaseRate();
 
