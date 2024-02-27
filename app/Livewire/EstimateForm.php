@@ -391,9 +391,9 @@ class EstimateForm extends Component
             $this->onChangeAssessItem();
         }
 
-        // if ($this->propertyType == '工場') {
-        //     $this->findFactoryBuildingItem($this->factoryBuildingCode);
-        // }
+        if ($this->propertyType == '工場') {
+            $this->findFactoryBuildingItem($this->factoryBuildingCode);
+        }
 
         // if (in_array($this->propertyType, ['普通', '住宅'], true)) {
         //     $this->onChangeBaseRate();
@@ -541,11 +541,11 @@ class EstimateForm extends Component
             return;
         }
 
-        if ($this->propertyType === '工場') {
-            $this->onChangeFactoryBuildingCode();
+        // if ($this->propertyType === '工場') {
+        //     $this->onChangeFactoryBuildingCode();
 
-            return;
-        }
+        //     return;
+        // }
 
         if ($this->propertyType === '住宅') {
             $buildingAge = $this->buildingAge ?? '';
