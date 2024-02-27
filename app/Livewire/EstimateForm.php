@@ -464,7 +464,7 @@ class EstimateForm extends Component
             $this->pillar = $estimateInfo['柱無地'];
             $this->usage = $estimateInfo['用法'];
 
-            $this->propertyType =$estimateInfo['物件'];
+            // $this->propertyType =$estimateInfo['物件'];
             // if( $estimateInfo['物件']!=''){
             //     $this->propertyType = '工場';
             // }
