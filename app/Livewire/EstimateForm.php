@@ -496,6 +496,15 @@ class EstimateForm extends Component
                 $this->onChangeFactoryBuildingCode();
             }
 
+            //APIで取得するコードが「標準コード」か「作業工程コード」か判定する
+            if($estimateInfo['職業割増']!=='0'){
+                $this->occupationalSurchargeCode =  $estimateInfo['職作業コード'];
+                $this->onChangeOccupationalSurchargeCode();
+            }else{
+                $this->workSurchargeCode= $estimateInfo['職作業コード'];
+                $this->onChangeWorkSurchargeCode();
+            }
+
             if ($estimateInfo['共済期間']['年']) {
                 $this->insuranceYear = $estimateInfo['共済期間']['年'];
             }
