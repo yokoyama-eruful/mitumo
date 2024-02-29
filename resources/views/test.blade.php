@@ -9,12 +9,12 @@
 
 <style>
     @font-face {
-        font-family: 'MyFont';
+        font-family: 'KyosaiFont';
         src: url(./fonts/kyosai.ttf);
     }
 
     body {
-        font-family: MyFont;
+        font-family: KyosaiFont;
     }
 </style>
 
