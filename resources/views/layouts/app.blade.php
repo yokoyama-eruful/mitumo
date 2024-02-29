@@ -10,7 +10,7 @@
     <style>
         @font-face {
             font-family: 'KyosaiFont';
-            src: url(./fonts/kyosai.ttf);
+            src: url(/fonts/kyosai.ttf);
         }
 
         body {
