@@ -12,7 +12,7 @@
             font-family: kyosai;
             font-style: normal;
             font-weight: normal;
-            src: url('{{ storage_path('fonts/kyosai.ttf') }}');
+            src: url('{{ asset('fonts/kyosai.ttf') }}');
         }
 
         body {
