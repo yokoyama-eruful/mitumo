@@ -462,6 +462,7 @@ class EstimateForm extends Component
             $this->payMethod = $estimateInfo['払い込み方法'];
             $this->structure = $estimateInfo['構造'];
             $this->pillar = $estimateInfo['柱無地'];
+            $this->fireResistance =$estimateInfo['耐火基準'];
             $this->usage = $estimateInfo['用法'];
 
 
