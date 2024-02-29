@@ -9,14 +9,12 @@
     @vite(['resources/css/app.css'])
     <style>
         @font-face {
-            font-family: kyosai;
-            font-style: normal;
-            font-weight: normal;
-            src: url('{{ asset('fonts/kyosai.ttf') }}');
+            font-family: 'KyosaiFont';
+            src: url(./fonts/kyosai.ttf);
         }
 
         body {
-            font-family: kyosai;
+            font-family: KyosaiFont;
         }
     </style>
 </head>
