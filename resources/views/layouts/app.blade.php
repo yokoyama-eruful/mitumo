@@ -8,6 +8,12 @@
     <title>火災見積書入力フォーム</title>
     @vite(['resources/css/app.css'])
 </head>
+@font-face {
+font-family: ipag;
+font-style: normal;
+font-weight: normal;
+src:url('{{ storage_path(' fonts/kyosai.ttf') }}');
+}
 
 <body class="flex flex-col min-h-screen max-w-full">
     <header id="header" class="bg-white w-full z-10 top-0 shadow">

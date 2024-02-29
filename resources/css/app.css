@@ -4,12 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-    font-family: ipag;
-    font-style: normal;
-    font-weight: normal;
-    src: url("/fonts/kyosai.ttf");
-}
 
 @layer components {
     .estimate-input-box {
