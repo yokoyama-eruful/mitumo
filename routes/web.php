@@ -15,6 +15,10 @@ use App\Http\Controllers\PreviewController;
 use App\Http\Controllers\TopController;
 use Illuminate\Support\Facades\Route;
 
+
+Route::get('/test',function(){
+    return view('test');
+});
 Route::controller(AuthController::class)
     ->name('auth.')
     ->group(function () {
