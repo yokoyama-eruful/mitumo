@@ -444,8 +444,7 @@ class EstimateForm extends Component
                 || $response->json()['status'] == '404'
                 || $response->json()['status'] == '302'
             ) {
-                $this->dispatch('alert', '証書番号:'.$this->certificateNumber.'のデータは見つかりません');
-
+                $this->dispatch('alert', '証書番号:'.$this->certificateNumber.'のデータは見つかりません。<br>もしくは、古いデータの可能性があります');
                 return;
             }
 
@@ -521,8 +520,10 @@ class EstimateForm extends Component
                 $estimateInfo['契約開始日']['年'].'-'.$estimateInfo['契約開始日']['月'].'-'.$estimateInfo['契約開始日']['日']
             );
 
-            if (CarbonImmutable::parse('2024-04-01') > $contractStartDate) {
-                $this->dispatch('alert', '2024年3月以前の契約開始日ため、割引率が適用されませんでした');
+            if (($estimateInfo['その他割引（旧）']??0) > 0
+                &&CarbonImmutable::parse('2024-04-01') < $contractStartDate
+            ) {
+                $this->dispatch('alert', '2024年3月以前の契約開始日のため、割引率が適用されませんでした');
             } else {
                 $this->discountFireExtinguisher = $estimateInfo['割引']['消化設備'];
                 $this->discountSecurity = $estimateInfo['割引']['セキュリティ'];
