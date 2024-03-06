@@ -7,7 +7,7 @@
 
     <title>火災見積書入力フォーム</title>
     @vite(['resources/css/app.css'])
-    <style>
+    {{-- <style>
         @font-face {
             font-family: 'KyosaiFont';
             src: url(/fonts/kyosai.ttf);
@@ -16,7 +16,7 @@
         body {
             font-family: KyosaiFont;
         }
-    </style>
+    </style> --}}
 </head>
 
 
