@@ -491,18 +491,25 @@ class Futsu2Form extends Component
 
             if ($estimateInfo['共済期間']['年']) {
                 $this->insuranceYear = $estimateInfo['共済期間']['年'];
-
-                if ($estimateInfo['共済期間']['月'] && ! $this->insuranceYear) {
-                    $this->insuranceMonth = $estimateInfo['共済期間']['月'];
-                }
-
-                if ($estimateInfo['共済期間']['日'] && ! $this->insuranceYear) {
-                    $this->insuranceDay = $estimateInfo['共済期間']['日'];
-                }
-
-                return;
             }
 
+            if ($estimateInfo['共済期間']['月'] && ! $this->insuranceYear) {
+                $this->insuranceMonth = $estimateInfo['共済期間']['月'];
+            }
+
+            if ($estimateInfo['共済期間']['日'] && ! $this->insuranceYear) {
+                $this->insuranceDay = $estimateInfo['共済期間']['日'];
+            }
+
+            if (intval($estimateInfo['契約開始日']['年']) <= 2024 && intval($estimateInfo['契約開始日']['月']) < 3) {
+                $this->dispatch('alert', '2024年3月以前の契約開始日ため、割引率が適用されませんでした');
+            } else {
+                $this->discountFireExtinguisher = $estimateInfo['割引']['消化設備'];
+                $this->discountSecurity = $estimateInfo['割引']['セキュリティ'];
+                $this->discountPublic = $estimateInfo['割引']['公有'];
+                $this->discountRiskRate = $estimateInfo['割引']['リスク'];
+                $this->otherDiscount = $estimateInfo['割引']['その他'];
+            }
         }
     }
 
