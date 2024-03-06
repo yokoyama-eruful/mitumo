@@ -501,7 +501,10 @@ class Futsu2Form extends Component
                 $this->insuranceDay = $estimateInfo['共済期間']['日'];
             }
 
-            if (intval($estimateInfo['契約開始日']['年']) <= 2024 && intval($estimateInfo['契約開始日']['月']) < 3) {
+            $contractStartDate = CarbonImmutable::parse(
+                $estimateInfo['契約開始日']['年'].'-'.$estimateInfo['契約開始日'].'-'.$estimateInfo['契約開始日']
+            );
+            if (CarbonImmutable::parse('2024-04-01') < $contractStartDate) {
                 $this->dispatch('alert', '2024年3月以前の契約開始日ため、割引率が適用されませんでした');
             } else {
                 $this->discountFireExtinguisher = $estimateInfo['割引']['消化設備'];
