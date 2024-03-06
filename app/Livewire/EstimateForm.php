@@ -462,12 +462,11 @@ class EstimateForm extends Component
             $this->payMethod = $estimateInfo['払い込み方法'];
             $this->structure = $estimateInfo['構造'];
             $this->pillar = $estimateInfo['柱無地'];
-            $this->fireResistance =$estimateInfo['耐火基準'];
+            $this->fireResistance = $estimateInfo['耐火基準'];
             $this->usage = $estimateInfo['用法'];
 
-
             $this->propertyType = $estimateInfo['物件'];
-            
+
             $this->rankList = $this->getRankList($this->propertyType);
             $this->rank = $estimateInfo['級別'];
             $this->floorArea = $estimateInfo['延床面積'];
@@ -477,7 +476,7 @@ class EstimateForm extends Component
 
             $this->buildingYear = $estimateInfo['築年数'] == 0 ? null : $estimateInfo['築年数'];
             $this->onChangeBuildingAge();
-            
+
             $this->buildingInsurancePayout = $estimateInfo['共済掛金']['建物'];
             $this->householdInsurancePayout = $estimateInfo['共済掛金']['家財'];
             $this->facilityInsurancePayout = $estimateInfo['共済掛金']['什器備品'];
@@ -488,21 +487,21 @@ class EstimateForm extends Component
             $this->onChangeBaseRate();
 
             //物件で普通が選択された時の動産割増が0以外の値の場合、決め打ちで1級（カテゴリー）
-            if($this->propertyType=='普通'){
-                $this->chattelSurchargeCategory =  $estimateInfo['動産割増']!='0'?'1級品':'-';
+            if ($this->propertyType == '普通') {
+                $this->chattelSurchargeCategory = $estimateInfo['動産割増'] != '0' ? '1級品' : '-';
             }
 
-            if($this->propertyType=='工場'){
-                $this->factoryBuildingCode =  $estimateInfo['職作業コード'];
+            if ($this->propertyType == '工場') {
+                $this->factoryBuildingCode = $estimateInfo['職作業コード'];
                 $this->onChangeFactoryBuildingCode();
             }
 
             //APIで取得するコードが「標準コード」か「作業工程コード」か判定する
-            if($estimateInfo['職業割増']!=='0'){
-                $this->occupationalSurchargeCode =  $estimateInfo['職作業コード'];
+            if ($estimateInfo['職業割増'] !== '0') {
+                $this->occupationalSurchargeCode = $estimateInfo['職作業コード'];
                 $this->onChangeOccupationalSurchargeCode();
-            }else{
-                $this->workSurchargeCode= $estimateInfo['職作業コード'];
+            } else {
+                $this->workSurchargeCode = $estimateInfo['職作業コード'];
                 $this->onChangeWorkSurchargeCode();
             }
 
@@ -516,6 +515,14 @@ class EstimateForm extends Component
 
             if ($estimateInfo['共済期間']['日'] && ! $this->insuranceYear) {
                 $this->insuranceDay = $estimateInfo['共済期間']['日'];
+            }
+
+            if (intval($estimateInfo['契約開始日']['年']) <= 2024 && intval($estimateInfo['契約開始日']['月']) < 3) {
+                $this->dispatch('alert', '2024年3月以前の契約開始日ため、割引率が適用されませんでした');
+            } else {
+                $this->discountFireExtinguisher = $estimateInfo['割引']['消化設備'];
+                $this->discountSecurity = $estimateInfo['割引']['セキュリティ'];
+                $this->discountPublic = $estimateInfo['割引']['公有'];
             }
 
             return;

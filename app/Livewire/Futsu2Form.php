@@ -396,7 +396,7 @@ class Futsu2Form extends Component
         return view('futsu2.livewire.form');
     }
 
-    /*
+    /**
      * 証書番号
      */
     public function onClickCertificateNumber()
@@ -446,12 +446,11 @@ class Futsu2Form extends Component
             $this->payMethod = $estimateInfo['払い込み方法'];
             $this->structure = $estimateInfo['構造'];
             $this->pillar = $estimateInfo['柱無地'];
+            $this->fireResistance = $estimateInfo['耐火基準'];
             $this->usage = $estimateInfo['用法'];
 
-            if( $estimateInfo['物件']!=''){
-                $this->propertyType = $estimateInfo['物件'];
-            }
-            
+            $this->propertyType = $estimateInfo['物件'];
+
             $this->rankList = $this->getRankList($this->propertyType);
             $this->rank = $estimateInfo['級別'];
             $this->floorArea = $estimateInfo['延床面積'];
@@ -461,7 +460,7 @@ class Futsu2Form extends Component
 
             $this->buildingYear = $estimateInfo['築年数'] == 0 ? null : $estimateInfo['築年数'];
             $this->onChangeBuildingAge();
-            
+
             $this->buildingInsurancePayout = $estimateInfo['共済掛金']['建物'];
             $this->householdInsurancePayout = $estimateInfo['共済掛金']['家財'];
             $this->facilityInsurancePayout = $estimateInfo['共済掛金']['什器備品'];
@@ -472,28 +471,38 @@ class Futsu2Form extends Component
             $this->onChangeBaseRate();
 
             //物件で普通が選択された時の動産割増が0以外の値の場合、決め打ちで1級（カテゴリー）
-            if($this->propertyType=='普通'){
-                $this->chattelSurchargeCategory =  $estimateInfo['動産割増']!='0'?'1級品':'-';
+            if ($this->propertyType == '普通') {
+                $this->chattelSurchargeCategory = $estimateInfo['動産割増'] != '0' ? '1級品' : '-';
             }
 
-            if($this->propertyType=='工場'){
-                $this->factoryBuildingCode =  $estimateInfo['職作業コード'];
+            if ($this->propertyType == '工場') {
+                $this->factoryBuildingCode = $estimateInfo['職作業コード'];
                 $this->onChangeFactoryBuildingCode();
+            }
+
+            //APIで取得するコードが「標準コード」か「作業工程コード」か判定する
+            if ($estimateInfo['職業割増'] !== '0') {
+                $this->occupationalSurchargeCode = $estimateInfo['職作業コード'];
+                $this->onChangeOccupationalSurchargeCode();
+            } else {
+                $this->workSurchargeCode = $estimateInfo['職作業コード'];
+                $this->onChangeWorkSurchargeCode();
             }
 
             if ($estimateInfo['共済期間']['年']) {
                 $this->insuranceYear = $estimateInfo['共済期間']['年'];
+
+                if ($estimateInfo['共済期間']['月'] && ! $this->insuranceYear) {
+                    $this->insuranceMonth = $estimateInfo['共済期間']['月'];
+                }
+
+                if ($estimateInfo['共済期間']['日'] && ! $this->insuranceYear) {
+                    $this->insuranceDay = $estimateInfo['共済期間']['日'];
+                }
+
+                return;
             }
 
-            if ($estimateInfo['共済期間']['月'] && ! $this->insuranceYear) {
-                $this->insuranceMonth = $estimateInfo['共済期間']['月'];
-            }
-
-            if ($estimateInfo['共済期間']['日'] && ! $this->insuranceYear) {
-                $this->insuranceDay = $estimateInfo['共済期間']['日'];
-            }
-
-            return;
         }
     }
 
