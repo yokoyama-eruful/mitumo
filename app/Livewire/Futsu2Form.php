@@ -502,7 +502,7 @@ class Futsu2Form extends Component
             }
 
             $contractStartDate = CarbonImmutable::parse(
-                $estimateInfo['契約開始日']['年'].'-'.$estimateInfo['契約開始日'].'-'.$estimateInfo['契約開始日']
+                $estimateInfo['契約開始日']['年'].'-'.$estimateInfo['契約開始日']['月'].'-'.$estimateInfo['契約開始日']['日']
             );
             if (CarbonImmutable::parse('2024-04-01') < $contractStartDate) {
                 $this->dispatch('alert', '2024年3月以前の契約開始日ため、割引率が適用されませんでした');
