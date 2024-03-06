@@ -444,7 +444,7 @@ class EstimateForm extends Component
                 || $response->json()['status'] == '404'
                 || $response->json()['status'] == '302'
             ) {
-                $this->dispatch('alert', '証書番号:'.$this->certificateNumber.'のデータは見つかりません。<br>もしくは、古いデータの可能性があります');
+                $this->dispatch('alert', '証書番号:'.$this->certificateNumber.'のデータは見つかりません。もしくは、古いデータの可能性があります');
                 return;
             }
 
