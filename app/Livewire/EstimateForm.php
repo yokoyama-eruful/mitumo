@@ -523,6 +523,7 @@ class EstimateForm extends Component
                 $this->discountFireExtinguisher = $estimateInfo['割引']['消化設備'];
                 $this->discountSecurity = $estimateInfo['割引']['セキュリティ'];
                 $this->discountPublic = $estimateInfo['割引']['公有'];
+                $this->discountRiskRate = $estimateInfo['割引']['リスク'];
             }
 
             return;
