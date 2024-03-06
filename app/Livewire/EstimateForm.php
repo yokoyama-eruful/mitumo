@@ -521,7 +521,7 @@ class EstimateForm extends Component
                 $estimateInfo['契約開始日']['年'].'-'.$estimateInfo['契約開始日']['月'].'-'.$estimateInfo['契約開始日']['日']
             );
 
-            if (CarbonImmutable::parse('2024-04-01') < $contractStartDate) {
+            if (CarbonImmutable::parse('2024-04-01') > $contractStartDate) {
                 $this->dispatch('alert', '2024年3月以前の契約開始日ため、割引率が適用されませんでした');
             } else {
                 $this->discountFireExtinguisher = $estimateInfo['割引']['消化設備'];
