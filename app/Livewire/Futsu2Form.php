@@ -515,6 +515,8 @@ class Futsu2Form extends Component
                 $this->discountRiskRate = $estimateInfo['割引']['リスク'];
                 $this->otherDiscount = $estimateInfo['割引']['その他'];
             }
+
+            $this->actualLossFactor = $estimateInfo['実損払係数']??'';
         }
     }
 

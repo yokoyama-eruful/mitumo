@@ -532,7 +532,7 @@ class EstimateForm extends Component
                 $this->otherDiscount = $estimateInfo['割引']['その他'];
             }
 
-            return;
+            $this->actualLossFactor = $estimateInfo['実損払係数']??'';
         }
     }
 
