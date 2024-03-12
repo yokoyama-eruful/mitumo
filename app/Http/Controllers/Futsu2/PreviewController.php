@@ -32,8 +32,6 @@ class PreviewController extends Controller
             abort(404);
         }
 
-        $test = new AssessNormal($estimate);
-
         $standardPremium = new StandardInsurancePremium($estimate);
         $standardCompensation = new Futsu2Compensation($estimate->property_type);
 
@@ -77,6 +75,7 @@ class PreviewController extends Controller
         }
 
         $standard = new StandardInsurancePremium($estimate);
+
         $occupationalSurchargeItem = new OccupationalSurcharge('estimateFutsu2/surchargeTable/occupationalSurchargeTable.csv');
         $workSurchargeItem = new WorkSurcharge('estimateFutsu2/surchargeTable/workSurchargeTable.csv');
         $factoryPropertyBasePremiumItem = new FactoryPropertyBasePremium();
