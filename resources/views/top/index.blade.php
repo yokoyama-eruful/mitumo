@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('main')
-    <p class="text-xl font-bold px-3 pt-3 ml-10">新規</p>
     <main class="min-h-[800px] flex flex-col overflow-y-auto overflow-x-hidden">
         <div class="flex flex-row justify-center space-x-10 w-screen mt-3">
             <div class="flex justify-center">
@@ -41,24 +40,24 @@
         <div class="flex flex-row ml-10 space-x-5 text-xl">
             @if ($estimateType == 'futsu')
                 <a
-                    class="ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-blue-400 bg-blue-200">
-                    <i class="fas fa-fire fa-lg text-blue-500 mr-2"></i>
+                    class="w-48 text-center ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-blue-400 bg-blue-200">
+                    <i class="fas fa-fire fa-lg text-blue-500 mr-1"></i>
                     普通・総合火災
                 </a>
                 <a href="{{ route('top.index', ['estimateType' => 'futsu2']) }}"
-                    class="ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-white hover:scale-110">
-                    <i class="fas fa-fire fa-lg text-green-500 mr-2"></i>
+                    class="w-48 text-center ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-white hover:scale-110">
+                    <i class="fas fa-fire fa-lg text-green-500 mr-1"></i>
                     普通火災Ⅱ
                 </a>
             @else
                 <a href="{{ route('top.index', ['estimateType' => 'futsu']) }}"
-                    class="ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-white hover:scale-110">
-                    <i class="fas fa-fire fa-lg text-blue-500 mr-2"></i>
+                    class="w-48 text-center ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-white hover:scale-110">
+                    <i class="fas fa-fire fa-lg text-blue-500 mr-1"></i>
                     普通・総合火災
                 </a>
                 <a
-                    class="ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-green-400 bg-green-200">
-                    <i class="fas fa-fire fa-lg text-green-500 mr-2"></i>
+                    class="w-48 text-center ease-in transition duration-400 block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-green-400 bg-green-200">
+                    <i class="fas fa-fire fa-lg text-green-500 mr-1"></i>
                     普通火災Ⅱ
                 </a>
             @endif
