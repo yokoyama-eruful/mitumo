@@ -27,7 +27,6 @@ final class BuildingBaseRate
         $buildingAge = $buildingAge > 25 ? 25 : $buildingAge;
 
         $result = array_filter($this->rateList, function ($item) use ($propertyType, $buildingAge, $rank) {
-
             return
              $item['物件'] === $propertyType
                 && $item['築年数'] == $buildingAge
@@ -46,7 +45,6 @@ final class BuildingBaseRate
     private function makeRateList($path)
     {
         $filePath = Storage::path($path);
-
         $rateList = [];
 
         $handle = fopen($filePath, 'r');

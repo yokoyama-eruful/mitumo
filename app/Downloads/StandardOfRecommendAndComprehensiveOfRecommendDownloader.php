@@ -44,7 +44,7 @@ class StandardOfRecommendAndComprehensiveOfRecommendDownloader
             Storage::makeDirectory('/excel');
             Storage::makeDirectory('/pdf');
 
-            $export_excel_path = storage_path('app/excel/standardOfRecommendAndComprehensiveOfRecommend.xlsx');
+            $export_excel_path = storage_path('app/excel/standardOfRecommendAndComprehensiveOfRecommend'.$estimate->id.'.xlsx');
 
             $writer->save($export_excel_path);
 
@@ -54,7 +54,7 @@ class StandardOfRecommendAndComprehensiveOfRecommendDownloader
                 exec($cmd);
             }
 
-            $pdf = storage_path('app/pdf/standardOfRecommendAndComprehensiveOfRecommend.pdf');
+            $pdf = storage_path('app/pdf/standardOfRecommendAndComprehensiveOfRecommend'.$estimate->id.'.pdf');
             $fileName = 'おすすめ_普通_総合_火災共済見積書_' .$estimate->contractee. date('YmdHi') . '.pdf';
 
             header('Content-Type:' . $pdf);
@@ -62,6 +62,9 @@ class StandardOfRecommendAndComprehensiveOfRecommendDownloader
             header('Cache-Control: max-age=0');
 
             readfile($pdf);
+
+            Storage::deleteDirectory('/excel');
+            Storage::deleteDirectory('/pdf');
         }
 
         if ($fileType === 'excel') {

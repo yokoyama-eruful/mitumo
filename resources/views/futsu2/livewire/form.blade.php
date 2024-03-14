@@ -45,11 +45,13 @@
                     <div class="futsu2-title">
                         <label class="p-3">共済契約者情報</label>
                     </div>
-                    <div class="estimate-input-box">
+                    <div class="estimate-input-box flex">
                         <label class="futsu2-label" for="certificate_number">証書番号
                         </label>
                         <input id="certificate_number" name="certificate_number" class="estimate-input"
-                            wire:model="certificateNumber" required>
+                        wire:model="certificateNumber" required>
+                    <button type="button" wire:click="onClickCertificateNumber"
+                        class="mx-2 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded whitespace-nowrap">証書番号参照</button>
                     </div>
                     <div class="estimate-input-box">
                         <label class="futsu2-label" for="contractee">ご契約者名
@@ -134,7 +136,7 @@
                             <label class="futsu2-label" for="fire_resistance">耐火基準</label>
                             <select id="fire_resistance" name="fire_resistance" wire:model="fireResistance"
                                 class="estimate-input">
-                                <option value="" hidden>選択してください</option>
+                                <option value="" hidden></option>
                                 @foreach ($fireResistanceList as $item)
                                     <option value={{ $item }} @if ($item === $fireResistance) selected @endif>
                                         {{ $item }}</option>
@@ -157,7 +159,7 @@
                             </label>
                             <select id="usage" name="usage" wire:model="usage" class="estimate-input"
                                 required>
-                                <option value="" hidden>選択してください</option>
+                                <option value="" hidden></option>
                                 @foreach ($usageList as $item)
                                     <option value={{ $item }} @if ($item === $usage) selected @endif>
                                         {{ $item }}</option>

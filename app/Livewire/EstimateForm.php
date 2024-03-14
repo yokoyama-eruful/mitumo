@@ -19,7 +19,9 @@ use App\Domains\WorkSurcharge;
 use App\Models\Estimate;
 use App\Utils\FullWidthDigitConverter;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 
 class EstimateForm extends Component
@@ -411,6 +413,132 @@ class EstimateForm extends Component
     }
 
     /**
+     * 証書番号
+     */
+    public function onClickCertificateNumber()
+    {
+        if ($this->certificateNumber == '') {
+            $this->dispatch('alert', '証書番号を入力してください。');
+
+            return;
+        }
+
+        $apiServer = config('api.server');
+        $apiToken = config('api.token');
+
+        if (is_null($apiToken)) {
+            $this->dispatch('alert', 'APIトークンが適切ではありません。管理者にご確認ください。');
+
+            return;
+        }
+        $headers = [
+            'Content-Type' => 'application/json',
+            'authorization' => 'Bearer '.$apiToken,
+        ];
+
+        try {
+            $response = Http::withHeaders($headers)
+                ->get('http://'.$apiServer.'/api/code/'.$this->certificateNumber);
+
+            if ($response->json() == null
+                || $response->json()['status'] == '404'
+                || $response->json()['status'] == '302'
+            ) {
+                $this->dispatch('alert', '証書番号:'.$this->certificateNumber.'のデータは見つかりません。もしくは、古いデータの可能性があります');
+                return;
+            }
+
+        } catch (HttpClientException $e) {
+            $this->dispatch('alert', '現在、参照機能がご利用できません');
+
+            return;
+        }
+
+        if ($response->json()['status'] == '200') {
+            $estimateInfo = $response->json()['data'];
+            $this->contractee = $estimateInfo['契約者名'];
+            $this->location = $estimateInfo['住所'];
+            $this->payMethod = $estimateInfo['払い込み方法'];
+            $this->structure = $estimateInfo['構造'];
+            $this->otherStructure = $estimateInfo['その他構造'];
+            $this->pillar = $estimateInfo['柱無地'];
+            $this->fireResistance = $estimateInfo['耐火基準'];
+            $this->usage = $estimateInfo['用法'];
+            $this->otherUsage = $estimateInfo['その他用法'];
+
+            $this->propertyType = $estimateInfo['物件'];
+
+            $this->rankList = $this->getRankList($this->propertyType);
+            $this->rank = $estimateInfo['級別'];
+            $this->floorArea = $estimateInfo['延床面積'];
+            $this->exclusiveArea = $estimateInfo['専有面積'];
+            $this->floor = $estimateInfo['階'];
+            $this->building = $estimateInfo['棟'];
+
+            $this->buildingYear = $estimateInfo['築年数'] == 0 ? null : $estimateInfo['築年数'];
+            $this->onChangeBuildingAge();
+
+            $this->buildingInsurancePayout = $estimateInfo['共済掛金']['建物'];
+            $this->householdInsurancePayout = $estimateInfo['共済掛金']['家財'];
+            $this->facilityInsurancePayout = $estimateInfo['共済掛金']['什器備品'];
+            $this->otherFacilityInsurancePayout = $estimateInfo['共済掛金']['その他什器備品'];
+            $this->itemInsurancePayout = $estimateInfo['共済掛金']['商品'];
+            $this->otherItemInsurancePayout = $estimateInfo['共済掛金']['その他商品'];
+
+            $this->onChangeBaseRate();
+
+            //物件で普通が選択された時の動産割増が0以外の値の場合、決め打ちで1級（カテゴリー）
+            if ($this->propertyType == '普通') {
+                $this->chattelSurchargeCategory = $estimateInfo['動産割増'] != '0' ? '1級品' : '-';
+            }
+
+            if ($this->propertyType == '工場') {
+                $this->factoryBuildingCode = $estimateInfo['職作業コード'];
+                $this->onChangeFactoryBuildingCode();
+            }
+
+            //APIで取得するコードが「標準コード」か「作業工程コード」か判定する
+            if ($estimateInfo['職業割増'] !== '0') {
+                $this->occupationalSurchargeCode = $estimateInfo['職作業コード'];
+                $this->onChangeOccupationalSurchargeCode();
+            } else {
+                $this->workSurchargeCode = $estimateInfo['職作業コード'];
+                $this->onChangeWorkSurchargeCode();
+            }
+
+            if ($estimateInfo['共済期間']['年']) {
+                $this->insuranceYear = $estimateInfo['共済期間']['年'];
+            }
+
+            if ($estimateInfo['共済期間']['月'] && ! $this->insuranceYear) {
+                $this->insuranceMonth = $estimateInfo['共済期間']['月'];
+            }
+
+            if ($estimateInfo['共済期間']['日'] && ! $this->insuranceYear) {
+                $this->insuranceDay = $estimateInfo['共済期間']['日'];
+            }
+
+            $contractStartDate = CarbonImmutable::parse(
+                $estimateInfo['契約開始日']['年'].'-'.$estimateInfo['契約開始日']['月'].'-'.$estimateInfo['契約開始日']['日']
+            );
+
+            if (($estimateInfo['その他割引（旧）']??0) > 0
+                &&CarbonImmutable::parse('2024-04-01') > $contractStartDate
+            ) {
+                $this->dispatch('alert', '2024年3月以前の契約開始日のため、割引率が適用されませんでした');
+            } else {
+                $this->discountFireExtinguisher = $estimateInfo['割引']['消化設備'];
+                $this->discountSecurity = $estimateInfo['割引']['セキュリティ'];
+                $this->discountPublic = $estimateInfo['割引']['公有'];
+                $this->discountRiskRate = $estimateInfo['割引']['リスク'];
+                $this->otherDiscount = $estimateInfo['割引']['その他'];
+            }
+
+            $this->actualLossFactor = $estimateInfo['実損払係数']??'';
+        }
+    }
+
+    /**
      * 物件情報に連動した級別セレクトボックスを設置する
      *
      * @return void
@@ -497,6 +625,10 @@ class EstimateForm extends Component
     {
         $this->insuranceMonth = null;
         $this->insuranceDay = null;
+
+        if ($this->insuranceYear) {
+            $this->insuranceYear = mb_convert_kana($this->insuranceYear, 'n');
+        }
     }
 
     /**
@@ -505,6 +637,10 @@ class EstimateForm extends Component
     public function onChangeInsuranceMonth()
     {
         $this->insuranceYear = null;
+
+        if ($this->insuranceMonth) {
+            $this->insuranceMonth = mb_convert_kana($this->insuranceMonth, 'n');
+        }
     }
 
     /**
@@ -513,6 +649,40 @@ class EstimateForm extends Component
     public function onChangeInsuranceDay()
     {
         $this->insuranceYear = null;
+
+        if ($this->insuranceDay) {
+            $this->insuranceDay = mb_convert_kana($this->insuranceDay, 'n');
+        }
+    }
+
+    /**
+     * おすすめ契約1
+     */
+    public function onChangeRecommend1()
+    {
+        if ($this->recommend1) {
+            $this->recommend1 = mb_convert_kana($this->recommend1, 'n');
+        }
+    }
+
+    /**
+     * おすすめ契約2
+     */
+    public function onChangeRecommend2()
+    {
+        if ($this->recommend2) {
+            $this->recommend2 = mb_convert_kana($this->recommend2, 'n');
+        }
+    }
+
+    /**
+     * おすすめ契約3
+     */
+    public function onChangeRecommend3()
+    {
+        if ($this->recommend3) {
+            $this->recommend3 = mb_convert_kana($this->recommend3, 'n');
+        }
     }
 
     /**
@@ -523,11 +693,13 @@ class EstimateForm extends Component
     public function onChangeAssessItem()
     {
         if ($this->floorArea) {
+            $this->floorArea = mb_convert_kana($this->floorArea, 'n');
             $this->floorArea = number_format((float) $this->floorArea, 2);
             $this->floorArea = str_replace(',', '', $this->floorArea);
         }
 
         if ($this->exclusiveArea) {
+            $this->exclusiveArea = mb_convert_kana($this->exclusiveArea, 'n');
             $this->exclusiveArea = number_format((float) $this->exclusiveArea, 2);
             $this->exclusiveArea = str_replace(',', '', $this->exclusiveArea);
         }

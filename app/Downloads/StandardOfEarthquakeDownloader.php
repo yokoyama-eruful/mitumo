@@ -42,7 +42,7 @@ class StandardOfEarthquakeDownloader
             Storage::makeDirectory('/excel');
             Storage::makeDirectory('/pdf');
 
-            $export_excel_path = storage_path('app/excel/standardOfEarthquake.xlsx');
+            $export_excel_path = storage_path('app/excel/standardOfEarthquake'.$estimate->id.'.xlsx');
 
             $writer->save($export_excel_path);
 
@@ -52,7 +52,7 @@ class StandardOfEarthquakeDownloader
                 exec($cmd);
             }
 
-            $pdf = storage_path('app/pdf/standardOfEarthquake.pdf');
+            $pdf = storage_path('app/pdf/standardOfEarthquake'.$estimate->id.'.pdf');
             $fileName = '地震おすすめ_普通火災共済見積書_' .$estimate->contractee. date('YmdHi')  . '.pdf';
 
             header('Content-Type:' . $pdf);
@@ -60,6 +60,9 @@ class StandardOfEarthquakeDownloader
             header('Cache-Control: max-age=0');
 
             readfile($pdf);
+
+            Storage::deleteDirectory('/excel');
+            Storage::deleteDirectory('/pdf');
         }
 
         if ($fileType === 'excel') {

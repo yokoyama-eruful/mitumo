@@ -60,7 +60,7 @@ class ComprehensiveDownloader
             Storage::makeDirectory('/excel');
             Storage::makeDirectory('/pdf');
 
-            $export_excel_path = storage_path('app/excel/comprehensive.xlsx');
+            $export_excel_path = storage_path('app/excel/comprehensive'.$estimate->id.'.xlsx');
 
             $writer->save($export_excel_path);
 
@@ -70,7 +70,7 @@ class ComprehensiveDownloader
                 exec($cmd);
             }
 
-            $pdf = storage_path('app/pdf/comprehensive.pdf');
+            $pdf = storage_path('app/pdf/comprehensive'.$estimate->id.'.pdf');
             $fileName = '総合火災共済見積書_' .$estimate->contractee . date('YmdHi'). '.pdf';
 
             header('Content-Type:' . $pdf);
@@ -78,6 +78,9 @@ class ComprehensiveDownloader
             header('Cache-Control: max-age=0');
 
             readfile($pdf);
+
+            Storage::deleteDirectory('/excel');
+            Storage::deleteDirectory('/pdf');
         }
 
         if ($fileType === 'excel') {

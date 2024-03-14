@@ -15,6 +15,7 @@ use App\Domains\StandardInsurancePremium;
 use App\Domains\WorkSurcharge;
 use App\Http\Controllers\Controller;
 use App\Services\Futsu2\Futsu2Service;
+use Illuminate\Support\Facades\Auth;
 
 class PreviewController extends Controller
 {
@@ -26,7 +27,10 @@ class PreviewController extends Controller
     public function standard(int $id): \Illuminate\View\View
     {
         $estimate = $this->futsu2Service->find($id);
-        $test = new AssessNormal($estimate);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
 
         $standardPremium = new StandardInsurancePremium($estimate);
         $standardCompensation = new Futsu2Compensation($estimate->property_type);
@@ -37,6 +41,11 @@ class PreviewController extends Controller
     public function standardOfRecommend(int $id)
     {
         $estimate = $this->futsu2Service->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $standardPremium = new StandardInsurancePremium($estimate);
         $recommendStandardPremium = new RecommendStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
 
@@ -46,6 +55,11 @@ class PreviewController extends Controller
     public function standardOfEarthquake(int $id)
     {
         $estimate = $this->futsu2Service->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $standardPremium = new StandardInsurancePremium($estimate);
         $earthquakePremium = new EarthquakeStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
 
@@ -55,7 +69,13 @@ class PreviewController extends Controller
     public function calculation(int $id)
     {
         $estimate = $this->futsu2Service->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         $standard = new StandardInsurancePremium($estimate);
+
         $occupationalSurchargeItem = new OccupationalSurcharge('estimateFutsu2/surchargeTable/occupationalSurchargeTable.csv');
         $workSurchargeItem = new WorkSurcharge('estimateFutsu2/surchargeTable/workSurchargeTable.csv');
         $factoryPropertyBasePremiumItem = new FactoryPropertyBasePremium();

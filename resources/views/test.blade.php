@@ -2,14 +2,44 @@
 <html lang="ja">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>火災見積書ログインページ</title>
-    @vite(['resources/css/app.css'])
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代理所サイト</title>
 </head>
 
+<style>
+    @font-face {
+        font-family: 'KyosaiFont';
+        src: url(./fonts/kyosai.ttf);
+    }
+
+    body {
+        font-family: KyosaiFont;
+    }
+</style>
+
 <body>
-    aaaaaa
+    
+    山　礼三
+    山　礼三
+    
+    
+    
+    
+    
+    
+    適当な普通の文字１２３３
+    
+
+    
+
+    
+
+
+    
+
+    
+    
 </body>
+
 </html>

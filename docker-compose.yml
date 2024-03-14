@@ -5,7 +5,6 @@ services:
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
-        image: sail-8.2/app
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
@@ -21,7 +20,7 @@ services:
             - '.:/var/www/html'
             - ~/.ssh:/home/sail/.ssh
         networks:
-            - sail
+            - mitumo
         depends_on:
             - mysql
     mysql:
@@ -38,8 +37,6 @@ services:
         volumes:
             - 'sail-mysql:/var/lib/mysql'
             - './docker/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
-        networks:
-            - sail
         healthcheck:
             test:
                 - CMD
@@ -48,9 +45,12 @@ services:
                 - '-p${DB_PASSWORD}'
             retries: 3
             timeout: 5s
+        networks:
+            - mitumo
 networks:
-    sail:
-        driver: bridge
+    mitumo:
+        external: true
+
 volumes:
     sail-mysql:
         driver: local

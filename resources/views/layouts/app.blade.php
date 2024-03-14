@@ -2,12 +2,23 @@
 <html lang="ja">
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>火災見積書入力フォーム</title>
     @vite(['resources/css/app.css'])
+    {{-- <style>
+        @font-face {
+            font-family: 'KyosaiFont';
+            src: url(/fonts/kyosai.ttf);
+        }
+
+        body {
+            font-family: KyosaiFont;
+        }
+    </style> --}}
 </head>
+
 
 <body class="flex flex-col min-h-screen max-w-full">
     <header id="header" class="bg-white w-full z-10 top-0 shadow">

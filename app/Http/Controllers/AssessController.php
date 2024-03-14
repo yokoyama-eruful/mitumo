@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Services\AssessDownloadService;
 use App\Services\EstimateService;
+use Illuminate\Support\Facades\Auth;
 
 class AssessController extends Controller
 {
@@ -20,12 +21,20 @@ class AssessController extends Controller
     {
         $estimate = $this->estimateService->find($id);
 
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
+
         return view('estimate.assess.show', ['estimate' => $estimate]);
     }
 
     public function download(int $id, $fileType)
     {
         $estimate = $this->estimateService->find($id);
+
+        if ($estimate->user_id != Auth::id()) {
+            abort(404);
+        }
 
         $this->assessDownloadService->download($estimate, $fileType);
 
