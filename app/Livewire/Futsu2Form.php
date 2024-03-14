@@ -445,9 +445,11 @@ class Futsu2Form extends Component
             $this->location = $estimateInfo['住所'];
             $this->payMethod = $estimateInfo['払い込み方法'];
             $this->structure = $estimateInfo['構造'];
+            $this->otherStructure = $estimateInfo['その他構造'];
             $this->pillar = $estimateInfo['柱無地'];
             $this->fireResistance = $estimateInfo['耐火基準'];
             $this->usage = $estimateInfo['用法'];
+            $this->otherUsage = $estimateInfo['その他用法'];
 
             $this->propertyType = $estimateInfo['物件'];
 
