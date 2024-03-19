@@ -38,6 +38,7 @@ class Estimate extends Model
         'property_type',
         'rank',
         'start_date',
+        'building_year_era',
         'building_year',
         'building_age',
         'pay_method',
@@ -65,11 +66,17 @@ class Estimate extends Model
 
     public function getBuildingStructureAttribute()
     {
+        if($this->building_year_era=='西暦'){
+            $buildingYear = $this->building_year.'年築';
+        }else{
+            $buildingYear = $this->building_year_era.' '.$this->building_year.'年築';
+        }
+        
         $buildingStructure = [
             $this->structure, $this->other_structure, $this->pillar,
             $this->other_pillar, $this->fire_resistance, $this->other_fire_resistance,
             $this->usage, $this->other_usage, $this->building_age ? '築'.$this->building_age.'年' : '',
-            $this->building_year ? '('.$this->building_year.'年築)' : '',
+            $this->building_year ? '('.$buildingYear.')' : '',
         ];
         $buildingStructure = array_filter($buildingStructure);
 

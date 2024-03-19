@@ -16,7 +16,7 @@ final class EstimateStandardInfoDto
             'structure', 'other_structure', 'pillar', 'other_pillar',
             'fire_resistance', 'other_fire_resistance', 'usage',
             'other_usage', 'floor', 'building', 'other', 'property_type',
-            'rank', 'start_date', 'building_year', 'building_age',
+            'rank', 'start_date','building_year_era', 'building_year', 'building_age',
             'pay_method', 'insurance_year', 'insurance_month',
             'insurance_day', 'assess_item', 'building_base_rate',
             'chattel_base_rate',

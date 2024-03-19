@@ -40,6 +40,7 @@ class Futsu2 extends Model
         'property_type',
         'rank',
         'start_date',
+        'building_year_era',
         'building_year',
         'building_age',
         'pay_method',

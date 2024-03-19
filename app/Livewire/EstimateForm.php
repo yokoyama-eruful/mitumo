@@ -18,6 +18,7 @@ use App\Domains\OccupationalSurcharge;
 use App\Domains\WorkSurcharge;
 use App\Models\Estimate;
 use App\Utils\FullWidthDigitConverter;
+use App\Utils\JapaneseEraConverter;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Auth;
@@ -75,6 +76,7 @@ class EstimateForm extends Component
 
     public ?string $startDate = null;
 
+    public ?string $buildingYearEra = null;
     public ?string $buildingYear = null;
 
     public ?string $buildingAge = null;
@@ -304,6 +306,7 @@ class EstimateForm extends Component
 
         $this->rank = old('rank', $estimate->rank);
         $this->startDate = old('start_date', $estimate->start_date?->format('Y-m')) != null ? old('start_date', $estimate->start_date?->format('Y-m')) : now()->format('Y-m');
+        $this->buildingYearEra = old('building_year_era', (string) $estimate->building_year_era);
         $this->buildingYear = old('building_year', (string) $estimate->building_year);
         $this->buildingAge = old('building_age', (string) $estimate->building_age);
         $this->payMethod = old('pay_method', $estimate->pay_method);
@@ -608,10 +611,18 @@ class EstimateForm extends Component
 
         $this->buildingYear = (string) FullWidthDigitConverter::convert($this->buildingYear);
 
-        $buildingDate = CarbonImmutable::createFromDate((int) $this->buildingYear, 1, 1);
-        [$startYear,$startMonth] = explode('-', $this->startDate);
+        $westernYear = $this->buildingYear + JapaneseEraConverter::getJapaneseEraStartYear($this->buildingYearEra);
 
-        $this->buildingAge = $buildingDate->year <= $startYear ? (string) $buildingDate->diffInYears($startYear) : null;
+        $buildingDate = CarbonImmutable::createFromDate(intval($westernYear-1) , 1, 1);
+
+        $startDate = CarbonImmutable::parse($this->startDate);
+
+        if($buildingDate->year <= $startDate->year){
+            $this->buildingAge=(string)$buildingDate->diffInYears($startDate);
+        }else{
+            $this->buildingAge = null;
+        }
+
 
         $this->onChangeBaseRate();
     }
