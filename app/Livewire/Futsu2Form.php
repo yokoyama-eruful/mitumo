@@ -493,7 +493,10 @@ class Futsu2Form extends Component
                 $this->workSurchargeCode = $estimateInfo['職作業コード'];
                 $this->onChangeWorkSurchargeCode();
             }
-
+            
+            $this->insuranceYear=null;
+            $this->insuranceDay =null;
+            $this->insuranceMonth = null;
             if ($estimateInfo['共済期間']['年']) {
                 $this->insuranceYear = $estimateInfo['共済期間']['年'];
             }

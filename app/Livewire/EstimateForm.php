@@ -509,6 +509,9 @@ class EstimateForm extends Component
                 $this->onChangeWorkSurchargeCode();
             }
 
+            $this->insuranceYear=null;
+            $this->insuranceDay =null;
+            $this->insuranceMonth = null;
             if ($estimateInfo['共済期間']['年']) {
                 $this->insuranceYear = $estimateInfo['共済期間']['年'];
             }
