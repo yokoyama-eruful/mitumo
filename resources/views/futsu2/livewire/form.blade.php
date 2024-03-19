@@ -187,7 +187,7 @@
                         </div>
                     </div>
                     <div class="estimate-input-box">
-                        <label class="futsu2-label" for="other">その他</label>
+                        <label class="futsu2-label" for="other">備考</label>
                         <input id="other" name="other" class="estimate-input" wire:model="other">
                         <!-- 任意・常時 -->
                     </div>
