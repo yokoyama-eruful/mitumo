@@ -106,6 +106,13 @@ class Futsu2Form extends Component
 
     public ?string $chattelBaseRate = null;
 
+    public bool $isSonpoBaseRate = false;
+
+    public ?string $sonpoBuildingBaseRate = null;
+
+    public ?string $sonpoChattelBaseRate = null;
+
+
     public ?string $chattelSurcharge = null;
 
     public ?string $actualLossFactor = null;
@@ -317,6 +324,9 @@ class Futsu2Form extends Component
         //物件情報
         $this->buildingBaseRate = old('building_base_rate', (string) $estimate->building_base_rate);
         $this->chattelBaseRate = old('chattel_base_rate', (string) $estimate->chattel_base_rate);
+        $this->isSonpoBaseRate = (bool )old('is_sonpo_base_rate', (string) $estimate?->is_sonpo_base_rate);
+        $this->sonpoBuildingBaseRate = old('sonpo_building_base_rate', (string) $estimate?->sonpo_building_base_rate);
+        $this->sonpoChattelBaseRate = old('sonpo_chattel_base_rate', (string) $estimate?->sonpo_chattel_base_rate);
 
         $this->chattelSurcharge = old('chattel_surcharge', $this->getValueByKey('chattel_surcharge', $estimate->property_detail));
         $this->actualLossFactor = old('actual_loss_factor', $this->getValueByKey('actual_loss_factor', $estimate->property_detail));

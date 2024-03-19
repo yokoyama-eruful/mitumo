@@ -51,12 +51,17 @@ class Estimate extends Model
 
         'property_detail',
         'assess_detail',
+        
+        'is_sonpo_base_rate',
+        'sonpo_building_base_rate', 
+        'sonpo_chattel_base_rate'
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'property_detail' => 'json',
         'assess_detail' => 'json',
+        'is_sonpo_base_rate' => 'boolean',
     ];
 
     public function users()

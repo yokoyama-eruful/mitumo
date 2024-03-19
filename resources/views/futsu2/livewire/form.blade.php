@@ -470,6 +470,26 @@
                             <input id="chattel_base_rate" name="chattel_base_rate" class="estimate-input"
                                 placeholder="物件が「住宅」か「普通」の時は、自動算出されます" wire:model="chattelBaseRate" readonly>
                         </div>
+                        <div class="estimate-input-box">
+                            <div class="futsu2-label flex flex-row" for="chattel_surcharge">
+                                <label> 損保９掛</label>
+                                <input type="checkbox" name="is_sonpo_base_rate" value="true"
+                                    wire:model.lazy="isSonpoBaseRate" class="ms-2 text-xl w-6 h-6">
+                            </div>
+                            @if ($isSonpoBaseRate)
+                                <label for="sonpo_building_base_rate" class="futsu2-label h-auto">
+                                    建物
+                                </label>
+                                <input id="sonpo_building_base_rate" name="sonpo_building_base_rate"
+                                    wire:model="sonpoBuildingBaseRate" class="estimate-input">
+
+                                <label for="sonpo_chattel_base_rate" class="futsu2-label">
+                                    動産
+                                </label>
+                                <input id="sonpo_chattel_base_rate" name="sonpo_chattel_base_rate"
+                                    class="estimate-input" wire:model="sonpoChattelBaseRate">
+                            @endif
+                        </div>
                     @endif
                     @if ($propertyType == '普通')
                         <div class="estimate-input-box">

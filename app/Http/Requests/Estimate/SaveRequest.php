@@ -63,6 +63,10 @@ final class SaveRequest extends FormRequest
             'chattel_base_rate' => ['nullable', 'required_with:household_insurance_payout,facility_insurance_payout,other_facility_insurance_payout,other_facility_insurance_payout,item_insurance_payout,other_item_insurance_payout', 'numeric', 'min:0'],
             'factory_building_code' => ['nullable',  'string'],
 
+            'is_sonpo_base_rate' => ['nullable'],
+            'sonpo_building_base_rate' => ['nullable', 'required_with:is_sonpo_base_rate', 'numeric', 'min:0'],
+            'sonpo_chattel_base_rate' => ['nullable',  'required_with:is_sonpo_base_rate','numeric', 'min:0'],
+            
             // // 動的に変化する項目（物件トリガー
             'chattel_surcharge' => ['nullable', 'string'],
 

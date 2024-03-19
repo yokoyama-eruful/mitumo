@@ -460,7 +460,7 @@
                                 placeholder="物件が「住宅」か「普通」の時は、自動算出されます" wire:model="chattelBaseRate" readonly>
                         </div>
                     @endif
-                    @if (in_array($propertyType, ['工場'], true))
+                    @if ($propertyType == '工場')
                         <div class="estimate-title">
                             <label class="p-3">料率・係数等</label>
                         </div>
@@ -501,6 +501,30 @@
                             <input id="chattel_base_rate" name="chattel_base_rate" class="estimate-input"
                                 placeholder="自動算出されます" wire:model="chattelBaseRate" readonly>
                         </div>
+                    @endif
+                    @if ($propertyType)
+                        <div class="estimate-input-box">
+                            <div class="estimate-label flex flex-row" for="chattel_surcharge">
+                                <label>損保９掛</label>
+                                <input type="checkbox" name="is_sonpo_base_rate" value="true"
+                                    wire:model.lazy="isSonpoBaseRate" class="ms-2 text-xl w-6 h-6">
+                            </div>
+                            @if ($isSonpoBaseRate)
+                                <label for="sonpo_building_base_rate" class="estimate-label h-auto">
+                                    建物
+                                </label>
+                                <input id="sonpo_building_base_rate" name="sonpo_building_base_rate"
+                                    wire:model="sonpoBuildingBaseRate" class="estimate-input">
+
+                                <label for="sonpo_chattel_base_rate" class="estimate-label">
+                                    動産
+                                </label>
+                                <input id="sonpo_chattel_base_rate" name="sonpo_chattel_base_rate"
+                                    class="estimate-input" wire:model="sonpoChattelBaseRate">
+                            @endif
+                        </div>
+                    @endif
+                    @if ($propertyType == '工場')
                         <div class="estimate-input-box">
                             <label class="estimate-label" for="chattel_surcharge">動産割増
                             </label>

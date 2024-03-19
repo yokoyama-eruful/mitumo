@@ -19,7 +19,8 @@ final class EstimateStandardInfoDto
             'rank', 'start_date','building_year_era', 'building_year', 'building_age',
             'pay_method', 'insurance_year', 'insurance_month',
             'insurance_day', 'assess_item', 'building_base_rate',
-            'chattel_base_rate',
+            'chattel_base_rate','is_sonpo_base_rate','sonpo_building_base_rate',
+            'sonpo_chattel_base_rate'
         ]));
 
         if (isset($tmpParams['floor']) && preg_match('/^[０-９]*$/', $tmpParams['floor']) == 1) {
@@ -33,6 +34,8 @@ final class EstimateStandardInfoDto
         if (isset($tmpParams['start_date'])) {
             $tmpParams['start_date'] = $params['start_date'].'-01';
         }
+
+        $tmpParams['is_sonpo_base_rate'] = array_key_exists('is_sonpo_base_rate',$params)?true:false;
 
         $this->params = $tmpParams;
     }
