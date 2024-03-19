@@ -27,7 +27,7 @@ final class SaveRequest extends FormRequest
             'certificate_number' => ['nullable', 'numeric'],
             'contractee' => ['nullable', 'string'],
             'location' => ['nullable', 'string'],
-            'floor_area' => ['nullable', 'required_without:exclusive_area', 'numeric', 'min:0'],
+            'floor_area' => ['nullable', 'numeric', 'min:0'],
             'exclusive_area' => ['nullable', 'numeric', 'min:0'],
             'structure' => ['required', 'string'],
             'other_structure' => ['nullable', 'string'],

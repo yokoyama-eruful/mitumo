@@ -49,9 +49,9 @@
                         <label class="futsu2-label" for="certificate_number">証書番号
                         </label>
                         <input id="certificate_number" name="certificate_number" class="estimate-input"
-                        wire:model="certificateNumber" required>
-                    <button type="button" wire:click="onClickCertificateNumber"
-                        class="mx-2 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded whitespace-nowrap">証書番号参照</button>
+                            wire:model="certificateNumber" required>
+                        <button type="button" wire:click="onClickCertificateNumber"
+                            class="mx-2 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded whitespace-nowrap">証書番号参照</button>
                     </div>
                     <div class="estimate-input-box">
                         <label class="futsu2-label" for="contractee">ご契約者名
@@ -92,7 +92,7 @@
                     <div class="flex flex-row">
                         <div class="estimate-input-box">
                             <label class="futsu2-label" for="structure">構造
-                                <div class="estimate-input-required">※必須</div>
+                                {{-- <div class="estimate-input-required">※必須</div> --}}
                             </label>
                             <select id="structure" name="structure" wire:model="structure" class="estimate-input"
                                 required>
@@ -155,7 +155,7 @@
                     <div class="flex flex-row">
                         <div class="estimate-input-box">
                             <label class="futsu2-label" for="usage">用法
-                                <div class="estimate-input-required">※必須</div>
+                                {{-- <div class="estimate-input-required">※必須</div> --}}
                             </label>
                             <select id="usage" name="usage" wire:model="usage" class="estimate-input"
                                 required>

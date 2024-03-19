@@ -88,7 +88,7 @@
                     <div class="flex flex-row">
                         <div class="estimate-input-box">
                             <label class="estimate-label" for="structure">構造
-                                <div class="estimate-input-required">※必須</div>
+                                {{-- <div class="estimate-input-required">※必須</div> --}}
                             </label>
                             <select id="structure" name="structure" wire:model="structure" class="estimate-input"
                                 required>
@@ -148,7 +148,7 @@
                     <div class="flex flex-row">
                         <div class="estimate-input-box">
                             <label class="estimate-label" for="usage">用法
-                                <div class="estimate-input-required">※必須</div>
+                                {{-- <div class="estimate-input-required">※必須</div> --}}
                             </label>
                             <select id="usage" name="usage" wire:model="usage" class="estimate-input"
                                 required>
