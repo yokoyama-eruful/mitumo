@@ -63,48 +63,82 @@
             @endif
         </div>
 
-        <div class="flex flex-col px-4 sm:px-10 my-5">
+        <div class="flex flex-col px-4 sm:px-10 mb-5">
             <div class="min-h-[522px] w-full bg-gray-200 overflow-hidden border border-gray-200 shadow-md">
-                @if ($estimateType == 'futsu')
-                    <table class="w-full border-collapse bg-gray-200 text-left text-sm text-gray-500 leading-normal">
-                        <thead class="bg-blue-300">
-                            <tr class="">
-                                <th class="px-5 py-1 w-1/12">
-                                    作成日
-                                </th>
-                                <th class="px-5 py-1 w-4/12">
-                                    所在地
-                                </th>
-                                <th class="px-5 py-1 w-2/12">
-                                    契約者名
-                                </th>
-                                <th class="px-5 py-1 w-2/12">
-                                    担当者
-                                </th>
-                                <th class="p-1 w-2/12">
-                                </th>
-                                <th class="p-1 w-1/12">
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="w-screen">
-                            @foreach ($estimateList as $estimate)
-                                <tr class="text-sm text-black bg-white border-b border-gray-200 hover:bg-indigo-100">
-                                    <td class="p-1 w-1/12">
-                                        {{ $estimate->created_at->isoFormat('YYYY年MM月DD日') }}
-                                    </td>
-                                    <td class="p-1 w-4/12">
-                                        {{ $estimate->location }}
-                                    </td>
-                                    <td class="p-1 w-2/12">
-                                        {{ $estimate->contractee }}
-                                    </td>
-                                    <td class="p-1 w-1/12">
-                                        {{ $estimate->staff_name }}
-                                    </td>
-                                    <td class="p-1 flex gap-10 w-2/12">
-                                        <form action="{{ route('estimate.edit', ['id' => $estimate->id]) }}" method="GET">
-                                            <button type="submit" class="text-indigo-600 hover:text-indigo-900 w-[30px]">
+                <table class="w-full border-collapse bg-gray-200 text-left text-sm text-gray-500 leading-normal">
+                    <thead class="{{ $estimateType == 'futsu' ? 'bg-blue-300' : 'bg-green-300' }}">
+                        <tr class="">
+                            <th class="px-2 py-1">
+                                作成日
+                            </th>
+                            <th class="px-5 py-1">
+                                所在地
+                            </th>
+                            <th class="px-2 py-1">
+                                物件
+                            </th>
+                            <th class="px-2 py-1">
+                                級別
+                            </th>
+                            <th class="px-2 py-1 ">
+                                共済期間（年）
+                            </th>
+                            <th class="px-2 py-1">
+                                振込方法
+                            </th>
+                            <th class="px-2 py-1">
+                                備考
+                            </th>
+                            <th class="px-5 py-1">
+                                契約者名
+                            </th>
+                            <th class="px-5 py-1">
+                                担当者
+                            </th>
+                            <th class="w-32">
+                            </th>
+                            <th class="w-16">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="w-screen">
+                        @foreach ($estimateList as $estimate)
+                            <tr class="text-sm text-black bg-white border-b border-gray-200 hover:bg-indigo-100">
+                                <td class="p-1 w-20">
+                                    {{ $estimate->created_at->isoFormat('YYYY') }}
+                                    <br>
+                                    {{ $estimate->created_at->isoFormat('MM/DD') }}
+                                </td>
+                                <td class="p-1">
+                                    {{ $estimate->location }}
+                                </td>
+                                <td class="p-1">
+                                    {{ $estimate->property_type }}
+                                </td>
+                                <td class="p-1">
+                                    {{ $estimate->rank }}
+                                </td>
+                                <td class="p-1">
+                                    {{ $estimate->insurance_year }}
+                                </td>
+                                <td class="p-1">
+                                    {{ $estimate->pay_method }}
+                                </td>
+                                <td class="p-1">
+                                    {{ $estimate->other }}
+                                </td>
+                                <td class="p-1">
+                                    {{ $estimate->contractee }}
+                                </td>
+                                <td class="p-1 w-28">
+                                    {{ $estimate->staff_name }}
+                                </td>
+                                <td class="flex gap-1">
+                                    @if ($estimateType == 'futsu')
+                                        <form action="{{ route('estimate.edit', ['id' => $estimate->id]) }}"
+                                            method="GET">
+                                            <button type="submit"
+                                                class="p-1 rounded text-indigo-600 hover:text-white hover:bg-indigo-600">
                                                 <i class="fa-solid fa-pen-to-square inline-block"></i>
                                                 編集
                                             </button>
@@ -113,7 +147,8 @@
                                             action="{{ route('estimate.duplication', ['id' => $estimate->id, 'estimateType' => 'futsu']) }}"
                                             method="POST">
                                             @csrf
-                                            <button type="submit" class="text-green-600 hover:text-green-900 w-[30px]"
+                                            <button type="submit"
+                                                class="p-1 rounded text-green-600 hover:text-white hover:bg-green-600"
                                                 onclick='return confirm("複製しますか？")'>
                                                 <i class="fa-solid fa-clone"></i>
                                                 複製
@@ -124,89 +159,54 @@
                                             method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900 w-[30px]"
+                                            <button type="submit"
+                                                class="p-1 rounded text-red-600 hover:text-white hover:bg-red-600"
                                                 onclick='return confirm("本当に削除しますか")'>
-                                                <i class="fa-solid fa-trash"></i>
+                                                <i class="fa-solid fa-trash me-1"></i>
                                                 削除
                                             </button>
                                         </form>
-                                    </td>
-                                    <td class="p-1 w-1/12">
-                                        {{ $versionDomain->Comparative($estimate->updated_at) }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                @else
-                    <table class="w-full border-collapse bg-gray-200 text-left text-sm text-gray-500 leading-normal">
-                        <thead class=" bg-green-300">
-                            <tr class="">
-                                <th class="px-5 py-1 w-1/12">
-                                    作成日
-                                </th>
-                                <th class="px-5 py-1 w-4/12">
-                                    所在地
-                                </th>
-                                <th class="px-5 py-1 w-2/12">
-                                    契約者名
-                                </th>
-                                <th class="px-5 py-1 w-1/12">
-                                    担当者
-                                </th>
-                                <th class="p-1  w-1/12">
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="w-screen">
-                            @foreach ($estimateList as $estimate)
-                                <tr class="text-sm text-black bg-white border-b border-gray-200 hover:bg-lime-100">
-                                    <td class="p-1  w-1/12">
-                                        {{ $estimate->created_at->isoFormat('YYYY年MM月DD日') }}
-                                    </td>
-                                    <td class="p-1  w-4/12">
-                                        {{ $estimate->location }}
-                                    </td>
-                                    <td class="p-1  w-2/12">
-                                        {{ $estimate->contractee }}
-                                    </td>
-                                    <td class="p-1  w-2/12">
-                                        {{ $estimate->staff_name }}
-                                    </td>
-                                    <td class="p-1 flex gap-10  w-1/12">
+                                    @else
                                         <form action="{{ route('futsu2.edit', ['id' => $estimate->id]) }}" method="GET">
-                                            <button type="submit" class="text-indigo-600 hover:text-indigo-900 w-[30px]">
+                                            <button type="submit"
+                                                class="p-1 rounded text-indigo-600 hover:text-white hover:bg-indigo-600">
                                                 <i class="fa-solid fa-pen-to-square inline-block"></i>
                                                 編集
                                             </button>
                                         </form>
                                         <form
-                                            action="{{ route('futsu2.duplication', ['id' => $estimate->id, 'estimateType' => 'futsu2']) }}"
+                                            action="{{ route('futsu2.duplication', ['id' => $estimate->id, 'estimateType' => 'futsu']) }}"
                                             method="POST">
                                             @csrf
-                                            <button type="submit" class="text-green-600 hover:text-green-900 w-[30px]"
+                                            <button type="submit"
+                                                class="p-1 rounded text-green-600 hover:text-white hover:bg-green-600"
                                                 onclick='return confirm("複製しますか？")'>
                                                 <i class="fa-solid fa-clone"></i>
                                                 複製
                                             </button>
                                         </form>
                                         <form
-                                            action="{{ route('futsu2.destroy', ['id' => $estimate->id, 'estimateType' => 'futsu2']) }}"
+                                            action="{{ route('futsu2.destroy', ['id' => $estimate->id, 'estimateType' => 'futsu']) }}"
                                             method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900 w-[30px]"
+                                            <button type="submit"
+                                                class="p-1 rounded text-red-600 hover:text-white hover:bg-red-600"
                                                 onclick='return confirm("本当に削除しますか")'>
-                                                <i class="fa-solid fa-trash"></i>
+                                                <i class="fa-solid fa-trash me-1"></i>
                                                 削除
                                             </button>
                                         </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                @endif
+                                    @endif
+                                </td>
+                                <td class="p-1">
+                                    {{ $versionDomain->Comparative($estimate->updated_at) }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+
+                </table>
             </div>
             <div class="flex flex-col items-center p-3 bg-white xs:flex-row xs:justify-between">
                 <div class="flex items-center">
