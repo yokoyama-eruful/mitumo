@@ -1208,7 +1208,7 @@ class EstimateForm extends Component
                 break;
             case '年次取得':
                 if ($this->assessItem == '年次取得' && ($this->buildingYear > 2024 || $this->buildingYear < 1976)) {
-                    $this->dispatch('alert', '建築年は「2024年~1976年」でなくて評価できません。');
+                    $this->dispatch('alert', '建築年は「2024年~1976年」でなくては評価できません。');
                     break;
                 }
 
