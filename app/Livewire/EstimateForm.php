@@ -1207,8 +1207,8 @@ class EstimateForm extends Component
                 $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '年次取得':
-                if ($this->assessItem == '年次取得' && ($this->buildingYear > 2020 || $this->buildingYear < 1976)) {
-                    $this->dispatch('alert', '建築年は「2020年~1976年」でなくて評価できません。');
+                if ($this->assessItem == '年次取得' && ($this->buildingYear > 2024 || $this->buildingYear < 1976)) {
+                    $this->dispatch('alert', '建築年は「2024年~1976年」でなくて評価できません。');
                     break;
                 }
 

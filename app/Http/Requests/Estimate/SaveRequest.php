@@ -204,8 +204,8 @@ final class SaveRequest extends FormRequest
         });
 
         $validator->after(function ($validator) {
-            if ($this->input('assess_item') == '年次取得' && ($this->input('building_year') > 2020 || $this->input('building_year') < 1976)) {
-                $validator->errors()->add('エラー', '建築年は「2020年~1976年」でなくてはいけません。');
+            if ($this->input('assess_item') == '年次取得' && ($this->input('building_year') > 2024 || $this->input('building_year') < 1976)) {
+                $validator->errors()->add('エラー', '建築年は「2024年~1976年」でなくてはいけません。');
             }
         });
 
