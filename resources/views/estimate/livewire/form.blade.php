@@ -761,21 +761,27 @@
                         </div>
                     @endif
 
-                    <div class="estimate-title">
-                        <label class="p-3">評価</label>
-                    </div>
-                    <div class="estimate-input-box">
-                        <label class="estimate-label" for="assess_item">評価項目</label>
-                        <select id="assess_item" name="assess_item" wire:model="assessItem"
-                            wire:change="onChangeAssessItem" class="estimate-input">
-                            <option value="" hidden>選択してください</option>
-                            @foreach ($assessItemList as $item)
-                                <option value="{{ $item }}"
-                                    @if ($item === $assessItem) selected @endif>
-                                    {{ $item }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    @if ($estimate->id)
+                        <div class="estimate-title">
+                            <label class="p-3">評価</label>
+                        </div>
+                        <div class="estimate-input-box">
+                            <label class="estimate-label" for="assess_item">評価項目</label>
+                            <select id="assess_item" name="assess_item" wire:model="assessItem"
+                                wire:change="onChangeAssessItem" class="estimate-input">
+                                <option value="" hidden>選択してください</option>
+                                @foreach ($assessItemList as $item)
+                                    <option value="{{ $item }}"
+                                        @if ($item === $assessItem) selected @endif>
+                                        {{ $item }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @else
+                        <div class="estimate-input-box bg-rose-400 text-white text-lg p-2">
+                            評価機能は、見積もり情報を保存することで利用できます。
+                        </div>
+                    @endif
                     @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
                         <div class="estimate-input-box">
                             <label class="estimate-label" for="assess_usage">用途
