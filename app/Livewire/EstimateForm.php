@@ -862,6 +862,11 @@ class EstimateForm extends Component
 
     public function onSelectedOccupationalCode($code)
     {
+        if(strlen($code)==6){
+            $this->dispatch('alert', '現在、該当のコードは対応しておりません。別のコードをお選びください。');
+            return;
+        }
+
         $this->occupationalSurchargeCode = $code;
         $this->onChangeOccupationalSurchargeCode();
 
