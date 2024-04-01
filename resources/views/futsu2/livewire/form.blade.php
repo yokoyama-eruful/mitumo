@@ -267,11 +267,19 @@
                         </div>
                         <div class="estimate-input-box">
                             <label class="futsu2-label" for="building_year">建築年
-                                <div class="estimate-input-required">※必須</div>
                             </label>
-                            <input id="building_year" name="building_year" class="estimate-input text-right"
-                                placeholder="西暦を入力してください" wire:model="buildingYear" wire:change="onChangeBuildingAge"
-                                required>
+                            <div class="estimate-input"></div>
+                            <select id="building_year" name="building_year_era" wire:change="onChangeBuildingAge"
+                                placeholder="和暦" class="text-right" wire:model="buildingYearEra" required>
+                                <option value="西暦">西暦</option>
+                                <option value="令和">令和</option>
+                                <option value="平成">平成</option>
+                                <option value="昭和">昭和</option>
+                                <option value="大正">大正</option>
+                                <option value="明治">明治</option>
+                            </select>
+                            <input id="building_year" name="building_year" class="estimate-input text-right w-20"
+                                placeholder="" wire:model="buildingYear" wire:change="onChangeBuildingAge" required>
                             <span class="unit-display">年</span>
                         </div>
                         <div class="estimate-input-box">
