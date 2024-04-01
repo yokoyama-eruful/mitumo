@@ -218,6 +218,9 @@ return [
         'other_facility_insurance_payout' => 'その他設備共済金額',
         'item_insurance_payout' => '商品共済金額',
         'other_item_insurance_payout' => 'その他商品共済金額',
+        'is_sonpo_base_rate'=>"損保９割掛",
+        'sonpo_building_base_rate'=>"損保９割掛の適用建物基本率",
+        'sonpo_chattel_base_rate'=>"損保９割掛の適用動産基本率",
     ],
 
 ];

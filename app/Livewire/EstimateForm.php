@@ -18,6 +18,7 @@ use App\Domains\OccupationalSurcharge;
 use App\Domains\WorkSurcharge;
 use App\Models\Estimate;
 use App\Utils\FullWidthDigitConverter;
+use App\Utils\JapaneseEraConverter;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Auth;
@@ -75,6 +76,7 @@ class EstimateForm extends Component
 
     public ?string $startDate = null;
 
+    public ?string $buildingYearEra = null;
     public ?string $buildingYear = null;
 
     public ?string $buildingAge = null;
@@ -104,6 +106,12 @@ class EstimateForm extends Component
     public ?string $buildingBaseRate = null;
 
     public ?string $chattelBaseRate = null;
+
+    public bool $isSonpoBaseRate = false;
+
+    public ?string $sonpoBuildingBaseRate = null;
+
+    public ?string $sonpoChattelBaseRate = null;
 
     public ?string $chattelSurcharge = null;
 
@@ -304,6 +312,7 @@ class EstimateForm extends Component
 
         $this->rank = old('rank', $estimate->rank);
         $this->startDate = old('start_date', $estimate->start_date?->format('Y-m')) != null ? old('start_date', $estimate->start_date?->format('Y-m')) : now()->format('Y-m');
+        $this->buildingYearEra = old('building_year_era', (string) $estimate->building_year_era);
         $this->buildingYear = old('building_year', (string) $estimate->building_year);
         $this->buildingAge = old('building_age', (string) $estimate->building_age);
         $this->payMethod = old('pay_method', $estimate->pay_method);
@@ -322,6 +331,10 @@ class EstimateForm extends Component
         //物件情報
         $this->buildingBaseRate = old('building_base_rate', (string) $estimate->building_base_rate);
         $this->chattelBaseRate = old('chattel_base_rate', (string) $estimate->chattel_base_rate);
+        $this->isSonpoBaseRate = (bool )old('is_sonpo_base_rate', (string) $estimate?->is_sonpo_base_rate);
+        $this->sonpoBuildingBaseRate = old('sonpo_building_base_rate', (string) $estimate?->sonpo_building_base_rate);
+        $this->sonpoChattelBaseRate = old('sonpo_chattel_base_rate', (string) $estimate?->sonpo_chattel_base_rate);
+
         $this->factoryBuildingCode = old('factory_building_code', $this->getValueByKey('factory_building_code', $estimate->property_detail));
 
         $this->chattelSurcharge = old('chattel_surcharge', $this->getValueByKey('chattel_surcharge', $estimate->property_detail));
@@ -506,6 +519,9 @@ class EstimateForm extends Component
                 $this->onChangeWorkSurchargeCode();
             }
 
+            $this->insuranceYear=null;
+            $this->insuranceDay =null;
+            $this->insuranceMonth = null;
             if ($estimateInfo['共済期間']['年']) {
                 $this->insuranceYear = $estimateInfo['共済期間']['年'];
             }
@@ -608,10 +624,18 @@ class EstimateForm extends Component
 
         $this->buildingYear = (string) FullWidthDigitConverter::convert($this->buildingYear);
 
-        $buildingDate = CarbonImmutable::createFromDate((int) $this->buildingYear, 1, 1);
-        [$startYear,$startMonth] = explode('-', $this->startDate);
+        $westernYear = $this->buildingYear + JapaneseEraConverter::getJapaneseEraStartYear($this->buildingYearEra);
 
-        $this->buildingAge = $buildingDate->year <= $startYear ? (string) $buildingDate->diffInYears($startYear) : null;
+        $buildingDate = CarbonImmutable::createFromDate(intval($westernYear-1) , 1, 1);
+
+        $startDate = CarbonImmutable::parse($this->startDate);
+
+        if($buildingDate->year <= $startDate->year){
+            $this->buildingAge=(string)$buildingDate->diffInYears($startDate);
+        }else{
+            $this->buildingAge = null;
+        }
+
 
         $this->onChangeBaseRate();
     }
@@ -838,6 +862,11 @@ class EstimateForm extends Component
 
     public function onSelectedOccupationalCode($code)
     {
+        if(strlen($code)==6){
+            $this->dispatch('alert', '現在、該当のコードは対応しておりません。別のコードをお選びください。');
+            return;
+        }
+
         $this->occupationalSurchargeCode = $code;
         $this->onChangeOccupationalSurchargeCode();
 
@@ -1183,8 +1212,8 @@ class EstimateForm extends Component
                 $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case '年次取得':
-                if ($this->assessItem == '年次取得' && ($this->buildingYear > 2020 || $this->buildingYear < 1976)) {
-                    $this->dispatch('alert', '建築年は「2020年~1976年」でなくて評価できません。');
+                if ($this->assessItem == '年次取得' && ($this->buildingYear > 2024 || $this->buildingYear < 1976)) {
+                    $this->dispatch('alert', '評価するには、建築年が「2024年~1976年」にしてください。評価しない場合は、評価項目を「選択しない」にしてください。');
                     break;
                 }
 

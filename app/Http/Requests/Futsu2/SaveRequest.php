@@ -27,15 +27,15 @@ final class SaveRequest extends FormRequest
             'certificate_number' => ['nullable', 'numeric'],
             'contractee' => ['nullable', 'string'],
             'location' => ['nullable', 'string'],
-            'floor_area' => ['nullable', 'required_without:exclusive_area', 'numeric', 'min:0'],
+            'floor_area' => ['nullable', 'numeric', 'min:0'],
             'exclusive_area' => ['nullable', 'numeric', 'min:0'],
-            'structure' => ['required', 'string'],
+            'structure' => ['nullable', 'string'],
             'other_structure' => ['nullable', 'string'],
             'pillar' => ['nullable', 'string'],
             'other_pillar' => ['nullable', 'string'],
             'fire_resistance' => ['nullable', 'string'],
             'other_fire_resistance' => ['nullable', 'string'],
-            'usage' => ['required', 'string'],
+            'usage' => ['nullable', 'string'],
             'other_usage' => ['nullable', 'string'],
             'floor' => ['nullable'],
             'building' => ['nullable'],
@@ -62,6 +62,10 @@ final class SaveRequest extends FormRequest
             'building_base_rate' => ['nullable', 'required_with:building_insurance_payout', 'numeric', 'min:0'],
             'chattel_base_rate' => ['nullable', 'required_with:household_insurance_payout,facility_insurance_payout,other_facility_insurance_payout,other_facility_insurance_payout,item_insurance_payout,other_item_insurance_payout', 'numeric', 'min:0'],
             'factory_building_code' => ['nullable',  'string'],
+
+            'is_sonpo_base_rate' => ['nullable'],
+            'sonpo_building_base_rate' => ['nullable', 'required_with:is_sonpo_base_rate', 'numeric', 'min:0'],
+            'sonpo_chattel_base_rate' => ['nullable',  'required_with:is_sonpo_base_rate','numeric', 'min:0'],
 
             // // 動的に変化する項目（物件トリガー
             'chattel_surcharge' => ['nullable', 'string'],
@@ -199,8 +203,8 @@ final class SaveRequest extends FormRequest
         });
 
         $validator->after(function ($validator) {
-            if ($this->input('assess_item') == '年次取得' && ($this->input('building_year') > 2020 || $this->input('building_year') < 1976)) {
-                $validator->errors()->add('エラー', '建築年は「2020年~1976年」でなくてはいけません。');
+            if ($this->input('assess_item') == '年次取得' && ($this->input('building_year') > 2024 || $this->input('building_year') < 1976)) {
+                    $this->dispatch('alert', '評価するには、建築年が「2024年~1976年」にしてください。評価しない場合は、評価項目を「選択しない」にしてください。');
             }
         });
 

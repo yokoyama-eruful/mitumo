@@ -202,9 +202,16 @@ final class StandardInsurancePremium
             } else {
                 $baseRate = new BuildingBaseRate($estimate, 'rateTable/buildingBaseRateTable.csv');
             }
+
             $buildingBaseRate = $baseRate->findRate($estimate->property_type, $buildingAge, $estimate->rank);
         } else {
             $buildingBaseRate = $estimate->building_base_rate;
+
+        }
+        
+        //損保９割のロジック（building_base_rate）
+        if($estimate->is_sonpo_base_rate){
+            $buildingBaseRate = $estimate->sonpo_building_base_rate;
         }
 
         $otherDiscount = $this->getOtherDiscount($buildingBaseRate);
@@ -250,10 +257,17 @@ final class StandardInsurancePremium
                 $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
             }
             $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
+            //損保９割のロジック（chattel_base_rate）
+            if($estimate->is_sonpo_base_rate){
+               $chattelBaseRate = $estimate->sonpo_chattel_base_rate;
+            }
         } else {
             $chattelBaseRate = $estimate->building_base_rate;
+            //損保９割のロジック（building_base_rate）
+            if($estimate->is_sonpo_base_rate){
+                $chattelBaseRate = $estimate->sonpo_building_base_rate;
+            }
         }
-
         //その他割引
         $otherDiscount = $this->getOtherDiscount($chattelBaseRate);
 
@@ -297,8 +311,16 @@ final class StandardInsurancePremium
                 $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
             }
             $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
+            //損保９割のロジック（chattel_base_rate）
+            if($estimate->is_sonpo_base_rate){
+               $chattelBaseRate = $estimate->sonpo_chattel_base_rate;
+            }
         } else {
             $chattelBaseRate = $estimate->building_base_rate;
+            //損保９割のロジック（building_base_rate）
+            if($estimate->is_sonpo_base_rate){
+                $chattelBaseRate = $estimate->sonpo_building_base_rate;
+            }
         }
         //その他割引
 
@@ -345,8 +367,16 @@ final class StandardInsurancePremium
                 $baseRate = new ChattelBaseRate($estimate, 'rateTable/chattelBaseTable.csv');
             }
             $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
+            //損保９割のロジック（chattel_base_rate）
+            if($estimate->is_sonpo_base_rate){
+               $chattelBaseRate = $estimate->sonpo_chattel_base_rate;
+            }
         } else {
             $chattelBaseRate = $estimate->building_base_rate;
+            //損保９割のロジック（building_base_rate）
+            if($estimate->is_sonpo_base_rate){
+                $chattelBaseRate = $estimate->sonpo_building_base_rate;
+            }
         }
         //その他割引
 

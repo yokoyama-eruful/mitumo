@@ -88,7 +88,7 @@
                     <div class="flex flex-row">
                         <div class="estimate-input-box">
                             <label class="estimate-label" for="structure">構造
-                                <div class="estimate-input-required">※必須</div>
+                                {{-- <div class="estimate-input-required">※必須</div> --}}
                             </label>
                             <select id="structure" name="structure" wire:model="structure" class="estimate-input"
                                 required>
@@ -148,7 +148,7 @@
                     <div class="flex flex-row">
                         <div class="estimate-input-box">
                             <label class="estimate-label" for="usage">用法
-                                <div class="estimate-input-required">※必須</div>
+                                {{-- <div class="estimate-input-required">※必須</div> --}}
                             </label>
                             <select id="usage" name="usage" wire:model="usage" class="estimate-input"
                                 required>
@@ -179,7 +179,7 @@
                         </div>
                     </div>
                     <div class="estimate-input-box">
-                        <label class="estimate-label" for="other">その他</label>
+                        <label class="estimate-label" for="other">備考</label>
                         <input id="other" name="other" class="estimate-input" wire:model="other">
                         <!-- 任意・常時 -->
                     </div>
@@ -220,9 +220,19 @@
                         <div class="estimate-input-box">
                             <label class="estimate-label" for="building_year">建築年
                             </label>
-                            <input id="building_year" name="building_year" class="estimate-input text-right"
-                                placeholder="西暦を入力してください" wire:model="buildingYear" wire:change="onChangeBuildingAge"
+                            <div class="estimate-input"></div>
+                            <select id="building_year" name="building_year_era"
+                                wire:change="onChangeBuildingAge"class="text-right" wire:model="buildingYearEra"
                                 required>
+                                <option value="西暦">西暦</option>
+                                <option value="令和">令和</option>
+                                <option value="平成">平成</option>
+                                <option value="昭和">昭和</option>
+                                <option value="大正">大正</option>
+                                <option value="明治">明治</option>
+                            </select>
+                            <input id="building_year" name="building_year" class="estimate-input text-right w-20"
+                                placeholder="" wire:model="buildingYear" wire:change="onChangeBuildingAge" required>
                             <span class="unit-display">年</span>
                         </div>
                         <div class="estimate-input-box">
@@ -236,7 +246,6 @@
                     @else
                         <div class="estimate-input-box">
                             <label class="estimate-label" for="start_date">始期日
-                                <div class="estimate-input-required">※必須</div>
                             </label>
                             <input id="start_date" name="start_date" type="month"
                                 class="estimate-input text-right" placeholder="西暦を入力してください" wire:model="startDate"
@@ -244,11 +253,20 @@
                         </div>
                         <div class="estimate-input-box">
                             <label class="estimate-label" for="building_year">建築年
-                                <div class="estimate-input-required">※必須</div>
                             </label>
-                            <input id="building_year" name="building_year" class="estimate-input text-right"
-                                placeholder="西暦を入力してください" wire:model="buildingYear" wire:change="onChangeBuildingAge"
+                            <div class="estimate-input"></div>
+                            <select id="building_year" name="building_year_era"
+                                wire:change="onChangeBuildingAge"class="text-right" wire:model="buildingYearEra"
                                 required>
+                                <option value="西暦">西暦</option>
+                                <option value="令和">令和</option>
+                                <option value="平成">平成</option>
+                                <option value="昭和">昭和</option>
+                                <option value="大正">大正</option>
+                                <option value="明治">明治</option>
+                            </select>
+                            <input id="building_year" name="building_year" class="estimate-input text-right w-20"
+                                placeholder="" wire:model="buildingYear" wire:change="onChangeBuildingAge" required>
                             <span class="unit-display">年</span>
                         </div>
                         <div class="estimate-input-box">
@@ -450,7 +468,7 @@
                                 placeholder="物件が「住宅」か「普通」の時は、自動算出されます" wire:model="chattelBaseRate" readonly>
                         </div>
                     @endif
-                    @if (in_array($propertyType, ['工場'], true))
+                    @if ($propertyType == '工場')
                         <div class="estimate-title">
                             <label class="p-3">料率・係数等</label>
                         </div>
@@ -491,6 +509,30 @@
                             <input id="chattel_base_rate" name="chattel_base_rate" class="estimate-input"
                                 placeholder="自動算出されます" wire:model="chattelBaseRate" readonly>
                         </div>
+                    @endif
+                    @if ($propertyType)
+                        <div class="estimate-input-box">
+                            <div class="estimate-label flex flex-row" for="chattel_surcharge">
+                                <label>損保９掛</label>
+                                <input type="checkbox" name="is_sonpo_base_rate" value="true"
+                                    wire:model.lazy="isSonpoBaseRate" class="ms-2 text-xl w-6 h-6">
+                            </div>
+                            @if ($isSonpoBaseRate)
+                                <label for="sonpo_building_base_rate" class="estimate-label h-auto">
+                                    建物
+                                </label>
+                                <input id="sonpo_building_base_rate" name="sonpo_building_base_rate"
+                                    wire:model="sonpoBuildingBaseRate" class="estimate-input">
+
+                                <label for="sonpo_chattel_base_rate" class="estimate-label">
+                                    動産
+                                </label>
+                                <input id="sonpo_chattel_base_rate" name="sonpo_chattel_base_rate"
+                                    class="estimate-input" wire:model="sonpoChattelBaseRate">
+                            @endif
+                        </div>
+                    @endif
+                    @if ($propertyType == '工場')
                         <div class="estimate-input-box">
                             <label class="estimate-label" for="chattel_surcharge">動産割増
                             </label>
@@ -727,21 +769,27 @@
                         </div>
                     @endif
 
-                    <div class="estimate-title">
-                        <label class="p-3">評価</label>
-                    </div>
-                    <div class="estimate-input-box">
-                        <label class="estimate-label" for="assess_item">評価項目</label>
-                        <select id="assess_item" name="assess_item" wire:model="assessItem"
-                            wire:change="onChangeAssessItem" class="estimate-input">
-                            <option value="" hidden>選択してください</option>
-                            @foreach ($assessItemList as $item)
-                                <option value="{{ $item }}"
-                                    @if ($item === $assessItem) selected @endif>
-                                    {{ $item }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    @if ($estimate->id)
+                        <div class="estimate-title">
+                            <label class="p-3">評価</label>
+                        </div>
+                        <div class="estimate-input-box">
+                            <label class="estimate-label" for="assess_item">評価項目</label>
+                            <select id="assess_item" name="assess_item" wire:model="assessItem"
+                                wire:change="onChangeAssessItem" class="estimate-input">
+                                <option value="" hidden>選択してください</option>
+                                @foreach ($assessItemList as $item)
+                                    <option value="{{ $item }}"
+                                        @if ($item === $assessItem) selected @endif>
+                                        {{ $item }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @else
+                        <div class="estimate-input-box bg-rose-400 text-white text-lg p-2">
+                            評価機能は、見積もり情報を保存することで利用できます。
+                        </div>
+                    @endif
                     @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
                         <div class="estimate-input-box">
                             <label class="estimate-label" for="assess_usage">用途
