@@ -625,6 +625,10 @@ class EstimateForm extends Component
         $this->buildingYear = (string) FullWidthDigitConverter::convert($this->buildingYear);
 
         $westernYear = $this->buildingYear + JapaneseEraConverter::getJapaneseEraStartYear($this->buildingYearEra);
+        
+        if($this->buildingYearEra!==''){
+            $westernYear =$westernYear-1;
+        }
 
         $buildingDate = CarbonImmutable::createFromDate($westernYear , 1, 1);
 
