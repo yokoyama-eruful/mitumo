@@ -588,14 +588,9 @@ class Futsu2Form extends Component
      *
      * @return void
      */
+
     public function onChangeBuildingAge()
     {
-        if (! $this->startDate || ! $this->buildingYear) {
-            $this->buildingAge = null;
-
-            return;
-        }
-
         if (! $this->startDate || ! $this->buildingYear) {
             $this->buildingAge = null;
 
@@ -606,12 +601,12 @@ class Futsu2Form extends Component
 
         $westernYear = $this->buildingYear + JapaneseEraConverter::getJapaneseEraStartYear($this->buildingYearEra);
 
-        $buildingDate = CarbonImmutable::createFromDate(intval($westernYear-1) , 1, 1);
+        $buildingDate = CarbonImmutable::createFromDate($westernYear , 1, 1);
 
         $startDate = CarbonImmutable::parse($this->startDate);
 
         if($buildingDate->year <= $startDate->year){
-            $this->buildingAge=(string)$buildingDate->diffInYears($startDate);
+            $this->buildingAge=(string)($buildingDate->diffInYears($startDate));
         }else{
             $this->buildingAge = null;
         }
@@ -619,6 +614,7 @@ class Futsu2Form extends Component
 
         $this->onChangeBaseRate();
     }
+
 
     /**
      * おすすめ契約期間指定の入力項目の表示トリガー
