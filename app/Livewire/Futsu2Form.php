@@ -600,8 +600,9 @@ class Futsu2Form extends Component
         $this->buildingYear = (string) FullWidthDigitConverter::convert($this->buildingYear);
 
         $westernYear =JapaneseEraConverter::getJapaneseEraStartYear($this->buildingYearEra);
-        
-        if($this->buildingYearEra!==''){
+        $this->buildingYearEra= $this->buildingYearEra==""?'西暦':$this->buildingYearEra;
+
+        if($this->buildingYearEra!=='西暦'){
             $buildingYear =$westernYear+$this->buildingYear-1;
         }else{
             $buildingYear =$this->buildingYear;
