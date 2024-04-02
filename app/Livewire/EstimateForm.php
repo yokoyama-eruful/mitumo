@@ -631,8 +631,8 @@ class EstimateForm extends Component
         }
 
         $buildingDate = CarbonImmutable::createFromDate($westernYear , 1, 1);
+        $startDate = CarbonImmutable::createFromDate($this->startDate , 1, 1);
 
-        $startDate = CarbonImmutable::parse($this->startDate);
 
         if($buildingDate->year <= $startDate->year){
             $this->buildingAge=(string)($buildingDate->diffInYears($startDate));

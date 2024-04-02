@@ -606,8 +606,7 @@ class Futsu2Form extends Component
         }
 
         $buildingDate = CarbonImmutable::createFromDate($westernYear , 1, 1);
-
-        $startDate = CarbonImmutable::parse($this->startDate);
+        $startDate = CarbonImmutable::createFromDate($this->startDate , 1, 1);
 
         if($buildingDate->year <= $startDate->year){
             $this->buildingAge=(string)($buildingDate->diffInYears($startDate));
