@@ -36,7 +36,7 @@ final class BuildingBaseRate
                 && $item['築年数'] == $buildingAge
                 && $item['級別'] === $rank;
         });
-       dd($result);
+        
         $result = ! empty($result) ? reset($result) : null;
 
         if (is_null($result)) {
