@@ -213,7 +213,6 @@ final class ComprehensiveInsurancePremium
             } else {
                 $baseRate = new BuildingBaseRate($estimate, 'rateTable/buildingBaseRateTable.csv');
             }
-
             $buildingBaseRate = $baseRate->findRate($estimate->property_type, $buildingAge, $estimate->rank);
         } else {
             $buildingBaseRate = $estimate->building_base_rate;

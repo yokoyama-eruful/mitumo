@@ -24,7 +24,10 @@ final class BuildingBaseRate
             return $this->baseRate;
         }
 
-        $buildingAge = $buildingAge > 25 ? 25 : $buildingAge;
+        
+        if($buildingAge == ''){
+            $buildingAge = 25;
+        }
 
         $result = array_filter($this->rateList, function ($item) use ($propertyType, $buildingAge, $rank) {
             return
