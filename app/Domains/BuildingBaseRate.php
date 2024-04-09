@@ -28,7 +28,7 @@ final class BuildingBaseRate
         if($buildingAge == ''){
             $buildingAge = 25;
         }
-        dd($buildingAge);
+ 
 
         $result = array_filter($this->rateList, function ($item) use ($propertyType, $buildingAge, $rank) {
             return
@@ -36,7 +36,7 @@ final class BuildingBaseRate
                 && $item['築年数'] == $buildingAge
                 && $item['級別'] === $rank;
         });
-
+       dd($result);
         $result = ! empty($result) ? reset($result) : null;
 
         if (is_null($result)) {
