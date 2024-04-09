@@ -28,6 +28,7 @@ final class BuildingBaseRate
         if($buildingAge == ''){
             $buildingAge = 25;
         }
+        dd($buildingAge);
 
         $result = array_filter($this->rateList, function ($item) use ($propertyType, $buildingAge, $rank) {
             return
