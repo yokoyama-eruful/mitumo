@@ -19,7 +19,14 @@ final class ComprehensivePremium
     public function __construct($estimate)
     {
         $this->propertyType = $estimate['property_type'];
-        $this->buildingAge = $estimate['building_age'] ? $estimate['building_age'] : 25;
+                
+        if($estimate['building_age'] == ''){
+            $this->buildingAge= 25;
+        }else{
+            $this->buildingAge = $estimate['building_age'];
+        }
+ 
+
         $this->rank = $estimate['rank'];
 
         $this->rateList = $this->makeRateList();
@@ -63,11 +70,11 @@ final class ComprehensivePremium
             return false;
         }
 
-        $building_age = $this->buildingAge > 25 ? 25 : $this->buildingAge;
+        $buildingAge = $this->buildingAge > 25 ? 25 : $this->buildingAge;
 
         //物件が住宅の場合のみ築年数を考慮する。その他の物件は築年数は空文字
         return $data[0] === $this->propertyType &&
-           (intval($data[2]) === $building_age || $data[2] === '') &&
+           (intval($data[2]) === $buildingAge || $data[2] === '') &&
             $data[3] === $this->rank;
     }
 }

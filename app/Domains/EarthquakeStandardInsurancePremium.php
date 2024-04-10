@@ -164,11 +164,9 @@ final class EarthquakeStandardInsurancePremium
     {
         $estimate = $this->estimate;
         $propertyType = $estimate->property_type;
-        if ($estimate->property_type === '住宅') {
-            $buildingAge = $estimate->building_age ?? '';
-        } else {
-            $buildingAge = '';
-        }
+
+        $buildingAge = $estimate->building_age ?? '';
+
         //その他割引
 
         if (in_array($propertyType, ['住宅', '普通'], true)) {
