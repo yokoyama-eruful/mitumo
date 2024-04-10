@@ -614,7 +614,7 @@ class Futsu2Form extends Component
 
             $this->buildingAge= (string)($startDate->year-$buildingYear);
         }else{
-            $this->buildingAge = null;
+            $this->buildingAge = (string)0;
         }
 
         $this->onChangeBaseRate();
