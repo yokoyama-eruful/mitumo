@@ -200,12 +200,8 @@ final class ComprehensiveInsurancePremium
         $estimate = $this->estimate;
 
         $propertyType = $estimate->property_type;
-
-        if ($estimate->property_type === '住宅') {
-            $buildingAge = $estimate->building_age ?? '';
-        } else {
-            $buildingAge = '';
-        }
+        
+        $buildingAge = $estimate->building_age ?? '';
 
         if (in_array($propertyType, ['住宅', '普通'], true)) {
             if ($estimate->getTable() == 'estimate_futsu2') {
@@ -215,7 +211,6 @@ final class ComprehensiveInsurancePremium
             }
 
             $buildingBaseRate = $baseRate->findRate($estimate->property_type, $buildingAge, $estimate->rank);
-            // dd($buildingBaseRate);
         } else {
             $buildingBaseRate = $estimate->building_base_rate;
 
