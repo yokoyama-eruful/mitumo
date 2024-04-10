@@ -1,6 +1,6 @@
 # mitumo
 
-### composer install 方法（Docker 利用の場合）
+### Composer install 方法（Docker 利用の場合）
 
 git clone後に実行してください
 
