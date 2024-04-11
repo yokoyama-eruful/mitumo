@@ -24,8 +24,7 @@ final class BuildingBaseRate
             return $this->baseRate;
         }
 
-        
-        if($buildingAge == ''){
+        if ($buildingAge == '') {
             $buildingAge = 25;
         }
 
