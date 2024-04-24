@@ -165,8 +165,6 @@ class PreviewController extends Controller
         $factoryPropertyBasePremiumItem = new FactoryPropertyBasePremium();
         $comprehensive = new ComprehensiveInsurancePremium($estimate);
 
-        // dd($standard->building['基本率']);
-
         return view('preview.calculation', compact('estimate', 'standard', 'comprehensive', 'occupationalSurchargeItem', 'workSurchargeItem', 'factoryPropertyBasePremiumItem'));
     }
 }
