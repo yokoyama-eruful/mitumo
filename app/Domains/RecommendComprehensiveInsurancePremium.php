@@ -215,7 +215,7 @@ final class RecommendComprehensiveInsurancePremium
 
         $longTermRate = $mutualAidPremium->longTerRate;
 
-        $applyRate = round(($otherDiscount + $comprehensivePremium) * $longTermRate, 2);
+        $applyRate = round(($otherDiscount) * $longTermRate, 2);
 
         //掛け金
         $itemInsurancePayout = $this->getValueByKey('item_insurance_payout', $estimate->property_detail);
