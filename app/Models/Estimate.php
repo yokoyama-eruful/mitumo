@@ -51,10 +51,10 @@ class Estimate extends Model
 
         'property_detail',
         'assess_detail',
-        
+
         'is_sonpo_base_rate',
-        'sonpo_building_base_rate', 
-        'sonpo_chattel_base_rate'
+        'sonpo_building_base_rate',
+        'sonpo_chattel_base_rate',
     ];
 
     protected $casts = [
@@ -71,12 +71,12 @@ class Estimate extends Model
 
     public function getBuildingStructureAttribute()
     {
-        if($this->building_year_era=='西暦'){
+        if ($this->building_year_era == '西暦') {
             $buildingYear = $this->building_year.'年築';
-        }else{
+        } else {
             $buildingYear = $this->building_year_era.' '.$this->building_year.'年築';
         }
-        
+
         $buildingStructure = [
             $this->structure, $this->other_structure, $this->pillar,
             $this->other_pillar, $this->fire_resistance, $this->other_fire_resistance,
@@ -116,18 +116,81 @@ class Estimate extends Model
 
     public function getOtherItemAttribute()
     {
+        $dosanWarimashi = $this->getDosanWarimashi();
+        $waribikiUtiwakeList = $this->getWaribikiUtiwakeList();
+
         $otherItem = [
-            (isset($this->property_detail['chattel_surcharge_category']) && $this->property_detail['chattel_surcharge_category'] != '-' && ($this->property_detail['item_insurance_payout'] || $this->property_detail['other_item_insurance_payout'])) ? '動産割増' : '',
-            (isset($this->property_detail['chattel_surcharge']) && ($this->property_detail['item_insurance_payout'] || $this->property_detail['other_item_insurance_payout'])) ? '動産割増' : '',
+            $dosanWarimashi,
+            ...$waribikiUtiwakeList,
             isset($this->property_detail['occupational_surcharge_rate']) ? '職業割増' : '',
             isset($this->property_detail['work_surcharge_rate']) ? '作業割増' : '',
-            isset($this->property_detail['other_discount']) ? 'その他割引' : '',
             isset($this->property_detail['actual_loss_factor']) ? '実損払係数あり' : '',
         ];
 
         $otherItem = array_filter($otherItem);
 
-        return implode(' ', $otherItem);
+        return implode(',', $otherItem);
+    }
+
+    private function getWaribikiUtiwakeList()
+    {
+        $risk = $this->property_detail['discount_risk_rate'] ? 'リスク評価割引' : '';
+        $fire = $this->property_detail['discount_fire_extinguisher'] ? '消火設備割引' : '';
+        $security = $this->property_detail['discount_security'] ? 'セキュリティ割引' : '';
+        $public = $this->property_detail['discount_public'] ? '公有物件等割引 ' : '';
+        $other = $this->property_detail['other_discount'] ? 'その他割引' : '';
+        $longTerm = $this->getLongTermFlag() ? '長期年払割引' : '';
+
+        $items = array_filter([
+            $risk,
+            $fire,
+            $security,
+            $public,
+            $other,
+            $longTerm,
+        ]);
+
+        return $items;
+    }
+
+    private function getDosanWarimashi()
+    {
+        if (
+            isset($this->property_detail['chattel_surcharge_category']) &&
+            $this->property_detail['chattel_surcharge_category'] != '-' &&
+            ($this->property_detail['item_insurance_payout'] || $this->property_detail['other_item_insurance_payout'])
+        ) {
+            return '動産割増';
+        }
+
+        if (
+            isset($this->property_detail['chattel_surcharge']) &&
+            ($this->property_detail['item_insurance_payout'] || $this->property_detail['other_item_insurance_payout'])
+        ) {
+            return '動産割増';
+        }
+
+        return '';
+    }
+
+    private function getLongTermFlag()
+    {
+        if (! isset($this->property_detail['discount_risk_rate']) || $this->property_detail['discount_risk_rate'] > 0) {
+            return false;
+        }
+
+        if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
+            return $this->payMethod == '長期年払' &&
+            $this->insurance_year >= 5 &&
+            is_null($this->property_detail['actual_loss_factor']) &&
+            $this->discountFireExtinguisher + $this->discountSecurity < 10;
+        }
+
+        return
+        $this->payMethod == '長期年払' &&
+        $this->insurance_year >= 5 &&
+        is_null($this->property_detail['actual_loss_factor']) &&
+        $this->otherDiscount < 10;
     }
 
     public function getRecommendListAttribute()
