@@ -65,7 +65,7 @@ final class SaveRequest extends FormRequest
 
             'is_sonpo_base_rate' => ['nullable'],
             'sonpo_building_base_rate' => ['nullable', 'required_with:is_sonpo_base_rate', 'numeric', 'min:0'],
-            'sonpo_chattel_base_rate' => ['nullable',  'required_with:is_sonpo_base_rate','numeric', 'min:0'],
+            'sonpo_chattel_base_rate' => ['nullable',  'required_with:is_sonpo_base_rate', 'numeric', 'min:0'],
 
             // // 動的に変化する項目（物件トリガー
             'chattel_surcharge' => ['nullable', 'string'],
@@ -153,7 +153,7 @@ final class SaveRequest extends FormRequest
         });
 
         $validator->after(function ($validator) {
-            if (in_array($this->input('assess_item'), ['通常', 'ピロティー付', '太陽光付', '年次取得', '大規模改装'], true) && ! $this->input('floor_area')) {
+            if (in_array($this->input('assess_item'), ['通常', 'ピロティー付', '太陽光付', '大規模改装'], true) && ! $this->input('floor_area')) {
                 $validator->errors()->add('エラー', 'この物件の評価を行うには、延床面積の入力が必須です。');
             }
         });
@@ -204,7 +204,7 @@ final class SaveRequest extends FormRequest
 
         $validator->after(function ($validator) {
             if ($this->input('assess_item') == '年次取得' && ($this->input('building_year') > 2024 || $this->input('building_year') < 1976)) {
-                    $this->dispatch('alert', '評価するには、建築年が「2024年~1976年」にしてください。評価しない場合は、評価項目を「選択しない」にしてください。');
+                $this->dispatch('alert', '評価するには、建築年が「2024年~1976年」にしてください。評価しない場合は、評価項目を「選択しない」にしてください。');
             }
         });
 

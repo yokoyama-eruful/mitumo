@@ -76,6 +76,7 @@ class Futsu2Form extends Component
     public ?string $startDate = null;
 
     public ?string $buildingYearEra = null;
+
     public ?string $buildingYear = null;
 
     public ?string $buildingAge = null;
@@ -111,7 +112,6 @@ class Futsu2Form extends Component
     public ?string $sonpoBuildingBaseRate = null;
 
     public ?string $sonpoChattelBaseRate = null;
-
 
     public ?string $chattelSurcharge = null;
 
@@ -324,7 +324,7 @@ class Futsu2Form extends Component
         //物件情報
         $this->buildingBaseRate = old('building_base_rate', (string) $estimate->building_base_rate);
         $this->chattelBaseRate = old('chattel_base_rate', (string) $estimate->chattel_base_rate);
-        $this->isSonpoBaseRate = (bool )old('is_sonpo_base_rate', (string) $estimate?->is_sonpo_base_rate);
+        $this->isSonpoBaseRate = (bool) old('is_sonpo_base_rate', (string) $estimate?->is_sonpo_base_rate);
         $this->sonpoBuildingBaseRate = old('sonpo_building_base_rate', (string) $estimate?->sonpo_building_base_rate);
         $this->sonpoChattelBaseRate = old('sonpo_chattel_base_rate', (string) $estimate?->sonpo_chattel_base_rate);
 
@@ -503,9 +503,9 @@ class Futsu2Form extends Component
                 $this->workSurchargeCode = $estimateInfo['職作業コード'];
                 $this->onChangeWorkSurchargeCode();
             }
-            
-            $this->insuranceYear=null;
-            $this->insuranceDay =null;
+
+            $this->insuranceYear = null;
+            $this->insuranceDay = null;
             $this->insuranceMonth = null;
             if ($estimateInfo['共済期間']['年']) {
                 $this->insuranceYear = $estimateInfo['共済期間']['年'];
@@ -522,8 +522,8 @@ class Futsu2Form extends Component
             $contractStartDate = CarbonImmutable::parse(
                 $estimateInfo['契約開始日']['年'].'-'.$estimateInfo['契約開始日']['月'].'-'.$estimateInfo['契約開始日']['日']
             );
-            if (($estimateInfo['その他割引（旧）']??0) > 0
-                &&CarbonImmutable::parse('2024-04-01') > $contractStartDate
+            if (($estimateInfo['その他割引（旧）'] ?? 0) > 0
+                && CarbonImmutable::parse('2024-04-01') > $contractStartDate
             ) {
                 $this->dispatch('alert', '2024年3月以前の契約開始日のため、割引率が適用されませんでした');
             } else {
@@ -534,7 +534,7 @@ class Futsu2Form extends Component
                 $this->otherDiscount = $estimateInfo['割引']['その他'];
             }
 
-            $this->actualLossFactor = $estimateInfo['実損払係数']??'';
+            $this->actualLossFactor = $estimateInfo['実損払係数'] ?? '';
         }
     }
 
@@ -588,7 +588,6 @@ class Futsu2Form extends Component
      *
      * @return void
      */
-
     public function onChangeBuildingAge()
     {
         if (! $this->startDate || ! $this->buildingYear) {
@@ -599,27 +598,26 @@ class Futsu2Form extends Component
 
         $this->buildingYear = (string) FullWidthDigitConverter::convert($this->buildingYear);
 
-        $westernYear =JapaneseEraConverter::getJapaneseEraStartYear($this->buildingYearEra);
-        $this->buildingYearEra= $this->buildingYearEra==""?'西暦':$this->buildingYearEra;
+        $westernYear = JapaneseEraConverter::getJapaneseEraStartYear($this->buildingYearEra);
+        $this->buildingYearEra = $this->buildingYearEra == '' ? '西暦' : $this->buildingYearEra;
 
-        if($this->buildingYearEra!=='西暦'){
-            $buildingYear =$westernYear+$this->buildingYear-1;
-        }else{
-            $buildingYear =$this->buildingYear;
+        if ($this->buildingYearEra !== '西暦') {
+            $buildingYear = $westernYear + $this->buildingYear - 1;
+        } else {
+            $buildingYear = $this->buildingYear;
         }
 
         $startDate = CarbonImmutable::parse($this->startDate);
 
-        if($buildingYear <= $startDate->year){
+        if ($buildingYear <= $startDate->year) {
 
-            $this->buildingAge= (string)($startDate->year-$buildingYear);
-        }else{
-            $this->buildingAge = (string)0;
+            $this->buildingAge = (string) ($startDate->year - $buildingYear);
+        } else {
+            $this->buildingAge = (string) 0;
         }
 
         $this->onChangeBaseRate();
     }
-
 
     /**
      * おすすめ契約期間指定の入力項目の表示トリガー
@@ -962,6 +960,12 @@ class Futsu2Form extends Component
 
         if (is_null($this->buildingAge) || $this->buildingAge == '') {
             $this->dispatch('alert', '評価する場合は、築年数を入力してください。');
+
+            return;
+        }
+
+        if (is_null($this->floorArea) && $this->assessItem != '年次取得') {
+            $this->dispatch('alert', '評価する場合は、延床面積を入力してください。');
 
             return;
         }
