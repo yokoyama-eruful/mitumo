@@ -175,22 +175,38 @@ class Estimate extends Model
 
     private function getLongTermFlag()
     {
-        if (! isset($this->property_detail['discount_risk_rate']) || $this->property_detail['discount_risk_rate'] > 0) {
+        if ($this->getValueByKey('discount_risk_rate', $this->property_detail, 0) > 0) {
             return false;
         }
 
-        if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
-            return $this->payMethod == '長期年払' &&
-            $this->insurance_year >= 5 &&
-            is_null($this->property_detail['actual_loss_factor']) &&
-            $this->discountFireExtinguisher + $this->discountSecurity < 10;
+        if (
+            $this->getValueByKey('discount_fire_extinguisher', $this->property_detail) > 0
+         || $this->getValueByKey('discount_security', $this->property_detail) > 0
+         || $this->getValueByKey('discount_public', $this->property_detail) > 0) {
+            return
+                $this->pay_method == '長期年払' &&
+                $this->insurance_year >= 5 &&
+                is_null($this->property_detail['actual_loss_factor']) &&
+                $this->getValueByKey('discount_fire_extinguisher', $this->property_detail) + $this->getValueByKey('discount_security', $this->property_detail) < 10;
         }
 
         return
-        $this->payMethod == '長期年払' &&
-        $this->insurance_year >= 5 &&
-        is_null($this->property_detail['actual_loss_factor']) &&
-        $this->otherDiscount < 10;
+            $this->pay_method == '長期年払' &&
+            $this->insurance_year >= 5 &&
+            is_null($this->property_detail['actual_loss_factor']) &&
+            $this->getValueByKey('other_discount', $this->property_detail) < 10;
+    }
+
+    /**
+     * 配列から安全に中身を取得するUtils関数
+     */
+    private function getValueByKey(string $key, array $array, int $defaultValue = 0): int
+    {
+        if (array_key_exists($key, $array) && $array[$key]) {
+            return intval($array[$key]);
+        }
+
+        return $defaultValue;
     }
 
     public function getRecommendListAttribute()
