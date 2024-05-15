@@ -116,20 +116,21 @@ class Estimate extends Model
 
     public function getOtherItemAttribute()
     {
-        $dosanWarimashi = $this->getDosanWarimashi();
-        $waribikiUtiwakeList = $this->getWaribikiUtiwakeList();
+        // $dosanWarimashi = $this->getDosanWarimashi();
+        // $waribikiUtiwakeList = $this->getWaribikiUtiwakeList();
 
-        $otherItem = [
-            $dosanWarimashi,
-            ...$waribikiUtiwakeList,
-            isset($this->property_detail['occupational_surcharge_rate']) ? '職業割増' : '',
-            isset($this->property_detail['work_surcharge_rate']) ? '作業割増' : '',
-            isset($this->property_detail['actual_loss_factor']) ? '実損払係数あり' : '',
-        ];
+        // $otherItem = [
+        //     $dosanWarimashi,
+        //     ...$waribikiUtiwakeList,
+        //     isset($this->property_detail['occupational_surcharge_rate']) ? '職業割増' : '',
+        //     isset($this->property_detail['work_surcharge_rate']) ? '作業割増' : '',
+        //     isset($this->property_detail['actual_loss_factor']) ? '実損払係数あり' : '',
+        // ];
 
-        $otherItem = array_filter($otherItem);
-
-        return implode(',', $otherItem);
+        // $otherItem = array_filter($otherItem);
+        // return implode(',', $otherItem);
+        //表示ロジックは残すが非表示。復活する可能性がある。
+        return '';
     }
 
     private function getWaribikiUtiwakeList()
