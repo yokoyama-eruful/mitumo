@@ -7,6 +7,7 @@ namespace App\Livewire;
 use App\Domains\Version;
 use App\Models\Estimate;
 use App\Models\Futsu2;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -27,10 +28,15 @@ class Search extends Component
         $estimateModel = $this->type == 'futsu' ? Estimate::class : Futsu2::class;
         if ($keyword) {
             $estimates =
-               $estimateModel::where('contractee', 'LIKE', '%' . $keyword . '%')
-                   ->orderByDesc('id')->paginate(10);
+               $estimateModel::where('user_id', Auth::id())
+                   ->where('contractee', 'LIKE', '%' . $keyword . '%')
+                   ->orderByDesc('id')
+                   ->paginate(10);
         } else {
-            $estimates = $estimateModel::orderByDesc('id')->paginate(10);
+            $estimates =
+             $estimateModel::where('user_id', Auth::id())
+                 ->orderByDesc('id')
+                 ->paginate(10);
         }
 
         return view('livewire.search', [

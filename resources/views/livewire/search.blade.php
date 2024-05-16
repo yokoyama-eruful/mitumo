@@ -159,7 +159,7 @@
          </table>
        </div>
        <div class="flex items-center mt-5 justify-center">
-         {{ $estimates->links('layouts.pagination') }}
+         {{ $estimates->withQueryString()->links('layouts.livewire.pagination') }}
        </div>
      </div>
    </div>
