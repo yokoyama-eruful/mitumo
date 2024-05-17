@@ -22,6 +22,11 @@ class Search extends Component
     #[Url(as: 'q')]
     public string $keyword = '';
 
+    public function updatingKeyword($value)
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         $keyword = $this->keyword;
