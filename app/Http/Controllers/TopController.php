@@ -20,16 +20,16 @@ final class TopController extends Controller
 
     public function index(TopRequest $request)
     {
-        $estimateType = $request->getEstimateType();
-        if ($estimateType == 'futsu') {
-            $estimateList = $this->estimateService->paginate(10);
-        } else {
-            $estimateList = $this->futsu2Service->paginate(10);
-        }
+        return to_route('top.type', [
+            'type' => 'futsu',
+        ]);
+    }
 
-        $versionDomain = new Version();
-
-        return view('top.index', compact('estimateList', 'estimateType', 'versionDomain'));
+    public function type(TopRequest $request, $type)
+    {
+        return view('top.index', [
+            'type' => $type,
+        ]);
     }
 
     public function show()

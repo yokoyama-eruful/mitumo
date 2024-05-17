@@ -201,6 +201,6 @@ class StandardAndComprehensiveDownloader
         $worksheet->setCellValue('L23', percentUnit($standardPremium->discountPublicProperty));
         $worksheet->setCellValue('L24', percentUnit($standardPremium->discountRiskRate));
         $worksheet->setCellValue('L25', $standardPremium->otherDiscount);
-        $worksheet->setCellValue('E26', $standardPremium->getPayByLongTermFlag() == true ? '3%' : '');
+        $worksheet->setCellValue('L26', $standardPremium->getPayByLongTermFlag() == true ? '3%' : '');
     }
 }

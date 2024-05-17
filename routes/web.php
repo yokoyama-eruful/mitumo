@@ -15,10 +15,6 @@ use App\Http\Controllers\PreviewController;
 use App\Http\Controllers\TopController;
 use Illuminate\Support\Facades\Route;
 
-
-Route::get('/test',function(){
-    return view('test');
-});
 Route::controller(AuthController::class)
     ->name('auth.')
     ->group(function () {
@@ -35,6 +31,7 @@ Route::middleware('auth:web')
             ->name('top.')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
+                Route::get('/{type}', 'type')->name('type');
                 Route::get('/version/show', 'show')->name('show');
             });
 
