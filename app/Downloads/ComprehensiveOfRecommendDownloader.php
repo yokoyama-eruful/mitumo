@@ -35,11 +35,12 @@ class ComprehensiveOfRecommendDownloader
 
         $this->setCalcInfo($spreadSheet, $standardPremium, $comprehensivePremium);
 
-        $spreadSheet->setActiveSheetIndex(0);
-
-        $writer = IOFactory::createWriter($spreadSheet, 'Xlsx');
-
         if ($fileType === 'pdf') {
+            $objSheet = $spreadSheet->getSheetByName('計算');
+            $spreadSheet->removeSheetByIndex($spreadSheet->getIndex($objSheet));
+
+            $spreadSheet->setActiveSheetIndex(0);
+            $writer = IOFactory::createWriter($spreadSheet, 'Xlsx');
             Storage::makeDirectory('/excel');
             Storage::makeDirectory('/pdf');
 
@@ -67,6 +68,8 @@ class ComprehensiveOfRecommendDownloader
         }
 
         if ($fileType === 'excel') {
+            $spreadSheet->setActiveSheetIndex(0);
+            $writer = IOFactory::createWriter($spreadSheet, 'Xlsx');
             $writer->save('php://output');
         }
 
