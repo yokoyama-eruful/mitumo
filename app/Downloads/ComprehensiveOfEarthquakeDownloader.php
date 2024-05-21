@@ -69,8 +69,8 @@ class ComprehensiveOfEarthquakeDownloader
         }
 
         if ($fileType === 'excel') {
-            $objSheet = $spreadSheet->getSheetByName('計算');
-            $spreadSheet->removeSheetByIndex($spreadSheet->getIndex($objSheet));
+            $spreadSheet->setActiveSheetIndex(0);
+            $writer = IOFactory::createWriter($spreadSheet, 'Xlsx');
             $writer->save('php://output');
         }
 
