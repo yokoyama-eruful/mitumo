@@ -60,9 +60,9 @@ final class AssessAnnual
         $reProcure = (float) $annualPrice * $annualCoefficient;
 
         return [
-            '80' => (string) thousandYenUnit(floor($reProcure * 0.8)),
-            '100' => (string) thousandYenUnit($reProcure),
-            '100まるめ' => (string) thousandYenUnit(ceil($reProcure / 1000) * 1000),
+            '80' => thousandYenUnit(floor($reProcure * 0.8)),
+            '100' => thousandYenUnit(floor($reProcure)),
+            '100まるめ' => thousandYenUnit(ceil(floor($reProcure) / 1000) * 1000),
         ];
     }
 
@@ -108,9 +108,9 @@ final class AssessAnnual
         return [
             '年次係数' => $annualCoefficient,
             '80%' => $reProcure * 0.8,
-            '80%まるめ' => ceil($reProcure * 0.8 / 1000) * 1000,
+            '80%まるめ' => ceil(floor($reProcure * 0.8) / 1000) * 1000,
             '100%' => $reProcure,
-            '100%まるめ' => ceil($reProcure / 1000) * 1000,
+            '100%まるめ' => ceil(floor($reProcure) / 1000) * 1000,
             '120%' => $reProcure * 1.2,
         ];
     }

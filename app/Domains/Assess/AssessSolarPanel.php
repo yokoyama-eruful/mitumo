@@ -60,9 +60,9 @@ final class AssessSolarPanel
         $reProcure = $amount * $floorArea;
 
         return [
-            '80' => (string) thousandYenUnit(floor($reProcure * 0.8)),
-            '100' => (string) thousandYenUnit($reProcure),
-            '100まるめ' => (string) thousandYenUnit(ceil($reProcure / 1000) * 1000),
+            '80' => thousandYenUnit(floor($reProcure * 0.8)),
+            '100' => thousandYenUnit(floor($reProcure)),
+            '100まるめ' => thousandYenUnit(ceil(floor($reProcure) / 1000) * 1000),
         ];
     }
 
@@ -133,11 +133,11 @@ final class AssessSolarPanel
         return [
             '標準単価' => $standardAmount,
             '80%' => $reProcure * 0.8,
-            '80%まるめ' => ceil($reProcure * 0.8 / 1000) * 1000,
-            '太陽光付き80%まるめ' => ceil($reProcure * 0.8 / 1000) * 1000 + $this->installationCost,
+            '80%まるめ' => ceil(floor($reProcure * 0.8) / 1000) * 1000,
+            '太陽光付き80%まるめ' => ceil(floor($reProcure * 0.8) / 1000) * 1000, +$this->installationCost,
             '100%' => $reProcure,
-            '100%まるめ' => ceil($reProcure / 1000) * 1000,
-            '太陽光付き100%まるめ' => ceil($reProcure / 1000) * 1000 + $this->installationCost,
+            '100%まるめ' => ceil(floor($reProcure) / 1000) * 1000,
+            '太陽光付き100%まるめ' => ceil(floor($reProcure) / 1000) * 1000 + $this->installationCost,
             '120%' => $reProcure * 1.2,
 
         ];

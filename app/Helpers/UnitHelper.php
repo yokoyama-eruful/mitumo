@@ -20,7 +20,7 @@ if (! function_exists('yenUnit')) {
 }
 
 if (! function_exists('thousandYenUnit')) {
-    function thousandYenUnit($amount)
+    function thousandYenUnit($amount): string
     {
         if (! $amount) {
 
