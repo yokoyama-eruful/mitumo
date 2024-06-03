@@ -172,7 +172,7 @@ final class AssessPiloti
 
         return [
             '時価額' => $currentMarketPrice,
-            '時価額まるめ' => ceil($currentMarketPrice / 1000) * 1000,
+            '時価額まるめ' => ceil(floor($currentMarketPrice)  / 1000) * 1000,
         ];
     }
 

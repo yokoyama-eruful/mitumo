@@ -167,8 +167,8 @@ final class AssessSolarPanel
 
         return [
             '時価額' => $currentMarketPrice,
-            '時価額まるめ' => ceil($currentMarketPrice / 1000) * 1000,
-            '太陽光付まるめ' => ceil($currentMarketPrice / 1000) * 1000 + $this->getSolarPanelInfo()['時価額'],
+            '時価額まるめ' => ceil(floor($currentMarketPrice)  / 1000) * 1000,
+            '太陽光付まるめ' => ceil(floor($currentMarketPrice)  / 1000) * 1000 + $this->getSolarPanelInfo()['時価額'],
         ];
     }
 

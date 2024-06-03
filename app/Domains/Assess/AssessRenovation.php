@@ -157,7 +157,7 @@ final class AssessRenovation
 
         return [
             '時価額' => $currentMarketPrice,
-            '時価額まるめ' => ceil($currentMarketPrice / 100000) * 100000,
+            '時価額まるめ' => ceil(floor($currentMarketPrice)  / 100000) * 100000,
         ];
     }
 
