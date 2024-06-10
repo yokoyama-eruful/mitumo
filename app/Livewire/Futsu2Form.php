@@ -503,9 +503,11 @@ class Futsu2Form extends Component
             //APIで取得するコードが「標準コード」か「作業工程コード」か判定する
             if ($estimateInfo['職業割増'] !== '0') {
                 $this->occupationalSurchargeCode = $estimateInfo['職作業コード'];
+
                 $this->onChangeOccupationalSurchargeCode();
             } else {
                 $this->workSurchargeCode = $estimateInfo['職作業コード'];
+                $this->workerCountClass = $estimateInfo['作業員人数の区分'] === '0' ? null : intval($estimateInfo['作業員人数の区分']);
                 $this->onChangeWorkSurchargeCode();
             }
 

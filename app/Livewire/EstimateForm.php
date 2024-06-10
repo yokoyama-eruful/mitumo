@@ -526,6 +526,7 @@ class EstimateForm extends Component
                 $this->onChangeOccupationalSurchargeCode();
             } else {
                 $this->workSurchargeCode = $estimateInfo['職作業コード'];
+                $this->workerCountClass = $estimateInfo['作業員人数の区分'] === '0' ? null : intval($estimateInfo['作業員人数の区分']);
                 $this->onChangeWorkSurchargeCode();
             }
 
