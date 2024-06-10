@@ -226,6 +226,8 @@ class Futsu2Form extends Component
 
     public ?string $currentMarketPriceCRound = null;
 
+    public ?int $workerCountClass = null;
+
     //セレクトボックス
     public array $structureList;
 
@@ -343,6 +345,7 @@ class Futsu2Form extends Component
 
         $this->workSurchargeCode = old('work_surcharge_code', $this->getValueByKey('work_surcharge_code', $estimate->property_detail));
         $this->workSurchargeRate = old('work_surcharge_rate', $this->getValueByKey('work_surcharge_rate', $estimate->property_detail));
+
         $this->workSurchargeItem = old('work_surcharge_item', $this->getValueByKey('work_surcharge_item', $estimate->property_detail));
 
         $this->discountRiskCode = old('discount_risk_code', $this->getValueByKey('discount_risk_code', $estimate->property_detail));
@@ -354,6 +357,8 @@ class Futsu2Form extends Component
         $this->otherFacilityInsurancePayout = old('other_facility_insurance_payout', $this->getValueByKey('other_facility_insurance_payout', $estimate->property_detail));
         $this->itemInsurancePayout = old('item_insurance_payout', $this->getValueByKey('item_insurance_payout', $estimate->property_detail));
         $this->otherItemInsurancePayout = old('other_item_insurance_payout', $this->getValueByKey('other_item_insurance_payout', $estimate->property_detail));
+
+        $this->workerCountClass = $estimate->worker_count_class;
 
         //評価項目
         $this->assessItem = old('assess_item', $estimate->assess_item);
@@ -574,11 +579,11 @@ class Futsu2Form extends Component
         $chattelBaseRate = new ChattelBaseRate($this->estimate, 'estimateFutsu2/rateTable/chattelBaseTable.csv');
         $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank);
 
-        if (isset($this->occupationalSurchargeCode)) {
+        if ($this->occupationalSurchargeCode) {
             $this->onChangeOccupationalSurchargeCode();
         }
 
-        if (isset($this->workSurchargeCode)) {
+        if ($this->workSurchargeCode) {
             $this->onChangeWorkSurchargeCode();
         }
     }
@@ -760,6 +765,7 @@ class Futsu2Form extends Component
         if ($this->workSurchargeRate) {
             $this->dispatch('alert', '職業割増、作業割増は一方しか適用できません。作業割増を削除します。');
         }
+
         $this->workSurchargeCode = null;
         $this->workSurchargeRate = null;
         $this->workSurchargeItem = null;
@@ -825,6 +831,18 @@ class Futsu2Form extends Component
         $workSurcharge = new WorkSurcharge('estimateFutsu2/surchargeTable/workSurchargeTable.csv');
 
         $this->workSurchargeRate = (string) $workSurcharge->findCode($this->workSurchargeCode, $this->rank);
+
+        $this->workSurchargeItem = (string) $workSurcharge->getWorkSurchargeItem($this->workSurchargeCode, $this->rank);
+
+        if ($this->workerCountClass == 1) {
+            $this->workSurchargeRate = (string) 0;
+        } else {
+            $this->workSurchargeRate = (string) $workSurcharge->findCode($this->workSurchargeCode, $this->rank);
+        }
+
+        if ($this->workSurchargeCode === '') {
+            $this->workerCountClass = null;
+        }
 
         $this->workSurchargeItem = (string) $workSurcharge->getWorkSurchargeItem($this->workSurchargeCode, $this->rank);
 

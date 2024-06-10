@@ -57,6 +57,8 @@ class Futsu2 extends Model
         'is_sonpo_base_rate',
         'sonpo_building_base_rate',
         'sonpo_chattel_base_rate',
+
+        'worker_count_class',
     ];
 
     protected $casts = [
@@ -252,5 +254,15 @@ class Futsu2 extends Model
     public function getExclusiveAreaWithFloorAttribute()
     {
         return $this->exclusive_area ? '専有:' . $this->exclusive_area . 'm² ' : '';
+    }
+
+    public function workerCountClass(): string
+    {
+        return match ($this->worker_count_class) {
+            1 => '5人未満',
+            2 => '50人未満',
+            3 => '50人以上',
+            default => '未入力',
+        };
     }
 }
