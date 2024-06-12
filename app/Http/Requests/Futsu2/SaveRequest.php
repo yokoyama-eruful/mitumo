@@ -239,7 +239,8 @@ final class SaveRequest extends FormRequest
         return array_merge(
             $standardParams,
             ['property_detail' => $propertyParams],
-            ['assess_detail' => $assessParams]
+            ['assess_detail' => $assessParams],
+            ['worker_count_class' => $this->worker_count_class],
         );
     }
 }

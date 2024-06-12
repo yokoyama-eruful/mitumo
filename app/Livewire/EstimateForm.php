@@ -229,6 +229,8 @@ class EstimateForm extends Component
 
     public ?string $currentMarketPriceCRound = null;
 
+    public ?int $workerCountClass = null;
+
     //セレクトボックス
     public array $structureList;
 
@@ -365,6 +367,8 @@ class EstimateForm extends Component
         $this->itemInsurancePayout = old('item_insurance_payout', $this->getValueByKey('item_insurance_payout', $estimate->property_detail));
         $this->otherItemInsurancePayout = old('other_item_insurance_payout', $this->getValueByKey('other_item_insurance_payout', $estimate->property_detail));
 
+        $this->workerCountClass = $estimate->worker_count_class;
+
         //評価項目
         $this->assessItem = old('assess_item', $estimate->assess_item);
         $this->assessUsage = old('assess_usage', $this->getValueByKey('assess_usage', $estimate->assess_detail));
@@ -422,6 +426,10 @@ class EstimateForm extends Component
         }
 
         $this->onChangeDiscountRiskCode();
+
+        if ($this->workSurchargeCode) {
+            $this->onChangeWorkSurchargeCode();
+        }
 
         return view('estimate.livewire.form');
     }
@@ -518,6 +526,7 @@ class EstimateForm extends Component
                 $this->onChangeOccupationalSurchargeCode();
             } else {
                 $this->workSurchargeCode = $estimateInfo['職作業コード'];
+                $this->workerCountClass = $estimateInfo['作業員人数の区分'] === '0' ? null : intval($estimateInfo['作業員人数の区分']);
                 $this->onChangeWorkSurchargeCode();
             }
 
@@ -977,7 +986,15 @@ class EstimateForm extends Component
 
         $workSurcharge = new WorkSurcharge('surchargeTable/workSurchargeTable.csv');
 
-        $this->workSurchargeRate = (string) $workSurcharge->findCode($this->workSurchargeCode, $this->rank);
+        if ($this->workerCountClass == 1) {
+            $this->workSurchargeRate = (string) 0;
+        } else {
+            $this->workSurchargeRate = (string) $workSurcharge->findCode($this->workSurchargeCode, $this->rank);
+        }
+
+        if ($this->workSurchargeCode === '') {
+            $this->workerCountClass = null;
+        }
 
         $this->workSurchargeItem = (string) $workSurcharge->getWorkSurchargeItem($this->workSurchargeCode, $this->rank);
 
