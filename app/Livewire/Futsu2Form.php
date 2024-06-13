@@ -1231,7 +1231,7 @@ class Futsu2Form extends Component
     private function getAssessUsageList()
     {
         return match ($this->assessItem) {
-            '通常', 'ピロティー付', '太陽光付', '年次取得' => ['専用住宅', '併用住宅', '専用店舗', 'プレハブ'],
+            '通常', 'ピロティー付', '太陽光付', '年次取得' => ['専用住宅', '併用住宅', '専用店舗', '工場・倉庫', 'プレハブ'],
             '分譲マンション' => ['分譲マンション'],
             default => [],
         };
