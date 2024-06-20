@@ -79,11 +79,11 @@ final class AssessRenovation
 
         $renovationCostRate = round(round($priceStructureRatio, 2) * $depreciationRate, 3);
 
-        $marketPrice = thousandYenUnit(floor($replacementPrice * (1 - $conventionalDepreciationRate + $renovationCostRate)));
+        $marketPrice = floor($replacementPrice * (1 - ($conventionalDepreciationRate + $renovationCostRate)));
 
         return [
-            '通常' => (string) $marketPrice,
-            'まるめ' => (string) thousandYenUnit(ceil(floor($replacementPrice * (1 - $conventionalDepreciationRate + $renovationCostRate)) / 1000) * 1000),
+            '通常' => thousandYenUnit($marketPrice),
+            'まるめ' => thousandYenUnit(ceil($marketPrice / 1000) * 1000),
         ];
     }
 
@@ -157,7 +157,7 @@ final class AssessRenovation
 
         return [
             '時価額' => $currentMarketPrice,
-            '時価額まるめ' => ceil(floor($currentMarketPrice)  / 100000) * 100000,
+            '時価額まるめ' => ceil($currentMarketPrice / 1000) * 1000,
         ];
     }
 

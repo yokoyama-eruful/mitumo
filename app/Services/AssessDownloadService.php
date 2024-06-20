@@ -89,6 +89,7 @@ final class AssessDownloadService
     {
         $assessData = new AssessRenovation($estimate);
         $assessDownloader = new AssessRenovationDownloader();
+
         $assessDownloader->dropFile($estimate, $assessData, $fileType);
     }
 }
