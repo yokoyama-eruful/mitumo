@@ -79,7 +79,7 @@ final class AssessRenovation
 
         $renovationCostRate = round(round($priceStructureRatio, 2) * $depreciationRate, 3);
 
-        $marketPrice = floor($replacementPrice * (1 - ($conventionalDepreciationRate + $renovationCostRate)));
+        $marketPrice = $replacementPrice * (1 - ($conventionalDepreciationRate + $renovationCostRate));
 
         return [
             '通常' => yenUnit($marketPrice),
