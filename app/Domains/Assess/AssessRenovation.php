@@ -82,8 +82,8 @@ final class AssessRenovation
         $marketPrice = floor($replacementPrice * (1 - ($conventionalDepreciationRate + $renovationCostRate)));
 
         return [
-            '通常' => thousandYenUnit($marketPrice),
-            'まるめ' => thousandYenUnit(ceil($marketPrice / 1000) * 1000),
+            '通常' => yenUnit($marketPrice),
+            'まるめ' => yenUnit(ceil($marketPrice / 1000000) * 1000000),
         ];
     }
 
@@ -157,7 +157,7 @@ final class AssessRenovation
 
         return [
             '時価額' => $currentMarketPrice,
-            '時価額まるめ' => ceil($currentMarketPrice / 1000) * 1000,
+            '時価額まるめ' => ceil($currentMarketPrice / 1000000) * 1000000,
         ];
     }
 
