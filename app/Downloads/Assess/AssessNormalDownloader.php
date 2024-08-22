@@ -67,6 +67,11 @@ class AssessNormalDownloader
     {
         $worksheet = $spreadSheet->getSheetByName('評価表（通常）');
         $worksheet->setCellValue('L1', date('Y年m月d日'));
+
+        if ($estimate->assess_item == '通常(専有面積)') {
+            $worksheet->setCellValue('E13', '専有面積');
+        }
+
         $worksheet->setCellValue('B4', $estimate->contractee);
         $worksheet->setCellValue('F4', $estimate->location);
         $worksheet->setCellValue('B7', $assessData->assessUsage);

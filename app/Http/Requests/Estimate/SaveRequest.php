@@ -159,7 +159,7 @@ final class SaveRequest extends FormRequest
         });
 
         $validator->after(function ($validator) {
-            if (in_array($this->input('assess_item'), ['通常(専有面積)'], true) && ! $this->input('floor_area')) {
+            if (in_array($this->input('assess_item'), ['通常(専有面積)'], true) && ! $this->input('exclusive_area')) {
                 $validator->errors()->add('エラー', 'この物件の評価を行うには、専有面積の入力が必須です。');
             }
         });
