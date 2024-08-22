@@ -69,6 +69,7 @@ class AssessNormalDownloader
         $worksheet->setCellValue('L1', date('Y年m月d日'));
 
         if ($estimate->assess_item == '通常(専有面積)') {
+            $worksheet->setCellValue('H6', '【専有面積】');
             $worksheet->setCellValue('E13', '専有面積');
         }
 
