@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Futsu2;
 
-use App\Domains\Assess\AssessNormal;
 use App\Domains\ComprehensiveInsurancePremium;
 use App\Domains\EarthquakeStandardInsurancePremium;
 use App\Domains\FactoryPropertyBasePremium;

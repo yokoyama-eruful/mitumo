@@ -15,11 +15,10 @@ class AssessNormalDownloader
         $assessData,
         $fileType
     ) {
-
         $filePath = storage_path('app/assessTemplate/normal.xlsx');
 
         if ($fileType === 'excel') {
-            $fileName = '評価表（通常）_'  .$estimate->contractee.'_'. date('YmdHi') . '.xlsx';
+            $fileName = '評価表_'.$estimate->assess_item.'_'  .$estimate->contractee.'_'. date('YmdHi') . '.xlsx';
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;');
             header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName));
             header('Cache-Control: max-age=0');
@@ -48,7 +47,7 @@ class AssessNormalDownloader
             }
 
             $pdf = storage_path('app/pdf/normal.pdf');
-            $fileName = '評価表（通常）_'  .$estimate->contractee.'_'. date('YmdHi') . '.pdf';
+            $fileName = '評価表_'.$estimate->assess_item.'_'  .$estimate->contractee.'_'. date('YmdHi') . '.pdf';
 
             header('Content-Type:' . $pdf);
             header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName));
@@ -68,6 +67,12 @@ class AssessNormalDownloader
     {
         $worksheet = $spreadSheet->getSheetByName('評価表（通常）');
         $worksheet->setCellValue('L1', date('Y年m月d日'));
+
+        if ($estimate->assess_item == '通常(専有面積)') {
+            $worksheet->setCellValue('H6', '【専有面積】');
+            $worksheet->setCellValue('E13', '専有面積');
+        }
+
         $worksheet->setCellValue('B4', $estimate->contractee);
         $worksheet->setCellValue('F4', $estimate->location);
         $worksheet->setCellValue('B7', $assessData->assessUsage);
@@ -119,7 +124,9 @@ class AssessNormalDownloader
         $worksheet->setCellValue('K23', $assessData->getCurrentMarketPrice('B')['時価額まるめ']);
         $worksheet->setCellValue('K24', $assessData->getCurrentMarketPrice('C')['時価額まるめ']);
 
-        $worksheet->setCellValue('B27',$assessData->remarks);
+        $worksheet->setCellValue('B27', $assessData->remarks);
+
+        $worksheet->setTitle('評価表_'.$estimate->assess_item);
     }
 
     public function ConvertYear($fiscal_year)

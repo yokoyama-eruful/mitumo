@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Domains\Assess\AssessNormal;
 use App\Domains\ComprehensiveCompensation;
 use App\Domains\ComprehensiveInsurancePremium;
 use App\Domains\EarthquakeComprehensiveInsurancePremium;
@@ -34,8 +33,6 @@ class PreviewController extends Controller
         if ($estimate->user_id != Auth::id()) {
             abort(404);
         }
-
-        $test = new AssessNormal($estimate);
 
         $standardPremium = new StandardInsurancePremium($estimate);
         $standardCompensation = new StandardCompensation($estimate->property_type);
