@@ -362,6 +362,8 @@ class Futsu2Form extends Component
 
         //評価項目
         $this->assessItem = old('assess_item', $estimate->assess_item);
+        $this->assessItem = $this->assessItem != '通常' ? $this->assessItem : '通常(延床面積)';
+
         $this->assessUsage = old('assess_usage', $this->getValueByKey('assess_usage', $estimate->assess_detail));
         $this->assessStructure = old('assess_structure', $this->getValueByKey('assess_structure', $estimate->assess_detail));
         $this->pilotiFloorArea = old('piloti_floor_area', $this->getValueByKey('piloti_floor_area', $estimate->assess_detail));
@@ -984,14 +986,20 @@ class Futsu2Form extends Component
             return;
         }
 
-        if (is_null($this->floorArea) && $this->assessItem != '年次取得') {
+        if ($this->floorArea == '' && ($this->assessItem != '年次取得' && $this->assessItem != '通常(専有面積)')) {
             $this->dispatch('alert', '評価する場合は、延床面積を入力してください。');
 
             return;
         }
 
+        if ($this->exclusiveArea == '' && $this->assessItem == '通常(専有面積)') {
+            $this->dispatch('alert', '評価する場合は、専有面積を入力してください。');
+
+            return;
+        }
+
         switch ($this->assessItem) {
-            case '通常':
+            case '通常(延床面積)':
                 $assessDomain = new AssessNormal($this->estimate);
 
                 $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['80'];
@@ -1013,6 +1021,29 @@ class Futsu2Form extends Component
                 $this->currentMarketPriceARound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'A')['まるめ'];
                 $this->currentMarketPriceBRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'B')['まるめ'];
                 $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->floorArea, $this->buildingAge, 'C')['まるめ'];
+                break;
+            case '通常(専有面積)':
+                $assessDomain = new AssessNormal($this->estimate);
+
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C')['80'];
+
+                $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['100'];
+                $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['100'];
+                $this->reProcureC100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C')['100'];
+
+                $this->reProcureA100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['100まるめ'];
+                $this->reProcureB100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['100まるめ'];
+                $this->reProcureC100round = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C')['100まるめ'];
+
+                $this->currentMarketPriceA = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'A')['通常'];
+                $this->currentMarketPriceB = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'B')['通常'];
+                $this->currentMarketPriceC = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'C')['通常'];
+
+                $this->currentMarketPriceARound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'A')['まるめ'];
+                $this->currentMarketPriceBRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'B')['まるめ'];
+                $this->currentMarketPriceCRound = $assessDomain->viewCurrentMarketPrice($this->assessUsage, $this->assessStructure, $this->exclusiveArea, $this->buildingAge, 'C')['まるめ'];
                 break;
             case 'ピロティー付':
                 $assessDomain = new AssessPiloti($this->estimate);
@@ -1225,13 +1256,13 @@ class Futsu2Form extends Component
 
     private function getAssessItemList()
     {
-        return ['選択しない', '通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'];
+        return ['選択しない', '通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'];
     }
 
     private function getAssessUsageList()
     {
         return match ($this->assessItem) {
-            '通常', 'ピロティー付', '太陽光付', '年次取得' => ['専用住宅', '併用住宅', '専用店舗', '工場・倉庫', 'プレハブ'],
+            '通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '年次取得' => ['専用住宅', '併用住宅', '専用店舗', '工場・倉庫', 'プレハブ'],
             '分譲マンション' => ['分譲マンション'],
             default => [],
         };
@@ -1240,7 +1271,7 @@ class Futsu2Form extends Component
     private function getAssessStructureList()
     {
         return match ($this->assessItem) {
-            '通常', 'ピロティー付', '太陽光付', '年次取得' => ['木造', '鉄骨', '鉄筋（RC）', '枠組（2×4）', 'プレハブ造', '軽量鉄骨'],
+            '通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '年次取得' => ['木造', '鉄骨', '鉄筋（RC）', '枠組（2×4）', 'プレハブ造', '軽量鉄骨'],
             '分譲マンション' => ['上塗', '壁真'],
             default => [],
         };

@@ -24,7 +24,8 @@ final class AssessNormal
 
     public function __construct($estimate)
     {
-        $this->floorArea = $estimate->floor_area ? $estimate->floor_area : 0;
+        $this->floorArea = $this->getBuildArea($estimate);
+
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
         $this->buildingYear = $estimate->building_year ? $estimate->building_year : 0;
         $this->assessUsage = $this->getValueByKey('assess_usage', $estimate->assess_detail);
@@ -33,6 +34,15 @@ final class AssessNormal
 
         $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure);
         $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
+    }
+
+    private function getBuildArea($estimate)
+    {
+        if ($estimate->assess_item == '通常(専有面積)') {
+            return $estimate->exclusive_area ?? 0;
+        }
+
+        return $estimate->floor_area ?? 0;
     }
 
     /*

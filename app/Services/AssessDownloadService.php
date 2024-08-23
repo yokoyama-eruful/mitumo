@@ -24,7 +24,8 @@ final class AssessDownloadService
         $assessType = $estimate->assess_item;
 
         switch ($assessType) {
-            case '通常' :
+            case '通常(延床面積)' :
+            case '通常(専有面積)' :
                 $this->dropNormal($estimate, $fileType);
                 break;
 

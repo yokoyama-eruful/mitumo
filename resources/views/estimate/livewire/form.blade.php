@@ -1,6 +1,6 @@
-<main class="w-full m-auto text-black bg-white">
+<main class="m-auto w-full bg-white text-black">
   @if (Session::has('message'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+    <div class="relative rounded border border-green-400 bg-green-100 px-4 py-3 text-green-700" role="alert">
       <span class="block sm:inline">{{ Session::get('message') }}</span>
     </div>
   @endif
@@ -8,14 +8,14 @@
   <form class="flex flex-col justify-center" id="estimateFormId"
     action="{{ route('estimate.save', ['id' => $estimate->id ?? 'new']) }}" onsubmit="return false;" method="POST">
     @csrf
-    <div class="block border-2 p-5 bg-blue-50 mx-10">
+    <div class="mx-10 block border-2 bg-blue-50 p-5">
 
       <div class="flex flex-wrap">
         <div class="w-1/2 px-2">
           <div class="estimate-title">
             <label class="p-3">取扱代理所情報</label>
           </div>
-          <div class=" estimate-input-box">
+          <div class="estimate-input-box">
             <label class="estimate-label" for="company">
               取扱代理所名
             </label>
@@ -48,7 +48,7 @@
             <input class="estimate-input" id="certificate_number" name="certificate_number"
               wire:model="certificateNumber" required>
             <button
-              class="mx-2 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded whitespace-nowrap"
+              class="mx-2 h-8 whitespace-nowrap rounded bg-gray-700 px-2 text-[0.6rem] text-white hover:bg-gray-600 sm:text-base"
               type="button" wire:click="onClickCertificateNumber">証書番号参照</button>
           </div>
           <div class="estimate-input-box">
@@ -222,14 +222,14 @@
                 <option value="大正">大正</option>
                 <option value="明治">明治</option>
               </select>
-              <input class="estimate-input text-right w-20" id="building_year" name="building_year" placeholder=""
+              <input class="estimate-input w-20 text-right" id="building_year" name="building_year" placeholder=""
                 wire:model="buildingYear" wire:change="onChangeBuildingAge" required>
               <span class="unit-display">年</span>
             </div>
             <div class="estimate-input-box">
               <label class="estimate-label" for="building_age">築年数
               </label>
-              <input class="estimate-input hover:bg-white focus:bg-white text-right" id="building_age"
+              <input class="estimate-input text-right hover:bg-white focus:bg-white" id="building_age"
                 name="building_age" wire:model="buildingAge"wire:change="onChangeAssessItem" required readonly>
               <span class="unit-display">年</span>
             </div>
@@ -253,7 +253,7 @@
                 <option value="大正">大正</option>
                 <option value="明治">明治</option>
               </select>
-              <input class="estimate-input text-right w-20" id="building_year" name="building_year" placeholder=""
+              <input class="estimate-input w-20 text-right" id="building_year" name="building_year" placeholder=""
                 wire:model="buildingYear" wire:change="onChangeBuildingAge" required>
               <span class="unit-display">年</span>
             </div>
@@ -261,7 +261,7 @@
               <label class="estimate-label" for="building_age">築年数
                 <div class="estimate-input-required">※必須</div>
               </label>
-              <input class="estimate-input hover:bg-white focus:bg-white text-right" id="building_age"
+              <input class="estimate-input text-right hover:bg-white focus:bg-white" id="building_age"
                 name="building_age" wire:model="buildingAge" required readonly>
               <span class="unit-display">年</span>
             </div>
@@ -292,38 +292,38 @@
             </label>
             <div class="flex flex-row" class="estimate-input">
               @if (!empty($insuranceMonth) || !empty($insuranceDay))
-                <div class="w-1/3 flex flex-row">
-                  <input class="text-right estimate-input bg-gray-300 hover:bg-gray-300" id="insurance_year"
+                <div class="flex w-1/3 flex-row">
+                  <input class="estimate-input bg-gray-300 text-right hover:bg-gray-300" id="insurance_year"
                     name="insurance_year" wire:model="insuranceYear" wire:change="onChangeRecommend" readonly>
                   <span class="unit-display">年</span>
                 </div>
               @else
-                <div class="w-1/3 flex flex-row">
-                  <input class="text-right estimate-input" id="insurance_year" name="insurance_year"
+                <div class="flex w-1/3 flex-row">
+                  <input class="estimate-input text-right" id="insurance_year" name="insurance_year"
                     wire:model="insuranceYear" wire:change="onChangeRecommend">
                   <span class="unit-display">年</span>
                 </div>
               @endif
               @if (!empty($insuranceYear))
-                <div class="w-1/3 flex flex-row">
-                  <input class="text-right estimate-input bg-gray-300 hover:bg-gray-300" id="insurance_month"
+                <div class="flex w-1/3 flex-row">
+                  <input class="estimate-input bg-gray-300 text-right hover:bg-gray-300" id="insurance_month"
                     name="insurance_month" wire:model="insuranceMonth" wire:change="onChangeInsuranceMonth" readonly>
-                  <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">ヶ月</span>
+                  <span class="unit-display sm:flex sm:w-16 sm:items-center sm:p-1">ヶ月</span>
                 </div>
-                <div class="w-1/3 flex flex-row">
-                  <input class="text-right estimate-input bg-gray-300 hover:bg-gray-300" id="insurance_day"
+                <div class="flex w-1/3 flex-row">
+                  <input class="estimate-input bg-gray-300 text-right hover:bg-gray-300" id="insurance_day"
                     name="insurance_day" wire:change="onChangeInsuranceDay" wire:model="insuranceDay" readonly>
                   <span class="unit-display">日</span>
                   <!-- 任意・常時 -->
                 </div>
               @else
-                <div class="w-1/3 flex flex-row">
-                  <input class="text-right estimate-input" id="insurance_month" name="insurance_month"
+                <div class="flex w-1/3 flex-row">
+                  <input class="estimate-input text-right" id="insurance_month" name="insurance_month"
                     wire:model="insuranceMonth" wire:change="onChangeInsuranceMonth">
-                  <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">ヶ月</span>
+                  <span class="unit-display sm:flex sm:w-16 sm:items-center sm:p-1">ヶ月</span>
                 </div>
-                <div class="w-1/3 flex flex-row">
-                  <input class="text-right estimate-input" id="insurance_day" name="insurance_day"
+                <div class="flex w-1/3 flex-row">
+                  <input class="estimate-input text-right" id="insurance_day" name="insurance_day"
                     wire:change="onChangeInsuranceDay" wire:model="insuranceDay">
                   <span class="unit-display">日</span>
                   <!-- 任意・常時 -->
@@ -462,7 +462,7 @@
               <div class="w-11/12">
                 <div class="flex">
                   <label class="estimate-label"></label>
-                  <button class="mx-2 px-2 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded"
+                  <button class="mx-2 rounded bg-gray-700 px-2 text-[0.6rem] text-white hover:bg-gray-600 sm:text-base"
                     type="button" wire:click="onOpenFactoryRateTable">コードを参照する</button>
                 </div>
                 <div class="estimate-input-box flex">
@@ -496,7 +496,7 @@
             <div class="estimate-input-box">
               <div class="estimate-label flex flex-row" for="chattel_surcharge">
                 <label>損保９掛</label>
-                <input class="ms-2 text-xl w-6 h-6" name="is_sonpo_base_rate" type="checkbox" value="true"
+                <input class="ms-2 h-6 w-6 text-xl" name="is_sonpo_base_rate" type="checkbox" value="true"
                   wire:model.lazy="isSonpoBaseRate">
               </div>
               @if ($isSonpoBaseRate)
@@ -565,7 +565,7 @@
                 <div class="estimate-input-box flex">
                   <label class="estimate-label" for="discount_risk_code"></label>
                   <button
-                    class="mx-2 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded"
+                    class="mx-2 h-8 rounded bg-gray-700 px-2 text-[0.6rem] text-white hover:bg-gray-600 sm:text-base"
                     type="button" wire:click="onClickDiscountRiskTable">評価項目表を参照</button>
                   <input class="estimate-input" id="discount_risk_code" name="discount_risk_code"
                     wire:model="discountRiskCode" wire:change="onChangeDiscountRiskCode" hidden>
@@ -608,12 +608,12 @@
                 <div class="estimate-input-box flex">
                   <label class="estimate-label" for="discount_risk_code"></label>
                   <button
-                    class="mx-2 px-2 h-8 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded"
+                    class="mx-2 h-8 rounded bg-gray-700 px-2 text-[0.6rem] text-white hover:bg-gray-600 sm:text-base"
                     type="button" wire:click="onClickDiscountRiskTable">評価項目表を参照</button>
                   <input class="estimate-input" id="discount_risk_code" name="discount_risk_code"
                     wire:model="discountRiskCode" wire:change="onChangeDiscountRiskCode" hidden>
                 </div>
-                <div class=" flex">
+                <div class="flex">
                   <label class="estimate-label" for="discount_risk_rate">割引率</label>
                   <input class="estimate-input text-right" id="discount_risk_rate" name="discount_risk_rate"
                     type="number" wire:model="discountRiskRate"wire:change="onChangeDiscountRiskRate" min="0"
@@ -641,7 +641,7 @@
               <div class="w-11/12">
                 <div class="estimate-input-box flex">
                   <label class="estimate-label"></label>
-                  <button class="mx-2 px-2 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded"
+                  <button class="mx-2 rounded bg-gray-700 px-2 text-[0.6rem] text-white hover:bg-gray-600 sm:text-base"
                     type="button" wire:click="onClickOpenOccupationalSurchargeTable">コードを参照する</button>
                 </div>
                 <div class="estimate-input-box flex">
@@ -666,7 +666,7 @@
               <div class="w-11/12">
                 <div class="estimate-input-box flex">
                   <label class="estimate-label" for=""></label>
-                  <button class="mx-2 px-2 sm:text-base text-[0.6rem] bg-gray-700 hover:bg-gray-600 text-white rounded"
+                  <button class="mx-2 rounded bg-gray-700 px-2 text-[0.6rem] text-white hover:bg-gray-600 sm:text-base"
                     type="button" wire:click="onClickOpenWorkSurchargeTable">コードを参照する</button>
                 </div>
                 <div class="estimate-input-box flex">
@@ -707,9 +707,9 @@
           @if (in_array($propertyType, ['住宅', '普通', '工場'], true))
             <div class="estimate-input-box">
               <label class="estimate-label w-1/2" for="building_insurance_payout">建物</label>
-              <input class="estimate-input  w-1/2 text-right" id="building_insurance_payout"
+              <input class="estimate-input w-1/2 text-right" id="building_insurance_payout"
                 name="building_insurance_payout" wire:model="buildingInsurancePayout">
-              <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
+              <span class="unit-display sm:flex sm:w-16 sm:items-center sm:p-1">千円</span>
 
             </div>
           @endif
@@ -718,7 +718,7 @@
               <label class="estimate-label w-1/2" for="household_insurance_payout">家財</label>
               <input class="estimate-input w-1/2 text-right" id="household_insurance_payout"
                 name="household_insurance_payout" wire:model="householdInsurancePayout">
-              <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
+              <span class="unit-display sm:flex sm:w-16 sm:items-center sm:p-1">千円</span>
             </div>
           @endif
           @if (in_array($propertyType, ['普通', '工場'], true))
@@ -728,7 +728,7 @@
               </label>
               <input class="estimate-input w-1/2 text-right" id="facility_insurance_payout"
                 name="facility_insurance_payout" wire:model="facilityInsurancePayout">
-              <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
+              <span class="unit-display sm:flex sm:w-16 sm:items-center sm:p-1">千円</span>
             </div>
           @endif
           @if (in_array($propertyType, ['普通', '工場'], true))
@@ -737,7 +737,7 @@
               </label>
               <input class="estimate-input w-1/2 text-right" id="other_facility_insurance_payout"
                 name="other_facility_insurance_payout" wire:model="otherFacilityInsurancePayout">
-              <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
+              <span class="unit-display sm:flex sm:w-16 sm:items-center sm:p-1">千円</span>
             </div>
           @endif
           @if (in_array($propertyType, ['普通', '工場'], true))
@@ -745,7 +745,7 @@
               <label class="estimate-label w-1/2" for="item_insurance_payout">商品・製品等</label>
               <input class="estimate-input w-1/2 text-right" id="item_insurance_payout" name="item_insurance_payout"
                 wire:model="itemInsurancePayout">
-              <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
+              <span class="unit-display sm:flex sm:w-16 sm:items-center sm:p-1">千円</span>
             </div>
           @endif
           @if (in_array($propertyType, ['普通', '工場'], true))
@@ -753,7 +753,7 @@
               <label class="estimate-label w-1/2" for="other_item_insurance_payout">その他商品</label>
               <input class="estimate-input w-1/2 text-right" id="other_item_insurance_payout"
                 name="other_item_insurance_payout" wire:model="otherItemInsurancePayout">
-              <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
+              <span class="unit-display sm:flex sm:w-16 sm:items-center sm:p-1">千円</span>
             </div>
           @endif
 
@@ -773,11 +773,14 @@
               </select>
             </div>
           @else
-            <div class="estimate-input-box bg-rose-400 text-white text-lg p-2">
+            <div class="estimate-input-box bg-rose-400 p-2 text-lg text-white">
               評価機能は、見積もり情報を保存することで利用できます。
             </div>
           @endif
-          @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
+          @if (in_array(
+                  $assessItem,
+                  ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'],
+                  true))
             <div class="estimate-input-box">
               <label class="estimate-label" for="assess_usage">用途
                 <div class="estimate-input-required">※必須</div>
@@ -793,7 +796,10 @@
               </select>
             </div>
           @endif
-          @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
+          @if (in_array(
+                  $assessItem,
+                  ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'],
+                  true))
             <div class="estimate-input-box">
               <label class="estimate-label" for="assess_structure">構造
                 <div class="estimate-input-required">※必須</div>
@@ -895,7 +901,7 @@
               </label>
               <input class="estimate-input" id="installation_cost" name="installation_cost"
                 wire:model="installationCost" wire:change="onChangeAssessItem">
-              <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
+              <span class="unit-display sm:flex sm:w-16 sm:items-center sm:p-1">千円</span>
             </div>
           @endif
           @if (in_array($assessItem, ['年次取得'], true))
@@ -905,10 +911,13 @@
               </label>
               <input class="estimate-input text-right" id="annual_price" name="annual_price"
                 wire:model="annualPrice" wire:change="onChangeAssessItem">
-              <span class="sm:w-16 sm:p-1 sm:flex sm:items-center unit-display">千円</span>
+              <span class="unit-display sm:flex sm:w-16 sm:items-center sm:p-1">千円</span>
             </div>
           @endif
-          @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'], true))
+          @if (in_array(
+                  $assessItem,
+                  ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'],
+                  true))
             <div class="estimate-input-box">
               <label class="estimate-label" for="remarks">備考
                 <div class="estimate-input-required"></div>
@@ -922,7 +931,7 @@
 
           <div class="flex flex-col justify-center">
             @if (in_array($assessItem, ['年次取得'], true))
-              <div class="w-full flex flex-row">
+              <div class="flex w-full flex-row">
                 <label class="assess-label"></label>
                 <label class="assess-label">80%
                 </label>
@@ -931,7 +940,7 @@
                 <label class="assess-label">100%まるめ
                 </label>
               </div>
-              <div class="w-full flex flex-row">
+              <div class="flex w-full flex-row">
                 <label class="assess-label">再調達価額
                 </label>
                 <input class="assess-input" wire:model="reProcure80" readonly>
@@ -942,8 +951,8 @@
           </div>
 
           <div class="flex flex-col justify-center">
-            @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
-              <div class="w-full flex flex-row">
+            @if (in_array($assessItem, ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション'], true))
+              <div class="flex w-full flex-row">
                 <label class="assess-label"></label>
                 <label class="assess-label">80%
                 </label>
@@ -952,7 +961,7 @@
                 <label class="assess-label">100%まるめ
                 </label>
               </div>
-              <div class="w-full flex flex-row">
+              <div class="flex w-full flex-row">
                 <label class="assess-label">再調達A</label>
 
                 <input class="assess-input" wire:model="reProcureA80" readonly>
@@ -961,8 +970,8 @@
               </div>
             @endif
 
-            @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
-              <div class="w-full flex flex-row">
+            @if (in_array($assessItem, ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション'], true))
+              <div class="flex w-full flex-row">
                 <label class="assess-label">再調達B</label>
                 <input class="assess-input" wire:model="reProcureB80" readonly>
                 <input class="assess-input" wire:model="reProcureB100" readonly>
@@ -970,8 +979,8 @@
               </div>
             @endif
 
-            @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション'], true))
-              <div class="w-full flex flex-row">
+            @if (in_array($assessItem, ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション'], true))
+              <div class="flex w-full flex-row">
                 <label class="assess-label">再調達C</label>
                 <input class="assess-input" wire:model="reProcureC80" readonly>
                 <input class="assess-input" wire:model="reProcureC100" readonly>
@@ -980,16 +989,16 @@
             @endif
           </div>
 
-          <div class="flex flex-col justify-center mt-5">
+          <div class="mt-5 flex flex-col justify-center">
             @if (in_array($assessItem, ['大規模改装'], true))
-              <div class="w-full flex flex-row">
+              <div class="flex w-full flex-row">
                 <label class="market-price-label"></label>
                 <label class="market-price-label">通常
                 </label>
                 <label class="market-price-label">まるめ
                 </label>
               </div>
-              <div class="w-full flex flex-row">
+              <div class="flex w-full flex-row">
                 <label class="market-price-label">時価額
                 </label>
                 <input class="market-price-input" wire:model="currentMarketPrice" readonly>
@@ -998,16 +1007,19 @@
             @endif
           </div>
 
-          <div class="flex flex-col justify-center mt-5">
-            @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
-              <div class="w-full flex flex-row">
+          <div class="mt-5 flex flex-col justify-center">
+            @if (in_array(
+                    $assessItem,
+                    ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'],
+                    true))
+              <div class="flex w-full flex-row">
                 <label class="market-price-label"></label>
                 <label class="market-price-label">通常
                 </label>
                 <label class="market-price-label">まるめ
                 </label>
               </div>
-              <div class="w-full flex flex-row">
+              <div class="flex w-full flex-row">
                 <label class="market-price-label">時価額A
                 </label>
                 <input class="market-price-input" wire:model="currentMarketPriceA" readonly>
@@ -1015,8 +1027,11 @@
               </div>
             @endif
 
-            @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
-              <div class="w-full flex flex-row">
+            @if (in_array(
+                    $assessItem,
+                    ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'],
+                    true))
+              <div class="flex w-full flex-row">
                 <label class="market-price-label">時価額B
                 </label>
                 <input class="market-price-input" wire:model="currentMarketPriceB" readonly>
@@ -1024,8 +1039,11 @@
               </div>
             @endif
 
-            @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'], true))
-              <div class="w-full flex flex-row">
+            @if (in_array(
+                    $assessItem,
+                    ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'],
+                    true))
+              <div class="flex w-full flex-row">
                 <label class="market-price-label">時価額C
                 </label>
                 <input class="market-price-input" wire:model="currentMarketPriceC" readonly>
@@ -1038,59 +1056,62 @@
     </div>
 
     <button
-      class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col mx-48 mt-5"
+      class="mx-48 mt-5 flex h-full flex-col rounded-lg bg-gray-100 p-8 shadow-md outline outline-1 outline-slate-300 hover:bg-gray-300"
       name="save" type="button" onclick="submitForm(this)">
-      <div class="flex items-center mb-3">
+      <div class="mb-3 flex items-center">
         <div
-          class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+          class="mr-2 inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-500 text-white">
           <i class="fa-solid fa-floppy-disk"></i>
         </div>
         <h2 class="text-lg font-medium">保存</h2>
       </div>
-      <p class="text-left pl-5">入力された内容を保存します。<br>保存したのちプレビューが可能になります。</p>
+      <p class="pl-5 text-left">入力された内容を保存します。<br>保存したのちプレビューが可能になります。</p>
     </button>
 
     @if ($estimate->id)
-      <div class="grid sm:grid-cols-3 grid-rows-3 gap-4 mx-48 mb-6">
+      <div class="mx-48 mb-6 grid grid-rows-3 gap-4 sm:grid-cols-3">
         <button
-          class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5"
+          class="mt-5 flex h-full w-full flex-col rounded-lg bg-gray-100 p-8 shadow-md outline outline-1 outline-slate-300 hover:bg-gray-300"
           type="button" value="preview" onclick="submitForm(this)">
-          <div class="flex items-center mt-2 mb-5">
+          <div class="mb-5 mt-2 flex items-center">
             <div
-              class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+              class="mr-2 inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-500 text-white">
               <i class="fa-solid fa-floppy-disk"></i>
             </div>
             <div class="text-lg font-medium">プレビュー</div>
           </div>
-          <p class="text-left pl-5">入力した内容で見積書をプレビューする。</p>
+          <p class="pl-5 text-left">入力した内容で見積書をプレビューする。</p>
         </button>
 
-        @if (in_array($assessItem, ['通常', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'], true))
+        @if (in_array(
+                $assessItem,
+                ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'],
+                true))
           <button
-            class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5"
+            class="mt-5 flex h-full w-full flex-col rounded-lg bg-gray-100 p-8 shadow-md outline outline-1 outline-slate-300 hover:bg-gray-300"
             type="button" value="assessSheet" onclick="submitForm(this)">
-            <div class="flex items-center mb-2">
+            <div class="mb-2 flex items-center">
               <div
-                class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                class="mr-2 inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-500 text-white">
                 <i class="fa-solid fa-ranking-star"></i>
               </div>
               <div class="text-lg font-medium">評価シートを<br>ダウンロード</div>
             </div>
-            <p class="text-left pl-5">評価シートをダウンロード方法を選択します。</p>
+            <p class="pl-5 text-left">評価シートをダウンロード方法を選択します。</p>
           </button>
         @endif
 
         <button
-          class="flex rounded-lg h-full outline outline-1 outline-slate-300 shadow-md bg-gray-100 hover:bg-gray-300 p-8 flex-col w-full mt-5"
+          class="mt-5 flex h-full w-full flex-col rounded-lg bg-gray-100 p-8 shadow-md outline outline-1 outline-slate-300 hover:bg-gray-300"
           type="button" value="download" onclick="submitForm(this)">
-          <div class="flex items-center mb-2">
+          <div class="mb-2 flex items-center">
             <div
-              class="w-8 h-8 mr-2 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+              class="mr-2 inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-500 text-white">
               <i class="fa-solid fa-eye"></i>
             </div>
             <div class="text-lg font-medium">ダウンロードファイル選択</div>
           </div>
-          <p class="text-left pl-5">ダウンロードする見積書を選択する画面に移動します。</p>
+          <p class="pl-5 text-left">ダウンロードする見積書を選択する画面に移動します。</p>
         </button>
       </div>
     @endif
