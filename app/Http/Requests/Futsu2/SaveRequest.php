@@ -42,9 +42,9 @@ final class SaveRequest extends FormRequest
             'other' => ['nullable', 'string'],
             'property_type' => ['required', 'string', 'in:住宅,普通,工場'],
             'rank' => ['required', 'string'],
-            'start_date' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'date'],
-            'building_year' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装',  'integer', 'min:0', 'max:'.(date('Y') + 1)],
-            'building_age' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'integer'],
+            'start_date' => ['nullable', 'required_if:assess_item,通常(延床面積),通常(専有面積),ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'date'],
+            'building_year' => ['nullable', 'required_if:assess_item,通常(延床面積),通常(専有面積),ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装',  'integer', 'min:0', 'max:'.(date('Y') + 1)],
+            'building_age' => ['nullable', 'required_if:assess_item,通常(延床面積),通常(専有面積),ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'integer'],
             'pay_method' => ['required', 'string'],
             'insurance_year' => ['nullable', 'required_without_all:insurance_month,insurance_day',  'integer', 'min:1', 'max:10'],
             'insurance_month' => ['nullable', 'required_without_all:insurance_year,insurance_day', 'integer', 'min:1', 'max:11'],
@@ -93,10 +93,10 @@ final class SaveRequest extends FormRequest
             'other_item_insurance_payout' => ['nullable', 'numeric', 'min:0'],
 
             //動的に変化する項目（評価トリガー）
-            'assess_item' => ['nullable', 'in:通常,ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装,選択しない'],
+            'assess_item' => ['nullable', 'in:通常(延床面積),通常(専有面積),ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装,選択しない'],
 
-            'assess_usage' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得', 'string'],
-            'assess_structure' => ['nullable', 'required_if:assess_item,通常,ピロティー付,太陽光付,分譲マンション,年次取得', 'string'],
+            'assess_usage' => ['nullable', 'required_if:assess_item,通常(延床面積),通常(専有面積),ピロティー付,太陽光付,分譲マンション,年次取得', 'string'],
+            'assess_structure' => ['nullable', 'required_if:assess_item,通常(延床面積),通常(専有面積),ピロティー付,太陽光付,分譲マンション,年次取得', 'string'],
 
             'piloti_floor_area' => ['nullable', 'required_if:assess_item,ピロティー付', 'numeric', 'min:0'],
 
@@ -153,7 +153,7 @@ final class SaveRequest extends FormRequest
         });
 
         $validator->after(function ($validator) {
-            if (in_array($this->input('assess_item'), ['通常', 'ピロティー付', '太陽光付', '大規模改装'], true) && ! $this->input('floor_area')) {
+            if (in_array($this->input('assess_item'), ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '大規模改装'], true) && ! $this->input('floor_area')) {
                 $validator->errors()->add('エラー', 'この物件の評価を行うには、延床面積の入力が必須です。');
             }
         });
