@@ -80,7 +80,7 @@ class AssessNormalDownloader
         $worksheet->setCellValue('H7', $assessData->floorArea);
         $worksheet->setCellValue('K7', $assessData->buildingYear.'-01-01');
 
-        if ($assessData->assessStructure == 'プレハブ造') {
+        if ($assessData->assessStructure == 'プレハブ工法') {
             $worksheet->setCellValue('B15', '木質系');
             $worksheet->setCellValue('B16', '鉄骨系');
             $worksheet->setCellValue('B17', 'RC系');
@@ -108,7 +108,7 @@ class AssessNormalDownloader
         $worksheet->setCellValue('K16', $assessData->getReProcure('B')['80%まるめ']);
         $worksheet->setCellValue('K17', $assessData->getReProcure('C')['80%まるめ']);
 
-        if ($assessData->assessStructure == 'プレハブ造') {
+        if ($assessData->assessStructure == 'プレハブ工法') {
             $worksheet->setCellValue('B22', '木質系');
             $worksheet->setCellValue('B23', '鉄骨系');
             $worksheet->setCellValue('B24', 'RC系');

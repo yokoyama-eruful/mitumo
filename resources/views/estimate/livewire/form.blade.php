@@ -963,7 +963,7 @@
               </div>
               <div class="flex w-full flex-row">
                 <label class="assess-label">
-                  {{ $assessStructure == 'プレハブ造' ? '木質系' : 'A' }}
+                  {{ $assessStructure == 'プレハブ工法' ? '木質系' : 'A' }}
                 </label>
 
                 <input class="assess-input" wire:model="reProcureA80" readonly>
@@ -975,7 +975,7 @@
             @if (in_array($assessItem, ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション'], true))
               <div class="flex w-full flex-row">
                 <label class="assess-label">
-                  {{ $assessStructure == 'プレハブ造' ? '鉄骨系' : 'B' }}
+                  {{ $assessStructure == 'プレハブ工法' ? '鉄骨系' : 'B' }}
                 </label>
                 <input class="assess-input" wire:model="reProcureB80" readonly>
                 <input class="assess-input" wire:model="reProcureB100" readonly>
@@ -986,7 +986,7 @@
             @if (in_array($assessItem, ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション'], true))
               <div class="flex w-full flex-row">
                 <label class="assess-label">
-                  {{ $assessStructure == 'プレハブ造' ? 'RC系' : 'C' }}
+                  {{ $assessStructure == 'プレハブ工法' ? 'RC系' : 'C' }}
                 </label>
                 <input class="assess-input" wire:model="reProcureC80" readonly>
                 <input class="assess-input" wire:model="reProcureC100" readonly>
@@ -1027,7 +1027,7 @@
               </div>
               <div class="flex w-full flex-row">
                 <label class="market-price-label">
-                  {{ $assessStructure == 'プレハブ造' ? '木質系' : 'A' }}
+                  {{ $assessStructure == 'プレハブ工法' ? '木質系' : 'A' }}
                 </label>
                 <input class="market-price-input" wire:model="currentMarketPriceA" readonly>
                 <input class="market-price-input" wire:model="currentMarketPriceARound" readonly>
@@ -1040,7 +1040,7 @@
                     true))
               <div class="flex w-full flex-row">
                 <label class="market-price-label">
-                  {{ $assessStructure == 'プレハブ造' ? '鉄骨系' : 'B' }}
+                  {{ $assessStructure == 'プレハブ工法' ? '鉄骨系' : 'B' }}
                 </label>
                 <input class="market-price-input" wire:model="currentMarketPriceB" readonly>
                 <input class="market-price-input" wire:model="currentMarketPriceBRound" readonly>
@@ -1053,7 +1053,7 @@
                     true))
               <div class="flex w-full flex-row">
                 <label class="market-price-label">
-                  {{ $assessStructure == 'プレハブ造' ? 'RC系' : 'C' }}
+                  {{ $assessStructure == 'プレハブ工法' ? 'RC系' : 'C' }}
                 </label>
                 <input class="market-price-input" wire:model="currentMarketPriceC" readonly>
                 <input class="market-price-input" wire:model="currentMarketPriceCRound" readonly>

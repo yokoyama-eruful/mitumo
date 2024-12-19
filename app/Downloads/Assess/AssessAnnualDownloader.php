@@ -86,7 +86,7 @@ class AssessAnnualDownloader
         $worksheet->setCellValue('J15', $assessData->getReProcure()['80%']);
         $worksheet->setCellValue('K15', $assessData->getReProcure()['80%まるめ']);
 
-        if ($assessData->assessStructure == 'プレハブ造') {
+        if ($assessData->assessStructure == 'プレハブ工法') {
             $worksheet->setCellValue('B20', '木質系');
             $worksheet->setCellValue('B21', '鉄骨系');
             $worksheet->setCellValue('B22', 'RC系');

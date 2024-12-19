@@ -82,7 +82,7 @@ class AssessSolarPanelDownloader
         $worksheet->setCellValue('K15', $assessData->getSolarPanelInfo()['残価率最終']);
         $worksheet->setCellValue('M15', $assessData->getSolarPanelInfo()['時価額']);
 
-        if ($assessData->assessStructure == 'プレハブ造') {
+        if ($assessData->assessStructure == 'プレハブ工法') {
             $worksheet->setCellValue('B19', '木質系');
             $worksheet->setCellValue('B20', '鉄骨系');
             $worksheet->setCellValue('B21', 'RC系');
@@ -114,7 +114,7 @@ class AssessSolarPanelDownloader
         $worksheet->setCellValue('M20', $assessData->getReProcure('B')['太陽光付き80%まるめ']);
         $worksheet->setCellValue('M21', $assessData->getReProcure('C')['太陽光付き80%まるめ']);
 
-        if ($assessData->assessStructure == 'プレハブ造') {
+        if ($assessData->assessStructure == 'プレハブ工法') {
             $worksheet->setCellValue('B25', '木質系');
             $worksheet->setCellValue('B26', '鉄骨系');
             $worksheet->setCellValue('B27', 'RC系');
