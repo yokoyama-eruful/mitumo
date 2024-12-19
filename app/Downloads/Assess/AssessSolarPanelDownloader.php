@@ -82,6 +82,12 @@ class AssessSolarPanelDownloader
         $worksheet->setCellValue('K15', $assessData->getSolarPanelInfo()['残価率最終']);
         $worksheet->setCellValue('M15', $assessData->getSolarPanelInfo()['時価額']);
 
+        if ($assessData->assessStructure == 'プレハブ造') {
+            $worksheet->setCellValue('B19', '木質系');
+            $worksheet->setCellValue('B20', '鉄骨系');
+            $worksheet->setCellValue('B21', 'RC系');
+        }
+
         $worksheet->setCellValue('C19', $assessData->getReProcure('A')['標準単価']);
         $worksheet->setCellValue('C20', $assessData->getReProcure('B')['標準単価']);
         $worksheet->setCellValue('C21', $assessData->getReProcure('C')['標準単価']);
@@ -108,6 +114,12 @@ class AssessSolarPanelDownloader
         $worksheet->setCellValue('M20', $assessData->getReProcure('B')['太陽光付き80%まるめ']);
         $worksheet->setCellValue('M21', $assessData->getReProcure('C')['太陽光付き80%まるめ']);
 
+        if ($assessData->assessStructure == 'プレハブ造') {
+            $worksheet->setCellValue('B25', '木質系');
+            $worksheet->setCellValue('B26', '鉄骨系');
+            $worksheet->setCellValue('B27', 'RC系');
+        }
+
         $worksheet->setCellValue('C25', $assessData->getResidualValue('A')['経年減価率']);
         $worksheet->setCellValue('C26', $assessData->getResidualValue('B')['経年減価率']);
         $worksheet->setCellValue('C27', $assessData->getResidualValue('C')['経年減価率']);
@@ -131,7 +143,7 @@ class AssessSolarPanelDownloader
         $worksheet->setCellValue('M26', $assessData->getCurrentMarketPrice('B')['太陽光付まるめ']);
         $worksheet->setCellValue('M27', $assessData->getCurrentMarketPrice('C')['太陽光付まるめ']);
 
-        $worksheet->setCellValue('B30',$assessData->remarks);
+        $worksheet->setCellValue('B30', $assessData->remarks);
     }
 
     public function ConvertYear($fiscal_year)

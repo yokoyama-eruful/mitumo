@@ -80,6 +80,12 @@ class AssessNormalDownloader
         $worksheet->setCellValue('H7', $assessData->floorArea);
         $worksheet->setCellValue('K7', $assessData->buildingYear.'-01-01');
 
+        if ($assessData->assessStructure == 'プレハブ造') {
+            $worksheet->setCellValue('B15', '木質系');
+            $worksheet->setCellValue('B16', '鉄骨系');
+            $worksheet->setCellValue('B17', 'RC系');
+        }
+
         $worksheet->setCellValue('C15', $assessData->getReProcure('A')['標準単価']);
         $worksheet->setCellValue('C16', $assessData->getReProcure('B')['標準単価']);
         $worksheet->setCellValue('C17', $assessData->getReProcure('C')['標準単価']);
@@ -101,6 +107,12 @@ class AssessNormalDownloader
         $worksheet->setCellValue('K15', $assessData->getReProcure('A')['80%まるめ']);
         $worksheet->setCellValue('K16', $assessData->getReProcure('B')['80%まるめ']);
         $worksheet->setCellValue('K17', $assessData->getReProcure('C')['80%まるめ']);
+
+        if ($assessData->assessStructure == 'プレハブ造') {
+            $worksheet->setCellValue('B22', '木質系');
+            $worksheet->setCellValue('B23', '鉄骨系');
+            $worksheet->setCellValue('B24', 'RC系');
+        }
 
         $worksheet->setCellValue('C22', $assessData->getResidualValue('A')['経年減価率']);
         $worksheet->setCellValue('C23', $assessData->getResidualValue('B')['経年減価率']);
