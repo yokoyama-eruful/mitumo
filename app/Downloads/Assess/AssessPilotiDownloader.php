@@ -77,6 +77,12 @@ class AssessPilotiDownloader
         $worksheet->setCellValue('H12', $assessData->pilotiFloorArea);
         $worksheet->setCellValue('K12', $assessData->floorArea);
 
+        if ($assessData->assessStructure == 'プレハブ工法') {
+            $worksheet->setCellValue('B17', '木質系');
+            $worksheet->setCellValue('B18', '鉄骨系');
+            $worksheet->setCellValue('B19', 'RC系');
+        }
+
         $worksheet->setCellValue('C17', $assessData->getExceptForPiloti('A')['標準単価']);
         $worksheet->setCellValue('C18', $assessData->getExceptForPiloti('B')['標準単価']);
         $worksheet->setCellValue('C19', $assessData->getExceptForPiloti('C')['標準単価']);
@@ -122,6 +128,18 @@ class AssessPilotiDownloader
         $worksheet->setCellValue('K29', $assessData->getAllFloorAreaReProcure('A')['80%まるめ']);
         $worksheet->setCellValue('K30', $assessData->getAllFloorAreaReProcure('B')['80%まるめ']);
         $worksheet->setCellValue('K31', $assessData->getAllFloorAreaReProcure('C')['80%まるめ']);
+
+        if ($assessData->assessStructure == 'プレハブ工法') {
+            $worksheet->setCellValue('B29', '木質系');
+            $worksheet->setCellValue('B30', '鉄骨系');
+            $worksheet->setCellValue('B31', 'RC系');
+        }
+
+        if ($assessData->assessStructure == 'プレハブ工法') {
+            $worksheet->setCellValue('B35', '木質系');
+            $worksheet->setCellValue('B36', '鉄骨系');
+            $worksheet->setCellValue('B37', 'RC系');
+        }
 
         $worksheet->setCellValue('C35', $assessData->getResidualValue('A')['経年減価率']);
         $worksheet->setCellValue('C36', $assessData->getResidualValue('B')['経年減価率']);

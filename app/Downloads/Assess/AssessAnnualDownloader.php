@@ -86,6 +86,12 @@ class AssessAnnualDownloader
         $worksheet->setCellValue('J15', $assessData->getReProcure()['80%']);
         $worksheet->setCellValue('K15', $assessData->getReProcure()['80%まるめ']);
 
+        if ($assessData->assessStructure == 'プレハブ工法') {
+            $worksheet->setCellValue('B20', '木質系');
+            $worksheet->setCellValue('B21', '鉄骨系');
+            $worksheet->setCellValue('B22', 'RC系');
+        }
+
         $worksheet->setCellValue('C20', $assessData->getResidualValue('A')['経年減価率']);
         $worksheet->setCellValue('C21', $assessData->getResidualValue('B')['経年減価率']);
         $worksheet->setCellValue('C22', $assessData->getResidualValue('C')['経年減価率']);
@@ -108,7 +114,7 @@ class AssessAnnualDownloader
         $worksheet->setCellValue('K21', $assessData->getCurrentMarketPrice('B')['時価額まるめ']);
         $worksheet->setCellValue('K22', $assessData->getCurrentMarketPrice('C')['時価額まるめ']);
 
-        $worksheet->setCellValue('B25',$assessData->remarks);
+        $worksheet->setCellValue('B25', $assessData->remarks);
     }
 
     public function ConvertYear($fiscal_year)
