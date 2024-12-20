@@ -879,7 +879,9 @@
           <div class="flex flex-col justify-center">
             @if (in_array($assessItem, ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション'], true))
               <div class="flex w-full flex-row">
-                <label class="assess-label"></label>
+                <label class="assess-label">
+                  再調達
+                </label>
                 <label class="assess-label">80%
                 </label>
                 <label class="assess-label">100%
@@ -888,7 +890,9 @@
                 </label>
               </div>
               <div class="flex w-full flex-row">
-                <label class="assess-label">再調達A</label>
+                <label class="assess-label">
+                  {{ $assessStructure == 'プレハブ工法' ? '木質系' : 'A' }}
+                </label>
 
                 <input class="assess-input" wire:model="reProcureA80" readonly>
                 <input class="assess-input" wire:model="reProcureA100" readonly>
@@ -898,7 +902,9 @@
 
             @if (in_array($assessItem, ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション'], true))
               <div class="flex w-full flex-row">
-                <label class="assess-label">再調達B</label>
+                <label class="assess-label">
+                  {{ $assessStructure == 'プレハブ工法' ? '鉄骨系' : 'B' }}
+                </label>
                 <input class="assess-input" wire:model="reProcureB80" readonly>
                 <input class="assess-input" wire:model="reProcureB100" readonly>
                 <input class="assess-input" wire:model="reProcureB100round" readonly>
@@ -907,7 +913,9 @@
 
             @if (in_array($assessItem, ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション'], true))
               <div class="flex w-full flex-row">
-                <label class="assess-label">再調達C</label>
+                <label class="assess-label">
+                  {{ $assessStructure == 'プレハブ工法' ? 'RC系' : 'C' }}
+                </label>
                 <input class="assess-input" wire:model="reProcureC80" readonly>
                 <input class="assess-input" wire:model="reProcureC100" readonly>
                 <input class="assess-input" wire:model="reProcureC100round" readonly>
@@ -939,14 +947,17 @@
                     ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'],
                     true))
               <div class="flex w-full flex-row">
-                <label class="market-price-label"></label>
+                <label class="market-price-label">
+                  時価額
+                </label>
                 <label class="market-price-label">通常
                 </label>
                 <label class="market-price-label">まるめ
                 </label>
               </div>
               <div class="flex w-full flex-row">
-                <label class="market-price-label">時価額A
+                <label class="market-price-label">
+                  {{ $assessStructure == 'プレハブ工法' ? '木質系' : 'A' }}
                 </label>
                 <input class="market-price-input" wire:model="currentMarketPriceA" readonly>
                 <input class="market-price-input" wire:model="currentMarketPriceARound" readonly>
@@ -958,7 +969,8 @@
                     ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'],
                     true))
               <div class="flex w-full flex-row">
-                <label class="market-price-label">時価額B
+                <label class="market-price-label">
+                  {{ $assessStructure == 'プレハブ工法' ? '鉄骨系' : 'B' }}
                 </label>
                 <input class="market-price-input" wire:model="currentMarketPriceB" readonly>
                 <input class="market-price-input" wire:model="currentMarketPriceBRound" readonly>
@@ -970,7 +982,8 @@
                     ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'],
                     true))
               <div class="flex w-full flex-row">
-                <label class="market-price-label">時価額C
+                <label class="market-price-label">
+                  {{ $assessStructure == 'プレハブ工法' ? 'RC系' : 'C' }}
                 </label>
                 <input class="market-price-input" wire:model="currentMarketPriceC" readonly>
                 <input class="market-price-input" wire:model="currentMarketPriceCRound" readonly>
