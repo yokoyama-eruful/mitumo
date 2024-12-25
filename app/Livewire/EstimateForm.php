@@ -1139,7 +1139,7 @@ class EstimateForm extends Component
             return;
         }
 
-        if ($this->floorArea == '' && ($this->assessItem != '年次取得' && $this->assessItem != '通常(専有面積)')) {
+        if ($this->floorArea == '' && ($this->assessItem != '年次取得' && $this->assessItem != '通常(専有面積)' && $this->assessItem != '分譲マンション')) {
             $this->dispatch('alert', '評価する場合は、延床面積を入力してください。');
 
             return;
