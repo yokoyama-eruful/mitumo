@@ -200,7 +200,7 @@ final class ComprehensiveInsurancePremium
         $estimate = $this->estimate;
 
         $propertyType = $estimate->property_type;
-        
+
         $buildingAge = $estimate->building_age ?? '';
 
         if (in_array($propertyType, ['住宅', '普通'], true)) {
@@ -215,9 +215,9 @@ final class ComprehensiveInsurancePremium
             $buildingBaseRate = $estimate->building_base_rate;
 
         }
-        
+
         //損保９割のロジック（building_base_rate）
-        if($estimate->is_sonpo_base_rate){
+        if ($estimate->is_sonpo_base_rate) {
             $buildingBaseRate = $estimate->sonpo_building_base_rate;
         }
         //その他割引
@@ -231,6 +231,13 @@ final class ComprehensiveInsurancePremium
         $longTermRate = $mutualAidPremium->longTerRate;
         $actualLossFactor = $this->getFloatValueByKey('actual_loss_factor', $estimate->property_detail, 1);
         $applyRate = round(round(($otherDiscount) * $actualLossFactor, 2) * $longTermRate, 2);
+
+        $calcShortTermRate = $mutualAidPremium->shortTermRate;
+
+        if ($calcShortTermRate == 0) {
+            $calcShortTermRate = 1;
+        }
+        $applyRate = round(round(round($otherDiscount * $actualLossFactor, 2) * $longTermRate, 2) * $calcShortTermRate, 2);
 
         //掛け金
         $buildingInsurancePayout = $this->getValueByKey('building_insurance_payout', $estimate->property_detail);
@@ -260,13 +267,13 @@ final class ComprehensiveInsurancePremium
             }
             $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             //損保９割のロジック（chattel_base_rate）
-            if($estimate->is_sonpo_base_rate){
-               $chattelBaseRate = $estimate->sonpo_chattel_base_rate;
+            if ($estimate->is_sonpo_base_rate) {
+                $chattelBaseRate = $estimate->sonpo_chattel_base_rate;
             }
         } else {
             $chattelBaseRate = $estimate->building_base_rate;
             //損保９割のロジック（building_base_rate）
-            if($estimate->is_sonpo_base_rate){
+            if ($estimate->is_sonpo_base_rate) {
                 $chattelBaseRate = $estimate->sonpo_building_base_rate;
             }
         }
@@ -280,7 +287,14 @@ final class ComprehensiveInsurancePremium
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $longTermRate = $mutualAidPremium->longTerRate;
-        $applyRate = round(($otherDiscount) * $longTermRate, 2);
+
+        $calcShortTermRate = $mutualAidPremium->shortTermRate;
+
+        if ($calcShortTermRate == 0) {
+            $calcShortTermRate = 1;
+        }
+
+        $applyRate = round(round($otherDiscount * $longTermRate, 2) * $calcShortTermRate, 2);
 
         //掛け金
         $householdInsurancePayout = $this->getValueByKey('household_insurance_payout', $estimate->property_detail);
@@ -310,13 +324,13 @@ final class ComprehensiveInsurancePremium
             }
             $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             //損保９割のロジック（chattel_base_rate）
-            if($estimate->is_sonpo_base_rate){
-               $chattelBaseRate = $estimate->sonpo_chattel_base_rate;
+            if ($estimate->is_sonpo_base_rate) {
+                $chattelBaseRate = $estimate->sonpo_chattel_base_rate;
             }
         } else {
             $chattelBaseRate = $estimate->building_base_rate;
             //損保９割のロジック（building_base_rate）
-            if($estimate->is_sonpo_base_rate){
+            if ($estimate->is_sonpo_base_rate) {
                 $chattelBaseRate = $estimate->sonpo_building_base_rate;
             }
         }
@@ -330,7 +344,14 @@ final class ComprehensiveInsurancePremium
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $longTermRate = $mutualAidPremium->longTerRate;
         $actualLossFactor = $this->getFloatValueByKey('actual_loss_factor', $estimate->property_detail, 1);
-        $applyRate = round(round(($otherDiscount) * $actualLossFactor, 2) * $longTermRate, 2);
+
+        $calcShortTermRate = $mutualAidPremium->shortTermRate;
+
+        if ($calcShortTermRate == 0) {
+            $calcShortTermRate = 1;
+        }
+
+        $applyRate = round(round(round($otherDiscount * $actualLossFactor, 2) * $longTermRate, 2) * $calcShortTermRate, 2);
 
         //掛け金
         $facilityInsurancePayout = $this->getValueByKey('facility_insurance_payout', $estimate->property_detail);
@@ -361,13 +382,13 @@ final class ComprehensiveInsurancePremium
             }
             $chattelBaseRate = $baseRate->findRate($propertyType, $estimate->rank);
             //損保９割のロジック（chattel_base_rate）
-            if($estimate->is_sonpo_base_rate){
-               $chattelBaseRate = $estimate->sonpo_chattel_base_rate;
+            if ($estimate->is_sonpo_base_rate) {
+                $chattelBaseRate = $estimate->sonpo_chattel_base_rate;
             }
         } else {
             $chattelBaseRate = $estimate->building_base_rate;
             //損保９割のロジック（building_base_rate）
-            if($estimate->is_sonpo_base_rate){
+            if ($estimate->is_sonpo_base_rate) {
                 $chattelBaseRate = $estimate->sonpo_building_base_rate;
             }
         }
@@ -379,7 +400,14 @@ final class ComprehensiveInsurancePremium
         ///適用率
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $longTermRate = $mutualAidPremium->longTerRate;
-        $applyRate = round(($otherDiscount) * $longTermRate, 2);
+
+        $calcShortTermRate = $mutualAidPremium->shortTermRate;
+
+        if ($calcShortTermRate == 0) {
+            $calcShortTermRate = 1;
+        }
+
+        $applyRate = round(round(($otherDiscount) * $longTermRate, 2) * $calcShortTermRate, 2);
 
         //掛け金
         $itemInsurancePayout = $this->getValueByKey('item_insurance_payout', $estimate->property_detail);
