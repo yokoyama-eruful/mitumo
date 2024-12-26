@@ -40,7 +40,7 @@ class DownloadController extends Controller
         $termRate = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $shortTermRate = $termRate->shortTermRate;
 
-        $estimateTypeList = $this->downloadService->getEnableDisableList($estimate, $shortTermRate, $estimateType);
+        $estimateTypeList = $this->downloadService->getEnableDisableList($estimate, $estimateType);
 
         return view('download.index', compact('estimate', 'fileType', 'keisyo', 'estimateTypeList', 'shortTermRate'));
     }

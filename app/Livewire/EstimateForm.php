@@ -1139,7 +1139,7 @@ class EstimateForm extends Component
             return;
         }
 
-        if ($this->floorArea == '' && ($this->assessItem != '年次取得' && $this->assessItem != '通常(専有面積)')) {
+        if ($this->floorArea == '' && ($this->assessItem != '年次取得' && $this->assessItem != '通常(専有面積)' && $this->assessItem != '分譲マンション')) {
             $this->dispatch('alert', '評価する場合は、延床面積を入力してください。');
 
             return;
@@ -1418,7 +1418,7 @@ class EstimateForm extends Component
     {
 
         return match ($this->assessItem) {
-            '通常(延床面積)', '通常(専有面積)',  'ピロティー付', '太陽光付', '年次取得' => ['専用住宅', '併用住宅', '専用店舗', '工場・倉庫', 'プレハブ'],
+            '通常(延床面積)', '通常(専有面積)',  'ピロティー付', '太陽光付', '年次取得' => ['専用住宅（柱あり）', '併用住宅', '専用店舗', '工場・倉庫', '専用住宅（柱なし）'],
             '分譲マンション' => ['分譲マンション'],
             default => [],
         };
@@ -1426,8 +1426,20 @@ class EstimateForm extends Component
 
     private function getAssessStructureList()
     {
+        if ($this->assessItem == '' || $this->assessUsage == '') {
+            return [];
+        }
+
+        if ($this->assessUsage == '専用住宅（柱なし）') {
+            return match ($this->assessItem) {
+                '通常(延床面積)', '通常(専有面積)',  'ピロティー付', '太陽光付', '年次取得' => ['木造（2×4）', 'プレハブ工法'],
+                '分譲マンション' => ['上塗', '壁真'],
+                default => [],
+            };
+        }
+
         return match ($this->assessItem) {
-            '通常(延床面積)', '通常(専有面積)',  'ピロティー付', '太陽光付', '年次取得' => ['木造', '鉄骨', '鉄筋（RC）', '枠組（2×4）', 'プレハブ工法', '軽量鉄骨'],
+            '通常(延床面積)', '通常(専有面積)',  'ピロティー付', '太陽光付', '年次取得' => ['木造', '鉄骨', '鉄筋（RC）', '軽量鉄骨'],
             '分譲マンション' => ['上塗', '壁真'],
             default => [],
         };
