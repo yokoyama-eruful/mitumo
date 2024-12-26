@@ -135,7 +135,7 @@ class StandardAndComprehensiveDownloader
         $worksheet->setCellValue('D45', thousandYenUnit(array_key_exists('other_facility_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_facility_insurance_payout'] : ''));
         $worksheet->setCellValue('K45', thousandYenUnit(array_key_exists('other_item_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_item_insurance_payout'] : ''));
 
-        $worksheet->setCellValue('O41', $shortTerm->shortTermRate != 0 ? '-' : $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
         $worksheet->setCellValue('O44', $standardPremium->getStandardPremium());
 
         foreach ($standardCompensation as $key => $standardCompensation) {
