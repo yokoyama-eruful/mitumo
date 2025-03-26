@@ -71,7 +71,6 @@ final class StandardInsurancePremium
 
         //普通合計１
         $this->standard1 = $this->calcStandard1();
-
         //普通合計２
         $this->standard2 = $this->calcStandard2();
 
@@ -114,7 +113,7 @@ final class StandardInsurancePremium
         }
 
         if ($this->standard2 >= 180) {
-            return $this->standard2;
+            return round(floor($this->standard1 * 1.1 / 12), -1);
         }
 
         return 180;
