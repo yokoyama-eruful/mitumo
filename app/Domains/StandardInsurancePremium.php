@@ -112,8 +112,14 @@ final class StandardInsurancePremium
             return 0;
         }
 
-        if ($this->standard2 >= 180) {
-            return round(floor($this->standard1 * 1.1 / 12), -1);
+        if ($this->standard1 >= 180) {
+            if ($this->standard1 >= 100000) {
+                $coefficient = 1.0;
+            } else {
+                $coefficient = 1.1;
+            }
+
+            return round(floor($this->standard1 * $coefficient / 12), -1);
         }
 
         return 180;
