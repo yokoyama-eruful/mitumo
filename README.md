@@ -7,8 +7,8 @@ git clone後に実行してください
 ```
 docker run --rm \
 -u "$(id -u):$(id -g)" \
--v $(pwd):/var/www/html \
--w /var/www/html \
+-v $(pwd):/var/www/mitumo \
+-w /var/www/mitumo \
 laravelsail/php81-composer:latest \
 composer install --ignore-platform-reqs
 ```
