@@ -126,6 +126,11 @@ final class ComprehensiveInsurancePremium
             return false;
         }
 
+        if ($this->discountPublicProperty > 0) {
+            return false;
+
+        }
+
         if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
             return $this->payMethod == '長期年払' &&
             $estimate->insurance_year >= 5 &&
