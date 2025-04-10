@@ -168,11 +168,11 @@ final class AssessPiloti
 
     public function getCurrentMarketPrice($assessRank)
     {
-        $currentMarketPrice = $this->getExceptForPiloti($assessRank)['ピロティー以外100%'] * $this->getResidualValue($assessRank)['残価率最終'];
+        $currentMarketPrice = ($this->getExceptForPiloti($assessRank)['ピロティー以外100%'] + $this->getPiloti()['ピロティー100%']) * $this->getResidualValue($assessRank)['残価率最終'];
 
         return [
             '時価額' => $currentMarketPrice,
-            '時価額まるめ' => ceil(floor($currentMarketPrice)  / 1000) * 1000,
+            '時価額まるめ' => ceil(floor($currentMarketPrice) / 1000) * 1000,
         ];
     }
 
