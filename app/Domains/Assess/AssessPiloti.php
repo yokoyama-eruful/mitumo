@@ -59,7 +59,9 @@ final class AssessPiloti
 
         $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
 
-        $reProcure = $standardAmount * ((float) $floorArea - (float) $pilotiFloorArea);
+        $pilotiOther = $standardAmount * ((float) $floorArea - (float) $pilotiFloorArea);
+        $pilotiOnly = 60 * (float) $pilotiFloorArea;
+        $reProcure = $pilotiOther + $pilotiOnly;
 
         return [
             '80' => (string) thousandYenUnit(floor($reProcure * 0.8)),
@@ -86,7 +88,10 @@ final class AssessPiloti
         $agingDepreciation = $this->agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
 
         $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
-        $reProcure = $standardAmount * ((float) $floorArea - (float) $pilotiFloorArea);
+
+        $pilotiOther = $standardAmount * ((float) $floorArea - (float) $pilotiFloorArea);
+        $pilotiOnly = 60 * (float) $pilotiFloorArea;
+        $reProcure = $pilotiOther + $pilotiOnly;
 
         $agingDepreciation = $this->agingDepreciation->findAgingDepreciation($assessRank);
 
