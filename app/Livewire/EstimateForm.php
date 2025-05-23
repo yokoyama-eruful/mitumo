@@ -1433,14 +1433,14 @@ class EstimateForm extends Component
         if ($this->assessUsage == '専用住宅（柱なし）') {
             return match ($this->assessItem) {
                 '通常(延床面積)', '通常(専有面積)',  'ピロティー付', '太陽光付', '年次取得' => ['木造（2×4）', 'プレハブ工法'],
-                '分譲マンション' => ['上塗', '壁真','占有＋共有'],
+                '分譲マンション' => ['上塗', '壁真', '占有＋共有'],
                 default => [],
             };
         }
 
         return match ($this->assessItem) {
             '通常(延床面積)', '通常(専有面積)',  'ピロティー付', '太陽光付', '年次取得' => ['木造', '鉄骨', '鉄筋（RC）', '軽量鉄骨'],
-            '分譲マンション' => ['上塗', '壁真','占有＋共有'],
+            '分譲マンション' => ['上塗', '壁真', '占有＋共有'],
             default => [],
         };
     }
@@ -1454,7 +1454,7 @@ class EstimateForm extends Component
             return '';
         }
 
-        if (array_key_exists($key, $array) && $array[$key]) {
+        if (array_key_exists($key, $array) && $array[$key] !== null && $array[$key] !== '') {
             return $array[$key];
         }
 

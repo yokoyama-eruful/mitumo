@@ -52,7 +52,12 @@ final class AssessRenovation
     */
     public function viewCurrentMarketPrice($replacementPrice, $renovationCost, $conventionalAge, $depreciationRate, $renovationAge, $renovationDepreciationRate)
     {
-        if (! $replacementPrice || ! $renovationCost || ! $conventionalAge || ! $depreciationRate || ! $renovationAge || ! $renovationDepreciationRate) {
+        if ($replacementPrice === null || $replacementPrice === '' ||
+    $renovationCost === null || $renovationCost === '' ||
+    $conventionalAge === null || $conventionalAge === '' ||
+    $depreciationRate === null || $depreciationRate === '' ||
+    $renovationAge === null || $renovationAge === '' ||
+    $renovationDepreciationRate === null || $renovationDepreciationRate === '') {
             return [
                 '通常' => '',
                 'まるめ' => '',
