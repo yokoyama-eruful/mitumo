@@ -103,6 +103,11 @@ class ComprehensiveOfEarthquakeDownloader
 
         $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
 
+        $value = ($estimate->pay_method == '分割払' && $comprehensivePremium->getComprehensivePremium() < 1000) ? '※掛金が1000円未満の場合、分割払いできません' : '';
+        $worksheet->setCellValue('O46', $value);
+
+        $worksheet->getStyle('O46')->getFont()->getColor()->setRGB('FF0000');
+
         $worksheet->setCellValue('D49', array_key_exists('earthquake1', $estimate->property_detail) ? $estimate->property_detail['earthquake1'] : '');
         $worksheet->setCellValue('D51', $earthquakePremium->getEarthquakePremium(array_key_exists('earthquake1', $estimate->property_detail) ? $estimate->property_detail['earthquake1'] : '')['共済金支払最大額']);
         $worksheet->setCellValue('D54', $earthquakePremium->getEarthquakePremium(array_key_exists('earthquake1', $estimate->property_detail) ? $estimate->property_detail['earthquake1'] : '')['地震掛金']);
