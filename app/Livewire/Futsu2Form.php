@@ -543,7 +543,7 @@ class Futsu2Form extends Component
                 $this->otherDiscount = $estimateInfo['割引']['その他'];
             }
 
-            $this->actualLossFactor = (isset($estimateInfo['実損払係数']) && $estimateInfo['実損払係数'] != '0')
+            $this->actualLossFactor = (isset($estimateInfo['実損払係数']))
     ? $estimateInfo['実損払係数']
     : null;
         }
