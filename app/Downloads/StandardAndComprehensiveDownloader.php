@@ -138,6 +138,11 @@ class StandardAndComprehensiveDownloader
         $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
         $worksheet->setCellValue('O44', $standardPremium->getStandardPremium());
 
+        $value = ($estimate->pay_method == '分割払' && ($comprehensivePremium->getComprehensivePremium() < 1000 || $standardPremium->getStandardPremium() < 1000)) ? '※掛金が1000円未満の場合、分割払いできません' : '';
+        $worksheet->setCellValue('O46', $value);
+
+        $worksheet->getStyle('O46')->getFont()->getColor()->setRGB('FF0000');
+
         foreach ($standardCompensation as $key => $standardCompensation) {
             $worksheet->setCellValue($key, $standardCompensation);
         }

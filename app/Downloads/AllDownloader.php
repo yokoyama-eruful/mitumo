@@ -118,7 +118,7 @@ class AllDownloader
         exit;
     }
 
-    private function setStandardInfo($spreadSheet, $standardInsurancePremium, $standardCompensation, $mutualItem)
+    private function setStandardInfo($spreadSheet, $standardInsurancePremium, $standardCompensation, $mutualItems)
     {
         $standardCompensation = [
             'G49' => $standardCompensation->coverageOptions['火災'],
@@ -138,18 +138,23 @@ class AllDownloader
         ];
 
         $worksheet = $spreadSheet->getSheetByName('普通');
-        foreach ($mutualItem as $key => $mutualItem) {
+        foreach ($mutualItems as $key => $mutualItem) {
             $worksheet->setCellValue($key, $mutualItem);
         }
 
         $worksheet->setCellValue('O41', $standardInsurancePremium->getStandardPremium());
+
+        $value = ($mutualItems['M31'] == '分割払' && $standardInsurancePremium->getStandardPremium()) ? '※掛金が1000円未満の場合、分割払いできません' : '';
+        $worksheet->setCellValue('O46', $value);
+
+        $worksheet->getStyle('O46')->getFont()->getColor()->setRGB('FF0000');
 
         foreach ($standardCompensation as $key => $standardCompensation) {
             $worksheet->setCellValue($key, $standardCompensation);
         }
     }
 
-    private function setComprehensiveInfo($spreadSheet, $comprehensivePremium, $comprehensiveCompensation, $mutualItem)
+    private function setComprehensiveInfo($spreadSheet, $comprehensivePremium, $comprehensiveCompensation, $mutualItems)
     {
         $comprehensiveCompensation = [
             'G49' => $comprehensiveCompensation->coverageOptions['火災'],
@@ -169,18 +174,23 @@ class AllDownloader
         ];
 
         $worksheet = $spreadSheet->getSheetByName('総合');
-        foreach ($mutualItem as $key => $mutualItem) {
+        foreach ($mutualItems as $key => $mutualItem) {
             $worksheet->setCellValue($key, $mutualItem);
         }
 
         $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+
+        $value = ($mutualItems['M31'] == '分割払' && $comprehensivePremium->getComprehensivePremium()) ? '※掛金が1000円未満の場合、分割払いできません' : '';
+        $worksheet->setCellValue('O46', $value);
+
+        $worksheet->getStyle('O46')->getFont()->getColor()->setRGB('FF0000');
 
         foreach ($comprehensiveCompensation as $key => $comprehensiveCompensation) {
             $worksheet->setCellValue($key, $comprehensiveCompensation);
         }
     }
 
-    private function setStandardAndComprehensiveInfo($spreadSheet, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation, $mutualItem)
+    private function setStandardAndComprehensiveInfo($spreadSheet, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation, $mutualItems)
     {
         $standardCompensation = [
             'F49' => $standardCompensation->coverageOptions['火災'],
@@ -217,12 +227,17 @@ class AllDownloader
         ];
 
         $worksheet = $spreadSheet->getSheetByName('普通&総合');
-        foreach ($mutualItem as $key => $mutualItem) {
+        foreach ($mutualItems as $key => $mutualItem) {
             $worksheet->setCellValue($key, $mutualItem);
         }
 
         $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
         $worksheet->setCellValue('O44', $comprehensivePremium->getComprehensivePremium());
+
+        $value = ($mutualItems['M31'] == '分割払' && ($comprehensivePremium->getComprehensivePremium() < 1000 || $standardPremium->getStandardPremium() < 1000)) ? '※掛金が1000円未満の場合、分割払いできません' : '';
+        $worksheet->setCellValue('O46', $value);
+
+        $worksheet->getStyle('O46')->getFont()->getColor()->setRGB('FF0000');
 
         foreach ($standardCompensation as $key => $standardCompensation) {
             $worksheet->setCellValue($key, $standardCompensation);
@@ -313,6 +328,11 @@ class AllDownloader
 
         $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
 
+        $value = ($estimate->pay_method == '分割払' && $standardPremium->getStandardPremium() < 1000) ? '※掛金が1000円未満の場合、分割払いできません' : '';
+        $worksheet->setCellValue('O46', $value);
+
+        $worksheet->getStyle('O46')->getFont()->getColor()->setRGB('FF0000');
+
         $worksheet->setCellValue('D49', array_key_exists('earthquake1', $estimate->property_detail) ? $estimate->property_detail['earthquake1'] : '');
         $worksheet->setCellValue('D51', $earthquakePremium->getEarthquakePremium(array_key_exists('earthquake1', $estimate->property_detail) ? $estimate->property_detail['earthquake1'] : '')['共済金支払最大額']);
         $worksheet->setCellValue('D54', $earthquakePremium->getEarthquakePremium(array_key_exists('earthquake1', $estimate->property_detail) ? $estimate->property_detail['earthquake1'] : '')['地震掛金']);
@@ -335,6 +355,11 @@ class AllDownloader
         }
 
         $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+
+        $value = ($estimate->pay_method == '分割払' && $comprehensivePremium->getComprehensivePremium() < 1000) ? '※掛金が1000円未満の場合、分割払いできません' : '';
+        $worksheet->setCellValue('O46', $value);
+
+        $worksheet->getStyle('O46')->getFont()->getColor()->setRGB('FF0000');
 
         $worksheet->setCellValue('D49', array_key_exists('earthquake1', $estimate->property_detail) ? $estimate->property_detail['earthquake1'] : '');
         $worksheet->setCellValue('D51', $earthquakePremium->getEarthquakePremium(array_key_exists('earthquake1', $estimate->property_detail) ? $estimate->property_detail['earthquake1'] : '')['共済金支払最大額']);

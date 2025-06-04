@@ -119,6 +119,12 @@ class ComprehensiveDownloader
         $worksheet->setCellValue('K45', thousandYenUnit(array_key_exists('other_item_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_item_insurance_payout'] : ''));
 
         $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+
+        $value = ($estimate->pay_method == '分割払' && $comprehensivePremium->getComprehensivePremium() < 1000) ? '※掛金が1000円未満の場合、分割払いできません' : '';
+        $worksheet->setCellValue('O46', $value);
+
+        $worksheet->getStyle('O46')->getFont()->getColor()->setRGB('FF0000');
+
         foreach ($comprehensiveCompensation as $key => $comprehensiveCompensation) {
             $worksheet->setCellValue($key, $comprehensiveCompensation);
         }
