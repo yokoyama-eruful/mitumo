@@ -141,13 +141,13 @@ final class StandardInsurancePremium
         if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
             return $this->payMethod == '長期年払' &&
             $estimate->insurance_year >= 5 &&
-            is_null($estimate->property_detail['actual_loss_factor']) &&
+            (is_null($estimate->property_detail['actual_loss_factor']) || $estimate->property_detail['actual_loss_factor'] == '0') &&
             $this->discountFireExtinguisher + $this->discountSecurity < 10;
         }
 
         return $this->payMethod == '長期年払' &&
         $estimate->insurance_year >= 5 &&
-        is_null($estimate->property_detail['actual_loss_factor']) &&
+        (is_null($estimate->property_detail['actual_loss_factor']) || $estimate->property_detail['actual_loss_factor'] == '0') &&
         $this->otherDiscount < 10;
 
         // return
