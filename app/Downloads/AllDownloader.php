@@ -58,21 +58,63 @@ class AllDownloader
             'K45' => thousandYenUnit(array_key_exists('other_item_insurance_payout', $estimate->property_detail) ? $estimate->property_detail['other_item_insurance_payout'] : ''),
         ];
 
-        $this->setStandardInfo($spreadSheet, $standardPremium, $standardCompensation, $mutualItem);
+        $estimateType = [
+            '普通火災見積', '総合火災見積', '普通火災見積&総合火災見積',
+            '普通火災見積おすすめ契約', '総合火災見積おすすめ契約',
+            '普通火災見積&総合火災見積おすすめ契約',
+            '普通火災見積地震おすすめ契約',
+            '総合火災見積地震おすすめ契約', 'すべて',
+        ];
 
-        $this->setComprehensiveInfo($spreadSheet, $comprehensivePremium, $comprehensiveCompensation, $mutualItem);
+        $estimateTypeList = $this->getEnableDisableList($estimate, $estimateType);
 
-        $this->setStandardAndComprehensiveInfo($spreadSheet, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation, $mutualItem);
+        if ($estimateTypeList['普通火災見積'] === 'enable') {
+            $this->setStandardInfo($spreadSheet, $standardPremium, $standardCompensation, $mutualItem);
+        } else {
+            $spreadSheet->removeSheetByIndex($spreadSheet->getIndex($spreadSheet->getSheetByName('普通')));
+        }
 
-        $this->setStandardOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $recommendStandardPremium, $mutualItem);
+        if ($estimateTypeList['総合火災見積'] === 'enable') {
+            $this->setComprehensiveInfo($spreadSheet, $comprehensivePremium, $comprehensiveCompensation, $mutualItem);
+        } else {
+            $spreadSheet->removeSheetByIndex($spreadSheet->getIndex($spreadSheet->getSheetByName('総合')));
+        }
 
-        $this->setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium, $mutualItem);
+        if ($estimateTypeList['普通火災見積&総合火災見積'] === 'enable') {
+            $this->setStandardAndComprehensiveInfo($spreadSheet, $standardPremium, $comprehensivePremium, $standardCompensation, $comprehensiveCompensation, $mutualItem);
+        } else {
+            $spreadSheet->removeSheetByIndex($spreadSheet->getIndex($spreadSheet->getSheetByName('普通&総合')));
+        }
 
-        $this->setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium, $mutualItem);
+        if ($estimateTypeList['普通火災見積おすすめ契約'] === 'enable') {
+            $this->setStandardOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $recommendStandardPremium, $mutualItem);
+        } else {
+            $spreadSheet->removeSheetByIndex($spreadSheet->getIndex($spreadSheet->getSheetByName('おすすめ(普通)')));
+        }
 
-        $this->setStandardOfEarthquakeInfo($spreadSheet, $estimate, $standardPremium, $standardEarthquakePremium, $mutualItem);
+        if ($estimateTypeList['総合火災見積おすすめ契約'] === 'enable') {
+            $this->setComprehensiveOfRecommendInfo($spreadSheet, $estimate, $comprehensivePremium, $recommendComprehensivePremium, $mutualItem);
+        } else {
+            $spreadSheet->removeSheetByIndex($spreadSheet->getIndex($spreadSheet->getSheetByName('おすすめ(総合)')));
+        }
 
-        $this->setComprehensiveOfEarthquakeInfo($spreadSheet, $estimate, $comprehensivePremium, $comprehensiveEarthquakePremium, $mutualItem);
+        if ($estimateTypeList['普通火災見積&総合火災見積おすすめ契約'] === 'enable') {
+            $this->setStandardOfRecommendAndComprehensiveOfRecommendInfo($spreadSheet, $estimate, $standardPremium, $comprehensivePremium, $recommendStandardPremium, $recommendComprehensivePremium, $mutualItem);
+        } else {
+            $spreadSheet->removeSheetByIndex($spreadSheet->getIndex($spreadSheet->getSheetByName('おすすめ(普&総)')));
+        }
+
+        if ($estimateTypeList['普通火災見積地震おすすめ契約'] === 'enable') {
+            $this->setStandardOfEarthquakeInfo($spreadSheet, $estimate, $standardPremium, $standardEarthquakePremium, $mutualItem);
+        } else {
+            $spreadSheet->removeSheetByIndex($spreadSheet->getIndex($spreadSheet->getSheetByName('地震おすすめ(普通)')));
+        }
+
+        if ($estimateTypeList['総合火災見積地震おすすめ契約'] === 'enable') {
+            $this->setComprehensiveOfEarthquakeInfo($spreadSheet, $estimate, $comprehensivePremium, $comprehensiveEarthquakePremium, $mutualItem);
+        } else {
+            $spreadSheet->removeSheetByIndex($spreadSheet->getIndex($spreadSheet->getSheetByName('地震おすすめ(総合)')));
+        }
 
         CalcInfo::setSheet($spreadSheet, $standardPremium, $comprehensivePremium);
 
@@ -118,6 +160,46 @@ class AllDownloader
         exit;
     }
 
+    //突貫で入れたもの（共通化するべき）
+    public function getEnableDisableList($estimate, $estimateType)
+    {
+        $enableDisableList = [];
+
+        foreach ($estimateType as $estimateType) {
+
+            if (str_contains($estimateType, '総合') &&
+            ($estimate->property_type == '工場')) {
+                $enableDisableList = array_merge($enableDisableList, [$estimateType => 'disable']);
+
+                continue;
+            }
+
+            if (in_array(
+                $estimateType,
+                ['普通火災見積おすすめ契約', '総合火災見積おすすめ契約', '普通火災見積&総合火災見積おすすめ契約'],
+                true) && ! array_keys_exists(['recommend1', 'recommend2', 'recommend3'], $estimate->property_detail)) {
+
+                $enableDisableList = array_merge($enableDisableList, [$estimateType => 'disable']);
+
+                continue;
+            }
+
+            if (in_array(
+                $estimateType,
+                ['普通火災見積地震おすすめ契約', '総合火災見積地震おすすめ契約', '普通火災見積&総合火災見積地震おすすめ契約'],
+                true) && ! array_keys_exists(['earthquake1', 'earthquake2', 'earthquake3'], $estimate->property_detail)) {
+                $enableDisableList = array_merge($enableDisableList, [$estimateType => 'disable']);
+
+                continue;
+            }
+
+            $enableDisableList = array_merge($enableDisableList, [$estimateType => 'enable']);
+        }
+
+        return $enableDisableList;
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private function setStandardInfo($spreadSheet, $standardInsurancePremium, $standardCompensation, $mutualItems)
     {
         $standardCompensation = [
@@ -144,7 +226,7 @@ class AllDownloader
 
         $worksheet->setCellValue('O41', $standardInsurancePremium->getStandardPremium());
 
-        $value = ($mutualItems['M31'] == '分割払' && $standardInsurancePremium->getStandardPremium()) ? '※掛金が1000円未満の場合、分割払いできません' : '';
+        $value = ($mutualItems['M31'] == '分割払' && $standardInsurancePremium->getStandardPremium() < 1000) ? '※掛金が1000円未満の場合、分割払いできません' : '';
         $worksheet->setCellValue('O46', $value);
 
         $worksheet->getStyle('O46')->getFont()->getColor()->setRGB('FF0000');
@@ -180,7 +262,7 @@ class AllDownloader
 
         $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
 
-        $value = ($mutualItems['M31'] == '分割払' && $comprehensivePremium->getComprehensivePremium()) ? '※掛金が1000円未満の場合、分割払いできません' : '';
+        $value = ($mutualItems['M31'] == '分割払' && $comprehensivePremium->getComprehensivePremium() < 1000) ? '※掛金が1000円未満の場合、分割払いできません' : '';
         $worksheet->setCellValue('O46', $value);
 
         $worksheet->getStyle('O46')->getFont()->getColor()->setRGB('FF0000');
