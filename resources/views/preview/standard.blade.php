@@ -13,7 +13,7 @@
       <div>
         <div class="flex flex-col items-center justify-center h-[120px] w-[200px] outline outline-1 outline-gray-500">
           <div>{{ yenUnit($standardPremium->getStandardPremium()) }}</div>
-          @if ($standardPremium->getStandardPremium() < 1000)
+          @if ($estimate['pay_method'] == '分割払' && $standardPremium->getStandardPremium() < 1000)
             <div class="text-red-500 text-xs">掛金が1000円未満の場合<br>分割払いはできません</div>
           @endif
         </div>
