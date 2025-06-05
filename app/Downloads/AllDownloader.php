@@ -313,8 +313,8 @@ class AllDownloader
             $worksheet->setCellValue($key, $mutualItem);
         }
 
-        $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
-        $worksheet->setCellValue('O44', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('O44', $standardPremium->getStandardPremium());
 
         $value = ($mutualItems['M31'] == '分割払' && ($comprehensivePremium->getComprehensivePremium() < 1000 || $standardPremium->getStandardPremium() < 1000)) ? '※掛金が1000円未満の場合、分割払いできません' : '';
         $worksheet->setCellValue('O46', $value);
@@ -377,8 +377,8 @@ class AllDownloader
             $worksheet->setCellValue($key, $mutualItem);
         }
 
-        $worksheet->setCellValue('O41', $standardPremium->getStandardPremium());
-        $worksheet->setCellValue('O44', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('O41', $comprehensivePremium->getComprehensivePremium());
+        $worksheet->setCellValue('O44', $standardPremium->getStandardPremium());
 
         $worksheet->setCellValue('D49', yearUnit(array_key_exists('recommend1', $estimate->property_detail) ? $estimate->property_detail['recommend1'] : ''));
         $worksheet->setCellValue('D51', $recommendComprehensivePremium->getRecommendPremium(array_key_exists('recommend1', $estimate->property_detail) ? $estimate->property_detail['recommend1'] : '')['共済掛金']);
