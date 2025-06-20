@@ -1252,7 +1252,7 @@ class EstimateForm extends Component
                 if ($this->structure != 'コンクリート造等' ||
                 $this->propertyType == '工場' ||
                 ($this->propertyType == '住宅' && $this->rank != 'M' ||
-                $this->propertyType == '普通' && ($this->rank != '1級' || $this->occupationalSurchargeCode != 899))) {
+                $this->propertyType == '普通' && ($this->rank != '1級' || $this->occupationalSurchargeCode != 899&&$this->occupationalSurchargeCode != 400))) {
                     break;
                 }
 
