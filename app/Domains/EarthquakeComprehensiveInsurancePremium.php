@@ -168,13 +168,15 @@ final class EarthquakeComprehensiveInsurancePremium
 
         $buildingAge = $estimate->building_age ?? '';
 
+        $startDate = $estimate->start_date ?? null;
+
         if (in_array($propertyType, ['住宅', '普通'], true)) {
             if ($estimate->getTable() == 'estimate_futsu2') {
                 $baseRate = new BuildingBaseRate($estimate, 'estimateFutsu2/rateTable/buildingBaseRateTable.csv');
             } else {
                 $baseRate = new BuildingBaseRate($estimate, 'rateTable/buildingBaseRateTable.csv');
             }
-            $buildingBaseRate = $baseRate->findRate($propertyType, $buildingAge, $estimate->rank);
+            $buildingBaseRate = $baseRate->findRate($propertyType, $buildingAge, $estimate->rank,$startDate);
         } else {
             $buildingBaseRate = $estimate->building_base_rate;
         }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domains;
 
+
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 final class ComprehensivePremium
@@ -13,6 +15,8 @@ final class ComprehensivePremium
     public readonly int $buildingAge;
 
     public readonly string $rank;
+
+    private $startDate;
 
     private array $rateList;
 
@@ -25,7 +29,8 @@ final class ComprehensivePremium
         }else{
             $this->buildingAge = $estimate['building_age'];
         }
- 
+
+        $this->startDate = $estimate['start_date'] ?? '';
 
         $this->rank = $estimate['rank'];
 
@@ -54,7 +59,7 @@ final class ComprehensivePremium
         }
 
         while (($data = fgetcsv($handle, null, ',')) !== false) {
-            if ($this->isMatched($data)) {
+            if ($this->isMatched($data)&&$this->startDateFilter($data)) {
                 $matchedRows[$data[1]] = $data[4];
             }
         }
@@ -72,9 +77,19 @@ final class ComprehensivePremium
 
         $buildingAge = $this->buildingAge > 25 ? 25 : $this->buildingAge;
 
-        //物件が住宅の場合のみ築年数を考慮する。その他の物件は築年数は空文字
         return $data[0] === $this->propertyType &&
            (intval($data[2]) === $buildingAge || $data[2] === '') &&
             $data[3] === $this->rank;
+    }
+
+    private function startDateFilter($data): bool
+    {
+        if (empty($this->startDate)) {
+            return true;
+        }
+
+        $target = Carbon::parse($this->startDate);
+
+        return Carbon::parse($data[5])->lte($target);
     }
 }

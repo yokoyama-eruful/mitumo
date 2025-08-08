@@ -581,9 +581,9 @@ class Futsu2Form extends Component
         $buildingAge = '';
 
         $buildingBaseRate = new BuildingBaseRate($this->estimate, 'estimateFutsu2/rateTable/buildingBaseRateTable.csv');
-        $this->buildingBaseRate = (string) $buildingBaseRate->findRate($this->propertyType, $buildingAge, $this->rank);
+        $this->buildingBaseRate = (string) $buildingBaseRate->findRate($this->propertyType, $buildingAge, $this->rank, $this->startDate);
         $chattelBaseRate = new ChattelBaseRate($this->estimate, 'estimateFutsu2/rateTable/chattelBaseTable.csv');
-        $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank);
+        $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank, $this->startDate);
 
         if ($this->occupationalSurchargeCode) {
             $this->onChangeOccupationalSurchargeCode();
