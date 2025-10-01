@@ -608,13 +608,13 @@ class EstimateForm extends Component
         if ($this->propertyType === '住宅') {
             $buildingAge = $this->buildingAge ?? '';
         } else {
-            $buildingAge = $this->buildingAge ?? '';
+            $buildingAge = '';
         }
 
         $buildingBaseRate = new BuildingBaseRate($this->estimate, 'rateTable/buildingBaseRateTable.csv');
-        $this->buildingBaseRate = (string) $buildingBaseRate->findRate($this->propertyType, $buildingAge, $this->rank,$this->startDate);
+        $this->buildingBaseRate = (string) $buildingBaseRate->findRate($this->propertyType, $buildingAge, $this->rank);
         $chattelBaseRate = new ChattelBaseRate($this->estimate, 'rateTable/chattelBaseTable.csv');
-        $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank,$this->startDate);
+        $this->chattelBaseRate = (string) $chattelBaseRate->findRate($this->propertyType, $this->rank);
 
         if (isset($this->occupationalSurchargeCode)) {
             $this->onChangeOccupationalSurchargeCode();
