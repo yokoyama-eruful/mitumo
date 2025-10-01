@@ -121,13 +121,15 @@ class PreviewController extends Controller
 
     public function standardOfEarthquake(int $id)
     {
+        $earthquakeFlag = true;
+
         $estimate = $this->estimateService->find($id);
 
         if ($estimate->user_id != Auth::id()) {
             abort(404);
         }
 
-        $standardPremium = new StandardInsurancePremium($estimate);
+        $standardPremium = new StandardInsurancePremium($estimate,$earthquakeFlag);
         $earthquakePremium = new EarthquakeStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
 
         return view('preview.standard-of-earthquake', compact('estimate', 'standardPremium', 'earthquakePremium'));
@@ -135,13 +137,15 @@ class PreviewController extends Controller
 
     public function comprehensiveOfEarthquake(int $id)
     {
+        $earthquakeFlag = true;
+
         $estimate = $this->estimateService->find($id);
 
         if ($estimate->user_id != Auth::id()) {
             abort(404);
         }
 
-        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate,$earthquakeFlag);
         $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $earthquakePremium = new EarthquakeComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
 

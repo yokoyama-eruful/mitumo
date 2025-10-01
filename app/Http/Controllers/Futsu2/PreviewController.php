@@ -53,13 +53,15 @@ class PreviewController extends Controller
 
     public function standardOfEarthquake(int $id)
     {
+        $earthquakeFlag = true;
+        
         $estimate = $this->futsu2Service->find($id);
 
         if ($estimate->user_id != Auth::id()) {
             abort(404);
         }
 
-        $standardPremium = new StandardInsurancePremium($estimate);
+        $standardPremium = new StandardInsurancePremium($estimate,$earthquakeFlag);
         $earthquakePremium = new EarthquakeStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
 
         return view('futsu2.preview.standard-of-earthquake', compact('estimate', 'standardPremium', 'earthquakePremium'));
