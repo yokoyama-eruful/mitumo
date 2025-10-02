@@ -127,10 +127,9 @@ final class DownloadService
     //普通火災見積書(地震特約あり)ダウンロード
     private function dropStandardOfEarthquake($estimate, $fileType, $keisyo)
     {
-        $earthquakeFlag = true;
         $standardOfEarthquakeEstimate = new StandardOfEarthquakeDownloader();
-        $standardPremium = new StandardInsurancePremium($estimate,$earthquakeFlag);
-        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate,$earthquakeFlag);
+        $standardPremium = new StandardInsurancePremium($estimate);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $earthquakePremium = new EarthquakeStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
         $standardOfEarthquakeEstimate->dropFile($estimate, $standardPremium, $comprehensivePremium, $earthquakePremium, $fileType, $keisyo);
     }
@@ -138,10 +137,9 @@ final class DownloadService
     //総合火災見積書(地震特約あり)ダウンロード
     private function dropComprehensiveOfEarthquake($estimate, $fileType, $keisyo)
     {
-        $earthquakeFlag = true;
         $comprehensiveOfEarthquakeEstimate = new ComprehensiveOfEarthquakeDownloader();
-        $standardPremium = new StandardInsurancePremium($estimate,$earthquakeFlag);
-        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate,$earthquakeFlag);
+        $standardPremium = new StandardInsurancePremium($estimate);
+        $comprehensivePremium = new ComprehensiveInsurancePremium($estimate);
         $earthquakePremium = new EarthquakeComprehensiveInsurancePremium($estimate, $comprehensivePremium->getComprehensivePremium());
         $shortTerm = new MutualAidPremiums($estimate, $estimate->insurance_year);
         $comprehensiveOfEarthquakeEstimate->dropFile($estimate, $standardPremium, $comprehensivePremium, $shortTerm, $earthquakePremium, $fileType, $keisyo);

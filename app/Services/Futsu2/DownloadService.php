@@ -50,9 +50,8 @@ final class DownloadService
     //普通火災見積書(地震特約あり)ダウンロード
     private function dropStandardOfEarthquake($estimate, $fileType, $keisyo)
     {
-        $earthquakeFlag = true;
         $standardOfEarthquakeEstimate = new StandardOfEarthquakeDownloader();
-        $standardPremium = new StandardInsurancePremium($estimate,$earthquakeFlag);
+        $standardPremium = new StandardInsurancePremium($estimate);
         $earthquakePremium = new EarthquakeStandardInsurancePremium($estimate, $standardPremium->getStandardPremium());
         $standardOfEarthquakeEstimate->dropFile($estimate, $standardPremium, $earthquakePremium, $fileType, $keisyo);
     }

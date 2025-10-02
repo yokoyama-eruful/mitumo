@@ -48,12 +48,9 @@ final class StandardInsurancePremium
 
     public readonly float $standardLongTerm;
 
-    public readonly bool $earthquakeFlag;
-
-    public function __construct($estimate,$earthquakeFlag = false)
+    public function __construct($estimate)
     {
         $this->estimate = $estimate;
-        $this->earthquakeFlag = $earthquakeFlag;
         $this->occupationalSurchargeRate = $this->getFloatValueByKey('occupational_surcharge_rate', $estimate->property_detail);
         $this->workSurchargeRate = $this->getFloatValueByKey('work_surcharge_rate', $estimate->property_detail);
         $this->chattelSurcharge = $this->getChattelSurcharge($estimate);
@@ -97,7 +94,7 @@ final class StandardInsurancePremium
             return $this->standard1;
         }
 
-        if ($this->standard1 >= 100000 || $this->earthquakeFlag == true) {
+        if ($this->standard1 >= 100000 ) {
             $coefficient = 1.0;
         } else {
             $coefficient = 1.1;
@@ -115,7 +112,7 @@ final class StandardInsurancePremium
         }
 
         if ($this->standard1 >= 180) {
-            if ($this->standard1 >= 100000 || $this->earthquakeFlag == true) {
+            if ($this->standard1 >= 100000 ) {
                 $coefficient = 1.0;
             } else {
                 $coefficient = 1.1;

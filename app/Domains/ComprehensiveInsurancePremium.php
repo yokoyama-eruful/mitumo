@@ -48,12 +48,9 @@ final class ComprehensiveInsurancePremium
 
     public readonly float $comprehensiveLongTerm;
 
-    public readonly bool $earthquakeFlag;
-
-    public function __construct($estimate,$earthquakeFlag = false)
+    public function __construct($estimate)
     {
         $this->estimate = $estimate;
-        $this->earthquakeFlag = $earthquakeFlag;
         $this->payMethod = $estimate->pay_method;
         $this->chattelSurcharge = $this->getChattelSurcharge($estimate);
         $this->occupationalSurchargeRate = $this->getFloatValueByKey('occupational_surcharge_rate', $estimate->property_detail);
@@ -97,7 +94,7 @@ final class ComprehensiveInsurancePremium
             return $this->comprehensive1;
         }
 
-        if ($this->comprehensive1 >= 100000 || $this->earthquakeFlag == true) {
+        if ($this->comprehensive1 >= 100000 ) {
             $coefficient = 1.0;
         } else {
             $coefficient = 1.1;
