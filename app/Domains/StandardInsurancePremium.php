@@ -118,7 +118,7 @@ final class StandardInsurancePremium
                 $coefficient = 1.1;
             }
 
-            return round(floor($this->standard1 * $coefficient / 12), -1);
+            return round(ceil($this->standard1 * $coefficient / 12), -1);
         }
 
         return 180;
