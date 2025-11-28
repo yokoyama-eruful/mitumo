@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace App\Domains\Assess;
 
+use App\Utils\JapaneseEraConverter;
+
 final class AssessAnnual
 {
+    public string $buildingYearEra;
+
     public readonly string $rank;
 
     public readonly float $floorArea;
 
     public readonly int $buildingAge;
+
+    public readonly int $originalBuildYear;
 
     public readonly int $buildingYear;
 
@@ -28,10 +34,12 @@ final class AssessAnnual
 
     public function __construct($estimate)
     {
+        $this->buildingYearEra = $estimate->building_year_era;
         $this->rank = $estimate->rank ?? '';
         $this->floorArea = $estimate->floor_area ? $estimate->floor_area : 0;
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
-        $this->buildingYear = $estimate->building_year ? $estimate->building_year : 0;
+        $this->originalBuildYear = $estimate->building_year ? $estimate->building_year : 0;
+        $this->buildingYear = $this->changeWarekiToSeireki();
         $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
         $this->annualPrice = $this->getIntValueByKey('annual_price', $estimate->assess_detail);
@@ -39,6 +47,20 @@ final class AssessAnnual
 
         $this->annualCoefficient = new AnnualCoefficient($this->rank, $this->buildingYear);
         $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
+    }
+
+    private function changeWarekiToSeireki()
+    {
+        $westernYear = JapaneseEraConverter::getJapaneseEraStartYear($this->buildingYearEra);
+        $this->buildingYearEra = $this->buildingYearEra == '' ? '西暦' : $this->buildingYearEra;
+
+        if ($this->buildingYearEra !== '西暦') {
+            $buildingYear = $westernYear + $this->originalBuildYear - 1;
+        } else {
+            $buildingYear = $this->originalBuildYear;
+        }
+
+        return $buildingYear;
     }
 
     /*
