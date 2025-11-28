@@ -8,6 +8,7 @@ use App\Domains\Dto\EstimateAssessDetailDto;
 use App\Domains\Dto\EstimatePropertyDetailDto;
 use App\Domains\Dto\EstimateStandardInfoDto;
 use App\Rules\Recommend;
+use App\Utils\JapaneseEraConverter;
 use Illuminate\Foundation\Http\FormRequest;
 
 final class SaveRequest extends FormRequest
@@ -202,9 +203,11 @@ final class SaveRequest extends FormRequest
             }
         });
 
-        $validator->after(function ($validator) {
-            if ($this->input('assess_item') == '年次取得' && ($this->input('building_year') > 2024 || $this->input('building_year') < 1976)) {
-                $this->dispatch('alert', '評価するには、建築年が「2024年~1976年」にしてください。評価しない場合は、評価項目を「選択しない」にしてください。');
+        $buildingYear = $this->changeWarekiToSeireki($this->params());
+
+        $validator->after(function ($validator) use ($buildingYear) {
+            if ($this->input('assess_item') == '年次取得' && ($buildingYear > 2024 || $buildingYear < 1976)) {
+                $validator->errors()->add('alert', '評価するには、建築年が「2024年~1976年」にしてください。評価しない場合は、評価項目を「選択しない」にしてください。');
             }
         });
 
@@ -223,6 +226,20 @@ final class SaveRequest extends FormRequest
                 }
             }
         });
+    }
+
+     private function changeWarekiToSeireki($params)
+    {
+        $westernYear = JapaneseEraConverter::getJapaneseEraStartYear($params['building_year_era']);
+        $buildingYearEra = $params['building_year_era'] == '' ? '西暦' : $params['building_year_era'];
+
+        if ($buildingYearEra !== '西暦') {
+            $buildingYear = $westernYear + $params['building_year'] - 1;
+        } else {
+            $buildingYear = $params['building_year'];
+        }
+
+        return $buildingYear;
     }
 
     public function params(): array
