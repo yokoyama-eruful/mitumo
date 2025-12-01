@@ -13,6 +13,6 @@
         </div>
     @endif
 
-    @livewire('estimate-form', ['estimate' => $estimate])
+    @livewire('estimate-form', ['estimate' => $estimate],key($estimate->updated_at->format('YmdHis')))
 
 @endsection
