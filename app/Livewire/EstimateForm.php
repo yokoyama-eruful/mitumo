@@ -1291,7 +1291,7 @@ class EstimateForm extends Component
                     break;
                 }
 
-                $assessDomain = new AssessAnnual($this->estimate);
+                $assessDomain = new AssessAnnual($this->buildingYearEra, $this->rank, $this->floorArea, $this->buildingAge, $this->buildingYear,$this->assessUsage,$this->assessStructure,$this->annualPrice,$this->remarks);
 
                 $this->reProcure80 = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['80'];
                 $this->reProcure100 = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['100'];
