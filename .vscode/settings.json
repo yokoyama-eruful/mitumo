@@ -4,7 +4,7 @@
     "laravel-pint.enableDebugLogs": true,
     "laravel-pint.configPath": "pint.json",
     "[php]": {
-        "editor.defaultFormatter": "open-southeners.laravel-pint"
+        "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
     },
     "cSpell.words": [
         "contractee",

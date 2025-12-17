@@ -437,22 +437,22 @@ class Futsu2Form extends Component
         }
         $headers = [
             'Content-Type' => 'application/json',
-            'authorization' => 'Bearer '.$apiToken,
+            'authorization' => 'Bearer ' . $apiToken,
         ];
 
         try {
             $response = Http::withHeaders($headers)
-                ->get('http://'.$apiServer.'/api/code/'.$this->certificateNumber);
+                ->get('http://' . $apiServer . '/api/code/' . $this->certificateNumber);
 
-            if ($response->json() == null
+            if (
+                $response->json() == null
                 || $response->json()['status'] == '404'
                 || $response->json()['status'] == '302'
             ) {
-                $this->dispatch('alert', '証書番号:'.$this->certificateNumber.'のデータは見つかりません。<br>もしくは、古いデータの可能性があります');
+                $this->dispatch('alert', '証書番号:' . $this->certificateNumber . 'のデータは見つかりません。<br>もしくは、古いデータの可能性があります');
 
                 return;
             }
-
         } catch (HttpClientException $e) {
             $this->dispatch('alert', '現在、参照機能がご利用できません');
 
@@ -529,7 +529,7 @@ class Futsu2Form extends Component
             }
 
             $contractStartDate = CarbonImmutable::parse(
-                $estimateInfo['契約開始日']['年'].'-'.$estimateInfo['契約開始日']['月'].'-'.$estimateInfo['契約開始日']['日']
+                $estimateInfo['契約開始日']['年'] . '-' . $estimateInfo['契約開始日']['月'] . '-' . $estimateInfo['契約開始日']['日']
             );
             if (($estimateInfo['その他割引（旧）'] ?? 0) > 0
                 && CarbonImmutable::parse('2024-04-01') > $contractStartDate
@@ -544,8 +544,8 @@ class Futsu2Form extends Component
             }
 
             $this->actualLossFactor = (isset($estimateInfo['実損払係数']))
-    ? $estimateInfo['実損払係数']
-    : null;
+                ? $estimateInfo['実損払係数']
+                : null;
         }
     }
 
@@ -693,7 +693,6 @@ class Futsu2Form extends Component
             $this->exclusiveArea = mb_convert_kana($this->exclusiveArea, 'n');
             $this->exclusiveArea = number_format((float) $this->exclusiveArea, 2);
             $this->exclusiveArea = str_replace(',', '', $this->exclusiveArea);
-
         }
 
         $this->assessUsageList = $this->getAssessUsageList();
@@ -1103,10 +1102,12 @@ class Futsu2Form extends Component
             case '分譲マンション':
                 $assessDomain = new AssessCondo($this->estimate);
 
-                if ($this->structure != 'コンクリート造等' ||
-                $this->propertyType == '工場' ||
-                ($this->propertyType == '住宅' && $this->rank != 'M' ||
-                $this->propertyType == '普通' && ($this->rank != '1級' || $this->occupationalSurchargeCode != 899&&$this->occupationalSurchargeCode != 400))) {
+                if (
+                    $this->structure != 'コンクリート造等' ||
+                    $this->propertyType == '工場' ||
+                    ($this->propertyType == '住宅' && $this->rank != 'M' ||
+                        $this->propertyType == '普通' && ($this->rank != '1級' || $this->occupationalSurchargeCode != 899 && $this->occupationalSurchargeCode != 400))
+                ) {
                     break;
                 }
 
@@ -1138,7 +1139,12 @@ class Futsu2Form extends Component
                     break;
                 }
 
-                $assessDomain = new AssessAnnual($this->buildingYearEra, $this->rank, $this->floorArea, $this->buildingAge, $this->buildingYear,$this->assessUsage,$this->assessStructure,$this->annualPrice,$this->remarks);
+                if ($this->assessItem == '年次取得' && is_null($this->annualPrice)) {
+                    $this->dispatch('alert', '年次価額は必須です。');
+                    break;
+                }
+
+                $assessDomain = new AssessAnnual($this->buildingYearEra, $this->rank, $this->floorArea, $this->buildingAge, $this->buildingYear, $this->assessUsage, $this->assessStructure, $this->annualPrice, $this->remarks);
 
                 $this->reProcure80 = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['80'];
                 $this->reProcure100 = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['100'];
@@ -1154,12 +1160,14 @@ class Futsu2Form extends Component
                 break;
             case '大規模改装':
 
-                if (! is_numeric($this->replacementPrice) ||
-                ! is_numeric($this->renovationCost) ||
-                ! is_numeric($this->conventionalAge) ||
-                ! is_numeric($this->depreciationRate) ||
-                ! is_numeric($this->renovationAge) ||
-                ! is_numeric($this->renovationDepreciationRate)) {
+                if (
+                    ! is_numeric($this->replacementPrice) ||
+                    ! is_numeric($this->renovationCost) ||
+                    ! is_numeric($this->conventionalAge) ||
+                    ! is_numeric($this->depreciationRate) ||
+                    ! is_numeric($this->renovationAge) ||
+                    ! is_numeric($this->renovationDepreciationRate)
+                ) {
                     break;
                 }
 
@@ -1168,9 +1176,7 @@ class Futsu2Form extends Component
                 $this->currentMarketPrice = $assessDomain->viewCurrentMarketPrice($this->replacementPrice, $this->renovationCost, $this->conventionalAge, $this->depreciationRate, $this->renovationAge, $this->renovationDepreciationRate)['通常'];
                 $this->currentMarketPriceRound = $assessDomain->viewCurrentMarketPrice($this->replacementPrice, $this->renovationCost, $this->conventionalAge, $this->depreciationRate, $this->renovationAge, $this->renovationDepreciationRate)['まるめ'];
                 break;
-
         }
-
     }
 
     //選択肢のデータ格納用メソッド

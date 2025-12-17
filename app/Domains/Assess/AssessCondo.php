@@ -40,8 +40,10 @@ final class AssessCondo
        */
     public function viewReProcure($assessUsage, $assessStructure, $exclusiveArea, $assessRank = '')
     {
-        if ($assessRank == '' || $assessUsage == '' ||
-        $assessStructure == '' || $exclusiveArea == '') {
+        if (
+            $assessRank == '' || $assessUsage == '' ||
+            $assessStructure == '' || $exclusiveArea == ''
+        ) {
             return [
                 '80' => '',
                 '100' => '',
@@ -50,13 +52,29 @@ final class AssessCondo
         }
 
         $standardAmount = new StandardAmount($assessUsage, $assessStructure);
-        $amount = $standardAmount->findStandardAmount($assessRank);
-        $reProcure = $amount * $exclusiveArea;
+
+        $amount = (string)$standardAmount->findStandardAmount($assessRank);
+        $exclusiveArea = (string)$exclusiveArea;
+
+        $reProcure = bcmul($amount, $exclusiveArea, 2);
+
+        $reProcure80 = bcmul($reProcure, '0.8', 2);
+
+        $roundThousand = function (string $value): string {
+            return bcmul(
+                bcadd(
+                    bcdiv($value, '1000', 0),
+                    bccomp(bcmod($value, '1000'), '0') === 1 ? '1' : '0'
+                ),
+                '1000',
+                0
+            );
+        };
 
         return [
-            '80' => thousandYenUnit(floor($reProcure * 0.8)),
-            '100' => thousandYenUnit(floor($reProcure)),
-            '100まるめ' => thousandYenUnit(ceil(floor($reProcure) / 1000) * 1000),
+            '80' => thousandYenUnit($reProcure80),
+            '100' => thousandYenUnit($reProcure),
+            '100まるめ' => thousandYenUnit($roundThousand($reProcure)),
         ];
     }
 
@@ -65,63 +83,95 @@ final class AssessCondo
     */
     public function viewCurrentMarketPrice($assessUsage, $assessStructure, $exclusiveArea, $buildingAge, $assessRank = '')
     {
-        if ($assessRank == '' || $assessUsage == '' ||
-        $assessStructure == '' || $exclusiveArea == '' ||
-        $buildingAge == '') {
+        if ($assessRank == '' || $assessUsage == '' || $assessStructure == '' || $exclusiveArea == '' || $buildingAge == '') {
             return [
                 '通常' => '',
                 'まるめ' => '',
             ];
         }
 
-        $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
+        $agingDepreciationObj = new AgingDepreciation($assessUsage, $assessStructure);
         $standardAmount = new StandardAmount($assessUsage, $assessStructure);
 
-        $amount = $standardAmount->findStandardAmount($assessRank);
-        $reProcure = $amount * $exclusiveArea;
+        $amount = (string)$standardAmount->findStandardAmount($assessRank);
+        $exclusiveArea = (string)$exclusiveArea;
+        $buildingAge = (string)$buildingAge;
 
-        $agingDepreciation = $agingDepreciation->findAgingDepreciation($assessRank);
+        $reProcure = bcmul($amount, $exclusiveArea, 2);
 
-        $residualValue = $agingDepreciation * $buildingAge;
+        $agingDepreciation = (string)$agingDepreciationObj->findAgingDepreciation($assessRank);
 
-        if ($residualValue >= 0.5) {
-            $finalResidualValue = 0.5;
+        $residualValue = bcmul($agingDepreciation, $buildingAge, 17);
+
+        if (bccomp($residualValue, '0.5', 17) >= 0) {
+            $finalResidualValue = '0.5';
         } else {
-            $finalResidualValue = 1 - $residualValue;
+            $finalResidualValue = bcsub('1', $residualValue, 17);
         }
 
-        $marketPrice = thousandYenUnit(floor($reProcure * $finalResidualValue));
+        $marketPrice = bcmul($reProcure, $finalResidualValue, 2);
+
+        $rounded = bcmul(
+            bcadd(
+                bcdiv($marketPrice, '1000', 0),
+                bccomp(bcmod($marketPrice, '1000'), '0') === 1 ? '1' : '0'
+            ),
+            '1000',
+            0
+        );
 
         return [
-            '通常' => (string) $marketPrice,
-            'まるめ' => (string) thousandYenUnit(ceil(floor($reProcure * $finalResidualValue) / 1000) * 1000),
+            '通常' => thousandYenUnit($marketPrice),
+            'まるめ' => thousandYenUnit($rounded),
         ];
     }
+
 
     public function getReProcure($assessRank = '')
     {
-        $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
-        $reProcure = $standardAmount * $this->exclusiveArea;
+        $standardAmount = (string)$this->standardAmount->findStandardAmount($assessRank);
+        $exclusiveArea = (string)$this->exclusiveArea;
+
+        // 再調達原価（円）
+        $reProcure = bcmul($standardAmount, $exclusiveArea, 2);
+
+        // 割合
+        $rate80  = bcmul($reProcure, '0.8', 2);
+        $rate120 = bcmul($reProcure, '1.2', 2);
+        // 千円切り上げ
+        $roundThousand = function (string $v): string {
+            return bcmul(
+                bcadd(
+                    bcdiv($v, '1000', 0),
+                    bccomp(bcmod($v, '1000'), '0') === 1 ? '1' : '0'
+                ),
+                '1000',
+                0
+            );
+        };
 
         return [
             '標準単価' => $standardAmount,
-            '80%' => $reProcure * 0.8,
-            '80%まるめ' => ceil(floor($reProcure * 0.8) / 1000) * 1000,
+            '80%' => $rate80,
+            '80%まるめ' => $roundThousand($rate80),
             '100%' => $reProcure,
-            '100%まるめ' => ceil(floor($reProcure) / 1000) * 1000,
-            '120%' => $reProcure * 1.2,
+            '100%まるめ' => $roundThousand($reProcure),
+            '120%' => $rate120,
         ];
     }
 
+
     public function getResidualValue($assessRank)
     {
-        $agingDepreciation = $this->agingDepreciation->findAgingDepreciation($assessRank);
-        $residualValue = $agingDepreciation * $this->buildingAge;
+        $agingDepreciation = (string)$this->agingDepreciation->findAgingDepreciation($assessRank);
+        $buildingAge = (string)$this->buildingAge;
 
-        if ($residualValue >= 0.5) {
-            $finalResidualValue = 0.5;
+        $residualValue = bcmul($agingDepreciation, $buildingAge, 17);
+
+        if (bccomp($residualValue, '0.5', 17) >= 0) {
+            $finalResidualValue = '0.5';
         } else {
-            $finalResidualValue = 1 - $residualValue;
+            $finalResidualValue = bcsub('1', $residualValue, 17);
         }
 
         return [
@@ -131,15 +181,29 @@ final class AssessCondo
         ];
     }
 
+
     public function getCurrentMarketPrice($assessRank)
     {
-        $currentMarketPrice = $this->getReProcure($assessRank)['100%'] * $this->getResidualValue($assessRank)['残価率最終'];
+        $reProcure = $this->getReProcure($assessRank)['100%'];
+        $residualRate = $this->getResidualValue($assessRank)['残価率最終'];
+
+        $currentMarketPrice = bcmul($reProcure, $residualRate, 2);
+
+        $rounded = bcmul(
+            bcadd(
+                bcdiv($currentMarketPrice, '1000', 0),
+                bccomp(bcmod($currentMarketPrice, '1000'), '0') === 1 ? '1' : '0'
+            ),
+            '1000',
+            0
+        );
 
         return [
             '時価額' => $currentMarketPrice,
-            '時価額まるめ' => ceil(floor($currentMarketPrice) / 1000) * 1000,
+            '時価額まるめ' => $rounded,
         ];
     }
+
 
     private function getValueByKey(string $key, ?array $array, string $defaultValue = ''): string
     {
