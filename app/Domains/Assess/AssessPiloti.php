@@ -41,13 +41,27 @@ final class AssessPiloti
         $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
     }
 
+    private function roundUpThousand(string $value): string
+    {
+        return bcmul(
+            bcadd(
+                bcdiv($value, '1000', 0),
+                bccomp(bcmod($value, '1000'), '0') === 1 ? '1' : '0'
+            ),
+            '1000',
+            0
+        );
+    }
+
     /*
     ** LiveFireで使用する評価額
     */
     public function viewReProcure($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $assessRank = '')
     {
-        if ($assessRank == '' || $assessUsage == '' ||
-        $assessStructure == '' || $floorArea == '') {
+        if (
+            $assessRank == '' || $assessUsage == '' ||
+            $assessStructure == '' || $floorArea == ''
+        ) {
             return [
                 '80' => '',
                 '100' => '',
@@ -55,18 +69,24 @@ final class AssessPiloti
             ];
         }
 
-        $standardAmount = $this->standardAmount = new StandardAmount($assessUsage, $assessStructure);
+        $standardAmountObj = new StandardAmount($assessUsage, $assessStructure);
+        $standardAmount = (string)$standardAmountObj->findStandardAmount($assessRank);
 
-        $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
+        // ピロティー以外面積
+        $otherArea = bcsub($floorArea, $pilotiFloorArea, 10);
 
-        $pilotiOther = $standardAmount * ((float) $floorArea - (float) $pilotiFloorArea);
-        $pilotiOnly = 60 * (float) $pilotiFloorArea;
-        $reProcure = $pilotiOther + $pilotiOnly;
+        // 金額
+        $pilotiOther = bcmul($standardAmount, $otherArea, 2);
+        $pilotiOnly  = bcmul('60', $pilotiFloorArea, 2);
+
+        $reProcure = bcadd($pilotiOther, $pilotiOnly, 2);
+
+        $rate80 = bcmul($reProcure, '0.8', 2);
 
         return [
-            '80' => (string) thousandYenUnit(floor($reProcure * 0.8)),
-            '100' => thousandYenUnit(floor($reProcure)),
-            '100まるめ' => thousandYenUnit(ceil(floor($reProcure) / 1000) * 1000),
+            '80'       => thousandYenUnit($rate80),
+            '100'      => thousandYenUnit($reProcure),
+            '100まるめ' => thousandYenUnit($this->roundUpThousand($reProcure)),
         ];
     }
 
@@ -75,81 +95,99 @@ final class AssessPiloti
     */
     public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $buildingAge, $assessRank = '')
     {
-        if ($assessRank == '' || $assessUsage == '' ||
-        $assessStructure == '' || $floorArea == '' ||
-        $pilotiFloorArea == '' || $buildingAge == '') {
+        if (
+            $assessRank == '' || $assessUsage == '' ||
+            $assessStructure == '' || $floorArea == '' ||
+            $pilotiFloorArea == '' || $buildingAge == ''
+        ) {
             return [
                 '通常' => '',
                 'まるめ' => '',
             ];
         }
 
-        $standardAmount = $this->standardAmount = new StandardAmount($assessUsage, $assessStructure);
-        $agingDepreciation = $this->agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
+        $standardAmountObj = new StandardAmount($assessUsage, $assessStructure);
+        $agingDepObj = new AgingDepreciation($assessUsage, $assessStructure);
 
-        $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
+        $standardAmount = (string)$standardAmountObj->findStandardAmount($assessRank);
+        $agingRate = (string)$agingDepObj->findAgingDepreciation($assessRank);
 
-        $pilotiOther = $standardAmount * ((float) $floorArea - (float) $pilotiFloorArea);
-        $pilotiOnly = 60 * (float) $pilotiFloorArea;
-        $reProcure = $pilotiOther + $pilotiOnly;
+        // 再調達原価
+        $otherArea = bcsub($floorArea, $pilotiFloorArea, 10);
+        $reProcure = bcadd(
+            bcmul($standardAmount, $otherArea, 0),
+            bcmul('60', $pilotiFloorArea, 0),
+            0
+        );
 
-        $agingDepreciation = $this->agingDepreciation->findAgingDepreciation($assessRank);
+        // 残価率
+        $residual = bcmul($agingRate, $buildingAge, 17);
 
-        $residualValue = $agingDepreciation * (int) $buildingAge;
-
-        if ($residualValue >= 0.5) {
-            $finalResidualValue = 0.5;
+        if (bccomp($residual, '0.5', 17) >= 0) {
+            $finalRate = '0.5';
         } else {
-            $finalResidualValue = 1 - $residualValue;
+            $finalRate = bcsub('1', $residual, 17);
         }
 
-        $marketPrice = thousandYenUnit(floor($reProcure * $finalResidualValue));
+        // 時価額
+        $marketPrice = bcmul($reProcure, $finalRate, 2);
 
         return [
-            '通常' => (string) $marketPrice,
-            'まるめ' => (string) thousandYenUnit(ceil(floor($reProcure * $finalResidualValue) / 1000) * 1000),
+            '通常'   => thousandYenUnit($marketPrice),
+            'まるめ' => thousandYenUnit($this->roundUpThousand($marketPrice)),
         ];
     }
 
     public function getExceptForPiloti($assessRank)
     {
-        $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
-        $reProcure = $standardAmount * $this->exceptForPilotiFloorArea;
+        $standardAmount = (string)$this->standardAmount->findStandardAmount($assessRank);
+
+        $reProcure = bcmul($standardAmount, (string)$this->exceptForPilotiFloorArea, 2);
+
+        $rate80  = bcmul($reProcure, '0.8', 2);
+        $rate120 = bcmul($reProcure, '1.2', 2);
 
         return [
             '標準単価' => $standardAmount,
-            'ピロティー以外80%' => $reProcure * 0.8,
-            'ピロティー以外80%まるめ' => ceil($reProcure * 0.8 / 1000) * 1000,
+            'ピロティー以外80%' => $rate80,
+            'ピロティー以外80%まるめ' => $this->roundUpThousand($rate80),
             'ピロティー以外100%' => $reProcure,
-            'ピロティー以外100%まるめ' => ceil($reProcure / 1000) * 1000,
-            'ピロティー以外120%' => $reProcure * 1.2,
-
+            'ピロティー以外100%まるめ' => $this->roundUpThousand($reProcure),
+            'ピロティー以外120%' => $rate120,
         ];
     }
 
     public function getPiloti()
     {
-        $standardAmount = 60;
-        $reProcure = $standardAmount * $this->pilotiFloorArea;
+        $standardAmount = '60';
+
+        $reProcure = bcmul($standardAmount, (string)$this->pilotiFloorArea, 2);
+
+        $rate80 = bcmul($reProcure, '0.8', 2);
 
         return [
             '標準単価' => $standardAmount,
-            'ピロティー80%' => $reProcure * 0.8,
-            'ピロティー80%まるめ' => ceil($reProcure * 0.8 / 1000) * 1000,
+            'ピロティー80%' => $rate80,
+            'ピロティー80%まるめ' => $this->roundUpThousand($rate80),
             'ピロティー100%' => $reProcure,
-            'ピロティー100%まるめ' => ceil($reProcure / 1000) * 1000,
+            'ピロティー100%まるめ' => $this->roundUpThousand($reProcure),
         ];
     }
 
     public function getAllFloorAreaReProcure($assessRank)
     {
-        $reProcure = $this->getExceptForPiloti($assessRank)['ピロティー以外100%'] + $this->getPiloti()['ピロティー100%'];
+        $except = $this->getExceptForPiloti($assessRank)['ピロティー以外100%'];
+        $piloti = $this->getPiloti()['ピロティー100%'];
+
+        $reProcure = bcadd($except, $piloti, 2);
+
+        $rate80 = bcmul($reProcure, '0.8', 2);
 
         return [
-            '80%' => $reProcure * 0.8,
-            '80%まるめ' => ceil(floor($reProcure * 0.8) / 1000) * 1000,
+            '80%' => $rate80,
+            '80%まるめ' => $this->roundUpThousand($rate80),
             '100%' => $reProcure,
-            '100%まるめ' => ceil(floor($reProcure) / 1000) * 1000,
+            '100%まるめ' => $this->roundUpThousand($reProcure),
         ];
     }
 
@@ -173,13 +211,34 @@ final class AssessPiloti
 
     public function getCurrentMarketPrice($assessRank)
     {
-        $currentMarketPrice = ($this->getExceptForPiloti($assessRank)['ピロティー以外100%'] + $this->getPiloti()['ピロティー100%']) * $this->getResidualValue($assessRank)['残価率最終'];
+        // 文字列で取得（bc用）
+        $except = (string) $this->getExceptForPiloti($assessRank)['ピロティー以外100%'];
+        $piloti = (string) $this->getPiloti()['ピロティー100%'];
+        $residual = (string) $this->getResidualValue($assessRank)['残価率最終'];
+
+        // 再調達原価合計（小数2桁）
+        $reProcure = bcadd($except, $piloti, 2);
+
+        // 時価額（小数2桁）
+        $currentMarketPrice = bcmul($reProcure, $residual, 2);
+
+        // 1000円単位切り上げ
+        $roundThousand = fn(string $v): string =>
+        bcmul(
+            bcadd(
+                bcdiv($v, '1000', 0),
+                bccomp(bcmod($v, '1000'), '0') === 1 ? '1' : '0'
+            ),
+            '1000',
+            0
+        );
 
         return [
-            '時価額' => $currentMarketPrice,
-            '時価額まるめ' => ceil(floor($currentMarketPrice) / 1000) * 1000,
+            '時価額' => bcadd($currentMarketPrice, '0', 0), // 表示用（整数）
+            '時価額まるめ' => $roundThousand($currentMarketPrice),
         ];
     }
+
 
     private function getStringValueByKey(string $key, ?array $array, string $defaultValue = ''): string
     {

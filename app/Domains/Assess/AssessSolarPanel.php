@@ -6,7 +6,7 @@ namespace App\Domains\Assess;
 
 final class AssessSolarPanel
 {
-    public readonly float $floorArea;
+    public readonly string $floorArea;
 
     public readonly int $buildingAge;
 
@@ -18,7 +18,7 @@ final class AssessSolarPanel
 
     public readonly string $installationDate;
 
-    public readonly int $installationCost;
+    public readonly string $installationCost;
 
     public readonly string $remarks;
 
@@ -28,13 +28,13 @@ final class AssessSolarPanel
 
     public function __construct($estimate)
     {
-        $this->floorArea = $estimate->floor_area ? $estimate->floor_area : 0;
+        $this->floorArea = (string) ($estimate->floor_area ?? '0');
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
         $this->buildingYear = $estimate->building_year ? $estimate->building_year : 0;
         $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
         $this->installationDate = $this->getStringValueByKey('installation_date', $estimate->assess_detail);
-        $this->installationCost = $this->getIntValueByKey('installation_cost', $estimate->assess_detail);
+        $this->installationCost = (string) ($this->getIntValueByKey('installation_cost', $estimate->assess_detail) ?? '0');
         $this->remarks = $this->getStringValueByKey('remarks', $estimate->assess_detail);
 
         $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure);
@@ -46,8 +46,10 @@ final class AssessSolarPanel
         */
     public function viewReProcure($assessUsage, $assessStructure, $floorArea, $assessRank = '')
     {
-        if ($assessRank == '' || $assessUsage == '' ||
-        $assessStructure == '' || $floorArea == '') {
+        if (
+            $assessRank == '' || $assessUsage == '' ||
+            $assessStructure == '' || $floorArea == ''
+        ) {
             return [
                 '80' => '',
                 '100' => '',
@@ -56,13 +58,28 @@ final class AssessSolarPanel
         }
 
         $standardAmount = new StandardAmount($assessUsage, $assessStructure);
-        $amount = $standardAmount->findStandardAmount($assessRank);
-        $reProcure = $amount * $floorArea;
+        $amount = (string) $standardAmount->findStandardAmount($assessRank);
+
+        // 再調達原価
+        $reProcure = bcmul($amount, (string) $floorArea, 2);
+
+        // 80%
+        $rate80 = bcmul($reProcure, '0.8', 2);
 
         return [
-            '80' => thousandYenUnit(floor($reProcure * 0.8)),
-            '100' => thousandYenUnit(floor($reProcure)),
-            '100まるめ' => thousandYenUnit(ceil(floor($reProcure) / 1000) * 1000),
+            '80' => thousandYenUnit($rate80),
+            '100' => thousandYenUnit($reProcure),
+            '100まるめ' => thousandYenUnit(
+                bcmul(
+                    bcadd(
+                        bcdiv($reProcure, '1000', 0),
+                        '1',
+                        0
+                    ),
+                    '1000',
+                    0
+                )
+            ),
         ];
     }
 
@@ -71,106 +88,183 @@ final class AssessSolarPanel
     */
     public function viewCurrentMarketPrice($assessUsage, $assessStructure, $floorArea, $buildingAge, $assessRank = '')
     {
-        if ($assessRank == '' || $assessUsage == '' ||
-        $assessStructure == '' || $floorArea == '' ||
-        $buildingAge == '') {
+        if (
+            $assessRank == '' || $assessUsage == '' ||
+            $assessStructure == '' || $floorArea == '' ||
+            $buildingAge == ''
+        ) {
             return [
                 '通常' => '',
                 'まるめ' => '',
             ];
         }
 
-        $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
         $standardAmount = new StandardAmount($assessUsage, $assessStructure);
+        $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
 
-        $amount = $standardAmount->findStandardAmount($assessRank);
-        $reProcure = $amount * $floorArea;
+        // 標準単価
+        $amount = (string) $standardAmount->findStandardAmount($assessRank);
 
-        $agingDepreciation = $agingDepreciation->findAgingDepreciation($assessRank);
+        // 再調達原価
+        $reProcure = bcmul($amount, (string) $floorArea, 2);
 
-        $residualValue = $agingDepreciation * $buildingAge;
+        // 経年減価率（年あたり）
+        $agingRate = (string) $agingDepreciation->findAgingDepreciation($assessRank);
 
-        if ($residualValue >= 0.5) {
-            $finalResidualValue = 0.5;
+        // 累計減価率 = 年数 × 率
+        $residualLoss = bcmul($agingRate, (string) $buildingAge, 6);
+
+        // 上限 0.5
+        if (bccomp($residualLoss, '0.5', 6) === 1) {
+            $finalResidualValue = '0.5';
         } else {
-            $finalResidualValue = 1 - $residualValue;
+            $finalResidualValue = bcsub('1', $residualLoss, 6);
         }
 
-        $marketPrice = thousandYenUnit(floor($reProcure * $finalResidualValue));
+        // 時価額
+        $marketPrice = bcmul($reProcure, $finalResidualValue, 2);
 
         return [
-            '通常' => (string) $marketPrice,
-            'まるめ' => (string) thousandYenUnit(ceil(floor($reProcure * $finalResidualValue) / 1000) * 1000),
+            '通常' => thousandYenUnit($marketPrice),
+            'まるめ' => thousandYenUnit(
+                bcmul(
+                    bcadd(
+                        bcdiv($marketPrice, '1000', 0),
+                        '1',
+                        0
+                    ),
+                    '1000',
+                    0
+                )
+            ),
         ];
     }
 
     public function getSolarPanelInfo()
     {
-        $agingDepreciation = 0.1;
-        $progressYear = now()->diffInYears($this->installationDate);
-        $residualValue = $progressYear * $agingDepreciation;
+        $agingDepreciation = '0.1';
 
-        if ($residualValue >= 0.5) {
-            $finalResidualValue = 0.5;
+        // 経過年数
+        $progressYear = (string) now()->diffInYears($this->installationDate);
+
+        // 残価率（年数 × 年率）
+        $residualValue = bcmul($progressYear, $agingDepreciation, 6);
+
+        // 上限 0.5
+        if (bccomp($residualValue, '0.5', 6) === 1) {
+            $finalResidualValue = '0.5';
         } else {
-            $finalResidualValue = 1 - $residualValue;
+            $finalResidualValue = bcsub('1', $residualValue, 6);
         }
 
+        // 時価額
+        $marketPrice = bcmul(
+            (string) $this->installationCost,
+            $finalResidualValue,
+            0
+        );
+
         return [
-            '経過年数' => $progressYear,
-            '経年減価率' => $agingDepreciation,
-            '残価率' => $residualValue,
-            '残価率最終' => $finalResidualValue,
-            '時価額' => $this->installationCost * $finalResidualValue,
+            '経過年数' => (int) $progressYear,
+            '経年減価率' => (float) $agingDepreciation,
+            '残価率' => (float) $residualValue,
+            '残価率最終' => (float) $finalResidualValue,
+            '時価額' => $marketPrice,
         ];
     }
 
     public function getReProcure($assessRank = '')
     {
-        $standardAmount = $this->standardAmount->findStandardAmount($assessRank);
-        $reProcure = $standardAmount * $this->floorArea;
+        $standardAmount = (string) $this->standardAmount->findStandardAmount($assessRank);
+        $floorArea = (string) $this->floorArea;
+
+        // 再調達原価（小数2桁）
+        $reProcure = bcmul($standardAmount, $floorArea, 2);
+
+        // 80%
+        $rate80 = bcmul($reProcure, '0.8', 2);
+
+        // 1000円単位切り上げ
+        $roundThousand = fn(string $v): string =>
+        bcmul(
+            bcadd(
+                bcdiv($v, '1000', 0),
+                bccomp(bcmod($v, '1000'), '0') === 1 ? '1' : '0'
+            ),
+            '1000',
+            0
+        );
+
+        $base80 = $roundThousand($rate80);
+        $base100 = $roundThousand($reProcure);
+        $install = (string) $this->installationCost;
 
         return [
             '標準単価' => $standardAmount,
-            '80%' => $reProcure * 0.8,
-            '80%まるめ' => ceil(floor($reProcure * 0.8) / 1000) * 1000,
-            '太陽光付き80%まるめ' => ceil(floor($reProcure * 0.8) / 1000) * 1000, +$this->installationCost,
-            '100%' => $reProcure,
-            '100%まるめ' => ceil(floor($reProcure) / 1000) * 1000,
-            '太陽光付き100%まるめ' => ceil(floor($reProcure) / 1000) * 1000 + $this->installationCost,
-            '120%' => $reProcure * 1.2,
 
+            '80%' => $rate80,
+            '80%まるめ' => $base80,
+            '太陽光付き80%まるめ' => bcadd($base80, $install, 0),
+
+            '100%' => $reProcure,
+            '100%まるめ' => $base100,
+            '太陽光付き100%まるめ' => bcadd($base100, $install, 0),
+
+            '120%' => bcmul($reProcure, '1.2', 2),
         ];
     }
 
     public function getResidualValue($assessRank = '')
     {
-        $agingDepreciation = $this->agingDepreciation->findAgingDepreciation($assessRank);
-        $residualValue = $agingDepreciation * $this->buildingAge;
+        $aging = (string) $this->agingDepreciation->findAgingDepreciation($assessRank);
+        $age = (string) $this->buildingAge;
 
-        if ($residualValue >= 0.5) {
-            $finalResidualValue = 0.5;
-        } else {
-            $finalResidualValue = 1 - $residualValue;
-        }
+        // 経年減価
+        $residualValue = bcmul($aging, $age, 2);
+
+        // 上限0.5
+        $finalResidualValue = bccomp($residualValue, '0.5', 2) === 1
+            ? '0.5'
+            : bcsub('1', $residualValue, 2);
 
         return [
-            '経年減価率' => $agingDepreciation,
+            '経年減価率' => $aging,
             '残価率' => $residualValue,
             '残価率最終' => $finalResidualValue,
         ];
     }
 
+
     public function getCurrentMarketPrice($assessRank = '')
     {
-        $currentMarketPrice = $this->getReProcure($assessRank)['100%'] * $this->getResidualValue($assessRank)['残価率最終'];
+        $reProcure = (string) $this->getReProcure($assessRank)['100%'];
+        $residual = (string) $this->getResidualValue($assessRank)['残価率最終'];
+
+        // 時価額（小数2桁）
+        $currentMarketPrice = bcmul($reProcure, $residual, 2);
+
+        // 1000円単位切り上げ
+        $roundThousand = fn(string $v): string =>
+        bcmul(
+            bcadd(
+                bcdiv($v, '1000', 0),
+                bccomp(bcmod($v, '1000'), '0') === 1 ? '1' : '0'
+            ),
+            '1000',
+            0
+        );
+
+        $rounded = $roundThousand($currentMarketPrice);
+        $solar = (string) $this->getSolarPanelInfo()['時価額'];
 
         return [
-            '時価額' => $currentMarketPrice,
-            '時価額まるめ' => ceil(floor($currentMarketPrice)  / 1000) * 1000,
-            '太陽光付まるめ' => ceil(floor($currentMarketPrice)  / 1000) * 1000 + $this->getSolarPanelInfo()['時価額'],
+            '時価額' => bcadd($currentMarketPrice, '0', 0),
+            '時価額まるめ' => $rounded,
+            '太陽光付まるめ' => bcadd($rounded, $solar, 0),
         ];
     }
+
+
 
     private function getStringValueByKey(string $key, ?array $array, string $defaultValue = ''): string
     {

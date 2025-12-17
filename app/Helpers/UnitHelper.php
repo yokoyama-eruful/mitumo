@@ -14,9 +14,8 @@ if (! function_exists('yenUnit')) {
             return $amount;
         }
 
-        return number_format($amount).'円';
+        return number_format($amount) . '円';
     }
-
 }
 
 if (! function_exists('thousandYenUnit')) {
@@ -32,7 +31,7 @@ if (! function_exists('thousandYenUnit')) {
             return $amount;
         }
 
-        return number_format((float) $amount).'千円';
+        return number_format((float) $amount) . '千円';
     }
 }
 
@@ -48,7 +47,7 @@ if (! function_exists('yearUnit')) {
             return $year;
         }
 
-        return $year.'年';
+        return $year . '年';
     }
 }
 
@@ -64,7 +63,7 @@ if (! function_exists('percentUnit')) {
             return $percent;
         }
 
-        return $percent.'%';
+        return $percent . '%';
     }
 }
 
@@ -80,6 +79,6 @@ if (! function_exists('gainUnit')) {
             return $percent;
         }
 
-        return number_format($percent).'円お得';
+        return number_format($percent) . '円お得';
     }
 }
