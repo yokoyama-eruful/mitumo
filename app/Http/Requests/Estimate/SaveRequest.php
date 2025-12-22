@@ -44,7 +44,7 @@ final class SaveRequest extends FormRequest
             'property_type' => ['required', 'string', 'in:住宅,普通,工場'],
             'rank' => ['required', 'string'],
             'start_date' => ['nullable', 'required_if:assess_item,通常(延床面積),通常(専有面積),ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'date'],
-            'building_year' => ['nullable', 'required_if:assess_item,通常(延床面積),通常(専有面積),ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'integer', 'min:0', 'max:'.(date('Y') + 1)],
+            'building_year' => ['nullable', 'required_if:assess_item,通常(延床面積),通常(専有面積),ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'integer', 'min:0', 'max:' . (date('Y') + 1)],
             'building_age' => ['nullable', 'required_if:assess_item,通常(延床面積),通常(専有面積),ピロティー付,太陽光付,分譲マンション,年次取得,大規模改装', 'integer'],
             'pay_method' => ['required', 'string'],
             'insurance_year' => ['nullable', 'required_without_all:insurance_month,insurance_day',  'integer', 'min:1', 'max:10'],
@@ -121,16 +121,16 @@ final class SaveRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             if (($this->input('household_insurance_payout') || $this->input('facility_insurance_payout') ||
-            $this->input('other_facility_insurance_payout') || $this->input('item_insurance_payout') ||
-            $this->input('other_item_insurance_payout')) && $this->input('property_type') == '工場' && ! $this->input('chattel_surcharge')) {
+                $this->input('other_facility_insurance_payout') || $this->input('item_insurance_payout') ||
+                $this->input('other_item_insurance_payout')) && $this->input('property_type') == '工場' && ! $this->input('chattel_surcharge')) {
                 $validator->errors()->add('エラー', '動産を指定する場合は、動産割増を指定してください');
             }
         });
 
         $validator->after(function ($validator) {
             if (($this->input('household_insurance_payout') || $this->input('facility_insurance_payout') ||
-                  $this->input('other_facility_insurance_payout') || $this->input('item_insurance_payout') ||
-                  $this->input('other_item_insurance_payout')) && $this->input('property_type') == '普通' && ! $this->input('chattel_surcharge_category')) {
+                $this->input('other_facility_insurance_payout') || $this->input('item_insurance_payout') ||
+                $this->input('other_item_insurance_payout')) && $this->input('property_type') == '普通' && ! $this->input('chattel_surcharge_category')) {
                 $validator->errors()->add('エラー', '動産を指定する場合は、動産割増を指定してください');
             }
         });
@@ -178,9 +178,11 @@ final class SaveRequest extends FormRequest
         });
 
         $validator->after(function ($validator) {
-            if ($this->input('assess_item') == '分譲マンション' &&
-            ($this->input('property_type') == '住宅' && $this->input('rank') != 'M' ||
-            $this->input('property_type') == '普通' && ($this->input('rank') != '1級' || $this->input('occupational_surcharge_code') != 899 && $this->input('occupational_surcharge_code') != 400))) {
+            if (
+                $this->input('assess_item') == '分譲マンション' &&
+                ($this->input('property_type') == '住宅' && $this->input('rank') != 'M' ||
+                    $this->input('property_type') == '普通' && ($this->input('rank') != '1級' || $this->input('occupational_surcharge_code') != 899 && $this->input('occupational_surcharge_code') != 400))
+            ) {
 
                 if ($this->input('property_type') == '住宅' && $this->input('rank') != 'M') {
                     $validator->errors()->add('エラー', '「物件」が「住宅」で分譲マンションを評価する場合「級別」は「M」でなくてはいけません。');
@@ -210,7 +212,7 @@ final class SaveRequest extends FormRequest
             }
         });
 
-        $buildingYear = $this->changeWarekiToSeireki($this->params());
+        $buildingYear = $this->changeWarekiToSeireki($this->input('building_year_era'), $this->input('building_year'));
 
         $validator->after(function ($validator) use ($buildingYear) {
             if ($this->input('assess_item') == '年次取得' && ($buildingYear > 2024 || $buildingYear < 1976)) {
@@ -236,15 +238,15 @@ final class SaveRequest extends FormRequest
         });
     }
 
-    private function changeWarekiToSeireki($params)
+    private function changeWarekiToSeireki($buildingYearEra, $buildingYear)
     {
-        $westernYear = JapaneseEraConverter::getJapaneseEraStartYear($params['building_year_era']);
-        $buildingYearEra = $params['building_year_era'] == '' ? '西暦' : $params['building_year_era'];
+        $westernYear = JapaneseEraConverter::getJapaneseEraStartYear($buildingYearEra);
+        $buildingYearEra = $buildingYearEra == '' ? '西暦' : $buildingYearEra;
 
         if ($buildingYearEra !== '西暦') {
-            $buildingYear = $westernYear + $params['building_year'] - 1;
+            $buildingYear = $westernYear + $buildingYear - 1;
         } else {
-            $buildingYear = $params['building_year'];
+            $buildingYear = $buildingYear;
         }
 
         return $buildingYear;
