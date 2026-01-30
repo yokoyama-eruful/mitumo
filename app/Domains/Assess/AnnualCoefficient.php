@@ -22,7 +22,7 @@ final class AnnualCoefficient
             return 0;
         }
 
-        if ($buildingYear > 2024) {
+        if ($buildingYear > 2025) {
             return 0;
         }
 
@@ -75,7 +75,6 @@ final class AnnualCoefficient
         }
 
         fclose($handle);
-
         return (float) $annualCoefficientList['年次係数'];
     }
 }

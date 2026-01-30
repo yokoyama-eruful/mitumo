@@ -215,8 +215,8 @@ final class SaveRequest extends FormRequest
         $buildingYear = $this->changeWarekiToSeireki($this->input('building_year_era'), $this->input('building_year'));
 
         $validator->after(function ($validator) use ($buildingYear) {
-            if ($this->input('assess_item') == '年次取得' && ($buildingYear > 2024 || $buildingYear < 1976)) {
-                $validator->errors()->add('エラー', '建築年は「2024年~1976年」でなくてはいけません。');
+            if ($this->input('assess_item') == '年次取得' && ($buildingYear > 2025 || $buildingYear < 1976)) {
+                $validator->errors()->add('エラー', '建築年は「2025年~1976年」でなくてはいけません。');
             }
         });
 
