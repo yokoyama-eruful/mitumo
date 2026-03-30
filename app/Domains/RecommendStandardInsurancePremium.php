@@ -99,7 +99,7 @@ final class RecommendStandardInsurancePremium
             } else {
                 $baseRate = new BuildingBaseRate($estimate, 'rateTable/buildingBaseRateTable.csv');
             }
-            $buildingBaseRate = $baseRate->findRate($estimate->property_type, $buildingAge, $estimate->rank,$startDate);
+            $buildingBaseRate = $baseRate->findRate($estimate->property_type, $buildingAge, $estimate->rank, $startDate);
         } else {
             $buildingBaseRate = $estimate->building_base_rate;
         }
@@ -252,11 +252,12 @@ final class RecommendStandardInsurancePremium
                 $discountPublicProperty = 1 - $discountPublicProperty / 100;
             }
 
-            $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount, 2);
-            $result = round(($result + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
+            // $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount, 2);
+            // $result = round(($result + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
+
+            $result = round(((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount) + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
 
             return $result;
-
         }
 
         $otherDiscount = $this->getValueByKey('other_discount', $this->estimate->property_detail, 0);
@@ -266,9 +267,9 @@ final class RecommendStandardInsurancePremium
             $otherDiscount = 1 - $otherDiscount / 100;
         }
 
-        $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
+        // $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
 
-        return round($result + $chattelPremium + $comprehensivePremium, 2);
+        return round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount) + $chattelPremium + $comprehensivePremium, 2);
     }
 
     private function getChattelSurcharge($estimate)

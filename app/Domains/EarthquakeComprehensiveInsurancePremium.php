@@ -111,7 +111,7 @@ final class EarthquakeComprehensiveInsurancePremium
         $shortTermRate = $shortTermRate->shortTermRate;
 
         return $shortTermRate == 0 &&
-        in_array($this->propertyType, ['普通', '工場'], true);
+            in_array($this->propertyType, ['普通', '工場'], true);
     }
 
     private function calcEarthquakeDiv($earthquakeRatio)
@@ -176,7 +176,7 @@ final class EarthquakeComprehensiveInsurancePremium
             } else {
                 $baseRate = new BuildingBaseRate($estimate, 'rateTable/buildingBaseRateTable.csv');
             }
-            $buildingBaseRate = $baseRate->findRate($propertyType, $buildingAge, $estimate->rank,$startDate);
+            $buildingBaseRate = $baseRate->findRate($propertyType, $buildingAge, $estimate->rank, $startDate);
         } else {
             $buildingBaseRate = $estimate->building_base_rate;
         }
@@ -336,11 +336,12 @@ final class EarthquakeComprehensiveInsurancePremium
                 $discountPublicProperty = 1 - $discountPublicProperty / 100;
             }
 
-            $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount, 2);
-            $result = round(($result + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
+            // $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount, 2);
+            // $result = round(($result + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
+
+            $result = round(((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount) + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
 
             return $result;
-
         }
 
         $otherDiscount = $this->getValueByKey('other_discount', $this->estimate->property_detail, 0);
@@ -350,9 +351,9 @@ final class EarthquakeComprehensiveInsurancePremium
             $otherDiscount = 1 - $otherDiscount / 100;
         }
 
-        $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
+        // $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
 
-        return round($result + $chattelPremium + $comprehensivePremium, 2);
+        return round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount) + $chattelPremium + $comprehensivePremium, 2);
     }
 
     private function getChattelSurcharge($estimate)

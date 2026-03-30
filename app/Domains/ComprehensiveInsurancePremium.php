@@ -94,7 +94,7 @@ final class ComprehensiveInsurancePremium
             return $this->comprehensive1;
         }
 
-        if ($this->comprehensive1 >= 100000 ) {
+        if ($this->comprehensive1 >= 100000) {
             $coefficient = 1.0;
         } else {
             $coefficient = 1.1;
@@ -128,20 +128,19 @@ final class ComprehensiveInsurancePremium
 
         if ($this->discountPublicProperty > 0) {
             return false;
-
         }
 
         if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
             return $this->payMethod == '長期年払' &&
-            $estimate->insurance_year >= 5 &&
-            (is_null($estimate->property_detail['actual_loss_factor']) || $estimate->property_detail['actual_loss_factor'] == '0') &&
-            $this->discountFireExtinguisher + $this->discountSecurity < 10;
+                $estimate->insurance_year >= 5 &&
+                (is_null($estimate->property_detail['actual_loss_factor']) || $estimate->property_detail['actual_loss_factor'] == '0') &&
+                $this->discountFireExtinguisher + $this->discountSecurity < 10;
         }
 
         return $this->payMethod == '長期年払' &&
-        $estimate->insurance_year >= 5 &&
-        (is_null($estimate->property_detail['actual_loss_factor']) || $estimate->property_detail['actual_loss_factor'] == '0') &&
-        $this->otherDiscount < 10;
+            $estimate->insurance_year >= 5 &&
+            (is_null($estimate->property_detail['actual_loss_factor']) || $estimate->property_detail['actual_loss_factor'] == '0') &&
+            $this->otherDiscount < 10;
 
         // return match ($this->discountCategory) {
         //     '公有物件等割引' => $this->payMethod == '長期年払' &&
@@ -217,10 +216,9 @@ final class ComprehensiveInsurancePremium
                 $baseRate = new BuildingBaseRate($estimate, 'rateTable/buildingBaseRateTable.csv');
             }
 
-            $buildingBaseRate = $baseRate->findRate($estimate->property_type, $buildingAge, $estimate->rank,$startDate);
+            $buildingBaseRate = $baseRate->findRate($estimate->property_type, $buildingAge, $estimate->rank, $startDate);
         } else {
             $buildingBaseRate = $estimate->building_base_rate;
-
         }
 
         //損保９割のロジック（building_base_rate）
@@ -463,11 +461,12 @@ final class ComprehensiveInsurancePremium
                 $discountPublicProperty = 1 - $discountPublicProperty / 100;
             }
 
-            $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount, 2);
-            $result = round(($result + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
+            // $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount, 2);
+            // $result = round(($result + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
+
+            $result = round(((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount + $chattelPremium + $comprehensivePremium) * $discountPublicProperty), 2);
 
             return $result;
-
         }
 
         $otherDiscount = $this->getValueByKey('other_discount', $this->estimate->property_detail, 0);
@@ -477,9 +476,9 @@ final class ComprehensiveInsurancePremium
             $otherDiscount = 1 - $otherDiscount / 100;
         }
 
-        $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
+        // $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
 
-        return round($result + $chattelPremium + $comprehensivePremium, 2);
+        return round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount) + $chattelPremium + $comprehensivePremium, 2);
     }
 
     private function getChattelSurcharge($estimate)
