@@ -94,15 +94,21 @@ final class ComprehensiveInsurancePremium
             return $this->comprehensive1;
         }
 
-        if ($this->comprehensive1 >= 100000) {
-            $coefficient = 1.0;
+        $coefficient = ($this->comprehensive1 >= 100000) ? '1.0' : '1.1';
+
+        $base = (string)$this->comprehensive1;
+
+        $mul = bcmul($base, $coefficient, 10);
+        $div = bcdiv($mul, '12', 10);
+
+        if (bccomp($div, (string)(int)$div, 10) === 0) {
+            $ceil = (string)(int)$div;
         } else {
-            $coefficient = 1.1;
+            $ceil = bcadd((string)(int)$div, '1', 0);
         }
 
-        $comprehensiveMonth = $this->comprehensive1 * $coefficient / 12;
-
-        return round(ceil($comprehensiveMonth), -1);
+        $result = (int)$ceil;
+        return (int)(round($result, -1));
     }
 
     private function calcComprehensiveDiv()
