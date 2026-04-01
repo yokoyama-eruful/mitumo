@@ -116,15 +116,21 @@ final class EarthquakeComprehensiveInsurancePremium
 
     private function calcEarthquakeDiv($earthquakeRatio)
     {
-        $earthquakePremium = $this->calcEarthquakePremium($earthquakeRatio);
+        $earthquakePremium = (string)$this->calcEarthquakePremium($earthquakeRatio);
 
         if (in_array($this->payMethod, ['一時払', '長期年払'], true)) {
-            return $earthquakePremium;
+            return (int)$earthquakePremium;
         }
 
-        $earthquakeMonth = $earthquakePremium / 12;
+        $div = bcdiv($earthquakePremium, '12', 10);
 
-        return round(ceil($earthquakeMonth), -1);
+        if (bccomp($div, (string)(int)$div, 10) === 0) {
+            $ceil = (string)(int)$div;
+        } else {
+            $ceil = bcadd((string)(int)$div, '1', 0);
+        }
+
+        return (int)round((int)$ceil, -1);
     }
 
     private function calcEarthquakePremium($earthquakeRatio)
@@ -149,15 +155,19 @@ final class EarthquakeComprehensiveInsurancePremium
             return $this->totalComprehensive;
         }
 
-        if ($this->totalComprehensive >= 100000) {
-            $coefficient = 1.0;
+        $coefficient = ($this->totalComprehensive >= 100000) ? '1.0' : '1.1';
+        $base = (string)$this->totalComprehensive;
+
+        $mul = bcmul($base, $coefficient, 10);
+        $div = bcdiv($mul, '12', 10);
+
+        if (bccomp($div, (string)(int)$div, 10) === 0) {
+            $ceil = (string)(int)$div;
         } else {
-            $coefficient = 1.1;
+            $ceil = bcadd((string)(int)$div, '1', 0);
         }
 
-        $totalEarthquakeComprehensive = $this->totalComprehensive * $coefficient / 12;
-
-        return round(ceil($totalEarthquakeComprehensive), -1);
+        return (int)round((int)$ceil, -1);
     }
 
     private function calcBuilding()

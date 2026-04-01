@@ -94,31 +94,41 @@ final class StandardInsurancePremium
             return $this->standard1;
         }
 
-        if ($this->standard1 >= 100000) {
-            $coefficient = 1.0;
+        $coefficient = ($this->standard1 >= 100000) ? '1.0' : '1.1';
+        $base = (string)$this->standard1;
+
+        $mul = bcmul($base, $coefficient, 10);
+        $div = bcdiv($mul, '12', 10);
+
+        if (bccomp($div, (string)(int)$div, 10) === 0) {
+            $ceil = (string)(int)$div;
         } else {
-            $coefficient = 1.1;
+            $ceil = bcadd((string)(int)$div, '1', 0);
         }
 
-        $standardMonth = $this->standard1 * $coefficient / 12;
-
-        return round(ceil($standardMonth), -1);
+        return (int)round((int)$ceil, -1);
     }
 
     private function calcStandardDiv()
     {
-        if (in_array($this->payMethod, ['一時払', '長期年払'])) {
+        if (in_array($this->payMethod, ['一時払', '長期年払'], true)) {
             return 0;
         }
 
         if ($this->standard1 >= 180) {
-            if ($this->standard1 >= 100000) {
-                $coefficient = 1.0;
+            $coefficient = ($this->standard1 >= 100000) ? '1.0' : '1.1';
+            $base = (string)$this->standard1;
+
+            $mul = bcmul($base, $coefficient, 10);
+            $div = bcdiv($mul, '12', 10);
+
+            if (bccomp($div, (string)(int)$div, 10) === 0) {
+                $ceil = (string)(int)$div;
             } else {
-                $coefficient = 1.1;
+                $ceil = bcadd((string)(int)$div, '1', 0);
             }
 
-            return round(ceil($this->standard1 * $coefficient / 12), -1);
+            return (int)round((int)$ceil, -1);
         }
 
         return 180;
