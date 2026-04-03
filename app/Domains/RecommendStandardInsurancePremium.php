@@ -111,11 +111,15 @@ final class RecommendStandardInsurancePremium
 
         $longTermRate = $mutualAidPremium->longTerRate;
         $actualLossFactor = $this->getFloatValueByKey('actual_loss_factor', $estimate->property_detail, 1);
-        $applyRate = round(round($otherDiscount * $actualLossFactor, 2) * $longTermRate, 2);
+        $applyRate = $this->calcApplyRate(
+            (string)$otherDiscount,
+            (string)$actualLossFactor,
+            (string)$longTermRate
+        );
 
         //掛け金
         $buildingInsurancePayout = $this->getValueByKey('building_insurance_payout', $estimate->property_detail);
-        $premium = ceil(floor($buildingInsurancePayout * $applyRate * 10) / 10);
+        $premium = $this->calcPremium($buildingInsurancePayout, $applyRate);
 
         return $premium;
     }
@@ -143,11 +147,14 @@ final class RecommendStandardInsurancePremium
         $mutualAidPremium = new MutualAidPremiums($estimate, $recommendYear); //おすすめ契約年数で長期率を取得
 
         $longTermRate = $mutualAidPremium->longTerRate;
-        $applyRate = round($otherDiscount * $longTermRate, 2);
+        $applyRate = $this->calcApplyRate(
+            (string)$otherDiscount,
+            (string)$longTermRate
+        );
 
         //掛け金
         $householdInsurancePayout = $this->getValueByKey('household_insurance_payout', $estimate->property_detail);
-        $premium = ceil(floor($householdInsurancePayout * $applyRate * 10) / 10);
+        $premium = $this->calcPremium($householdInsurancePayout, $applyRate);
 
         return $premium;
     }
@@ -176,12 +183,16 @@ final class RecommendStandardInsurancePremium
 
         $longTermRate = $mutualAidPremium->longTerRate;
         $actualLossFactor = $this->getFloatValueByKey('actual_loss_factor', $estimate->property_detail, 1);
-        $applyRate = round(round($otherDiscount * $actualLossFactor, 2) * $longTermRate, 2);
+        $applyRate = $this->calcApplyRate(
+            (string)$otherDiscount,
+            (string)$actualLossFactor,
+            (string)$longTermRate
+        );
 
         //掛け金
         $facilityInsurancePayout = $this->getValueByKey('facility_insurance_payout', $estimate->property_detail);
         $otherFacilityInsurancePayout = $this->getValueByKey('other_facility_insurance_payout', $estimate->property_detail);
-        $premium = ceil(floor(($facilityInsurancePayout + $otherFacilityInsurancePayout) * $applyRate * 10) / 10);
+        $premium = $this->calcPremium($facilityInsurancePayout + $otherFacilityInsurancePayout, $applyRate);
 
         return $premium;
     }
@@ -210,12 +221,15 @@ final class RecommendStandardInsurancePremium
 
         $longTermRate = $mutualAidPremium->longTerRate;
 
-        $applyRate = round(round(($otherDiscount), 2) * $longTermRate, 2);
+        $applyRate = $this->calcApplyRate(
+            (string)$otherDiscount,
+            (string)$longTermRate
+        );
 
         //掛け金
         $itemInsurancePayout = $this->getValueByKey('item_insurance_payout', $estimate->property_detail);
         $otherItemInsurancePayout = $this->getValueByKey('other_item_insurance_payout', $estimate->property_detail);
-        $premium = ceil(floor(($itemInsurancePayout + $otherItemInsurancePayout) * $applyRate * 10) / 10);
+        $premium = $this->calcPremium($itemInsurancePayout + $otherItemInsurancePayout, $applyRate);
 
         return $premium;
     }
@@ -227,10 +241,11 @@ final class RecommendStandardInsurancePremium
             if ($discountRiskRate == 0) {
                 $discountRiskRate = 1;
             } else {
-                $discountRiskRate = 1 - $discountRiskRate / 100;
+                $discountRiskRate = (float)bcsub('1', bcdiv((string)$discountRiskRate, '100', 10), 10);
             }
 
-            return round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) + $chattelPremium + $comprehensivePremium) * $discountRiskRate, 2);
+            $base = $this->calcBaseRate((string)$baseRate, (string)$chattelPremium, (string)$comprehensivePremium);
+            return (float)$this->bcRound2(bcmul($base, (string)$discountRiskRate, 10));
         }
 
         if ($this->discountFireExtinguisher > 0 || $this->discountSecurity > 0 || $this->discountPublicProperty > 0) {
@@ -243,33 +258,109 @@ final class RecommendStandardInsurancePremium
             if ($discount == 0) {
                 $discount = 1;
             } else {
-                $discount = 1 - $discount / 100;
+                $discount = (float)bcsub('1', bcdiv((string)$discount, '100', 10), 10);
             }
 
             if ($discountPublicProperty == 0) {
                 $discountPublicProperty = 1;
             } else {
-                $discountPublicProperty = 1 - $discountPublicProperty / 100;
+                $discountPublicProperty = (float)bcsub('1', bcdiv((string)$discountPublicProperty, '100', 10), 10);
             }
 
             // $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount, 2);
             // $result = round(($result + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
 
-            $result = round(((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $discount) + $chattelPremium + $comprehensivePremium) * $discountPublicProperty, 2);
+            $base = bcadd(
+                bcmul(
+                    bcadd(
+                        bcadd((string)$baseRate, (string)$this->occupationalSurchargeRate, 10),
+                        (string)$this->workSurchargeRate,
+                        10
+                    ),
+                    (string)$discount,
+                    10
+                ),
+                bcadd((string)$chattelPremium, (string)$comprehensivePremium, 10),
+                10
+            );
+            $result = $this->bcRound2(bcmul($base, (string)$discountPublicProperty, 10));
 
-            return $result;
+            return (float)$result;
         }
 
         $otherDiscount = $this->getValueByKey('other_discount', $this->estimate->property_detail, 0);
         if ($otherDiscount == 0) {
             $otherDiscount = 1;
         } else {
-            $otherDiscount = 1 - $otherDiscount / 100;
+            $otherDiscount = (float)bcsub('1', bcdiv((string)$otherDiscount, '100', 10), 10);
         }
 
         // $result = round(($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount, 2);
 
-        return round((($baseRate + $this->occupationalSurchargeRate + $this->workSurchargeRate) * $otherDiscount) + $chattelPremium + $comprehensivePremium, 2);
+        $base = bcadd(
+            bcmul(
+                bcadd(
+                    bcadd((string)$baseRate, (string)$this->occupationalSurchargeRate, 10),
+                    (string)$this->workSurchargeRate,
+                    10
+                ),
+                (string)$otherDiscount,
+                10
+            ),
+            bcadd((string)$chattelPremium, (string)$comprehensivePremium, 10),
+            10
+        );
+        return (float)$this->bcRound2($base);
+    }
+
+    private function calcApplyRate(string ...$factors): string
+    {
+        $rate = array_shift($factors);
+        if ($rate === null) {
+            return '0.00';
+        }
+
+        foreach ($factors as $factor) {
+            $rate = $this->bcRound2(bcmul($rate, $factor, 10));
+        }
+
+        return $rate;
+    }
+
+    private function calcPremium(int $insurancePayout, string $applyRate): int
+    {
+        $raw = bcmul((string)$insurancePayout, $applyRate, 10);
+        $multiplied = bcmul($raw, '10', 0);
+        $floorTenth = bcdiv($multiplied, '10', 1);
+        return (int)$this->bcCeil($floorTenth);
+    }
+
+    private function calcBaseRate(string $baseRate, string $chattelPremium, string $comprehensivePremium): string
+    {
+        return bcadd(
+            bcadd(
+                bcadd($baseRate, (string)$this->occupationalSurchargeRate, 10),
+                (string)$this->workSurchargeRate,
+                10
+            ),
+            bcadd($chattelPremium, $comprehensivePremium, 10),
+            10
+        );
+    }
+
+    private function bcRound2(string $value): string
+    {
+        return bcadd($value, '0.005', 2);
+    }
+
+    private function bcCeil(string $value): string
+    {
+        $integer = (string)(int)$value;
+        if (bccomp($value, $integer, 10) === 0) {
+            return $integer;
+        }
+
+        return bcadd($integer, '1', 0);
     }
 
     private function getChattelSurcharge($estimate)
