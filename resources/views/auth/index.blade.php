@@ -16,7 +16,7 @@
             <div>mitumo</div>
             <div class="text-xs text-black">{{ config('version.type') . config('version.number') }}</div>
         </h1>
-        <form action="{{ route('auth.login') }}" method="POST">
+        <form action="{{ route('auth.login.submit') }}" method="POST">
             @csrf
             <div class="flex flex-col justify-center items-center">
                 <div class="mb-2 w-96">
