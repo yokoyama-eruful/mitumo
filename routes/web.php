@@ -2,17 +2,25 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\AccountController;
-use App\Http\Controllers\AssessController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DownloadController;
-use App\Http\Controllers\EstimateController;
-use App\Http\Controllers\Futsu2\AssessController as Futsu2AssessController;
-use App\Http\Controllers\Futsu2\DownloadController as Futsu2DownloadController;
-use App\Http\Controllers\Futsu2\Futsu2Controller;
-use App\Http\Controllers\Futsu2\PreviewController as Futsu2PreviewController;
-use App\Http\Controllers\PreviewController;
-use App\Http\Controllers\TopController;
+use App\Http\Controllers\New\AccountController as NewAccountController;
+use App\Http\Controllers\New\DownloadController as NewDownloadController;
+use App\Http\Controllers\New\EstimateController as NewEstimateController;
+use App\Http\Controllers\New\Futsu2\Futsu2Controller as NewFutsu2Controller;
+use App\Http\Controllers\New\Futsu2\DownloadController as NewFutsu2DownloadController;
+use App\Http\Controllers\New\Futsu2\PreviewController as NewFutsu2PreviewController;
+use App\Http\Controllers\New\PreviewController as NewPreviewController;
+use App\Http\Controllers\New\TopController as NewTopController;
+use App\Http\Controllers\Old\AccountController;
+use App\Http\Controllers\Old\AssessController;
+use App\Http\Controllers\Old\AuthController;
+use App\Http\Controllers\Old\DownloadController;
+use App\Http\Controllers\Old\EstimateController;
+use App\Http\Controllers\Old\Futsu2\AssessController as Futsu2AssessController;
+use App\Http\Controllers\Old\Futsu2\DownloadController as Futsu2DownloadController;
+use App\Http\Controllers\Old\Futsu2\Futsu2Controller;
+use App\Http\Controllers\Old\Futsu2\PreviewController as Futsu2PreviewController;
+use App\Http\Controllers\Old\PreviewController;
+use App\Http\Controllers\Old\TopController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)
@@ -26,6 +34,90 @@ Route::controller(AuthController::class)
 
 Route::middleware('auth:web')
     ->group(function () {
+        Route::controller(NewTopController::class)
+            ->prefix('new')
+            ->name('new.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('top', 'index')->name('top.index');
+                Route::get('top/{type}', 'type')->name('top.type');
+                Route::get('version/show', 'show')->name('top.show');
+            });
+
+        Route::controller(NewAccountController::class)
+            ->prefix('new/account')
+            ->name('new.account.')
+            ->group(function () {
+                Route::get('index', 'index')->name('index');
+                Route::get('create', 'create')->name('create');
+                Route::get('edit/{id}', 'edit')->name('edit');
+                Route::post('save/{id}', 'save')->name('save');
+                Route::delete('destroy/{id}', 'destroy')->name('destroy');
+            });
+
+        Route::controller(NewEstimateController::class)
+            ->prefix('new/estimate')
+            ->name('new.estimate.')
+            ->group(function () {
+                Route::get('create', 'create')->name('create');
+                Route::get('edit/{id}', 'edit')->name('edit');
+                Route::post('save/{id}', 'save')->name('save');
+                Route::post('duplication/{id}', 'duplication')->name('duplication');
+                Route::delete('destroy/{id}', 'destroy')->name('destroy');
+            });
+
+        Route::controller(NewPreviewController::class)
+            ->prefix('new/estimate/preview/{id}')
+            ->name('new.estimate.preview.')
+            ->group(function () {
+                Route::get('standard', 'standard')->name('standard');
+                Route::get('comprehensive', 'comprehensive')->name('comprehensive');
+                Route::get('standardAndComprehensive', 'standardAndComprehensive')->name('standardAndComprehensive');
+                Route::get('standardOfRecommend', 'standardOfRecommend')->name('standardOfRecommend');
+                Route::get('comprehensiveOfRecommend', 'comprehensiveOfRecommend')->name('comprehensiveOfRecommend');
+                Route::get('standardOfRecommendAndComprehensiveOfRecommend', 'standardOfRecommendAndComprehensiveOfRecommend')->name('standardOfRecommendAndComprehensiveOfRecommend');
+                Route::get('standardOfEarthquake', 'standardOfEarthquake')->name('standardOfEarthquake');
+                Route::get('comprehensiveOfEarthquake', 'comprehensiveOfEarthquake')->name('comprehensiveOfEarthquake');
+                Route::get('calculation', 'calculation')->name('calculation');
+            });
+
+        Route::controller(NewDownloadController::class)
+            ->prefix('new/estimate/download/{id}')
+            ->name('new.estimate.download.')
+            ->group(function () {
+                Route::get('index/', 'index')->name('index');
+                Route::post('{category}', 'download')->name('type');
+            });
+
+        Route::controller(NewFutsu2Controller::class)
+            ->prefix('new/futsu2')
+            ->name('new.futsu2.')
+            ->group(function () {
+                Route::get('create', 'create')->name('create');
+                Route::get('edit/{id}', 'edit')->name('edit');
+                Route::post('save/{id}', 'save')->name('save');
+                Route::post('duplication/{id}', 'duplication')->name('duplication');
+                Route::delete('destroy/{id}', 'destroy')->name('destroy');
+            });
+
+        Route::controller(NewFutsu2PreviewController::class)
+            ->prefix('new/futsu2/preview/{id}')
+            ->name('new.futsu2.preview.')
+            ->group(function () {
+                Route::get('standard', 'standard')->name('standard');
+                Route::get('standardOfRecommend', 'standardOfRecommend')->name('standardOfRecommend');
+                Route::get('standardOfEarthquake', 'standardOfEarthquake')->name('standardOfEarthquake');
+                Route::get('calculation', 'calculation')->name('calculation');
+            });
+
+        Route::controller(NewFutsu2DownloadController::class)
+            ->prefix('new/futsu2/download/{id}')
+            ->name('new.futsu2.download.')
+            ->group(function () {
+                Route::get('index/', 'index')->name('index');
+                Route::post('{category}', 'download')->name('type');
+            });
+
         Route::controller(TopController::class)
             ->prefix('top')
             ->name('top.')

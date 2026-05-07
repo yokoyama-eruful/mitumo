@@ -1,0 +1,56 @@
+# =========================
+# Environment / Secrets
+# =========================
+.env
+.env.*
+*.key
+
+# =========================
+# Dependencies
+# =========================
+/vendor/
+/node_modules/
+
+# =========================
+# Build / Cache
+# =========================
+/public/build/
+/public/hot
+/storage/*.key
+/storage/app/public
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/views/
+/storage/logs/
+
+# =========================
+# Logs & Debug
+# =========================
+*.log
+npm-debug.log
+yarn-error.log
+
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# Tests (必要なければ)
+# =========================
+/tests/
+
+# =========================
+# Git
+# =========================
+.git/
+.gitignore
+
+# =========================
+# Misc
+# =========================
+*.zip
+*.tar.gz
