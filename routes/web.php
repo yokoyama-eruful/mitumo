@@ -20,7 +20,7 @@ Route::controller(AuthController::class)
     ->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('login', 'index')->name('login');
-        Route::post('login', 'login')->name('login');
+        Route::post('login', 'login')->name('login.submit');
         Route::post('logout', 'logout')->name('logout');
     });
 
