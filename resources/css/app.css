@@ -102,15 +102,19 @@
         @apply inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em];
     }
 
+    .new-layout {
+        @apply transition-[grid-template-columns] duration-300 ease-out;
+    }
+
     .new-sidebar-shell {
-        @apply px-4 py-4 lg:px-5 lg:py-5;
+        @apply px-4 py-4 transition-[padding] duration-300 ease-out lg:px-5 lg:py-5;
     }
 
     .new-sidebar {
         border: 1px solid var(--new-sidebar-border);
         background: var(--new-sidebar-bg);
         box-shadow: 0 24px 80px -36px rgba(15, 23, 42, 0.45);
-        @apply flex h-full flex-col overflow-y-auto rounded-[2rem] p-4 backdrop-blur-xl sm:p-5;
+        @apply flex h-full flex-col overflow-y-auto rounded-[2rem] p-4 backdrop-blur-xl transition-[padding,border-radius] duration-300 ease-out sm:p-5;
     }
 
     .new-sidebar-top {
@@ -133,11 +137,22 @@
         @apply text-xl font-semibold tracking-[0.08em];
     }
 
+    .new-sidebar-actions {
+        @apply flex shrink-0 items-center gap-2;
+    }
+
+    .new-sidebar-toggle {
+        border: 1px solid var(--new-sidebar-border);
+        background: var(--new-link-bg);
+        color: var(--new-text);
+        @apply inline-flex h-9 w-9 items-center justify-center rounded-full text-xs transition hover:opacity-90;
+    }
+
     .new-theme-toggle {
         border: 1px solid var(--new-sidebar-border);
         background: var(--new-link-bg);
         color: var(--new-text);
-        @apply rounded-full px-3 py-2 text-xs font-semibold tracking-[0.14em] transition hover:opacity-90;
+        @apply inline-flex h-9 items-center justify-center gap-2 rounded-full px-3 text-xs font-semibold tracking-[0.14em] transition hover:opacity-90;
     }
 
     .new-sidebar-group {
@@ -153,13 +168,21 @@
         border: 1px solid transparent;
         background: var(--new-link-bg);
         color: var(--new-text);
-        @apply flex flex-col rounded-[1.4rem] px-4 py-3 transition duration-300 hover:-translate-y-0.5;
+        @apply flex items-center gap-3 rounded-[1.4rem] px-4 py-3 transition duration-300 hover:-translate-y-0.5;
     }
 
     .new-side-link-active {
         background: var(--new-link-active);
         color: var(--new-link-active-text);
         box-shadow: 0 16px 40px -24px rgba(15, 23, 42, 0.55);
+    }
+
+    .new-side-link-icon {
+        @apply flex h-5 w-5 shrink-0 items-center justify-center text-sm;
+    }
+
+    .new-side-link-text {
+        @apply flex min-w-0 flex-col;
     }
 
     .new-side-link-title {
@@ -178,7 +201,7 @@
         border: 1px solid var(--new-sidebar-border);
         background: var(--new-utility-bg);
         color: var(--new-utility-text);
-        @apply block w-full rounded-[1.3rem] px-4 py-3 text-center text-sm font-medium transition hover:-translate-y-0.5;
+        @apply flex w-full items-center justify-center gap-2 rounded-[1.3rem] px-4 py-3 text-center text-sm font-medium transition hover:-translate-y-0.5;
     }
 
     .new-side-utility-danger {
@@ -188,6 +211,69 @@
 
     .new-main {
         color: var(--new-text);
+    }
+
+    @media (max-width: 1023px) {
+        :root[data-new-sidebar="collapsed"] .new-sidebar {
+            @apply max-h-20 overflow-hidden;
+        }
+
+        :root[data-new-sidebar="collapsed"] .new-sidebar-group,
+        :root[data-new-sidebar="collapsed"] .new-sidebar-footer {
+            @apply hidden;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        :root[data-new-sidebar="collapsed"] .new-layout {
+            grid-template-columns: 96px minmax(0, 1fr);
+        }
+
+        :root[data-new-sidebar="collapsed"] .new-sidebar-shell {
+            @apply px-3;
+        }
+
+        :root[data-new-sidebar="collapsed"] .new-sidebar {
+            @apply items-center rounded-[1.6rem] px-2 py-4;
+        }
+
+        :root[data-new-sidebar="collapsed"] .new-sidebar-top {
+            @apply w-full flex-col items-center;
+        }
+
+        :root[data-new-sidebar="collapsed"] .new-sidebar-actions {
+            @apply flex-col;
+        }
+
+        :root[data-new-sidebar="collapsed"] .new-sidebar-collapsible-text,
+        :root[data-new-sidebar="collapsed"] .new-sidebar-label,
+        :root[data-new-sidebar="collapsed"] .new-side-link-text,
+        :root[data-new-sidebar="collapsed"] .new-side-utility-text,
+        :root[data-new-sidebar="collapsed"] .new-theme-label {
+            @apply sr-only;
+        }
+
+        :root[data-new-sidebar="collapsed"] .new-sidebar-group,
+        :root[data-new-sidebar="collapsed"] .new-sidebar-footer {
+            @apply w-full;
+        }
+
+        :root[data-new-sidebar="collapsed"] .new-sidebar-group {
+            @apply mt-5;
+        }
+
+        :root[data-new-sidebar="collapsed"] .new-sidebar-footer {
+            @apply space-y-2;
+        }
+
+        :root[data-new-sidebar="collapsed"] .new-side-link,
+        :root[data-new-sidebar="collapsed"] .new-side-utility {
+            @apply h-12 justify-center rounded-2xl px-0 py-0;
+        }
+
+        :root[data-new-sidebar="collapsed"] .new-theme-toggle {
+            @apply w-9 px-0;
+        }
     }
 
     .new-page-stack {
@@ -265,6 +351,23 @@
     .new-download-disabled {
         color: var(--new-muted);
         @apply inline-flex rounded-full px-3 py-2 text-sm;
+    }
+
+    .new-download-progress-panel {
+        border: 1px solid var(--new-panel-border);
+        background: var(--new-panel-solid);
+        color: var(--new-text);
+        @apply rounded-[1.5rem] p-6 shadow-[0_24px_70px_-28px_rgba(15,23,42,0.5)];
+    }
+
+    .new-download-progress-percent {
+        color: var(--new-text);
+        @apply shrink-0 text-3xl font-semibold tabular-nums;
+    }
+
+    .new-download-progress-bar {
+        background: linear-gradient(90deg, #0ea5e9, #10b981);
+        @apply transition-[width] duration-300 ease-out;
     }
 
     .new-form-frame {

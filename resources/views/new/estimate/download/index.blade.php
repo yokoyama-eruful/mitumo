@@ -59,7 +59,7 @@
                                     @if ($enableDisable === 'disable')
                                         <span class="new-download-disabled">出力不可</span>
                                     @else
-                                        <form method="POST"
+                                        <form method="POST" data-download-form
                                             action="{{ route('new.estimate.download.type', ['id' => $estimate->id, 'category' => $estimateType, 'fileType' => $fileType, 'keisyo' => $keisyo]) }}">
                                             @csrf
                                             <button type="submit" class="new-action-card min-w-[140px]">
@@ -74,5 +74,7 @@
                 </table>
             </div>
         </section>
+
+        @include('new.download.progress')
     </section>
 @endsection
