@@ -120,17 +120,14 @@ final class SaveRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            if (($this->input('household_insurance_payout') || $this->input('facility_insurance_payout') ||
-                $this->input('other_facility_insurance_payout') || $this->input('item_insurance_payout') ||
+            if (($this->input('item_insurance_payout') ||
                 $this->input('other_item_insurance_payout')) && $this->input('property_type') == '工場' && ! $this->input('chattel_surcharge')) {
                 $validator->errors()->add('エラー', '動産を指定する場合は、動産割増を指定してください');
             }
         });
 
         $validator->after(function ($validator) {
-            if (($this->input('household_insurance_payout') || $this->input('facility_insurance_payout') ||
-                $this->input('other_facility_insurance_payout') || $this->input('item_insurance_payout') ||
-                $this->input('other_item_insurance_payout')) && $this->input('property_type') == '普通' && ! $this->input('chattel_surcharge_category')) {
+            if (($this->input('item_insurance_payout') || $this->input('other_item_insurance_payout')) && $this->input('property_type') == '普通' && ! $this->input('chattel_surcharge_category')) {
                 $validator->errors()->add('エラー', '動産を指定する場合は、動産割増を指定してください');
             }
         });
