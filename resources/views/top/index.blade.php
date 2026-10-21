@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('main')
-  <main class="min-h-[800px] flex flex-col overflow-y-auto overflow-x-hidden">
-    <div class="flex flex-row justify-center space-x-10 w-screen mt-3">
+  <main class="flex flex-col overflow-y-auto overflow-x-hidden">
+    <div class="flex flex-row justify-center space-x-10 w-screen my-3">
       <div class="flex justify-center">
         <a class="transition px-14 bg-gray-200 border-2 border-gray-300 rounded shadow p-2 hover:bg-gray-100 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-lg"
           href="{{ route('estimate.create') }}">
@@ -33,8 +33,6 @@
         </a>
       </div>
     </div>
-
-    <hr class="w-screen border border-gray-300 mt-5 mb-5 mx-5">
     @livewire('Search', ['type' => $type])
   </main>
 @endsection

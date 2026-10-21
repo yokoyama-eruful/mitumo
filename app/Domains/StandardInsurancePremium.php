@@ -232,6 +232,8 @@ final class StandardInsurancePremium
         $otherDiscount = $this->getOtherDiscount($buildingBaseRate);
 
         ///適用率
+
+
         $mutualAidPremium = new MutualAidPremiums($estimate, $estimate->insurance_year);
 
         $shortTermRate = $mutualAidPremium->shortTermRate;
