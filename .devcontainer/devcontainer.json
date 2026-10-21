@@ -9,11 +9,9 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"DEVSENSE.phptools-vscode",
-				"bmewburn.vscode-intelephense-client",
 				"mikestead.dotenv",
+				"bmewburn.vscode-intelephense-client",
 				"amiralizadeh9480.laravel-extra-intellisense",
-				"ryannaddy.laravel-artisan",
 				"onecentlin.laravel5-snippets",
 				"onecentlin.laravel-blade",
 				"shufo.vscode-blade-formatter",
@@ -21,9 +19,12 @@
 				"open-southeners.laravel-pint",
 				"bradlc.vscode-tailwindcss",
 				"streetsidesoftware.code-spell-checker",
-				"eamodio.gitlens",
-				"davidanson.vscode-markdownlint",
 				"neilbrayfield.php-docblocker",
+				"seatonjiang.gitmoji-vscode",
+				"open-southeners.laravel-pint",
+				"damms005.devdb",
+				"st-pham.php-refactor-tool",
+				"Gruntfuggly.todo-tree"
 			],
 			"settings": {}
 		}
