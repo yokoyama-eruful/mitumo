@@ -5,7 +5,7 @@
     </div>
   @endif
 
-  <form class="mt-2 flex flex-col justify-center p-2" id="estimateFormId"
+  <form class="flex flex-col justify-center" id="estimateFormId"
     action="{{ route('estimate.save', ['id' => $estimate->id ?? 'new']) }}" onsubmit="return false;" method="POST">
     @csrf
     <div class="mx-10 block border-2 bg-blue-50 p-5">

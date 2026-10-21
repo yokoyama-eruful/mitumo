@@ -5,11 +5,7 @@ export default {
     "./resources/**/*.js",
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        montserrat: ['Montserrat', 'sans-serif'],
-      },
-    },
+    extend: {},
   },
   plugins: [],
 }
