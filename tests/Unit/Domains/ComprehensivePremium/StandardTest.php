@@ -6,157 +6,137 @@ namespace Tests\Unit\Domains\ComprehensivePremium;
 
 use App\Domains\ComprehensivePremium;
 use App\Models\Estimate;
-use PHPUnit\Framework\TestCase;
-use Tests\CreatesApplication;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\TestCase;
 
-class StandardTest extends TestCase
+final class StandardTest extends TestCase
 {
-    use CreatesApplication;
+    #[DataProvider('rateCases')]
+    public function test_rates_match_the_start_date_and_building_age(
+        int $buildingAge,
+        string $rank,
+        string $startDate,
+        array $expectedRates,
+    ): void {
+        $estimate = new Estimate([
+            'property_type' => '普通',
+            'building_age' => $buildingAge,
+            'rank' => $rank,
+            'start_date' => $startDate,
+        ]);
 
-    protected function setUp(): void
-    {
-        parent::setUp();
+        $rates = new ComprehensivePremium($estimate);
 
-        $this->createApplication();
+        foreach ($expectedRates as $purpose => $expectedRate) {
+            $this->assertSame($expectedRate, $rates->getRate($purpose), "{$startDate} / {$buildingAge}年 / {$rank} / {$purpose}");
+        }
     }
 
-    //////////////////////////////////////////////////
-    // 普通
-    /**
-     * 総合割増のテスト
-     * 条件
-     * 　物件　：普通
-     * 　築年数：1年
-     * 　級数　：1級
-     */
-    public function test_普通1年1級の条件でのテスト(): void
+    public static function rateCases(): array
     {
-        $estimate = new Estimate();
-        $estimate->property_type = '普通';
-        $estimate->building_age = 1;
-        $estimate->rank = '1級';
-
-        $comprehensivePremium = new ComprehensivePremium($estimate);
-
-        $this->assertEquals(0.25, $comprehensivePremium->getRate('建物'));
-        $this->assertEquals(0.5, $comprehensivePremium->getRate('家財'));
-
-        $this->assertEquals(0.43, $comprehensivePremium->getRate('動産2'));
-        $this->assertEquals(0.14, $comprehensivePremium->getRate('動産3'));
+        return [
+            'grade 1, young building, current rates' => [
+                1,
+                '1級',
+                '2026-04-01',
+                ['建物' => 0.25, '家財' => 0.5, '動産2' => 0.43, '動産3' => 0.14],
+            ],
+            'grade 1, age 19, current rates' => [
+                19,
+                '1級',
+                '2026-04-01',
+                ['建物' => 0.25, '家財' => 0.5, '動産2' => 0.43, '動産3' => 0.14],
+            ],
+            'grade 1, age 20, current rates' => [
+                20,
+                '1級',
+                '2026-04-01',
+                ['建物' => 0.33, '家財' => 0.5, '動産2' => 0.43, '動産3' => 0.14],
+            ],
+            'grade 1, old building, before rate change' => [
+                26,
+                '1級',
+                '2026-03-31',
+                ['建物' => 0.25, '家財' => 0.5, '動産2' => 0.43, '動産3' => 0.14],
+            ],
+            'grade 1, old building, rate change is effective on its start date' => [
+                26,
+                '1級',
+                '2026-04-01',
+                ['建物' => 0.33, '家財' => 0.5, '動産2' => 0.43, '動産3' => 0.14],
+            ],
+            'grade 2, maximum supported age' => [
+                25,
+                '2級',
+                '2026-04-01',
+                ['建物' => 0.33, '家財' => 0.5, '動産2' => 0.43, '動産3' => 0.14],
+            ],
+            'grade 2, age 20, current rates' => [
+                20,
+                '2級',
+                '2026-04-01',
+                ['建物' => 0.33, '家財' => 0.5, '動産2' => 0.43, '動産3' => 0.14],
+            ],
+            'grade 3, young building, current rates' => [
+                1,
+                '3級',
+                '2026-04-01',
+                ['建物' => 0.57, '家財' => 0.74, '動産2' => 0.65, '動産3' => 0.33],
+            ],
+            'grade 3, age 19, current rates' => [
+                19,
+                '3級',
+                '2026-04-01',
+                ['建物' => 0.57, '家財' => 0.74, '動産2' => 0.65, '動産3' => 0.33],
+            ],
+            'grade 3, age 20, current rates' => [
+                20,
+                '3級',
+                '2026-04-01',
+                ['建物' => 0.74, '家財' => 0.74, '動産2' => 0.65, '動産3' => 0.33],
+            ],
+            'grade 3, old building, before rate change' => [
+                25,
+                '3級',
+                '2026-03-31',
+                ['建物' => 0.57, '家財' => 0.74, '動産2' => 0.59, '動産3' => 0.3],
+            ],
+            'grade 3, old building, rate change is effective on its start date' => [
+                25,
+                '3級',
+                '2026-04-01',
+                ['建物' => 0.74, '家財' => 0.74, '動産2' => 0.65, '動産3' => 0.33],
+            ],
+        ];
     }
 
-    /**
-     * 総合割増のテスト
-     * 条件
-     * 　物件　：普通
-     * 　築年数：26年
-     * 　級数　：1級
-     */
-    public function test_普通25年1級の条件でのテスト(): void
+    public function test_blank_building_age_uses_the_maximum_age_rate(): void
     {
-        $estimate = new Estimate();
-        $estimate->property_type = '普通';
-        $estimate->building_age = 26;
-        $estimate->rank = '1級';
+        $estimate = new Estimate([
+            'property_type' => '普通',
+            'building_age' => null,
+            'rank' => '1級',
+            'start_date' => '2026-04-01',
+        ]);
 
-        $comprehensivePremium = new ComprehensivePremium($estimate);
+        $rates = new ComprehensivePremium($estimate);
 
-        $this->assertEquals(0.25, $comprehensivePremium->getRate('建物'));
-        $this->assertEquals(0.5, $comprehensivePremium->getRate('家財'));
-
-        $this->assertEquals(0.43, $comprehensivePremium->getRate('動産2'));
-        $this->assertEquals(0.14, $comprehensivePremium->getRate('動産3'));
+        $this->assertSame(25, $rates->buildingAge);
+        $this->assertSame(0.33, $rates->getRate('建物'));
     }
 
-    /**
-     * 総合割増のテスト
-     * 条件
-     * 　物件　：普通
-     * 　築年数：1年
-     * 　級数　：2級
-     */
-    public function test_普通1年2級の条件でのテスト(): void
+    public function test_unknown_purposes_and_unmatched_rates_return_null(): void
     {
-        $estimate = new Estimate();
-        $estimate->property_type = '普通';
-        $estimate->building_age = 1;
-        $estimate->rank = '2級';
+        $estimate = new Estimate([
+            'property_type' => '存在しない物件',
+            'building_age' => 1,
+            'rank' => '1級',
+            'start_date' => '2026-04-01',
+        ]);
 
-        $comprehensivePremium = new ComprehensivePremium($estimate);
+        $rates = new ComprehensivePremium($estimate);
 
-        $this->assertEquals(0.25, $comprehensivePremium->getRate('建物'));
-        $this->assertEquals(0.5, $comprehensivePremium->getRate('家財'));
-
-        $this->assertEquals(0.43, $comprehensivePremium->getRate('動産2'));
-        $this->assertEquals(0.14, $comprehensivePremium->getRate('動産3'));
-    }
-
-    /**
-     * 総合割増のテスト
-     * 条件
-     * 　物件　：普通
-     * 　築年数：25年
-     * 　級数　：2級
-     */
-    public function test_普通25年2級の条件でのテスト(): void
-    {
-        $estimate = new Estimate();
-        $estimate->property_type = '普通';
-        $estimate->building_age = 25;
-        $estimate->rank = '2級';
-
-        $comprehensivePremium = new ComprehensivePremium($estimate);
-
-        $this->assertEquals(0.25, $comprehensivePremium->getRate('建物'));
-        $this->assertEquals(0.5, $comprehensivePremium->getRate('家財'));
-
-        $this->assertEquals(0.43, $comprehensivePremium->getRate('動産2'));
-        $this->assertEquals(0.14, $comprehensivePremium->getRate('動産3'));
-    }
-
-    /**
-     * 総合割増のテスト
-     * 条件
-     * 　物件　：普通
-     * 　築年数：1年
-     * 　級数　：3級
-     */
-    public function test_普通1年3級の条件でのテスト(): void
-    {
-        $estimate = new Estimate();
-        $estimate->property_type = '普通';
-        $estimate->building_age = 1;
-        $estimate->rank = '3級';
-
-        $comprehensivePremium = new ComprehensivePremium($estimate);
-
-        $this->assertEquals(0.57, $comprehensivePremium->getRate('建物'));
-        $this->assertEquals(0.74, $comprehensivePremium->getRate('家財'));
-
-        $this->assertEquals(0.59, $comprehensivePremium->getRate('動産2'));
-        $this->assertEquals(0.3, $comprehensivePremium->getRate('動産3'));
-    }
-
-    /**
-     * 総合割増のテスト
-     * 条件
-     * 　物件　：普通
-     * 　築年数：25年
-     * 　級数　：3級
-     */
-    public function test_普通25年3級の条件でのテスト(): void
-    {
-        $estimate = new Estimate();
-        $estimate->property_type = '普通';
-        $estimate->building_age = 25;
-        $estimate->rank = '3級';
-
-        $comprehensivePremium = new ComprehensivePremium($estimate);
-
-        $this->assertEquals(0.57, $comprehensivePremium->getRate('建物'));
-        $this->assertEquals(0.74, $comprehensivePremium->getRate('家財'));
-
-        $this->assertEquals(0.59, $comprehensivePremium->getRate('動産2'));
-        $this->assertEquals(0.3, $comprehensivePremium->getRate('動産3'));
+        $this->assertNull($rates->getRate('建物'));
+        $this->assertNull($rates->getRate('存在しない目的'));
     }
 }
