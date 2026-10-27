@@ -145,7 +145,7 @@ final class AssessSolarPanel
         $agingDepreciation = '0.1';
 
         // 経過年数
-        $progressYear = (string) now()->diffInYears($this->installationDate);
+        $progressYear = (string) (int) now()->diffInYears($this->installationDate, true);
 
         // 残価率（年数 × 年率）
         $residualValue = bcmul($progressYear, $agingDepreciation, 6);

@@ -6,110 +6,34 @@ namespace Tests\Unit\Domains\ComprehensivePremium;
 
 use App\Domains\ComprehensivePremium;
 use App\Models\Estimate;
-use PHPUnit\Framework\TestCase;
-use Tests\CreatesApplication;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\TestCase;
 
-class FactoryTest extends TestCase
+final class FactoryTest extends TestCase
 {
-    use CreatesApplication;
-
-    protected function setUp(): void
+    #[DataProvider('rankCases')]
+    public function test_factory_rates_are_zero_for_each_grade(string $rank): void
     {
-        parent::setUp();
+        $estimate = new Estimate([
+            'property_type' => '工場',
+            'building_age' => 1,
+            'rank' => $rank,
+            'start_date' => '2026-04-01',
+        ]);
 
-        $this->createApplication();
+        $rates = new ComprehensivePremium($estimate);
+
+        foreach (['建物', '家財', '動産2', '動産3'] as $purpose) {
+            $this->assertSame(0.0, $rates->getRate($purpose), "{$rank} / {$purpose}");
+        }
     }
 
-    //////////////////////////////////////////////////
-    // 工場
-    /**
-     * 総合割増のテスト
-     * 条件
-     * 　物件　：工場
-     * 　築年数：1年
-     * 　級数　：1級
-     */
-    public function test_工場1年1級の条件でのテスト(): void
+    public static function rankCases(): array
     {
-        $estimate = new Estimate();
-        $estimate->property_type = '工場';
-        $estimate->building_age = 1;
-        $estimate->rank = '1級';
-
-        $comprehensivePremium = new ComprehensivePremium($estimate);
-
-        $this->assertNotNull($comprehensivePremium->getRate('建物'));
-        $this->assertEquals(0.0, $comprehensivePremium->getRate('建物'));
-
-        $this->assertNotNull($comprehensivePremium->getRate('家財'));
-        $this->assertEquals(0.0, $comprehensivePremium->getRate('家財'));
-
-        $this->assertNotNull($comprehensivePremium->getRate('動産2'));
-        $this->assertEquals(0.0, $comprehensivePremium->getRate('動産2'));
-
-        $this->assertNotNull($comprehensivePremium->getRate('動産3'));
-        $this->assertEquals(0.0, $comprehensivePremium->getRate('動産3'));
-    }
-
-    //////////////////////////////////////////////////
-    // 工場
-    /**
-     * 総合割増のテスト
-     * 条件
-     * 　物件　：工場
-     * 　築年数：1年
-     * 　級数　：2級
-     */
-    public function test_工場1年2級の条件でのテスト(): void
-    {
-        $estimate = new Estimate();
-        $estimate->property_type = '工場';
-        $estimate->building_age = 1;
-        $estimate->rank = '2級';
-
-        $comprehensivePremium = new ComprehensivePremium($estimate);
-
-        $this->assertNotNull($comprehensivePremium->getRate('建物'));
-        $this->assertEquals(0.0, $comprehensivePremium->getRate('建物'));
-
-        $this->assertNotNull($comprehensivePremium->getRate('家財'));
-        $this->assertEquals(0.0, $comprehensivePremium->getRate('家財'));
-
-        $this->assertNotNull($comprehensivePremium->getRate('動産2'));
-        $this->assertEquals(0.0, $comprehensivePremium->getRate('動産2'));
-
-        $this->assertNotNull($comprehensivePremium->getRate('動産3'));
-        $this->assertEquals(0.0, $comprehensivePremium->getRate('動産3'));
-    }
-
-    //////////////////////////////////////////////////
-    // 工場
-    /**
-     * 総合割増のテスト
-     * 条件
-     * 　物件　：工場
-     * 　築年数：1年
-     * 　級数　：3級
-     */
-    public function test_工場1年3級の条件でのテスト(): void
-    {
-        $estimate = new Estimate();
-        $estimate->property_type = '工場';
-        $estimate->building_age = 1;
-        $estimate->rank = '3級';
-
-        $comprehensivePremium = new ComprehensivePremium($estimate);
-
-        $this->assertNotNull($comprehensivePremium->getRate('建物'));
-        $this->assertEquals(0.0, $comprehensivePremium->getRate('建物'));
-
-        $this->assertNotNull($comprehensivePremium->getRate('家財'));
-        $this->assertEquals(0.0, $comprehensivePremium->getRate('家財'));
-
-        $this->assertNotNull($comprehensivePremium->getRate('動産2'));
-        $this->assertEquals(0.0, $comprehensivePremium->getRate('動産2'));
-
-        $this->assertNotNull($comprehensivePremium->getRate('動産3'));
-        $this->assertEquals(0.0, $comprehensivePremium->getRate('動産3'));
+        return [
+            'grade 1' => ['1級'],
+            'grade 2' => ['2級'],
+            'grade 3' => ['3級'],
+        ];
     }
 }
