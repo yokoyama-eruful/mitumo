@@ -14,16 +14,7 @@
             <section class="w-full rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7 lg:p-8">
                 <h2 class="text-base font-semibold">基本情報</h2>
 
-                    @if ($errors->any())
-                        <div id="alert" role="alert" class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800 md:col-span-2">
-                            <p class="font-semibold"><i class="fa-solid fa-circle-exclamation mr-2"></i>入力内容を確認してください</p>
-                            <ul class="mt-2 list-inside list-disc space-y-1">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                    @include('components.form-feedback', ['feedbackClass' => 'mt-5 mb-0'])
 
                     <form action="{{ route('account.save', ['id' => isset($user) ? $user->id : 'new']) }}" method="POST" class="mt-5 grid gap-x-8 gap-y-5 md:grid-cols-2">
                         @csrf

@@ -18,12 +18,17 @@ final class AssessNormal
 
     public readonly string $remarks;
 
+    public int $reProcureRate;
+
     private StandardAmount $standardAmount;
 
     private AgingDepreciation $agingDepreciation;
 
+    private bool $isNewRate = false;
+
     public function __construct($estimate)
     {
+        $this->isNewRate = ($this->getValueByKey('rate_version', $estimate->assess_detail) === 'new');
         $this->floorArea = $this->getBuildArea($estimate);
 
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
@@ -31,9 +36,10 @@ final class AssessNormal
         $this->assessUsage = $this->getValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getValueByKey('assess_structure', $estimate->assess_detail);
         $this->remarks = $this->getValueByKey('remarks', $estimate->assess_detail);
+        $this->reProcureRate = min(120, max(80, (int) $this->getValueByKey('reprocure_rate', $estimate->assess_detail, '80')));
 
-        $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure);
-        $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
+        $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure, $this->isNewRate);
+        $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure, $this->isNewRate);
     }
 
     private function getBuildArea($estimate)
@@ -48,7 +54,7 @@ final class AssessNormal
     /*
     ** LiveFireで使用する評価額
     */
-    public function viewReProcure(string $assessUsage, string $assessStructure, string $floorArea, string $assessRank = '')
+    public function viewReProcure(string $assessUsage, string $assessStructure, string $floorArea, string $assessRank = '', int $reProcureRate = 80)
     {
 
         if (
@@ -62,7 +68,7 @@ final class AssessNormal
             ];
         }
 
-        $standardAmount = new StandardAmount($assessUsage, $assessStructure);
+        $standardAmount = new StandardAmount($assessUsage, $assessStructure, $this->isNewRate);
 
         $amount = (string)$standardAmount->findStandardAmount($assessRank);
         $floorArea = (string)$floorArea;
@@ -70,7 +76,7 @@ final class AssessNormal
         // 再調達原価（円）
         $reProcure = bcmul($amount, $floorArea, 2);
 
-        $rate80 = bcmul($reProcure, '0.8', 2);
+        $rate80 = bcmul($reProcure, bcdiv((string) $reProcureRate, '100', 4), 2);
 
         $roundThousand = fn(string $v) =>
         bcmul(
@@ -105,8 +111,8 @@ final class AssessNormal
             ];
         }
 
-        $agingDepreciationObj = new AgingDepreciation($assessUsage, $assessStructure);
-        $standardAmount = new StandardAmount($assessUsage, $assessStructure);
+        $agingDepreciationObj = new AgingDepreciation($assessUsage, $assessStructure, $this->isNewRate);
+        $standardAmount = new StandardAmount($assessUsage, $assessStructure, $this->isNewRate);
 
         // 全部 string
         $amount = (string)$standardAmount->findStandardAmount($assessRank);
@@ -157,7 +163,7 @@ final class AssessNormal
         $reProcure = bcmul($standardAmount, $floorArea, 2);
 
         // 割合計算
-        $rate80  = bcmul($reProcure, '0.8', 2);
+        $rate80  = bcmul($reProcure, bcdiv((string) $this->reProcureRate, '100', 4), 2);
         $rate120 = bcmul($reProcure, '1.2', 2);
         // 千円単位切り上げ
         $roundThousand = function (string $v): string {

@@ -11,18 +11,18 @@ final class StandardAmount
 {
     private array $standardAmountList;
 
-    public function __construct($assessUsage, $assessStructure)
+    public function __construct($assessUsage, $assessStructure, bool $newRate = false)
     {
-        $this->standardAmountList = $this->setStandardAmountList($assessUsage, $assessStructure);
+        $this->standardAmountList = $this->setStandardAmountList($assessUsage, $assessStructure, $newRate);
     }
 
-    private function setStandardAmountList($assessUsage, $assessStructure)
+    private function setStandardAmountList($assessUsage, $assessStructure, bool $newRate)
     {
         if (is_null($assessUsage) || is_null($assessStructure)) {
             return [];
         }
 
-        $filePath = Storage::path('rateTable/standardAmountList.csv');
+        $filePath = Storage::path('rateTable/' . ($newRate ? 'newStandardAmountList.csv' : 'standardAmountList.csv'));
 
         $standardAmountList = [];
 

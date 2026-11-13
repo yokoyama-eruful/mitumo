@@ -67,6 +67,8 @@ class AssessSolarPanelDownloader
     private function setNormalInfo($spreadSheet, $estimate, $assessData)
     {
         $worksheet = $spreadSheet->getSheetByName('評価表（太陽光付）');
+        $worksheet->setCellValue('K17', '再調達価額（'.$assessData->reProcureRate.'％）');
+        $worksheet->setCellValue('K18', '（'.$assessData->reProcureRate.'%）');
         $worksheet->setCellValue('L1', date('Y年m月d日'));
         $worksheet->setCellValue('B4', $estimate->contractee);
         $worksheet->setCellValue('F4', $estimate->location);

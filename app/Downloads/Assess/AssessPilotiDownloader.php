@@ -67,6 +67,12 @@ class AssessPilotiDownloader
     private function setNormalInfo($spreadSheet, $estimate, $assessData)
     {
         $worksheet = $spreadSheet->getSheetByName('評価表（ピロティー付）');
+        foreach (['J15', 'J22', 'J27'] as $cell) {
+            $worksheet->setCellValue($cell, '再調達価額（'.$assessData->reProcureRate.'％）');
+        }
+        foreach (['J16', 'J23', 'J28'] as $cell) {
+            $worksheet->setCellValue($cell, '（'.$assessData->reProcureRate.'%）');
+        }
         $worksheet->setCellValue('L1', date('Y年m月d日'));
         $worksheet->setCellValue('B4', $estimate->contractee);
         $worksheet->setCellValue('F4', $estimate->location);

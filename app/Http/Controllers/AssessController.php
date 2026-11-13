@@ -36,7 +36,27 @@ class AssessController extends Controller
             abort(404);
         }
 
+        ob_start();
+        $this->notifyDownloadCompletion((string) request()->input('download_token', ''));
         $this->assessDownloadService->download($estimate, $fileType);
 
+    }
+
+    private function notifyDownloadCompletion(string $token): void
+    {
+        if (! preg_match('/^[a-f0-9]{32}$/', $token)) {
+            return;
+        }
+
+        $secure = request()->isSecure();
+        register_shutdown_function(static function () use ($token, $secure): void {
+            setcookie('estimate_download_complete', $token, [
+                'expires' => time() + 60,
+                'path' => '/',
+                'secure' => $secure,
+                'httponly' => false,
+                'samesite' => 'Lax',
+            ]);
+        });
     }
 }

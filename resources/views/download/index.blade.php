@@ -67,7 +67,7 @@
                                     </td>
                                 @else
                                     <td class="p-3 w-1/4">
-                                        <form method="POST"
+                                        <form method="POST" target="estimate-download-frame"
                                             action="{{ route('estimate.download.type', ['id' => $estimate->id, 'category' => $estimateType, 'fileType' => $fileType, 'keisyo' => $keisyo]) }}">
                                             @csrf
                                             <button class="text-blue-500 hover:text-blue-800"><i
@@ -83,7 +83,7 @@
                                     </td>
                                 @else
                                     <td class="p-3 w-1/4">
-                                        <form method="POST"
+                                        <form method="POST" target="estimate-download-frame"
                                             action="{{ route('estimate.download.type', ['id' => $estimate->id, 'category' => $estimateType, 'fileType' => $fileType, 'keisyo' => $keisyo]) }}">
                                             @csrf
                                             <button class="text-blue-500 hover:text-blue-800"><i
@@ -117,4 +117,5 @@
         </div>
         </div>
     </main>
+    @include('estimate.livewire.download-loading')
 @endsection

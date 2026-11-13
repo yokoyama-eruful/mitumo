@@ -67,6 +67,8 @@ class AssessCondoDownloader
     private function setNormalInfo($spreadSheet, $estimate, $assessData)
     {
         $worksheet = $spreadSheet->getSheetByName('評価表（分譲マンション）');
+        $worksheet->setCellValue('J13', '再調達価額（'.$assessData->reProcureRate.'％）');
+        $worksheet->setCellValue('J14', '（'.$assessData->reProcureRate.'%）');
         $worksheet->setCellValue('L1', date('Y年m月d日'));
         $worksheet->setCellValue('B4', $estimate->contractee);
         $worksheet->setCellValue('F4', $estimate->location);

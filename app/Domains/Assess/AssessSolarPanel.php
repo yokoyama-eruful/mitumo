@@ -22,12 +22,17 @@ final class AssessSolarPanel
 
     public readonly string $remarks;
 
+    public int $reProcureRate;
+
     private StandardAmount $standardAmount;
 
     private AgingDepreciation $agingDepreciation;
 
+    private bool $isNewRate = false;
+
     public function __construct($estimate)
     {
+        $this->isNewRate = ($this->getStringValueByKey('rate_version', $estimate->assess_detail) === 'new');
         $this->floorArea = (string) ($estimate->floor_area ?? '0');
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
         $this->buildingYear = $estimate->building_year ? $estimate->building_year : 0;
@@ -36,15 +41,16 @@ final class AssessSolarPanel
         $this->installationDate = $this->getStringValueByKey('installation_date', $estimate->assess_detail);
         $this->installationCost = (string) ($this->getIntValueByKey('installation_cost', $estimate->assess_detail) ?? '0');
         $this->remarks = $this->getStringValueByKey('remarks', $estimate->assess_detail);
+        $this->reProcureRate = min(120, max(80, (int) ($this->getIntValueByKey('reprocure_rate', $estimate->assess_detail) ?? 80)));
 
-        $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure);
-        $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
+        $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure, $this->isNewRate);
+        $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure, $this->isNewRate);
     }
 
     /*
         ** LiveFireで使用する評価額
         */
-    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $assessRank = '')
+    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $assessRank = '', $reProcureRate = 80)
     {
         if (
             $assessRank == '' || $assessUsage == '' ||
@@ -57,14 +63,14 @@ final class AssessSolarPanel
             ];
         }
 
-        $standardAmount = new StandardAmount($assessUsage, $assessStructure);
+        $standardAmount = new StandardAmount($assessUsage, $assessStructure, $this->isNewRate);
         $amount = (string) $standardAmount->findStandardAmount($assessRank);
 
         // 再調達原価
         $reProcure = bcmul($amount, (string) $floorArea, 2);
 
         // 80%
-        $rate80 = bcmul($reProcure, '0.8', 2);
+        $rate80 = bcmul($reProcure, bcdiv((string) $reProcureRate, '100', 4), 2);
 
         return [
             '80' => thousandYenUnit($rate80),
@@ -99,8 +105,8 @@ final class AssessSolarPanel
             ];
         }
 
-        $standardAmount = new StandardAmount($assessUsage, $assessStructure);
-        $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
+        $standardAmount = new StandardAmount($assessUsage, $assessStructure, $this->isNewRate);
+        $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure, $this->isNewRate);
 
         // 標準単価
         $amount = (string) $standardAmount->findStandardAmount($assessRank);
@@ -182,7 +188,7 @@ final class AssessSolarPanel
         $reProcure = bcmul($standardAmount, $floorArea, 2);
 
         // 80%
-        $rate80 = bcmul($reProcure, '0.8', 2);
+        $rate80 = bcmul($reProcure, bcdiv((string) $this->reProcureRate, '100', 4), 2);
 
         // 1000円単位切り上げ
         $roundThousand = fn(string $v): string =>

@@ -22,12 +22,17 @@ final class AssessPiloti
 
     public readonly string $remarks;
 
+    public int $reProcureRate;
+
     private StandardAmount $standardAmount;
 
     private AgingDepreciation $agingDepreciation;
 
+    private bool $isNewRate = false;
+
     public function __construct($estimate)
     {
+        $this->isNewRate = ($this->getStringValueByKey('rate_version', $estimate->assess_detail) === 'new');
         $this->floorArea = $estimate->floor_area ? $estimate->floor_area : 0;
         $this->pilotiFloorArea = $this->getFloatValueByKey('piloti_floor_area', $estimate->assess_detail);
         $this->exceptForPilotiFloorArea = $this->floorArea - $this->pilotiFloorArea;
@@ -36,9 +41,10 @@ final class AssessPiloti
         $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
         $this->remarks = $this->getStringValueByKey('remarks', $estimate->assess_detail);
+        $this->reProcureRate = min(120, max(80, (int) $this->getStringValueByKey('reprocure_rate', $estimate->assess_detail, '80')));
 
-        $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure);
-        $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
+        $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure, $this->isNewRate);
+        $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure, $this->isNewRate);
     }
 
     private function roundUpThousand(string $value): string
@@ -56,7 +62,7 @@ final class AssessPiloti
     /*
     ** LiveFireで使用する評価額
     */
-    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $assessRank = '')
+    public function viewReProcure($assessUsage, $assessStructure, $floorArea, $pilotiFloorArea, $assessRank = '', $reProcureRate = 80)
     {
         if (
             $assessRank == '' || $assessUsage == '' ||
@@ -69,7 +75,7 @@ final class AssessPiloti
             ];
         }
 
-        $standardAmountObj = new StandardAmount($assessUsage, $assessStructure);
+        $standardAmountObj = new StandardAmount($assessUsage, $assessStructure, $this->isNewRate);
         $standardAmount = (string)$standardAmountObj->findStandardAmount($assessRank);
 
         // ピロティー以外面積
@@ -81,7 +87,7 @@ final class AssessPiloti
 
         $reProcure = bcadd($pilotiOther, $pilotiOnly, 2);
 
-        $rate80 = bcmul($reProcure, '0.8', 2);
+        $rate80 = bcmul($reProcure, bcdiv((string) $reProcureRate, '100', 4), 2);
 
         return [
             '80'       => thousandYenUnit($rate80),
@@ -106,8 +112,8 @@ final class AssessPiloti
             ];
         }
 
-        $standardAmountObj = new StandardAmount($assessUsage, $assessStructure);
-        $agingDepObj = new AgingDepreciation($assessUsage, $assessStructure);
+        $standardAmountObj = new StandardAmount($assessUsage, $assessStructure, $this->isNewRate);
+        $agingDepObj = new AgingDepreciation($assessUsage, $assessStructure, $this->isNewRate);
 
         $standardAmount = (string)$standardAmountObj->findStandardAmount($assessRank);
         $agingRate = (string)$agingDepObj->findAgingDepreciation($assessRank);
@@ -144,7 +150,7 @@ final class AssessPiloti
 
         $reProcure = bcmul($standardAmount, (string)$this->exceptForPilotiFloorArea, 2);
 
-        $rate80  = bcmul($reProcure, '0.8', 2);
+        $rate80  = bcmul($reProcure, bcdiv((string) $this->reProcureRate, '100', 4), 2);
         $rate120 = bcmul($reProcure, '1.2', 2);
 
         return [
@@ -163,7 +169,7 @@ final class AssessPiloti
 
         $reProcure = bcmul($standardAmount, (string)$this->pilotiFloorArea, 2);
 
-        $rate80 = bcmul($reProcure, '0.8', 2);
+        $rate80 = bcmul($reProcure, bcdiv((string) $this->reProcureRate, '100', 4), 2);
 
         return [
             '標準単価' => $standardAmount,
@@ -181,7 +187,7 @@ final class AssessPiloti
 
         $reProcure = bcadd($except, $piloti, 2);
 
-        $rate80 = bcmul($reProcure, '0.8', 2);
+        $rate80 = bcmul($reProcure, bcdiv((string) $this->reProcureRate, '100', 4), 2);
 
         return [
             '80%' => $rate80,

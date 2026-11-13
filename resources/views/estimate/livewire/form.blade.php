@@ -1,18 +1,13 @@
-<main class="m-auto w-full bg-white text-black">
-  @if (Session::has('message'))
-    <div class="relative rounded border border-green-400 bg-green-100 px-4 py-3 text-green-700" role="alert">
-      <span class="block sm:inline">{{ Session::get('message') }}</span>
-    </div>
-  @endif
+<main class="mx-auto flex-1 w-full bg-blue-50 text-black">
+  @include('components.form-feedback')
 
-  <form class="mt-2 flex flex-col justify-center p-2" id="estimateFormId"
+  <form class="flex flex-col justify-center" id="estimateFormId"
     action="{{ route('estimate.save', ['id' => $estimate->id ?? 'new']) }}" onsubmit="return false;" method="POST">
     @csrf
-    <div class="mx-10 block border-2 bg-blue-50 p-5">
-
+    <div class="p-5">
       <div class="flex flex-wrap">
         <div class="w-1/2 px-2">
-          <div class="estimate-title">
+          <div class="estimate-title mt-0">
             <label class="p-3">取扱代理所情報</label>
           </div>
           <div class="estimate-input-box">
@@ -39,7 +34,7 @@
           </div>
         </div>
         <div class="w-1/2 px-2">
-          <div class="estimate-title">
+          <div class="estimate-title mt-0">
             <label class="p-3">共済契約者情報</label>
           </div>
           <div class="estimate-input-box flex">
@@ -48,8 +43,12 @@
             <input class="estimate-input" id="certificate_number" name="certificate_number"
               wire:model="certificateNumber" required>
             <button
-              class="mx-2 h-8 whitespace-nowrap rounded bg-gray-700 px-2 text-[0.6rem] text-white hover:bg-gray-600 sm:text-base"
-              type="button" wire:click="onClickCertificateNumber">証書番号参照</button>
+              class="mx-2 h-8 whitespace-nowrap rounded bg-gray-700 px-2 text-[0.6rem] text-white hover:bg-gray-600 disabled:cursor-wait disabled:opacity-60 sm:text-base"
+              type="button" wire:click="onClickCertificateNumber" wire:loading.attr="disabled"
+              wire:target="onClickCertificateNumber">
+              <span wire:loading.remove wire:target="onClickCertificateNumber">証書番号参照</span>
+              <span wire:loading wire:target="onClickCertificateNumber">照会中...</span>
+            </button>
           </div>
           <div class="estimate-input-box">
             <label class="estimate-label" for="contractee">ご契約者名
@@ -918,212 +917,273 @@
                   $assessItem,
                   ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'],
                   true))
-            <div class="estimate-input-box">
+            <div class="estimate-input-box mb-5">
               <label class="estimate-label" for="remarks">備考
                 <div class="estimate-input-required"></div>
               </label>
               <input class="estimate-input text-right" id="remarks" name="remarks" wire:model="remarks"
                 wire:change="onChangeAssessItem">
             </div>
-          @endif
 
-          <br>
+            <div class="mb-5 flex items-center">
+              <div class="text-xs text-[#9C9C9C]">表示:</div>
+              <div class="ml-5">
+                <input type="hidden" name="rate_version" wire:model="rateVersion">
+                <button type="button" wire:click="changeRateVersion('new')"
+                  @class(['w-[90px] rounded-lg border border-[#DBDBDB] h-[35px] font-bold', 'bg-[#0088FF] text-white' => $rateVersion === 'new', 'bg-white text-[#0088FF]' => $rateVersion !== 'new'])>新料率</button>
+                <button type="button" wire:click="changeRateVersion('old')"
+                  @class(['w-[90px] rounded-lg border border-[#DBDBDB] h-[35px] font-bold', 'bg-[#0088FF] text-white' => $rateVersion === 'old', 'bg-white text-[#0088FF]' => $rateVersion !== 'old'])>旧料率</button>
+              </div>
+            </div>
+          @endif
 
           <div class="flex flex-col justify-center">
             @if (in_array($assessItem, ['年次取得'], true))
-              <div class="flex w-full flex-row">
-                <label class="assess-label"></label>
-                <label class="assess-label">80%
-                </label>
-                <label class="assess-label">100%
-                </label>
-                <label class="assess-label">100%まるめ
-                </label>
-              </div>
-              <div class="flex w-full flex-row">
-                <label class="assess-label">再調達価額
-                </label>
-                <input class="assess-input" wire:model="reProcure80" readonly>
-                <input class="assess-input" wire:model="reProcure100" readonly>
-                <input class="assess-input" wire:model="reProcure100round" readonly>
+              <div class="grid grid-rows-1">
+                <div
+                  class="grid grid-cols-[96px_repeat(3,minmax(0,1fr))] items-center h-10 bg-[#0B1833] divide-x divide-x-[1px] divide-x-[#717171]">
+                  <div class="h-full flex items-center justify-center text-white"></div>
+                  <div class="h-full flex items-center justify-center text-white">
+                    <button type="button" wire:click="decrementReProcureRate"
+                      class="bg-[#FFFFFF1A] h-[26px] w-[26px] rounded-full mr-2 hover:opacity-80"><i
+                        class="fa-solid fa-angle-left"></i></button>
+                    <input class="w-[50px] rounded bg-[#717171] border text-center" type="number" min="80"
+                      max="120" step="1" name="reprocure_rate" wire:model.live="reProcureRate"
+                      aria-label="再調達率 (80〜120%)"><span class="pl-1">%</span>
+                    <button type="button" wire:click="incrementReProcureRate"
+                      class="bg-[#FFFFFF1A] h-[26px] w-[26px] rounded-full ml-2 hover:opacity-80"><i
+                        class="fa-solid fa-angle-right"></i></button>
+                  </div>
+                  <div class="h-full flex items-center justify-center text-white">100%</div>
+                  <div class="h-full flex items-center justify-center text-white">100%まるめ</div>
+                </div>
+                <div
+                  class="grid grid-cols-[96px_repeat(3,minmax(0,1fr))] items-center h-10 divide-x divide-x-[1px] divide-x-[#717171]">
+                  <div
+                    class="h-full flex items-center justify-center text-white bg-[#4C566B] font-bold border-b border-b-[#717171]">
+                    再調達価額
+                  </div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $reProcure80 }}</div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $reProcure100 }}</div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $reProcure100round }}
+                  </div>
+                </div>
               </div>
             @endif
           </div>
 
           <div class="flex flex-col justify-center">
             @if (in_array($assessItem, ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション'], true))
-              <div class="flex w-full flex-row">
-                <label class="assess-label">再調達</label>
-                <label class="assess-label">80%
-                </label>
-                <label class="assess-label">100%
-                </label>
-                <label class="assess-label">100%まるめ
-                </label>
-              </div>
-              <div class="flex w-full flex-row">
-                <label class="assess-label">
-                  {{ $assessStructure == 'プレハブ工法' ? '木質系' : 'A' }}
-                </label>
-
-                <input class="assess-input" wire:model="reProcureA80" readonly>
-                <input class="assess-input" wire:model="reProcureA100" readonly>
-                <input class="assess-input" wire:model="reProcureA100round" readonly>
-              </div>
-            @endif
-
-            @if (in_array($assessItem, ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション'], true))
-              <div class="flex w-full flex-row">
-                <label class="assess-label">
-                  {{ $assessStructure == 'プレハブ工法' ? '鉄骨系' : 'B' }}
-                </label>
-                <input class="assess-input" wire:model="reProcureB80" readonly>
-                <input class="assess-input" wire:model="reProcureB100" readonly>
-                <input class="assess-input" wire:model="reProcureB100round" readonly>
-              </div>
-            @endif
-
-            @if (in_array($assessItem, ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション'], true))
-              <div class="flex w-full flex-row">
-                <label class="assess-label">
-                  {{ $assessStructure == 'プレハブ工法' ? 'RC系' : 'C' }}
-                </label>
-                <input class="assess-input" wire:model="reProcureC80" readonly>
-                <input class="assess-input" wire:model="reProcureC100" readonly>
-                <input class="assess-input" wire:model="reProcureC100round" readonly>
+              <div class="grid grid-rows-4">
+                <div
+                  class="grid grid-cols-[96px_repeat(3,minmax(0,1fr))] items-center h-10 bg-[#0B1833] divide-x divide-x-[1px] divide-x-[#717171]">
+                  <div class="h-full flex items-center justify-center text-white">再調達率</div>
+                  <div class="h-full flex items-center justify-center text-white">
+                    <button type="button" wire:click="decrementReProcureRate"
+                      class="bg-[#FFFFFF1A] h-[26px] w-[26px] rounded-full mr-2 hover:opacity-80"><i
+                        class="fa-solid fa-angle-left"></i></button>
+                    <input class="w-[50px] rounded bg-[#717171] border text-center" type="number" min="80"
+                      max="120" step="1" name="reprocure_rate" wire:model.live="reProcureRate"
+                      aria-label="再調達率 (80〜120%)"><span class="pl-1">%</span>
+                    <button type="button" wire:click="incrementReProcureRate"
+                      class="bg-[#FFFFFF1A] h-[26px] w-[26px] rounded-full ml-2 hover:opacity-80"><i
+                        class="fa-solid fa-angle-right"></i></button>
+                  </div>
+                  <div class="h-full flex items-center justify-center text-white">100%</div>
+                  <div class="h-full flex items-center justify-center text-white">100%まるめ</div>
+                </div>
+                <div
+                  class="grid grid-cols-[96px_repeat(3,minmax(0,1fr))] items-center h-10 divide-x divide-x-[1px] divide-x-[#717171]">
+                  <div
+                    class="h-full flex items-center justify-center text-white bg-[#4C566B] font-bold border-b border-b-[#717171]">
+                    {{ $assessStructure == 'プレハブ工法' ? '木質系' : 'A' }}
+                  </div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $reProcureA80 }}</div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $reProcureA100 }}</div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $reProcureA100round }}
+                  </div>
+                </div>
+                <div
+                  class="grid grid-cols-[96px_repeat(3,minmax(0,1fr))] items-center h-10 divide-x divide-x-[1px] divide-x-[#717171]">
+                  <div
+                    class="h-full flex items-center justify-center text-white bg-[#4C566B] font-bold border-b border-b-[#717171]">
+                    {{ $assessStructure == 'プレハブ工法' ? '鉄骨系' : 'B' }}
+                  </div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $reProcureB80 }}</div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $reProcureB100 }}</div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $reProcureB100round }}
+                  </div>
+                </div>
+                <div
+                  class="grid grid-cols-[96px_repeat(3,minmax(0,1fr))] items-center h-10 divide-x divide-x-[1px] divide-x-[#717171]">
+                  <div class="h-full flex items-center justify-center text-white bg-[#4C566B] font-bold">
+                    {{ $assessStructure == 'プレハブ工法' ? 'RC系' : 'C' }}
+                  </div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $reProcureC80 }}</div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $reProcureC100 }}</div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $reProcureC100round }}
+                  </div>
+                </div>
               </div>
             @endif
           </div>
 
-          <div class="mt-5 flex flex-col justify-center">
+          <div class="flex flex-col justify-center">
             @if (in_array($assessItem, ['大規模改装'], true))
-              <div class="flex w-full flex-row">
-                <label class="market-price-label"></label>
-                <label class="market-price-label">通常
-                </label>
-                <label class="market-price-label">まるめ
-                </label>
-              </div>
-              <div class="flex w-full flex-row">
-                <label class="market-price-label">時価額
-                </label>
-                <input class="market-price-input" wire:model="currentMarketPrice" readonly>
-                <input class="market-price-input" wire:model="currentMarketPriceRound" readonly>
+              <div class="grid grid-rows-2">
+                <div
+                  class="grid grid-cols-[96px_repeat(2,minmax(0,1fr))] items-center h-10 bg-[#0B1833] divide-x divide-x-[1px] divide-x-[#717171]">
+                  <div class="h-full flex items-center justify-center text-white"></div>
+                  <div class="h-full flex items-center justify-center text-white">通常</div>
+                  <div class="h-full flex items-center justify-center text-white">まるめ</div>
+                </div>
+
+                <div
+                  class="grid grid-cols-[96px_repeat(2,minmax(0,1fr))] items-center h-10 divide-x divide-x-[1px] divide-x-[#717171]">
+                  <div class="h-full flex items-center justify-center text-white bg-[#4C566B] font-bold">
+                    時価額
+                  </div>
+                  <div class="h-full flex items-center justify-center bg-white">
+                    {{ $currentMarketPrice }}</div>
+                  <div class="h-full flex items-center justify-center bg-white">
+                    {{ $currentMarketPriceRound }}</div>
+                </div>
               </div>
             @endif
           </div>
 
-          <div class="mt-5 flex flex-col justify-center">
+          <div class="flex flex-col justify-center">
             @if (in_array(
                     $assessItem,
                     ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'],
                     true))
-              <div class="flex w-full flex-row">
-                <label class="market-price-label">時価額</label>
-                <label class="market-price-label">通常
-                </label>
-                <label class="market-price-label">まるめ
-                </label>
-              </div>
-              <div class="flex w-full flex-row">
-                <label class="market-price-label">
-                  {{ $assessStructure == 'プレハブ工法' ? '木質系' : 'A' }}
-                </label>
-                <input class="market-price-input" wire:model="currentMarketPriceA" readonly>
-                <input class="market-price-input" wire:model="currentMarketPriceARound" readonly>
-              </div>
-            @endif
-
-            @if (in_array(
-                    $assessItem,
-                    ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'],
-                    true))
-              <div class="flex w-full flex-row">
-                <label class="market-price-label">
-                  {{ $assessStructure == 'プレハブ工法' ? '鉄骨系' : 'B' }}
-                </label>
-                <input class="market-price-input" wire:model="currentMarketPriceB" readonly>
-                <input class="market-price-input" wire:model="currentMarketPriceBRound" readonly>
-              </div>
-            @endif
-
-            @if (in_array(
-                    $assessItem,
-                    ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得'],
-                    true))
-              <div class="flex w-full flex-row">
-                <label class="market-price-label">
-                  {{ $assessStructure == 'プレハブ工法' ? 'RC系' : 'C' }}
-                </label>
-                <input class="market-price-input" wire:model="currentMarketPriceC" readonly>
-                <input class="market-price-input" wire:model="currentMarketPriceCRound" readonly>
+              <div class="grid grid-rows-4">
+                <div
+                  class="grid grid-cols-[96px_repeat(2,minmax(0,1fr))] items-center h-10 bg-[#0B1833] divide-x divide-x-[1px] divide-x-[#717171]">
+                  <div class="h-full flex items-center justify-center text-white">時価額</div>
+                  <div class="h-full flex items-center justify-center text-white">通常</div>
+                  <div class="h-full flex items-center justify-center text-white">まるめ</div>
+                </div>
+                <div
+                  class="grid grid-cols-[96px_repeat(2,minmax(0,1fr))] items-center h-10 divide-x divide-x-[1px] divide-x-[#717171]">
+                  <div
+                    class="h-full flex items-center justify-center text-white bg-[#4C566B] font-bold border-b border-b-[#717171]">
+                    {{ $assessStructure == 'プレハブ工法' ? '木質系' : 'A' }}
+                  </div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $currentMarketPriceA }}</div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $currentMarketPriceARound }}</div>
+                </div>
+                <div
+                  class="grid grid-cols-[96px_repeat(2,minmax(0,1fr))] items-center h-10 divide-x divide-x-[1px] divide-x-[#717171]">
+                  <div
+                    class="h-full flex items-center justify-center text-white bg-[#4C566B] font-bold border-b border-b-[#717171]">
+                    {{ $assessStructure == 'プレハブ工法' ? '鉄骨系' : 'B' }}
+                  </div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $currentMarketPriceB }}</div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $currentMarketPriceBRound }}</div>
+                </div>
+                <div
+                  class="grid grid-cols-[96px_repeat(2,minmax(0,1fr))] items-center h-10 divide-x divide-x-[1px] divide-x-[#717171]">
+                  <div class="h-full flex items-center justify-center text-white bg-[#4C566B] font-bold">
+                    {{ $assessStructure == 'プレハブ工法' ? 'RC系' : 'C' }}
+                  </div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $currentMarketPriceC }}</div>
+                  <div class="h-full flex items-center justify-center bg-white border-b border-b-[#E1E3E8]">
+                    {{ $currentMarketPriceCRound }}</div>
+                </div>
               </div>
             @endif
           </div>
         </div>
       </div>
-    </div>
-
-    <button
-      class="mx-48 mt-5 flex h-full flex-col rounded-lg bg-gray-100 p-8 shadow-md outline outline-1 outline-slate-300 hover:bg-gray-300"
-      name="save" type="button" onclick="submitForm(this)">
-      <div class="mb-3 flex items-center">
-        <div
-          class="mr-2 inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-500 text-white">
-          <i class="fa-solid fa-floppy-disk"></i>
-        </div>
-        <h2 class="text-lg font-medium">保存</h2>
-      </div>
-      <p class="pl-5 text-left">入力された内容を保存します。<br>保存したのちプレビューが可能になります。</p>
-    </button>
-
-    @if ($estimate->id)
-      <div class="mx-48 mb-6 grid grid-rows-3 gap-4 sm:grid-cols-3">
+      <div class="mx-auto max-w-6xl">
         <button
-          class="mt-5 flex h-full w-full flex-col rounded-lg bg-gray-100 p-8 shadow-md outline outline-1 outline-slate-300 hover:bg-gray-300"
-          type="button" value="preview" onclick="submitForm(this)">
-          <div class="mb-5 mt-2 flex items-center">
+          class="group mt-5 flex w-full flex-col rounded-2xl border border-slate-200 bg-white p-4 text-left text-slate-800 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200"
+          name="save" type="button" onclick="submitForm(this)">
+          <div class="flex items-center">
             <div
-              class="mr-2 inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-500 text-white">
+              class="mr-3 inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-lg text-indigo-600 transition group-hover:bg-indigo-600 group-hover:text-white">
               <i class="fa-solid fa-floppy-disk"></i>
             </div>
-            <div class="text-lg font-medium">プレビュー</div>
+            <div class="flex flex-col">
+              <h2 class="text-lg font-semibold">保存</h2>
+              <p class="text-sm leading-6 text-slate-500">入力された内容を保存します。保存したのちプレビューが可能になります</p>
+            </div>
           </div>
-          <p class="pl-5 text-left">入力した内容で見積書をプレビューする。</p>
         </button>
 
-        @if (in_array(
-                $assessItem,
-                ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'],
-                true))
-          <button
-            class="mt-5 flex h-full w-full flex-col rounded-lg bg-gray-100 p-8 shadow-md outline outline-1 outline-slate-300 hover:bg-gray-300"
-            type="button" value="assessSheet" onclick="submitForm(this)">
-            <div class="mb-2 flex items-center">
-              <div
-                class="mr-2 inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-500 text-white">
-                <i class="fa-solid fa-ranking-star"></i>
+        @if ($estimate->id)
+          <div class="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <button
+              class="group mt-5 flex min-w-0 w-full flex-col rounded-2xl border border-slate-200 bg-white p-4 text-left text-slate-800 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200"
+              type="button" value="preview" onclick="submitForm(this)">
+              <div class="flex items-center">
+                <div
+                  class="mr-3 inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-lg text-indigo-600 transition group-hover:bg-indigo-600 group-hover:text-white">
+                  <i class="fa-solid fa-file-lines"></i>
+                </div>
+                <div class="flex flex-col">
+                  <div class="text-lg font-semibold">プレビュー</div>
+                  <p class="text-sm leading-6 text-slate-500">入力した内容で見積書をプレビューする</p>
+                </div>
               </div>
-              <div class="text-lg font-medium">評価シートを<br>ダウンロード</div>
-            </div>
-            <p class="pl-5 text-left">評価シートをダウンロード方法を選択します。</p>
-          </button>
-        @endif
+            </button>
 
-        <button
-          class="mt-5 flex h-full w-full flex-col rounded-lg bg-gray-100 p-8 shadow-md outline outline-1 outline-slate-300 hover:bg-gray-300"
-          type="button" value="download" onclick="submitForm(this)">
-          <div class="mb-2 flex items-center">
-            <div
-              class="mr-2 inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-500 text-white">
-              <i class="fa-solid fa-eye"></i>
-            </div>
-            <div class="text-lg font-medium">ダウンロードファイル選択</div>
+            @if (in_array(
+                    $assessItem,
+                    ['通常(延床面積)', '通常(専有面積)', 'ピロティー付', '太陽光付', '分譲マンション', '年次取得', '大規模改装'],
+                    true))
+              <button
+                class="group mt-5 flex min-w-0 w-full flex-col rounded-2xl border border-slate-200 bg-white p-4 text-left text-slate-800 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200"
+                type="button" value="assessSheet" onclick="submitForm(this)">
+                <div class="flex items-center">
+                  <div
+                    class="mr-3 inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-lg text-indigo-600 transition group-hover:bg-indigo-600 group-hover:text-white">
+                    <i class="fa-solid fa-ranking-star"></i>
+                  </div>
+                  <div class="flex flex-col">
+                    <div class="text-lg font-semibold">評価シートダウンロード</div>
+                    <p class="text-sm leading-6 text-slate-500">評価シートを選択する画面に移動します</p>
+                  </div>
+                </div>
+              </button>
+            @endif
+
+            <button
+              class="group mt-5 flex min-w-0 w-full flex-col rounded-2xl border border-slate-200 bg-white p-4 text-left text-slate-800 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200"
+              type="button" value="download" onclick="submitForm(this)">
+              <div class="flex items-center">
+                <div
+                  class="mr-3 inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-lg text-indigo-600 transition group-hover:bg-indigo-600 group-hover:text-white">
+                  <i class="fa-solid fa-download"></i>
+                </div>
+                <div class="flex flex-col">
+                  <div class="text-lg font-semibold">見積書ダウンロード</div>
+                  <p class="text-sm leading-6 text-slate-500">見積書を選択する画面に移動します</p>
+                </div>
+              </div>
+            </button>
           </div>
-          <p class="pl-5 text-left">ダウンロードする見積書を選択する画面に移動します。</p>
-        </button>
+        @endif
       </div>
-    @endif
+    </div>
   </form>
   @if ($isViewFactoryRateTable)
     @include('estimate.livewire.factory-rate-table')
@@ -1139,6 +1199,23 @@
     @include('estimate.livewire.discount-risk-table')
   @endif
 
+  <div wire:loading.flex wire:target="onClickCertificateNumber"
+    class="fixed inset-0 z-40 items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm" role="status"
+    aria-live="polite">
+    <div class="flex w-full max-w-sm items-center gap-4 rounded-2xl bg-white p-5 shadow-2xl shadow-slate-950/20">
+      <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+        <svg class="h-6 w-6 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle class="opacity-25" cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3"></circle>
+          <path class="opacity-90" fill="currentColor" d="M12 3a9 9 0 0 1 9 9h-3a6 6 0 0 0-6-6V3Z"></path>
+        </svg>
+      </span>
+      <div>
+        <p class="font-semibold text-slate-900">証書番号を照会しています</p>
+        <p class="mt-1 text-sm text-slate-500">しばらくお待ちください</p>
+      </div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       Livewire.on('disableScroll', function() {
@@ -1150,9 +1227,6 @@
         document.body.style.overflow = 'auto';
       });
 
-      Livewire.on('alert', function(message) {
-        alert(message)
-      });
     });
   </script>
 

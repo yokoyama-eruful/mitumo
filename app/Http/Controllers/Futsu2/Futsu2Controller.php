@@ -54,7 +54,7 @@ class Futsu2Controller extends Controller
             default => 'futsu2.edit',
         };
 
-        Session::flash('message', '保存しました。_'.now());
+        Session::flash('message', '保存しました。');
 
         return redirect()->route($redirectName, ['id' => $estimate->id]);
     }

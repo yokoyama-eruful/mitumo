@@ -18,27 +18,33 @@ final class AssessCondo
 
     public readonly string $remarks;
 
+    public int $reProcureRate;
+
     private StandardAmount $standardAmount;
 
     private AgingDepreciation $agingDepreciation;
 
+    private bool $isNewRate = false;
+
     public function __construct($estimate)
     {
+        $this->isNewRate = ($this->getValueByKey('rate_version', $estimate->assess_detail) === 'new');
         $this->exclusiveArea = $estimate->exclusive_area ? $estimate->exclusive_area : 0;
         $this->buildingAge = $estimate->building_age ? $estimate->building_age : 0;
         $this->buildingYear = $estimate->building_year ? $estimate->building_year : 0;
         $this->assessUsage = $this->getValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getValueByKey('assess_structure', $estimate->assess_detail);
         $this->remarks = $this->getValueByKey('remarks', $estimate->assess_detail);
+        $this->reProcureRate = min(120, max(80, (int) $this->getValueByKey('reprocure_rate', $estimate->assess_detail, '80')));
 
-        $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure);
-        $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
+        $this->standardAmount = new StandardAmount($this->assessUsage, $this->assessStructure, $this->isNewRate);
+        $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure, $this->isNewRate);
     }
 
     /*
        ** LiveFireで使用する評価額
        */
-    public function viewReProcure($assessUsage, $assessStructure, $exclusiveArea, $assessRank = '')
+    public function viewReProcure($assessUsage, $assessStructure, $exclusiveArea, $assessRank = '', $reProcureRate = 80)
     {
         if (
             $assessRank == '' || $assessUsage == '' ||
@@ -51,14 +57,14 @@ final class AssessCondo
             ];
         }
 
-        $standardAmount = new StandardAmount($assessUsage, $assessStructure);
+        $standardAmount = new StandardAmount($assessUsage, $assessStructure, $this->isNewRate);
 
         $amount = (string)$standardAmount->findStandardAmount($assessRank);
         $exclusiveArea = (string)$exclusiveArea;
 
         $reProcure = bcmul($amount, $exclusiveArea, 2);
 
-        $reProcure80 = bcmul($reProcure, '0.8', 2);
+        $reProcure80 = bcmul($reProcure, bcdiv((string) $reProcureRate, '100', 4), 2);
 
         $roundThousand = function (string $value): string {
             return bcmul(
@@ -90,8 +96,8 @@ final class AssessCondo
             ];
         }
 
-        $agingDepreciationObj = new AgingDepreciation($assessUsage, $assessStructure);
-        $standardAmount = new StandardAmount($assessUsage, $assessStructure);
+        $agingDepreciationObj = new AgingDepreciation($assessUsage, $assessStructure, $this->isNewRate);
+        $standardAmount = new StandardAmount($assessUsage, $assessStructure, $this->isNewRate);
 
         $amount = (string)$standardAmount->findStandardAmount($assessRank);
         $exclusiveArea = (string)$exclusiveArea;
@@ -136,7 +142,7 @@ final class AssessCondo
         $reProcure = bcmul($standardAmount, $exclusiveArea, 2);
 
         // 割合
-        $rate80  = bcmul($reProcure, '0.8', 2);
+        $rate80  = bcmul($reProcure, bcdiv((string) $this->reProcureRate, '100', 4), 2);
         $rate120 = bcmul($reProcure, '1.2', 2);
         // 千円切り上げ
         $roundThousand = function (string $v): string {

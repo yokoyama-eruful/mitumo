@@ -44,7 +44,7 @@ class AccountController extends Controller
             $user = $this->userService->update(intval($id), $params);
         }
 
-        session::flash('message', '保存しました。_'.now());
+        session::flash('message', '保存しました。');
         $userList = $this->userService->paginate();
 
         return redirect()->route('account.index', compact('userList'));

@@ -28,12 +28,17 @@ final class AssessAnnual
 
     public $remarks;
 
+    public int $reProcureRate;
+
     private AnnualCoefficient $annualCoefficient;
 
     private AgingDepreciation $agingDepreciation;
 
+    private bool $isNewRate = false;
+
     public function __construct($estimate)
     {
+        $this->isNewRate = ($this->getStringValueByKey('rate_version', $estimate->assess_detail) === 'new');
         $this->buildingYearEra = $estimate->building_year_era;
         $this->rank = $estimate->rank ?? '';
         $this->floorArea = (float)$estimate->floor_area ? (float)$estimate->floor_area : 0;
@@ -43,9 +48,10 @@ final class AssessAnnual
         $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
         $this->remarks = $this->getStringValueByKey('remarks', $estimate->assess_detail);
+        $this->reProcureRate = min(120, max(80, (int) ($this->getIntValueByKey('reprocure_rate', $estimate->assess_detail) ?? 80)));
         $this->annualPrice = $this->getIntValueByKey('annual_price', $estimate->assess_detail);
         $this->annualCoefficient = new AnnualCoefficient($this->rank, $this->buildingYear);
-        $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure);
+        $this->agingDepreciation = new AgingDepreciation($this->assessUsage, $this->assessStructure, $this->isNewRate);
     }
 
     private function changeWarekiToSeireki()
@@ -65,7 +71,7 @@ final class AssessAnnual
     /*
       ** LiveFireで使用する評価額
       */
-    public function viewReProcure($rank, $annualPrice, $buildingAge)
+    public function viewReProcure($rank, $annualPrice, $buildingAge, $reProcureRate = 80)
     {
         if ($rank == '' || $annualPrice == '' || $buildingAge == '') {
             return [
@@ -81,7 +87,7 @@ final class AssessAnnual
 
         $reProcure = bcmul($annualPrice, $annualCoefficient, 2);
 
-        $reProcure80 = bcmul($reProcure, '0.8', 2);
+        $reProcure80 = bcmul($reProcure, bcdiv((string) $reProcureRate, '100', 4), 2);
 
         $rounded = bcmul(
             bcadd(
@@ -105,7 +111,7 @@ final class AssessAnnual
     public function viewCurrentMarketPrice($assessUsage, $assessStructure, $rank, $annualPrice, $buildingAge, $assessRank = '')
     {
         $annualCoefficient = new AnnualCoefficient($rank, $this->buildingYear);
-        $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure);
+        $agingDepreciation = new AgingDepreciation($assessUsage, $assessStructure, $this->isNewRate);
 
         if ($assessRank == '') {
             return [
@@ -148,7 +154,7 @@ final class AssessAnnual
         $annualCoefficient = (string)$this->annualCoefficient->annualCoefficient;
         $reProcure = bcmul((string)$this->annualPrice, $annualCoefficient, 2);
 
-        $reProcure80  = bcmul($reProcure, '0.8', 2);
+        $reProcure80  = bcmul($reProcure, bcdiv((string) $this->reProcureRate, '100', 4), 2);
         $reProcure120 = bcmul($reProcure, '1.2', 2);
 
         $round = function (string $value): string {

@@ -11,18 +11,18 @@ final class AgingDepreciation
 {
     public readonly array $agingDepreciationList;
 
-    public function __construct($assessUsage, $assessStructure)
+    public function __construct($assessUsage, $assessStructure, bool $newRate = false)
     {
-        $this->agingDepreciationList = $this->setAgingDepreciation($assessUsage, $assessStructure);
+        $this->agingDepreciationList = $this->setAgingDepreciation($assessUsage, $assessStructure, $newRate);
     }
 
-    private function setAgingDepreciation($assessUsage, $assessStructure)
+    private function setAgingDepreciation($assessUsage, $assessStructure, bool $newRate)
     {
         if (is_null($assessUsage) || is_null($assessStructure)) {
             return [];
         }
 
-        $filePath = Storage::path('rateTable/AgingDepreciationList.csv');
+        $filePath = Storage::path('rateTable/' . ($newRate ? 'newAgingDepreciationList.csv' : 'AgingDepreciationList.csv'));
 
         $agingDepreciationList = [];
 

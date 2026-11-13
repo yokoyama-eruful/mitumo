@@ -26,7 +26,7 @@ final class EstimateAssessDetailDto
     {
         return array_intersect_key($params, array_flip(
             [
-                'assess_usage', 'assess_structure', 'remarks',
+                'assess_usage', 'assess_structure', 'remarks', 'reprocure_rate',
             ]
         ));
     }
@@ -35,7 +35,7 @@ final class EstimateAssessDetailDto
     {
         return array_intersect_key($params, array_flip(
             [
-                'assess_usage', 'assess_structure', 'piloti_floor_area', 'remarks',
+                'assess_usage', 'assess_structure', 'piloti_floor_area', 'remarks', 'reprocure_rate',
             ]
         ));
     }
@@ -44,7 +44,7 @@ final class EstimateAssessDetailDto
     {
         return array_intersect_key($params, array_flip(
             [
-                'assess_usage', 'assess_structure', 'installation_date', 'installation_cost', 'remarks',
+                'assess_usage', 'assess_structure', 'installation_date', 'installation_cost', 'remarks', 'reprocure_rate',
             ]
         ));
     }
@@ -53,7 +53,7 @@ final class EstimateAssessDetailDto
     {
         return array_intersect_key($params, array_flip(
             [
-                'assess_usage', 'assess_structure', 'remarks',
+                'assess_usage', 'assess_structure', 'remarks', 'reprocure_rate',
             ]
         ));
     }
@@ -62,7 +62,7 @@ final class EstimateAssessDetailDto
     {
         return array_intersect_key($params, array_flip(
             [
-                'assess_usage', 'assess_structure', 'annual_price', 'remarks',
+                'assess_usage', 'assess_structure', 'annual_price', 'remarks', 'reprocure_rate',
             ]
         ));
     }
@@ -73,7 +73,7 @@ final class EstimateAssessDetailDto
             [
                 'replacement_price', 'renovation_cost',
                 'conventional_age', 'depreciation_rate', 'renovation_age',
-                'renovation_depreciation_rate', 'remarks',
+                'renovation_depreciation_rate', 'remarks', 'reprocure_rate',
             ]
         ));
     }

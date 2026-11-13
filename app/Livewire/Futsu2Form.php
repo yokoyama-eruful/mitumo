@@ -28,6 +28,26 @@ class Futsu2Form extends Component
 {
     public Futsu2 $estimate;
 
+    public int $reProcureRate = 80;
+
+    public function updatedReProcureRate($value): void
+    {
+        $this->reProcureRate = min(120, max(80, (int) $value));
+        $this->onChangeAssessItem();
+    }
+
+    public function decrementReProcureRate(): void
+    {
+        $this->reProcureRate = max(80, $this->reProcureRate - 5);
+        $this->onChangeAssessItem();
+    }
+
+    public function incrementReProcureRate(): void
+    {
+        $this->reProcureRate = min(120, $this->reProcureRate + 5);
+        $this->onChangeAssessItem();
+    }
+
     //入力項目　プロパティ名：キャメルケース　nameタグ：スネークケース
     public ?string $company = null;
 
@@ -159,6 +179,14 @@ class Futsu2Form extends Component
 
     /////評価項目/////////////////////////////
     public ?string $assessItem = null;
+
+    public string $rateVersion = 'old';
+
+    public function changeRateVersion(string $version): void
+    {
+        $this->rateVersion = $version === 'new' ? 'new' : 'old';
+        $this->onChangeAssessItem();
+    }
 
     public ?string $assessUsage = null;
 
@@ -361,11 +389,16 @@ class Futsu2Form extends Component
         $this->workerCountClass = $estimate->worker_count_class;
 
         //評価項目
+        $savedRateVersion = old('rate_version', $this->getValueByKey('rate_version', $estimate->assess_detail));
+        $this->rateVersion = $savedRateVersion === 'new' ? 'new' : 'old';
         $this->assessItem = old('assess_item', $estimate->assess_item);
         $this->assessItem = $this->assessItem != '通常' ? $this->assessItem : '通常(延床面積)';
 
         $this->assessUsage = old('assess_usage', $this->getValueByKey('assess_usage', $estimate->assess_detail));
-        $this->assessStructure = old('assess_structure', $this->getValueByKey('assess_structure', $estimate->assess_detail));
+        $savedAssessStructure = old('assess_structure', $this->getValueByKey('assess_structure', $estimate->assess_detail));
+        $this->assessStructure = $savedAssessStructure === '木造（2×4）'
+            ? '枠組（2×4）'
+            : $savedAssessStructure;
         $this->pilotiFloorArea = old('piloti_floor_area', $this->getValueByKey('piloti_floor_area', $estimate->assess_detail));
         $this->replacementPrice = old('replacement_price', $this->getValueByKey('replacement_price', $estimate->assess_detail));
         $this->renovationCost = old('renovation_cost', $this->getValueByKey('renovation_cost', $estimate->assess_detail));
@@ -377,6 +410,10 @@ class Futsu2Form extends Component
         $this->installationCost = old('installation_cost', $this->getValueByKey('installation_cost', $estimate->assess_detail));
         $this->annualPrice = old('annual_price', $this->getValueByKey('annual_price', $estimate->assess_detail));
         $this->remarks = old('remarks', $this->getValueByKey('remarks', $estimate->assess_detail));
+        $savedReProcureRate = old('reprocure_rate', $this->getValueByKey('reprocure_rate', $estimate->assess_detail));
+        $this->reProcureRate = $savedReProcureRate === null || $savedReProcureRate === ''
+            ? 80
+            : min(120, max(80, (int) $savedReProcureRate));
 
         //セレクトボックスの選択肢
         $this->structureList = $this->getStructureList();
@@ -683,6 +720,10 @@ class Futsu2Form extends Component
      */
     public function onChangeAssessItem()
     {
+        $assessDetail = $this->estimate->assess_detail ?? [];
+        $assessDetail['rate_version'] = $this->rateVersion;
+        $this->estimate->assess_detail = $assessDetail;
+
         if ($this->floorArea) {
             $this->floorArea = mb_convert_kana($this->floorArea, 'n');
             $this->floorArea = number_format((float) $this->floorArea, 2);
@@ -1010,9 +1051,9 @@ class Futsu2Form extends Component
             case '通常(延床面積)':
                 $assessDomain = new AssessNormal($this->estimate);
 
-                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['80'];
-                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['80'];
-                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['80'];
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A', $this->reProcureRate)['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B', $this->reProcureRate)['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C', $this->reProcureRate)['80'];
 
                 $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['100'];
                 $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['100'];
@@ -1033,9 +1074,9 @@ class Futsu2Form extends Component
             case '通常(専有面積)':
                 $assessDomain = new AssessNormal($this->estimate);
 
-                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['80'];
-                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['80'];
-                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C')['80'];
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A', $this->reProcureRate)['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B', $this->reProcureRate)['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C', $this->reProcureRate)['80'];
 
                 $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['100'];
                 $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['100'];
@@ -1056,9 +1097,9 @@ class Futsu2Form extends Component
             case 'ピロティー付':
                 $assessDomain = new AssessPiloti($this->estimate);
 
-                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'A')['80'];
-                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'B')['80'];
-                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'C')['80'];
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'A', $this->reProcureRate)['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'B', $this->reProcureRate)['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'C', $this->reProcureRate)['80'];
 
                 $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'A')['100'];
                 $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, $this->pilotiFloorArea, 'B')['100'];
@@ -1079,9 +1120,9 @@ class Futsu2Form extends Component
             case '太陽光付':
                 $assessDomain = new AssessSolarPanel($this->estimate);
 
-                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['80'];
-                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['80'];
-                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C')['80'];
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A', $this->reProcureRate)['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B', $this->reProcureRate)['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'C', $this->reProcureRate)['80'];
 
                 $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'A')['100'];
                 $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->floorArea, 'B')['100'];
@@ -1111,9 +1152,9 @@ class Futsu2Form extends Component
                     break;
                 }
 
-                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['80'];
-                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['80'];
-                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C')['80'];
+                $this->reProcureA80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A', $this->reProcureRate)['80'];
+                $this->reProcureB80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B', $this->reProcureRate)['80'];
+                $this->reProcureC80 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'C', $this->reProcureRate)['80'];
 
                 $this->reProcureA100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'A')['100'];
                 $this->reProcureB100 = $assessDomain->viewReProcure($this->assessUsage, $this->assessStructure, $this->exclusiveArea, 'B')['100'];
@@ -1146,7 +1187,7 @@ class Futsu2Form extends Component
 
                 $assessDomain = new AssessAnnual($this->estimate);
 
-                $this->reProcure80 = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['80'];
+                $this->reProcure80 = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge, $this->reProcureRate)['80'];
                 $this->reProcure100 = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['100'];
                 $this->reProcure100round = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['100まるめ'];
 
@@ -1293,7 +1334,7 @@ class Futsu2Form extends Component
 
         if ($this->assessUsage == '専用住宅（柱なし）') {
             return match ($this->assessItem) {
-                '通常(延床面積)', '通常(専有面積)',  'ピロティー付', '太陽光付', '年次取得' => ['木造（2×4）', 'プレハブ工法'],
+                '通常(延床面積)', '通常(専有面積)',  'ピロティー付', '太陽光付', '年次取得' => ['枠組（2×4）', 'プレハブ工法'],
                 '分譲マンション' => ['上塗', '壁真', '占有＋共有'],
                 default => [],
             };

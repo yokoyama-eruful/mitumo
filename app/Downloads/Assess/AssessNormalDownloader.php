@@ -67,6 +67,8 @@ class AssessNormalDownloader
     {
         $worksheet = $spreadSheet->getSheetByName('評価表（通常）');
         $worksheet->setCellValue('L1', date('Y年m月d日'));
+        $worksheet->setCellValue('J13', '再調達価額（'.$assessData->reProcureRate.'％）');
+        $worksheet->setCellValue('J14', '（'.$assessData->reProcureRate.'%）');
 
         if ($estimate->assess_item == '通常(専有面積)') {
             $worksheet->setCellValue('H6', '【専有面積】');

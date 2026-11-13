@@ -25,7 +25,7 @@
                             excel
                         </td>
                                 <td class="p-3 w-1/4">
-                                    <form method="POST"
+                                    <form method="POST" target="estimate-download-frame"
                                     action="{{ route('estimate.assess.download', ['id' => $estimate->id, 'fileType' => 'excel']) }}">
                                         @csrf
                                         <button class="text-blue-500 hover:text-blue-800"><i
@@ -41,7 +41,7 @@
                             pdf
                         </td>
                                 <td class="p-3 w-1/4">
-                                    <form method="POST"
+                                    <form method="POST" target="estimate-download-frame"
                                     action="{{ route('estimate.assess.download', ['id' => $estimate->id, 'fileType' => 'pdf']) }}">
                                         @csrf
                                         <button class="text-blue-500 hover:text-blue-800"><i
@@ -71,4 +71,5 @@
         </div>
 
     </main>
+    @include('estimate.livewire.download-loading')
 @endsection

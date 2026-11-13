@@ -112,6 +112,7 @@ final class SaveRequest extends FormRequest
             'installation_cost' => ['nullable', 'required_if:assess_item,太陽光付', 'numeric', 'min:0'],
 
             'annual_price' => ['nullable', 'required_if:assess_item,年次取得', 'numeric', 'min:0'],
+            'reprocure_rate' => ['nullable', 'integer', 'between:80,120'],
 
             'remarks' => ['nullable', 'string'],
         ];
@@ -255,7 +256,7 @@ final class SaveRequest extends FormRequest
         return array_merge(
             $standardParams,
             ['property_detail' => $propertyParams],
-            ['assess_detail' => $assessParams],
+            ['assess_detail' => array_merge($assessParams, ['rate_version' => $this->input('rate_version') === 'new' ? 'new' : 'old'])],
             ['worker_count_class' => $this->worker_count_class],
         );
     }
