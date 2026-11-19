@@ -37,6 +37,11 @@ class EstimateForm extends Component
         $this->onChangeAssessItem();
     }
 
+    public function updatedAnnualPrice(): void
+    {
+        $this->onChangeAssessAmount();
+    }
+
     public function decrementReProcureRate(): void
     {
         $this->reProcureRate = max(80, $this->reProcureRate - 5);
@@ -629,12 +634,14 @@ class EstimateForm extends Component
             $this->buildingBaseRate = null;
             $this->chattelBaseRate = null;
             $this->factoryBuildingCode = null;
+            $this->onChangeAssessAmount();
 
             return;
         }
 
         if ($this->propertyType === '工場') {
             $this->onChangeFactoryBuildingCode();
+            $this->onChangeAssessAmount();
 
             return;
         }
@@ -657,6 +664,8 @@ class EstimateForm extends Component
         if (isset($this->workSurchargeCode)) {
             $this->onChangeWorkSurchargeCode();
         }
+
+        $this->onChangeAssessAmount();
     }
 
     /**
@@ -668,6 +677,7 @@ class EstimateForm extends Component
     {
         if (! $this->startDate || ! $this->buildingYear) {
             $this->buildingAge = null;
+            $this->onChangeAssessAmount();
 
             return;
         }
@@ -1325,8 +1335,8 @@ class EstimateForm extends Component
             case '年次取得':
                 $buildingYear = $this->changeWarekiToSeireki();
 
-                if ($this->assessItem == '年次取得' && ($buildingYear > 2025 || $buildingYear < 1976)) {
-                    $this->dispatch('alert', '評価するには、建築年が「2025年~1976年」にしてください。評価しない場合は、評価項目を「選択しない」にしてください。');
+                if ($this->assessItem == '年次取得' && ($buildingYear > 2026 || $buildingYear < 1976)) {
+                    $this->dispatch('alert', '評価するには、建築年が「2026年~1976年」にしてください。評価しない場合は、評価項目を「選択しない」にしてください。');
                     break;
                 }
 
@@ -1335,7 +1345,7 @@ class EstimateForm extends Component
                     break;
                 }
 
-                $assessDomain = new AssessAnnual($this->estimate);
+                $assessDomain = new AssessAnnual($this->estimate, (int) $buildingYear);
 
                 $this->reProcure80 = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge, $this->reProcureRate)['80'];
                 $this->reProcure100 = $assessDomain->viewReProcure($this->rank, $this->annualPrice, $this->buildingAge)['100'];

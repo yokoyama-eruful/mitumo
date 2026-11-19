@@ -836,7 +836,7 @@
                 <div class="estimate-input-required">※必須</div>
               </label>
               <input class="estimate-input text-right" id="annual_price" name="annual_price"
-                wire:model="annualPrice" wire:change="onChangeAssessItem">
+                wire:model.live="annualPrice" wire:change="onChangeAssessItem">
               <span class="unit-display sm:flex sm:w-16 sm:items-center sm:p-1">千円</span>
             </div>
           @endif

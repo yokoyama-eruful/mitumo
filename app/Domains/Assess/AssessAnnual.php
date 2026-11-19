@@ -36,7 +36,7 @@ final class AssessAnnual
 
     private bool $isNewRate = false;
 
-    public function __construct($estimate)
+    public function __construct($estimate, ?int $buildingYear = null)
     {
         $this->isNewRate = ($this->getStringValueByKey('rate_version', $estimate->assess_detail) === 'new');
         $this->buildingYearEra = $estimate->building_year_era;
@@ -44,7 +44,7 @@ final class AssessAnnual
         $this->floorArea = (float)$estimate->floor_area ? (float)$estimate->floor_area : 0;
         $this->buildingAge = (int)$estimate->building_age ? (int)$estimate->building_age : 0;
         $this->originalBuildYear = (int)$estimate->building_year ? (int)$estimate->building_year : 0;
-        $this->buildingYear = $this->changeWarekiToSeireki();
+        $this->buildingYear = $buildingYear ?? $this->changeWarekiToSeireki();
         $this->assessUsage = $this->getStringValueByKey('assess_usage', $estimate->assess_detail);
         $this->assessStructure = $this->getStringValueByKey('assess_structure', $estimate->assess_detail);
         $this->remarks = $this->getStringValueByKey('remarks', $estimate->assess_detail);
