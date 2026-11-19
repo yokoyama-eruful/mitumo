@@ -930,9 +930,17 @@
               <div class="ml-5">
                 <input type="hidden" name="rate_version" wire:model="rateVersion">
                 <button type="button" wire:click="changeRateVersion('new')"
-                  @class(['w-[90px] rounded-lg border border-[#DBDBDB] h-[35px] font-bold', 'bg-[#0088FF] text-white' => $rateVersion === 'new', 'bg-white text-[#0088FF]' => $rateVersion !== 'new'])>新料率</button>
+                  @class([
+                      'w-[90px] rounded-lg border border-[#DBDBDB] h-[35px] font-bold',
+                      'bg-[#0088FF] text-white' => $rateVersion === 'new',
+                      'bg-white text-[#0088FF]' => $rateVersion !== 'new',
+                  ])>新評価基準</button>
                 <button type="button" wire:click="changeRateVersion('old')"
-                  @class(['w-[90px] rounded-lg border border-[#DBDBDB] h-[35px] font-bold', 'bg-[#0088FF] text-white' => $rateVersion === 'old', 'bg-white text-[#0088FF]' => $rateVersion !== 'old'])>旧料率</button>
+                  @class([
+                      'w-[90px] rounded-lg border border-[#DBDBDB] h-[35px] font-bold',
+                      'bg-[#0088FF] text-white' => $rateVersion === 'old',
+                      'bg-white text-[#0088FF]' => $rateVersion !== 'old',
+                  ])>旧評価基準</button>
               </div>
             </div>
           @endif
@@ -1205,7 +1213,8 @@
     <div class="flex w-full max-w-sm items-center gap-4 rounded-2xl bg-white p-5 shadow-2xl shadow-slate-950/20">
       <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
         <svg class="h-6 w-6 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <circle class="opacity-25" cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3"></circle>
+          <circle class="opacity-25" cx="12" cy="12" r="9" stroke="currentColor"
+            stroke-width="3"></circle>
           <path class="opacity-90" fill="currentColor" d="M12 3a9 9 0 0 1 9 9h-3a6 6 0 0 0-6-6V3Z"></path>
         </svg>
       </span>
