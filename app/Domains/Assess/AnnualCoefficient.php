@@ -22,7 +22,7 @@ final class AnnualCoefficient
             return 0;
         }
 
-        if ($buildingYear > 2026) {
+        if ($buildingYear > 2027) {
             return 0;
         }
 

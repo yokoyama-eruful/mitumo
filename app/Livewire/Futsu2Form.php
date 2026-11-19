@@ -1184,8 +1184,8 @@ class Futsu2Form extends Component
             case '年次取得':
                 $buildingYear = $this->changeWarekiToSeireki();
 
-                if ($this->assessItem == '年次取得' && ($buildingYear > 2026 || $buildingYear < 1976)) {
-                    $this->dispatch('alert', '評価するには、建築年が「2026年~1976年」にしてください。評価しない場合は、評価項目を「選択しない」にしてください。');
+                if ($this->assessItem == '年次取得' && ($buildingYear > 2027 || $buildingYear < 1976)) {
+                    $this->dispatch('alert', '評価するには、建築年が「2027年~1976年」にしてください。評価しない場合は、評価項目を「選択しない」にしてください。');
                     break;
                 }
 
